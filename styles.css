@@ -16,15 +16,13 @@ h1 {
 }
 
 #gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
     padding: 20px;
 }
 
 .img-container {
     position: relative;
-    width: calc(33.33% - 20px); /* 3 images per row with 20px gap */
     margin-bottom: 20px;
 }
 
