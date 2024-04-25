@@ -72,3 +72,8 @@ h1 {
 .page-btn:hover {
     background-color: #555;
 }
+
+.page-btn.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

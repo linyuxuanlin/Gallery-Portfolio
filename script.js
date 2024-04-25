@@ -19,6 +19,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 const doc = parser.parseFromString(html, "text/html");
                 const links = Array.from(doc.querySelectorAll("a"));
 
+                // Disable access to pages with no photos
+                if (links.length === 0) {
+                    window.location.href = "./";
+                    return;
+                }
+
                 const paginatedLinks = links.slice(startIndex, endIndex);
 
                 gallery.innerHTML = "";
@@ -49,6 +55,23 @@ document.addEventListener("DOMContentLoaded", function() {
                     history.pushState(null, null, `?page=${page}`);
                 } else {
                     history.pushState(null, null, window.location.pathname);
+                }
+
+                // Disable or enable pagination buttons based on availability of photos
+                if (links.length <= endIndex) {
+                    nextPageBtn.disabled = true;
+                    nextPageBtn.classList.add("disabled");
+                } else {
+                    nextPageBtn.disabled = false;
+                    nextPageBtn.classList.remove("disabled");
+                }
+
+                if (page === 1) {
+                    prevPageBtn.disabled = true;
+                    prevPageBtn.classList.add("disabled");
+                } else {
+                    prevPageBtn.disabled = false;
+                    prevPageBtn.classList.remove("disabled");
                 }
             })
             .catch(error => console.error("Error fetching photos:", error));
