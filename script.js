@@ -101,4 +101,16 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     loadPhotos(currentPage);
+    
+    // Dynamically calculate number of columns based on window width
+    function calculateColumns() {
+        const windowWidth = window.innerWidth;
+        let columns = Math.floor(windowWidth / 200); // Minimum width for each image container is 200px
+        columns = Math.max(2, Math.min(columns, 10)); // Ensure minimum of 2 and maximum of 10 columns
+        gallery.style.columnCount = columns;
+    }
+
+    // Call calculateColumns function initially and on window resize
+    calculateColumns();
+    window.addEventListener("resize", calculateColumns);
 });
