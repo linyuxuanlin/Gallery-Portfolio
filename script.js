@@ -8,16 +8,17 @@ document.addEventListener("DOMContentLoaded", function() {
     const photosPerPage = 6;
     const photoDirectory = "./photo/";
 
-    function loadPhotos() {
-        fetch(photoDirectory)
+    function loadPhotos(page) {
+        const startIndex = (page - 1) * photosPerPage;
+        const endIndex = startIndex + photosPerPage;
+
+        fetch(`${photoDirectory}?page=${page}`)
             .then(response => response.text())
             .then(html => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, "text/html");
                 const links = Array.from(doc.querySelectorAll("a"));
 
-                const startIndex = (currentPage - 1) * photosPerPage;
-                const endIndex = startIndex + photosPerPage;
                 const paginatedLinks = links.slice(startIndex, endIndex);
 
                 gallery.innerHTML = "";
@@ -41,7 +42,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 });
 
-                currentPageSpan.textContent = `Page ${currentPage}`;
+                currentPageSpan.textContent = `Page ${page}`;
+
+                // Update URL only if it's not the first page
+                if (page > 1) {
+                    history.pushState(null, null, `?page=${page}`);
+                } else {
+                    history.pushState(null, null, window.location.pathname);
+                }
             })
             .catch(error => console.error("Error fetching photos:", error));
     }
@@ -49,17 +57,24 @@ document.addEventListener("DOMContentLoaded", function() {
     function goToPrevPage() {
         if (currentPage > 1) {
             currentPage--;
-            loadPhotos();
+            loadPhotos(currentPage);
         }
     }
 
     function goToNextPage() {
         currentPage++;
-        loadPhotos();
+        loadPhotos(currentPage);
     }
 
     prevPageBtn.addEventListener("click", goToPrevPage);
     nextPageBtn.addEventListener("click", goToNextPage);
 
-    loadPhotos();
+    // Check if page number is provided in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageParam = urlParams.get("page");
+    if (pageParam && !isNaN(pageParam) && pageParam > 0) {
+        currentPage = parseInt(pageParam);
+    }
+
+    loadPhotos(currentPage);
 });
