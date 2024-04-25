@@ -17,7 +17,7 @@ h1 {
 
 #gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     padding: 20px;
 }
@@ -29,6 +29,7 @@ h1 {
 .img-container img {
     width: 100%;
     display: block;
+    border-radius: 5px;
 }
 
 .img-overlay {
@@ -45,6 +46,7 @@ h1 {
     align-items: center;
     opacity: 0;
     transition: opacity 0.3s ease;
+    border-radius: 5px;
 }
 
 .img-container:hover .img-overlay {
@@ -53,6 +55,7 @@ h1 {
 
 .img-overlay h3 {
     margin: 0;
+    padding: 0;
 }
 
 #pagination {
