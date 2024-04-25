@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentPageSpan = document.getElementById("currentPage");
 
     let currentPage = 1;
-    const photosPerPage = 20;
+    const photosPerPage = 18;
     const photoDirectory = "./photo/";
 
     function loadPhotos(page) {
@@ -105,8 +105,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Dynamically calculate number of columns based on window width
     function calculateColumns() {
         const windowWidth = window.innerWidth;
-        let columns = Math.floor(windowWidth / 300); // Minimum width for each image container is 200px
-        columns = Math.max(2, Math.min(columns, 10)); // Ensure minimum of 2 and maximum of 8 columns
+        let columns = Math.floor(windowWidth / 200); // Minimum width for each image container is 300px
+        columns = Math.max(2, Math.min(columns, 8)); // Ensure minimum of 2 and maximum of 8 columns
         gallery.style.columnCount = columns;
     }
 
