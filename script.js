@@ -12,44 +12,41 @@ document.addEventListener("DOMContentLoaded", function() {
         const startIndex = (page - 1) * photosPerPage;
         const endIndex = startIndex + photosPerPage;
 
-        fetch(`${photoDirectory}?page=${page}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.text();
-            })
+        fetch(photoDirectory)
+            .then(response => response.text())
             .then(html => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, "text/html");
                 const links = Array.from(doc.querySelectorAll("a"));
 
-                const paginatedLinks = links.slice(startIndex, endIndex);
+                // Filter out non-image files and sort by modification date in descending order
+                const imageLinks = links
+                    .filter(link => link.href.match(/\.(jpg|jpeg|png)$/i))
+                    .sort((a, b) => {
+                        const aModified = new Date(a.lastModified);
+                        const bModified = new Date(b.lastModified);
+                        return bModified - aModified;
+                    });
 
-                if (paginatedLinks.length === 0) {
-                    window.location.href = "/404.html";
-                    return;
-                }
+                const paginatedLinks = imageLinks.slice(startIndex, endIndex);
 
                 gallery.innerHTML = "";
 
                 paginatedLinks.forEach(link => {
                     const imgSrc = link.href;
-                    if (imgSrc.endsWith(".jpg") || imgSrc.endsWith(".png") || imgSrc.endsWith(".jpeg")) {
-                        const imgContainer = document.createElement("div");
-                        imgContainer.classList.add("img-container");
+                    const imgContainer = document.createElement("div");
+                    imgContainer.classList.add("img-container");
 
-                        const img = document.createElement("img");
-                        img.src = imgSrc;
+                    const img = document.createElement("img");
+                    img.src = imgSrc;
 
-                        const overlay = document.createElement("div");
-                        overlay.classList.add("img-overlay");
-                        overlay.innerHTML = "<h3>Click to enlarge</h3>";
+                    const overlay = document.createElement("div");
+                    overlay.classList.add("img-overlay");
+                    overlay.innerHTML = "<h3>Click to enlarge</h3>";
 
-                        imgContainer.appendChild(img);
-                        imgContainer.appendChild(overlay);
-                        gallery.appendChild(imgContainer);
-                    }
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(overlay);
+                    gallery.appendChild(imgContainer);
                 });
 
                 currentPageSpan.textContent = `Page ${page}`;
@@ -62,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
 
                 // Disable or enable pagination buttons based on availability of photos
-                if (links.length <= endIndex) {
+                if (imageLinks.length <= endIndex) {
                     nextPageBtn.disabled = true;
                     nextPageBtn.classList.add("disabled");
                 } else {
