@@ -54,3 +54,21 @@ h1 {
 .img-overlay h3 {
     margin: 0;
 }
+
+#pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.page-btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.page-btn:hover {
+    background-color: #555;
+}
