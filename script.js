@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentPageSpan = document.getElementById("currentPage");
 
     let currentPage = 1;
-    const photosPerPage = 6;
+    const photosPerPage = 10;
     const photoDirectory = "./photo/";
 
     function loadPhotos(page) {
