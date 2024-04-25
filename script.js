@@ -13,19 +13,23 @@ document.addEventListener("DOMContentLoaded", function() {
         const endIndex = startIndex + photosPerPage;
 
         fetch(`${photoDirectory}?page=${page}`)
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
             .then(html => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, "text/html");
                 const links = Array.from(doc.querySelectorAll("a"));
 
-                // Disable access to pages with no photos
-                if (links.length === 0) {
-                    window.location.href = "./";
+                const paginatedLinks = links.slice(startIndex, endIndex);
+
+                if (paginatedLinks.length === 0) {
+                    window.location.href = "/404.html";
                     return;
                 }
-
-                const paginatedLinks = links.slice(startIndex, endIndex);
 
                 gallery.innerHTML = "";
 
