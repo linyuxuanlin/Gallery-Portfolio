@@ -8,74 +8,76 @@ document.addEventListener("DOMContentLoaded", function() {
     const photosPerPage = 18;
     const photoDirectory = "./photo/";
 
-    function loadPhotos(page) {
+    async function loadPhotos(page) {
         const startIndex = (page - 1) * photosPerPage;
         const endIndex = startIndex + photosPerPage;
 
-        fetch(photoDirectory)
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, "text/html");
-                const links = Array.from(doc.querySelectorAll("a"));
+        const response = await fetch(photoDirectory);
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const links = Array.from(doc.querySelectorAll("a"));
 
-                // Filter out non-image files and sort by modification date in descending order
-                const imageLinks = links
-                    .filter(link => link.href.match(/\.(jpg|jpeg|png)$/i))
-                    .sort((a, b) => {
-                        const aModified = new Date(a.lastModified);
-                        const bModified = new Date(b.lastModified);
-                        return bModified - aModified;
-                    });
+        // Filter out non-image files and sort by modification date in descending order
+        const imageLinks = links
+            .filter(link => link.href.match(/\.(jpg|jpeg|png)$/i))
+            .sort((a, b) => {
+                const aModified = new Date(a.lastModified);
+                const bModified = new Date(b.lastModified);
+                return bModified - aModified;
+            });
 
-                const paginatedLinks = imageLinks.slice(startIndex, endIndex);
+        const paginatedLinks = imageLinks.slice(startIndex, endIndex);
 
-                gallery.innerHTML = "";
+        gallery.innerHTML = "";
 
-                paginatedLinks.forEach(link => {
-                    const imgSrc = link.href;
-                    const imgContainer = document.createElement("div");
-                    imgContainer.classList.add("img-container");
+        for (const link of paginatedLinks) {
+            const imgSrc = link.href;
+            const imgContainer = document.createElement("div");
+            imgContainer.classList.add("img-container");
 
-                    const img = document.createElement("img");
-                    img.src = imgSrc;
+            const img = document.createElement("img");
+            img.src = imgSrc;
 
-                    const overlay = document.createElement("div");
-                    overlay.classList.add("img-overlay");
-                    overlay.innerHTML = "<h3>Click to enlarge</h3>";
+            const overlay = document.createElement("div");
+            overlay.classList.add("img-overlay");
+            overlay.innerHTML = "<h3>Click to enlarge</h3>";
 
-                    imgContainer.appendChild(img);
-                    imgContainer.appendChild(overlay);
-                    gallery.appendChild(imgContainer);
-                });
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(overlay);
+            gallery.appendChild(imgContainer);
 
-                currentPageSpan.textContent = `Page ${page}`;
+            // Wait for image to load
+            await new Promise(resolve => {
+                img.onload = resolve;
+            });
+        }
 
-                // Update URL only if it's not the first page
-                if (page > 1) {
-                    history.pushState(null, null, `?page=${page}`);
-                } else {
-                    history.pushState(null, null, window.location.pathname);
-                }
+        currentPageSpan.textContent = `Page ${page}`;
 
-                // Disable or enable pagination buttons based on availability of photos
-                if (imageLinks.length <= endIndex) {
-                    nextPageBtn.disabled = true;
-                    nextPageBtn.classList.add("disabled");
-                } else {
-                    nextPageBtn.disabled = false;
-                    nextPageBtn.classList.remove("disabled");
-                }
+        // Update URL only if it's not the first page
+        if (page > 1) {
+            history.pushState(null, null, `?page=${page}`);
+        } else {
+            history.pushState(null, null, window.location.pathname);
+        }
 
-                if (page === 1) {
-                    prevPageBtn.disabled = true;
-                    prevPageBtn.classList.add("disabled");
-                } else {
-                    prevPageBtn.disabled = false;
-                    prevPageBtn.classList.remove("disabled");
-                }
-            })
-            .catch(error => console.error("Error fetching photos:", error));
+        // Disable or enable pagination buttons based on availability of photos
+        if (imageLinks.length <= endIndex) {
+            nextPageBtn.disabled = true;
+            nextPageBtn.classList.add("disabled");
+        } else {
+            nextPageBtn.disabled = false;
+            nextPageBtn.classList.remove("disabled");
+        }
+
+        if (page === 1) {
+            prevPageBtn.disabled = true;
+            prevPageBtn.classList.add("disabled");
+        } else {
+            prevPageBtn.disabled = false;
+            prevPageBtn.classList.remove("disabled");
+        }
     }
 
     function goToPrevPage() {
@@ -101,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     loadPhotos(currentPage);
-    
+
     // Dynamically calculate number of columns based on window width
     function calculateColumns() {
         const windowWidth = window.innerWidth;
