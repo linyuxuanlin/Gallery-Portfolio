@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const img = document.createElement("img");
             img.src = imgSrc;
+            img.style.opacity = 0; // Start with opacity 0 for fade-in effect
 
             const overlay = document.createElement("div");
             overlay.classList.add("img-overlay");
@@ -47,9 +48,19 @@ document.addEventListener("DOMContentLoaded", function() {
             imgContainer.appendChild(overlay);
             gallery.appendChild(imgContainer);
 
+            // Fade in image
+            img.onload = () => {
+                img.style.transition = "opacity 0.5s";
+                img.style.opacity = 1;
+            };
+
             // Wait for image to load
             await new Promise(resolve => {
-                img.onload = resolve;
+                img.onload = () => {
+                    img.style.transition = "opacity 0.5s";
+                    img.style.opacity = 1;
+                    resolve();
+                };
             });
         }
 
@@ -107,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Dynamically calculate number of columns based on window width
     function calculateColumns() {
         const windowWidth = window.innerWidth;
-        let columns = Math.floor(windowWidth / 200); // Minimum width for each image container is 300px
+        let columns = Math.floor(windowWidth / 200); // Minimum width for each image container is 200px
         columns = Math.max(2, Math.min(columns, 8)); // Ensure minimum of 2 and maximum of 8 columns
         gallery.style.columnCount = columns;
     }
