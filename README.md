@@ -1,5 +1,16 @@
 # Gallery-Portfolio
 
+## 部署步骤
+
+1. 将 `.env_template` 改名为 `.env`，并修改其中的配置
+2. 使用以下方法部署：
+
+```console
+npm init -y
+npm install express aws-sdk dotenv
+node server.js
+```
+
 ## Progress Flow
 
 - [x] 正常显示 Cloudflare R2 bucket 某个路径下的所有图片
