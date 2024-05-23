@@ -40,7 +40,12 @@ async function checkAndCreateThumbnail(key) {
         });
       });
 
-      const thumbnailBuffer = await sharp(imageBuffer).resize(200).toBuffer();
+      const imageMetadata = await sharp(imageBuffer).metadata();
+      const thumbnailBuffer = await sharp(imageBuffer)
+        .rotate() // This will use the EXIF Orientation tag to rotate the image if necessary
+        .resize(200)
+        .withMetadata({ orientation: imageMetadata.orientation }) // Ensure the orientation is preserved
+        .toBuffer();
 
       const uploadParams = {
         Bucket: BUCKET_NAME,
