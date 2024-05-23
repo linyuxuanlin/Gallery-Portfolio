@@ -57,7 +57,8 @@ footer {
     text-align: center;
     padding: 10px 0;
     margin-top: auto; /* Pushes footer to the bottom */
-    display: none; /* Hide initially */
+    opacity: 0; /* Start hidden */
+    transition: opacity 1s; /* Fade-in effect */
 }
 
 footer a {
@@ -83,6 +84,19 @@ footer a {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
+    opacity: 0;
+    transform: translateY(100px); /* Start below the view */
+}
+
+.gallery img.loaded {
+    animation: fall-in 0.5s forwards; /* Apply the animation */
+}
+
+@keyframes fall-in {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .gallery img.loaded:hover {
@@ -95,6 +109,22 @@ footer a {
     display: flex;
     flex-direction: column;
     gap: 20px; /* Ensure sufficient space between columns */
+}
+
+.load-more {
+    padding: 10px 20px;
+    margin: 20px 0;
+    background-color: #004d40; /* 深绿色 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 1s; /* Fade-in effect for the button */
+    opacity: 0; /* Start hidden */
+}
+
+.load-more:hover {
+    background-color: #00332e; /* Slightly darker green */
 }
 
 /* Modal styles */

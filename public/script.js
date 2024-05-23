@@ -1,6 +1,10 @@
 const galleryElement = document.getElementById('gallery');
 const columns = 3;
 const columnElements = [];
+const loadMoreButton = document.getElementById('load-more');
+let imageUrls = [];
+let currentIndex = 0;
+const imagesPerLoad = 10;
 
 // 创建列元素
 for (let i = 0; i < columns; i++) {
@@ -10,34 +14,40 @@ for (let i = 0; i < columns; i++) {
     galleryElement.appendChild(column);
 }
 
-// 从服务器获取图片 URL 并逐一展示
+// 从服务器获取所有图片 URL
 fetch('/images')
     .then(response => response.json())
-    .then(imageUrls => {
-        let index = 0;
-
-        function loadNextImage() {
-            if (index < imageUrls.length) {
-                const img = document.createElement('img');
-                img.src = imageUrls[index];
-                img.alt = `Photo ${index + 1}`;
-                img.onload = function() {
-                    this.classList.add('loaded'); // Add loaded class when image is loaded
-                    columnElements[index % columns].appendChild(img);
-                    index++;
-                    loadNextImage();
-                };
-                img.onerror = () => {
-                    console.error(`Error loading image: ${imageUrls[index]}`);
-                    index++;
-                    loadNextImage();
-                };
-            }
-        }
-
-        loadNextImage();
+    .then(urls => {
+        imageUrls = urls;
+        loadNextImages();
     })
     .catch(error => console.error('Error loading images:', error));
+
+// 加载下一批图片
+function loadNextImages() {
+    const endIndex = Math.min(currentIndex + imagesPerLoad, imageUrls.length);
+    for (let i = currentIndex; i < endIndex; i++) {
+        const img = document.createElement('img');
+        img.src = imageUrls[i];
+        img.alt = `Photo ${i + 1}`;
+        img.onload = function() {
+            this.classList.add('loaded'); // Add loaded class when image is loaded
+            columnElements[i % columns].appendChild(img);
+        };
+        img.onclick = function() {
+            openModal(img.src, img.alt);
+        };
+        img.onerror = () => {
+            console.error(`Error loading image: ${imageUrls[i]}`);
+        };
+    }
+    currentIndex = endIndex;
+    if (currentIndex >= imageUrls.length) {
+        loadMoreButton.style.display = 'none';
+    }
+}
+
+loadMoreButton.onclick = loadNextImages;
 
 // 模态窗口逻辑
 const modal = document.getElementById('myModal');
@@ -102,10 +112,12 @@ themeToggle.addEventListener('click', () => {
     }
 });
 
-// Add footer dynamically
+// Add footer and load more button dynamically
 window.addEventListener('load', () => {
     const footer = document.createElement('footer');
     footer.innerHTML = '<p>© 2024 Power\'s Wiki | <a href="https://wiki-power.com" target="_blank">Power\'s Wiki</a></p>';
     document.body.appendChild(footer);
-    footer.style.display = 'block'; // Show footer after it is appended
+    footer.style.opacity = '1'; // Fade-in effect for footer
+    
+    loadMoreButton.style.opacity = '1'; // Fade-in effect for load more button
 });
