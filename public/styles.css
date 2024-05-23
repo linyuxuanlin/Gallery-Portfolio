@@ -1,3 +1,4 @@
+/* Layout styles */
 body {
     font-family: 'Roboto', Arial, sans-serif;
     display: flex;
@@ -66,47 +67,6 @@ footer a {
     text-decoration: none;
 }
 
-.gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px; /* Increase gap to prevent overlap */
-    width: 80%;
-    max-width: 1200px;
-    margin: 100px auto 20px; /* Adjust for header */
-    padding: 10px;
-    flex-grow: 1; /* Ensure gallery takes up available space */
-    align-items: flex-start; /* Align items to the top */
-    opacity: 0; /* Start hidden */
-    transition: opacity 1s; /* Fade-in effect */
-}
-
-.gallery img {
-    width: 100%;
-    object-fit: cover;
-    border-radius: 10px; /* Increase the roundness */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    transform: translateY(0);
-}
-
-.gallery img.loaded {
-    opacity: 1;
-    transition: opacity 0.3s ease-in-out;
-}
-
-.gallery img.loaded:hover {
-    transform: translate(1px, -3px); /* Move to right and up */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Ensure sufficient space between columns */
-}
-
 .load-more {
     padding: 10px 20px;
     margin: 20px 0;
@@ -123,61 +83,6 @@ footer a {
     background-color: #00332e; /* Slightly darker green */
 }
 
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.9);
-}
-
-.modal-content {
-    margin: auto;
-    margin-top: 100px; /* Top margin */
-    display: block;
-    max-width: 90%;
-    max-height: 80%; /* Adjust to accommodate caption and exif-info */
-    width: auto;
-    height: auto;
-}
-
-.close {
-    position: absolute;
-    top: 15px;
-    right: 35px;
-    color: #fff;
-    font-size: 40px;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.close:hover,
-.close:focus {
-    color: #bbb;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-#caption, #exif-info {
-    margin: auto;
-    display: block;
-    width: 90%;
-    max-width: 700px;
-    text-align: center;
-    color: #ccc;
-    padding: 10px 0;
-}
-
-/* Disable scrolling */
-.no-scroll {
-    overflow: hidden;
-}
-
 /* Dark theme styles */
 body.dark {
     background-color: #121212;
@@ -187,17 +92,4 @@ body.dark {
 body.dark header,
 body.dark footer {
     background-color: #1E1E1E;
-}
-
-body.dark .gallery img {
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
-}
-
-body.dark .close {
-    color: #e0e0e0;
-}
-
-body.dark #caption,
-body.dark #exif-info {
-    color: #e0e0e0;
 }
