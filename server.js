@@ -1,5 +1,5 @@
 const express = require('express');
-const AWS = require('aws-sdk');
+const { S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -8,11 +8,13 @@ const app = express();
 const port = 3000;
 
 // 配置 AWS SDK
-const r2 = new AWS.S3({
-    endpoint: new AWS.Endpoint(process.env.R2_ENDPOINT),
-    accessKeyId: process.env.R2_ACCESS_KEY_ID,
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+const s3Client = new S3Client({
     region: process.env.R2_REGION,
+    endpoint: process.env.R2_ENDPOINT,
+    credentials: {
+        accessKeyId: process.env.R2_ACCESS_KEY_ID,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+    }
 });
 
 // 处理获取图片列表的请求
@@ -22,7 +24,8 @@ app.get('/images', async (req, res) => {
             Bucket: process.env.R2_BUCKET_NAME,
             Prefix: 'gallery/'
         };
-        const data = await r2.listObjectsV2(params).promise();
+        const command = new ListObjectsV2Command(params);
+        const data = await s3Client.send(command);
         const imageUrls = data.Contents.map(item => {
             return `${process.env.IMAGE_BASE_URL}/${item.Key}`;
         });

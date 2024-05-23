@@ -7,7 +7,7 @@
 
 ```console
 npm init -y
-npm install express aws-sdk dotenv
+npm install @aws-sdk/client-s3 dotenv express
 node server.js
 ```
 
