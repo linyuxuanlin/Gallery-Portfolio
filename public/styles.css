@@ -76,6 +76,8 @@ footer a {
     padding: 10px;
     flex-grow: 1; /* Ensure gallery takes up available space */
     align-items: flex-start; /* Align items to the top */
+    opacity: 0; /* Start hidden */
+    transition: opacity 1s; /* Fade-in effect */
 }
 
 .gallery img {
@@ -85,7 +87,6 @@ footer a {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-    opacity: 0; /* Start hidden */
     transform: translateY(0);
 }
 

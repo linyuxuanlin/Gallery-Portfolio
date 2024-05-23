@@ -5,6 +5,7 @@ const loadMoreButton = document.getElementById('load-more');
 let imageUrls = [];
 let currentIndex = 0;
 const imagesPerLoad = 10;
+let imagesLoadedCount = 0;
 
 // 创建列元素
 for (let i = 0; i < columns; i++) {
@@ -47,6 +48,8 @@ function loadNextImages() {
             this.classList.add('loaded'); // Add loaded class when image is loaded
             const shortestColumn = getShortestColumn();
             columnElements[shortestColumn].appendChild(img);
+            imagesLoadedCount++;
+            checkIfAllImagesLoaded();
         };
         img.onclick = function() {
             openModal(img.src, img.alt);
@@ -58,6 +61,16 @@ function loadNextImages() {
     currentIndex = endIndex;
     if (currentIndex >= imageUrls.length) {
         loadMoreButton.style.display = 'none';
+    }
+}
+
+// 检查是否所有图片都加载完成
+function checkIfAllImagesLoaded() {
+    const totalImagesToLoad = Math.min(currentIndex, imageUrls.length);
+    if (imagesLoadedCount >= totalImagesToLoad) {
+        document.querySelector('.gallery').style.opacity = '1'; // Show gallery
+        document.querySelector('footer').style.opacity = '1'; // Show footer
+        loadMoreButton.style.opacity = '1'; // Show load more button
     }
 }
 
@@ -126,20 +139,9 @@ themeToggle.addEventListener('click', () => {
     }
 });
 
-// Add footer and load more button dynamically
+// Add footer dynamically
 window.addEventListener('load', () => {
     const footer = document.createElement('footer');
     footer.innerHTML = '<p>© 2024 Power\'s Wiki | <a href="https://wiki-power.com" target="_blank">Power\'s Wiki</a></p>';
     document.body.appendChild(footer);
-    footer.style.opacity = '1'; // Fade-in effect for footer
-    
-    loadMoreButton.style.opacity = '1'; // Fade-in effect for load more button
-});
-
-// Add loaded class to images after window load to enable hover effect
-window.addEventListener('load', () => {
-    const images = document.querySelectorAll('.gallery img');
-    images.forEach(img => {
-        img.classList.add('loaded');
-    });
 });
