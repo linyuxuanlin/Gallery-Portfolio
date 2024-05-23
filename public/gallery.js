@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = currentIndex; i < endIndex; i++) {
             const img = document.createElement('img');
-            img.src = imageUrls[i];
+            img.src = imageUrls[i].thumbnail;
             img.alt = `Photo ${i + 1}`;
             img.onload = function() {
                 this.classList.add('loaded'); // Add loaded class when image is loaded
@@ -62,10 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
             img.onclick = function() {
-                openModal(img.src, img.alt);
+                openModal(imageUrls[i].original, img.alt);
             };
             img.onerror = () => {
-                console.error(`Error loading image: ${imageUrls[i]}`);
+                console.error(`Error loading image: ${imageUrls[i].thumbnail}`);
                 loadingImagesCount--;
                 if (loadingImagesCount === 0) {
                     setLoadingState(false);
