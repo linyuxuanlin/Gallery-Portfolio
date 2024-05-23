@@ -21,10 +21,8 @@ fetch('/images')
                 const img = document.createElement('img');
                 img.src = imageUrls[index];
                 img.alt = `Photo ${index + 1}`;
-                img.onclick = function() {
-                    openModal(img.src, img.alt);
-                };
-                img.onload = () => {
+                img.onload = function() {
+                    this.classList.add('loaded'); // Add loaded class when image is loaded
                     columnElements[index % columns].appendChild(img);
                     index++;
                     loadNextImage();

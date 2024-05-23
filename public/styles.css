@@ -68,7 +68,7 @@ footer a {
 .gallery {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 20px; /* Increase gap to prevent overlap */
     width: 80%;
     max-width: 1200px;
     margin: 100px auto 20px; /* Adjust for header */
@@ -79,16 +79,22 @@ footer a {
 .gallery img {
     width: 100%;
     object-fit: cover;
-    border-radius: 5px;
+    border-radius: 10px; /* Increase the roundness */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.gallery img.loaded:hover {
+    transform: translate(1px, -3px); /* Move to right and up */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .column {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px; /* Ensure sufficient space between columns */
 }
 
 /* Modal styles */
