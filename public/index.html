@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>照片瀑布流</title>
+    <title>Gallery-Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body>
-    <h1>我的照片瀑布流</h1>
+    <header>
+        <h1>Gallery-Portfolio</h1>
+        <button id="theme-toggle" class="material-icons">brightness_4</button>
+    </header>
     <div class="gallery" id="gallery"></div>
 
     <!-- Modal for image display -->
@@ -17,6 +21,10 @@
         <div id="caption"></div>
         <div id="exif-info"></div>
     </div>
+
+    <footer>
+        <p>© 2024 Power's Wiki | <a href="https://wiki-power.com" target="_blank">Power's Wiki</a></p>
+    </footer>
 
     <script src="script.js"></script>
     <script src="exif.js"></script>

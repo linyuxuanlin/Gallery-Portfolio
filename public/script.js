@@ -91,3 +91,15 @@ document.addEventListener('keydown', function(event) {
         closeModal();
     }
 });
+
+// Theme toggle logic
+const themeToggle = document.getElementById('theme-toggle');
+
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    if (document.body.classList.contains('dark')) {
+        themeToggle.textContent = 'brightness_7';
+    } else {
+        themeToggle.textContent = 'brightness_4';
+    }
+});

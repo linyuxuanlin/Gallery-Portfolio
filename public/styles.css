@@ -1,12 +1,56 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-h1 {
-    margin: 20px 0;
+header {
+    width: 100%;
+    background-color: #004d40; /* 深绿色 */
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 24px;
+    margin-right: 50px;
+}
+
+footer {
+    width: 100%;
+    background-color: #004d40; /* 深绿色 */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
 }
 
 .gallery {
@@ -15,7 +59,8 @@ h1 {
     gap: 10px;
     width: 80%;
     max-width: 1200px;
-    margin: auto;
+    margin: 80px auto 60px; /* Adjust for header and footer */
+    padding: 10px;
 }
 
 .gallery img {
@@ -48,7 +93,7 @@ h1 {
 
 .modal-content {
     margin: auto;
-    margin-top: 5%; /* Top margin */
+    margin-top: 100px; /* Top margin */
     display: block;
     max-width: 90%;
     max-height: 80%; /* Adjust to accommodate caption and exif-info */
@@ -86,4 +131,28 @@ h1 {
 /* Disable scrolling */
 .no-scroll {
     overflow: hidden;
+}
+
+/* Dark theme styles */
+body.dark {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark header,
+body.dark footer {
+    background-color: #1E1E1E;
+}
+
+body.dark .gallery img {
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+body.dark .close {
+    color: #e0e0e0;
+}
+
+body.dark #caption,
+body.dark #exif-info {
+    color: #e0e0e0;
 }
