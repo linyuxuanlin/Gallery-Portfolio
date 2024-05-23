@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const columns = 3;
     const columnElements = [];
     const loadMoreButton = document.getElementById('load-more');
+    const loadingElement = document.getElementById('loading');
     let imageUrls = [];
     let currentIndex = 0;
     const imagesPerLoad = 10;
@@ -85,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.gallery').style.opacity = '1'; // Show gallery
             document.querySelector('footer').style.opacity = '1'; // Show footer
             loadMoreButton.style.opacity = '1'; // Show load more button
+            loadingElement.classList.add('hidden'); // Hide loading animation
         }
     }
 
