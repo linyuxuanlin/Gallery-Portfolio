@@ -10,15 +10,30 @@ for (let i = 0; i < columns; i++) {
     galleryElement.appendChild(column);
 }
 
-// 从服务器获取图片 URL 并展示
+// 从服务器获取图片 URL 并逐一展示
 fetch('/images')
     .then(response => response.json())
     .then(imageUrls => {
-        imageUrls.forEach((url, index) => {
-            const img = document.createElement('img');
-            img.src = url;
-            img.alt = `Photo ${index + 1}`;
-            columnElements[index % columns].appendChild(img);
-        });
+        let index = 0;
+
+        function loadNextImage() {
+            if (index < imageUrls.length) {
+                const img = document.createElement('img');
+                img.src = imageUrls[index];
+                img.alt = `Photo ${index + 1}`;
+                img.onload = () => {
+                    columnElements[index % columns].appendChild(img);
+                    index++;
+                    loadNextImage();
+                };
+                img.onerror = () => {
+                    console.error(`Error loading image: ${imageUrls[index]}`);
+                    index++;
+                    loadNextImage();
+                };
+            }
+        }
+
+        loadNextImage();
     })
     .catch(error => console.error('Error loading images:', error));
