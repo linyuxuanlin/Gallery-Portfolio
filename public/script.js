@@ -21,6 +21,9 @@ fetch('/images')
                 const img = document.createElement('img');
                 img.src = imageUrls[index];
                 img.alt = `Photo ${index + 1}`;
+                img.onclick = function() {
+                    openModal(img.src, img.alt);
+                };
                 img.onload = () => {
                     columnElements[index % columns].appendChild(img);
                     index++;
@@ -37,3 +40,35 @@ fetch('/images')
         loadNextImage();
     })
     .catch(error => console.error('Error loading images:', error));
+
+// 模态窗口逻辑
+const modal = document.getElementById('myModal');
+const modalImg = document.getElementById('img01');
+const captionText = document.getElementById('caption');
+const span = document.getElementsByClassName('close')[0];
+
+function openModal(src, alt) {
+    modal.style.display = 'block';
+    modalImg.src = src;
+    captionText.innerHTML = alt;
+}
+
+span.onclick = function() {
+    closeModal();
+}
+
+modal.onclick = function(event) {
+    if (event.target === modal || event.target === modalImg) {
+        closeModal();
+    }
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+}
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
