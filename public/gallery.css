@@ -19,13 +19,13 @@
     border-radius: 10px; /* Increase the roundness */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+    opacity: 0; /* Start hidden */
+    transition: transform 0.3s, box-shadow 0.3s, opacity 1s; /* Add opacity transition */
     transform: translateY(0);
 }
 
 .gallery img.loaded {
-    opacity: 1;
-    transition: opacity 0.3s ease-in-out;
+    opacity: 1; /* Fade in */
 }
 
 .gallery img.loaded:hover {
