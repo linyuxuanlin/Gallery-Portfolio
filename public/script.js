@@ -23,6 +23,19 @@ fetch('/images')
     })
     .catch(error => console.error('Error loading images:', error));
 
+// 获取最短列的索引
+function getShortestColumn() {
+    let minIndex = 0;
+    let minHeight = columnElements[0].offsetHeight;
+    for (let i = 1; i < columnElements.length; i++) {
+        if (columnElements[i].offsetHeight < minHeight) {
+            minHeight = columnElements[i].offsetHeight;
+            minIndex = i;
+        }
+    }
+    return minIndex;
+}
+
 // 加载下一批图片
 function loadNextImages() {
     const endIndex = Math.min(currentIndex + imagesPerLoad, imageUrls.length);
@@ -32,7 +45,8 @@ function loadNextImages() {
         img.alt = `Photo ${i + 1}`;
         img.onload = function() {
             this.classList.add('loaded'); // Add loaded class when image is loaded
-            columnElements[i % columns].appendChild(img);
+            const shortestColumn = getShortestColumn();
+            columnElements[shortestColumn].appendChild(img);
         };
         img.onclick = function() {
             openModal(img.src, img.alt);
@@ -120,4 +134,12 @@ window.addEventListener('load', () => {
     footer.style.opacity = '1'; // Fade-in effect for footer
     
     loadMoreButton.style.opacity = '1'; // Fade-in effect for load more button
+});
+
+// Add loaded class to images after window load to enable hover effect
+window.addEventListener('load', () => {
+    const images = document.querySelectorAll('.gallery img');
+    images.forEach(img => {
+        img.classList.add('loaded');
+    });
 });

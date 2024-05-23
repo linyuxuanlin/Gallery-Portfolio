@@ -75,6 +75,7 @@ footer a {
     margin: 100px auto 20px; /* Adjust for header */
     padding: 10px;
     flex-grow: 1; /* Ensure gallery takes up available space */
+    align-items: flex-start; /* Align items to the top */
 }
 
 .gallery img {
@@ -84,19 +85,13 @@ footer a {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
-    opacity: 0;
-    transform: translateY(100px); /* Start below the view */
+    opacity: 0; /* Start hidden */
+    transform: translateY(0);
 }
 
 .gallery img.loaded {
-    animation: fall-in 0.5s forwards; /* Apply the animation */
-}
-
-@keyframes fall-in {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
 }
 
 .gallery img.loaded:hover {
