@@ -1,11 +1,9 @@
 {
-  "name": "gallery-portfolio-2",
+  "name": "gallery-portfolio",
   "version": "1.0.0",
-  "description": "1. 将 `.env_template` 改名为 `.env`，并修改其中的配置\r 2. 使用以下方法部署：",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node api/images.js"
   },
   "keywords": [],
   "author": "",
