@@ -45,12 +45,30 @@ fetch('/images')
 const modal = document.getElementById('myModal');
 const modalImg = document.getElementById('img01');
 const captionText = document.getElementById('caption');
+const exifInfo = document.getElementById('exif-info');
 const span = document.getElementsByClassName('close')[0];
 
 function openModal(src, alt) {
     modal.style.display = 'block';
+    document.body.classList.add('no-scroll');
     modalImg.src = src;
     captionText.innerHTML = alt;
+    exifInfo.innerHTML = ''; // Clear previous EXIF info
+
+    // Fetch and display EXIF data
+    modalImg.onload = function() {
+        EXIF.getData(modalImg, function() {
+            const aperture = EXIF.getTag(this, 'FNumber');
+            const exposureTime = EXIF.getTag(this, 'ExposureTime');
+            const iso = EXIF.getTag(this, 'ISOSpeedRatings');
+
+            exifInfo.innerHTML = `
+                <p>光圈: ${aperture ? `f/${aperture}` : 'N/A'}</p>
+                <p>快门: ${exposureTime ? `${exposureTime}s` : 'N/A'}</p>
+                <p>ISO: ${iso ? iso : 'N/A'}</p>
+            `;
+        });
+    };
 }
 
 span.onclick = function() {
@@ -58,13 +76,14 @@ span.onclick = function() {
 }
 
 modal.onclick = function(event) {
-    if (event.target === modal || event.target === modalImg) {
+    if (event.target === modal) {
         closeModal();
     }
 }
 
 function closeModal() {
     modal.style.display = 'none';
+    document.body.classList.remove('no-scroll');
 }
 
 document.addEventListener('keydown', function(event) {
