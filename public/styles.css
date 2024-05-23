@@ -7,6 +7,7 @@ body {
     padding: 0;
     background-color: #f0f0f0;
     transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh; /* Ensures footer is at the bottom */
 }
 
 header {
@@ -34,7 +35,7 @@ header button {
     color: white;
     cursor: pointer;
     font-size: 24px;
-    margin-right: 50px;
+    margin-right: 20px;
 }
 
 footer {
@@ -43,9 +44,8 @@ footer {
     color: white;
     text-align: center;
     padding: 10px 0;
-    position: fixed;
-    bottom: 0;
-    left: 0;
+    margin-top: auto; /* Pushes footer to the bottom */
+    display: none; /* Hide initially */
 }
 
 footer a {
@@ -59,8 +59,9 @@ footer a {
     gap: 10px;
     width: 80%;
     max-width: 1200px;
-    margin: 80px auto 60px; /* Adjust for header and footer */
+    margin: 100px auto 20px; /* Adjust for header */
     padding: 10px;
+    flex-grow: 1; /* Ensure gallery takes up available space */
 }
 
 .gallery img {
