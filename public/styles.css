@@ -77,10 +77,30 @@ footer a {
     cursor: pointer;
     transition: background-color 0.3s, opacity 1s; /* Fade-in effect for the button */
     opacity: 0; /* Start hidden */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.load-more:hover {
-    background-color: #00332e; /* Slightly darker green */
+.load-more.loading {
+    background-color: #a0a0a0; /* 灰色 */
+    cursor: not-allowed;
+}
+
+.load-more.loading::after {
+    content: "";
+    border: 2px solid #fff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    margin-left: 10px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Dark theme styles */

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentIndex = 0;
     const imagesPerLoad = 10;
     let imagesLoadedCount = 0;
+    let loadingImagesCount = 0;
 
     // 创建列元素
     for (let i = 0; i < columns; i++) {
@@ -40,7 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 加载下一批图片
     function loadNextImages() {
+        setLoadingState(true);
         const endIndex = Math.min(currentIndex + imagesPerLoad, imageUrls.length);
+        loadingImagesCount = endIndex - currentIndex;
+
         for (let i = currentIndex; i < endIndex; i++) {
             const img = document.createElement('img');
             img.src = imageUrls[i];
@@ -50,13 +54,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 const shortestColumn = getShortestColumn();
                 columnElements[shortestColumn].appendChild(img);
                 imagesLoadedCount++;
-                checkIfAllImagesLoaded();
+                loadingImagesCount--;
+                if (loadingImagesCount === 0) {
+                    setLoadingState(false);
+                    checkIfAllImagesLoaded();
+                }
             };
             img.onclick = function() {
                 openModal(img.src, img.alt);
             };
             img.onerror = () => {
                 console.error(`Error loading image: ${imageUrls[i]}`);
+                loadingImagesCount--;
+                if (loadingImagesCount === 0) {
+                    setLoadingState(false);
+                    checkIfAllImagesLoaded();
+                }
             };
         }
         currentIndex = endIndex;
@@ -72,6 +85,19 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.gallery').style.opacity = '1'; // Show gallery
             document.querySelector('footer').style.opacity = '1'; // Show footer
             loadMoreButton.style.opacity = '1'; // Show load more button
+        }
+    }
+
+    // 设置加载按钮状态
+    function setLoadingState(isLoading) {
+        if (isLoading) {
+            loadMoreButton.textContent = '加载中…';
+            loadMoreButton.classList.add('loading');
+            loadMoreButton.disabled = true;
+        } else {
+            loadMoreButton.textContent = '加载更多';
+            loadMoreButton.classList.remove('loading');
+            loadMoreButton.disabled = false;
         }
     }
 
