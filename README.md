@@ -7,7 +7,7 @@
 
 ```console
 npm init -y
-npm install @aws-sdk/client-s3 @aws-sdk/lib-storage sharp dotenv express
+npm install @aws-sdk/client-s3 sharp dotenv express
 node server.js
 ```
 
