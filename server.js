@@ -1,9 +1,9 @@
 const express = require('express');
 const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
-const exifParser = require('exif-parser');
 const sharp = require('sharp');
 const dotenv = require('dotenv');
 const path = require('path');
+const exifParser = require('exif-parser');
 
 dotenv.config();
 
@@ -28,10 +28,10 @@ const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 async function checkAndCreateThumbnail(key) {
   const thumbnailKey = `gallery/preview/${path.basename(key)}`;
   try {
-    await s3Client.send(new GetObjectCommand({ Bucket: BUCKET_NAME, Key: thumbnailKey }));
+    await s3Client.send(new HeadObjectCommand({ Bucket: BUCKET_NAME, Key: thumbnailKey }));
     return thumbnailKey;
   } catch (error) {
-    if (error.name === 'NoSuchKey') {
+    if (error.name === 'NotFound') {
       const imageBuffer = await s3Client.send(new GetObjectCommand({ Bucket: BUCKET_NAME, Key: key })).then(response => {
         return new Promise((resolve, reject) => {
           const chunks = [];
@@ -43,7 +43,7 @@ async function checkAndCreateThumbnail(key) {
 
       const thumbnailBuffer = await sharp(imageBuffer)
         .resize(200)
-        .withMetadata()  // This ensures that all EXIF data is included
+        .withMetadata()
         .toBuffer();
 
       const uploadParams = {
@@ -62,12 +62,11 @@ async function checkAndCreateThumbnail(key) {
 }
 
 async function getExifData(key) {
-  const headParams = {
+  const getObjectParams = {
     Bucket: BUCKET_NAME,
-    Key: key
+    Key: key,
   };
-  const headObject = await s3Client.send(new HeadObjectCommand(headParams));
-  const imageBuffer = await s3Client.send(new GetObjectCommand(headParams)).then(response => {
+  const imageBuffer = await s3Client.send(new GetObjectCommand(getObjectParams)).then(response => {
     return new Promise((resolve, reject) => {
       const chunks = [];
       response.Body.on('data', (chunk) => chunks.push(chunk));
@@ -80,17 +79,11 @@ async function getExifData(key) {
   return {
     FNumber: exifData.FNumber,
     ExposureTime: exifData.ExposureTime,
-    ISO: exifData.ISO
+    ISO: exifData.ISO,
   };
 }
 
-
-
 app.use(express.static('public'));
-
-app.get('/config', (req, res) => {
-  res.json({ IMAGE_BASE_URL: process.env.IMAGE_BASE_URL });
-});
 
 app.get('/images', async (req, res) => {
   try {
@@ -125,6 +118,9 @@ app.get('/exif/:key', async (req, res) => {
   }
 });
 
+app.get('/config', (req, res) => {
+  res.json({ IMAGE_BASE_URL: process.env.IMAGE_BASE_URL });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
