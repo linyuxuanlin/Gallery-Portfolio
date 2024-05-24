@@ -24,6 +24,8 @@ const s3Client = new S3Client({
 const BUCKET_NAME = process.env.R2_BUCKET_NAME;
 const IMAGE_BASE_URL = process.env.IMAGE_BASE_URL;
 
+const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+
 async function checkAndCreateThumbnail(key) {
   const thumbnailKey = `gallery/preview/${path.basename(key)}`;
   try {
@@ -40,11 +42,13 @@ async function checkAndCreateThumbnail(key) {
         });
       });
 
-      const imageMetadata = await sharp(imageBuffer).metadata();
+      const metadata = await sharp(imageBuffer).metadata();
+      const orientation = metadata.orientation;
+
       const thumbnailBuffer = await sharp(imageBuffer)
-        .rotate() // This will use the EXIF Orientation tag to rotate the image if necessary
         .resize(200)
-        .withMetadata({ orientation: imageMetadata.orientation }) // Ensure the orientation is preserved
+        .withMetadata({ orientation })
+        .rotate()
         .toBuffer();
 
       const uploadParams = {
@@ -68,7 +72,11 @@ app.get('/images', async (req, res) => {
   try {
     const images = await s3Client.send(new ListObjectsCommand({ Bucket: BUCKET_NAME, Prefix: 'gallery/' }));
     const imageUrls = await Promise.all(images.Contents.map(async (item) => {
-      if (item.Key.endsWith('/')) return null;
+      const itemExtension = path.extname(item.Key).toLowerCase();
+      const isFile = item.Key.split('/').length === 2;
+      if (!validImageExtensions.includes(itemExtension) || !isFile) {
+        return null;
+      }
       const thumbnailKey = await checkAndCreateThumbnail(item.Key);
       return {
         original: `${IMAGE_BASE_URL}/${item.Key}`,
