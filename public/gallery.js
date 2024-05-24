@@ -128,20 +128,24 @@ document.addEventListener('DOMContentLoaded', () => {
         function openModal(src, alt) {
             modal.style.display = 'block';
             document.body.classList.add('no-scroll');
-            modalImg.src = src;
             captionText.innerHTML = alt;
             exifInfo.innerHTML = 'Loading EXIF data...'; // Placeholder text
 
+            // Fetch EXIF data first
             fetch(`/exif/${encodeURIComponent(src.replace(IMAGE_BASE_URL + '/', ''))}`)
                 .then(response => response.json())
                 .then(data => {
                     exifInfo.innerHTML = `
                         <p>光圈: ${data.FNumber ? `f/${data.FNumber}` : 'N/A'}  ·  快门: ${data.ExposureTime ? `${data.ExposureTime}s` : 'N/A'}  ·  ISO: ${data.ISO ? data.ISO : 'N/A'}</p>
                     `;
+                    // Load the image after fetching EXIF data
+                    modalImg.src = src;
                 })
                 .catch(error => {
                     console.error('Error fetching EXIF data:', error);
                     exifInfo.innerHTML = 'Error loading EXIF data';
+                    // Load the image even if EXIF data fails to load
+                    modalImg.src = src;
                 });
         }
 
