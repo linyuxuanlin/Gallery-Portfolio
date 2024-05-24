@@ -1,5 +1,6 @@
 const express = require('express');
-const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsCommand } = require('@aws-sdk/client-s3');
+const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
+const exifParser = require('exif-parser');
 const sharp = require('sharp');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -60,7 +61,36 @@ async function checkAndCreateThumbnail(key) {
   }
 }
 
+async function getExifData(key) {
+  const headParams = {
+    Bucket: BUCKET_NAME,
+    Key: key
+  };
+  const headObject = await s3Client.send(new HeadObjectCommand(headParams));
+  const imageBuffer = await s3Client.send(new GetObjectCommand(headParams)).then(response => {
+    return new Promise((resolve, reject) => {
+      const chunks = [];
+      response.Body.on('data', (chunk) => chunks.push(chunk));
+      response.Body.on('end', () => resolve(Buffer.concat(chunks)));
+      response.Body.on('error', reject);
+    });
+  });
+  const parser = exifParser.create(imageBuffer);
+  const exifData = parser.parse().tags;
+  return {
+    FNumber: exifData.FNumber,
+    ExposureTime: exifData.ExposureTime,
+    ISO: exifData.ISO
+  };
+}
+
+
+
 app.use(express.static('public'));
+
+app.get('/config', (req, res) => {
+  res.json({ IMAGE_BASE_URL: process.env.IMAGE_BASE_URL });
+});
 
 app.get('/images', async (req, res) => {
   try {
@@ -83,6 +113,18 @@ app.get('/images', async (req, res) => {
     res.status(500).send('Error loading images');
   }
 });
+
+app.get('/exif/:key', async (req, res) => {
+  const key = decodeURIComponent(req.params.key);
+  try {
+    const exifData = await getExifData(key);
+    res.json(exifData);
+  } catch (error) {
+    console.error('Error getting EXIF data:', error);
+    res.status(500).send('Error getting EXIF data');
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

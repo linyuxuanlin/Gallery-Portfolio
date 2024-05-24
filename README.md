@@ -7,7 +7,7 @@
 
 ```console
 npm init -y
-npm install @aws-sdk/client-s3 sharp dotenv express
+npm install @aws-sdk/client-s3 sharp dotenv express exif-parser
 node server.js
 ```
 
@@ -24,5 +24,5 @@ node server.js
 - [ ] 每页最少显示 2 列图片，并随着页面宽度的增加，逐步增加显示的列数，最多显示 6 列图片，在页面宽度增加的时候保持列宽不变；如果显示到 6 列之后屏幕宽度仍然继续增加，则在页面左右两侧增加空白。
 - [x] 创建缩略图以供预览加载
 - [ ] 加入标签系统，使用标签筛选图片
-- [ ] 无法根据生成缩略图 exif 中的 orientation 做出对应的旋转（应该是读取 exif 出现的问题
+- [x] 压缩图片的过程中保留原图的metadata信息，使图片的旋转方向正常
 - [x] 在 R2 目录下所有图片都加载完成后，把“加载更多”按钮的文字替换为“已全部加载”，并变成灰色不可点的状态
