@@ -1,10 +1,8 @@
 const express = require('express');
 const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsCommand } = require('@aws-sdk/client-s3');
-const { Upload } = require('@aws-sdk/lib-storage');
 const sharp = require('sharp');
 const dotenv = require('dotenv');
 const path = require('path');
-const fs = require('fs');
 
 dotenv.config();
 
@@ -42,13 +40,9 @@ async function checkAndCreateThumbnail(key) {
         });
       });
 
-      const metadata = await sharp(imageBuffer).metadata();
-      const orientation = metadata.orientation;
-
       const thumbnailBuffer = await sharp(imageBuffer)
         .resize(200)
-        .withMetadata({ orientation })
-        .rotate()
+        .withMetadata()  // This ensures that all EXIF data is included
         .toBuffer();
 
       const uploadParams = {
