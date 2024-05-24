@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
                 img.onclick = function() {
-                    openModal(imageUrls[i].original, img.alt);
+                    openModal(imageUrls[i].original);
                 };
                 img.onerror = () => {
                     console.error(`Error loading image: ${imageUrls[i].thumbnail}`);
@@ -120,16 +120,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 模态窗口逻辑
         const modal = document.getElementById('myModal');
+        const modalContent = document.querySelector('.modal-content');
         const modalImg = document.getElementById('img01');
-        const captionText = document.getElementById('caption');
         const exifInfo = document.getElementById('exif-info');
         const span = document.getElementsByClassName('close')[0];
 
-        function openModal(src, alt) {
+        function openModal(src) {
             modal.style.display = 'block';
             document.body.classList.add('no-scroll');
-            //captionText.innerHTML = alt;
-            exifInfo.innerHTML = 'Loading original photo and EXIF data...'; // Placeholder text
+            exifInfo.innerHTML = 'Loading EXIF data...'; // Placeholder text
 
             // Fetch EXIF data first
             fetch(`/exif/${encodeURIComponent(src.replace(IMAGE_BASE_URL + '/', ''))}`)
@@ -153,10 +152,12 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }
 
-        modal.onclick = function(event) {
-            if (event.target === modal) {
-                closeModal();
-            }
+        modalContent.onclick = function(event) {
+            event.stopPropagation(); // Prevent click on image from closing modal
+        }
+
+        modal.onclick = function() {
+            closeModal();
         }
 
         function closeModal() {
