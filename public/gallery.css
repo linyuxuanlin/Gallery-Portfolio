@@ -2,7 +2,7 @@
 .gallery {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px; /* Increase gap to prevent overlap */
+    gap: 0.8em; /* Increase gap to prevent overlap */
     width: 80%;
     max-width: 1200px;
     margin: 100px auto 20px; /* Adjust for header */
@@ -16,7 +16,7 @@
 .gallery img {
     width: 100%;
     object-fit: cover;
-    border-radius: 10px; /* Increase the roundness */
+    border-radius: 5%; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     opacity: 0; /* Start hidden */
@@ -37,7 +37,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Ensure sufficient space between columns */
+    gap: 0.8em; /* Ensure sufficient space between columns */
 }
 
 /* Modal styles */

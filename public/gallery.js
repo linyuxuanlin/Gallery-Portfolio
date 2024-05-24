@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function openModal(src) {
             modal.style.display = 'block';
             document.body.classList.add('no-scroll');
-            exifInfo.innerHTML = 'Loading EXIF data...'; // Placeholder text
+            exifInfo.innerHTML = 'Loading original image and EXIF data...'; // Placeholder text
 
             // Fetch EXIF data first
             fetch(`/exif/${encodeURIComponent(src.replace(IMAGE_BASE_URL + '/', ''))}`)
