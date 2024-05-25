@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let IMAGE_BASE_URL;
     let columns = 3; // Default number of columns
     let imagesPerLoad = 10; // Default images per load
+    const SCROLL_THRESHOLD = 100; // Scroll threshold to start hiding the header
 
     // Fetch configuration from server
     fetch('/config')
@@ -104,8 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.alt = `Photo ${i + 1}`;
                 img.onload = function() {
                     this.classList.add('loaded'); // Add loaded class when image is loaded
-
-
                     const shortestColumn = getShortestColumn();
                     columnElements[shortestColumn].appendChild(img);
                     imagesLoadedCount++;
@@ -217,13 +216,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Hide header on scroll
         let lastScrollY = window.scrollY;
+        let scrollDelta = 0;
+
         window.addEventListener('scroll', () => {
-            if (window.scrollY > lastScrollY) {
-                document.querySelector('header').style.transform = 'translateY(-100%)';
+            const currentScrollY = window.scrollY;
+            const header = document.querySelector('header');
+
+            if (currentScrollY === 0) {
+                header.style.transform = 'translateY(0)';
+            } else if (currentScrollY > lastScrollY) {
+                scrollDelta += currentScrollY - lastScrollY;
+                if (scrollDelta > SCROLL_THRESHOLD) {
+                    header.style.transform = 'translateY(-100%)';
+                }
             } else {
-                document.querySelector('header').style.transform = 'translateY(0)';
+                scrollDelta = 0;
+                header.style.transform = 'translateY(0)';
             }
-            lastScrollY = window.scrollY;
+
+            lastScrollY = currentScrollY;
         });
     }
 });
