@@ -160,6 +160,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         loadMoreButton.onclick = loadNextImages;
 
+        // 动态设置 gallery 的 margin-top
+        function setGalleryMarginTop() {
+            const headerHeight = document.querySelector('header').offsetHeight;
+            galleryElement.style.marginTop = `${headerHeight + 20}px`; // 20px 是 header 和 gallery 之间的间距
+        }
+
         // 模态窗口逻辑
         const modal = document.getElementById('myModal');
         const modalContent = document.querySelector('.modal-content');
@@ -250,9 +256,11 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', () => {
             updateColumns(); // Update columns on window resize
             distributeImages(); // Re-distribute images
+            setGalleryMarginTop(); // Update gallery margin-top on window resize
         });
 
         updateColumns(); // Initial column setup
+        setGalleryMarginTop(); // Initial gallery margin-top setup
 
         // Hide header on scroll
         let lastScrollY = window.scrollY;
