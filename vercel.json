@@ -13,8 +13,8 @@
     "routes": [
       { "src": "/config", "dest": "/server.js" },
       { "src": "/images", "dest": "/server.js" },
-      { "src": "/exif/:imageKey", "dest": "/server.js" },
-      { "src": "/thumbnails/:imageKey", "dest": "/server.js" },
+      { "src": "/exif/(.*)", "dest": "/server.js" },
+      { "src": "/thumbnails/(.*)", "dest": "/server.js" },
       { "src": "/(.*)", "dest": "/public/$1" }
     ]
   }
