@@ -16,7 +16,7 @@
 .gallery img {
   width: 100%;
   object-fit: cover;
-  border-radius: 5%;
+  border-radius: 10px; /* Set a fixed border-radius value */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   opacity: 0; /* Start hidden */
