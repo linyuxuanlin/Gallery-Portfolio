@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let columns = 3; // Default number of columns
     let imagesPerLoad = 10; // Default images per load
     const SCROLL_THRESHOLD = 100; // Scroll threshold to start hiding the header
+    let currentImageRequest = null; // Variable to hold the current image request
+    let currentExifRequest = null; // Variable to hold the current EXIF request
 
     // Fetch configuration from server
     fetch('/config')
@@ -166,26 +168,53 @@ document.addEventListener('DOMContentLoaded', () => {
         const span = document.getElementsByClassName('close')[0];
 
         function openModal(src) {
+            // Cancel any ongoing image or EXIF requests
+            if (currentImageRequest) {
+                currentImageRequest.abort();
+            }
+            if (currentExifRequest) {
+                currentExifRequest.abort();
+            }
+
             modal.style.display = 'block';
             document.body.classList.add('no-scroll');
             exifInfo.innerHTML = 'Loading original image and EXIF data...'; // Placeholder text
 
+            // Create a new AbortController for the current requests
+            const imageController = new AbortController();
+            const exifController = new AbortController();
+            currentImageRequest = imageController;
+            currentExifRequest = exifController;
+
             // Fetch EXIF data first
-            fetch(`/exif/${encodeURIComponent(src.replace(IMAGE_BASE_URL + '/', ''))}`)
+            fetch(`/exif/${encodeURIComponent(src.replace(IMAGE_BASE_URL + '/', ''))}`, { signal: exifController.signal })
                 .then(response => response.json())
                 .then(data => {
-                    exifInfo.innerHTML = `
-                        <p>光圈: ${data.FNumber ? `f/${data.FNumber}` : 'N/A'}  ·  快门: ${data.ExposureTime ? `${data.ExposureTime}s` : 'N/A'}  ·  ISO: ${data.ISO ? data.ISO : 'N/A'}</p>
-                    `;
-                    // Load the image after fetching EXIF data
-                    modalImg.src = src;
+                    if (!exifController.signal.aborted) {
+                        exifInfo.innerHTML = `
+                            <p>光圈: ${data.FNumber ? `f/${data.FNumber}` : 'N/A'}  ·  快门: ${data.ExposureTime ? `${data.ExposureTime}s` : 'N/A'}  ·  ISO: ${data.ISO ? data.ISO : 'N/A'}</p>
+                        `;
+                    }
                 })
                 .catch(error => {
-                    console.error('Error fetching EXIF data:', error);
-                    exifInfo.innerHTML = 'Error loading EXIF data';
-                    // Load the image even if EXIF data fails to load
-                    modalImg.src = src;
+                    if (error.name !== 'AbortError') {
+                        console.error('Error fetching EXIF data:', error);
+                        exifInfo.innerHTML = 'Error loading EXIF data';
+                    }
                 });
+
+            // Load the image after fetching EXIF data
+            modalImg.src = src;
+            modalImg.onload = () => {
+                if (!imageController.signal.aborted) {
+                    currentImageRequest = null; // Clear the current image request when loaded
+                }
+            };
+            modalImg.onerror = () => {
+                if (!imageController.signal.aborted) {
+                    console.error('Error loading image');
+                }
+            };
         }
 
         span.onclick = function() {
@@ -201,6 +230,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function closeModal() {
+            // Abort any ongoing image or EXIF requests when closing the modal
+            if (currentImageRequest) {
+                currentImageRequest.abort();
+            }
+            if (currentExifRequest) {
+                currentExifRequest.abort();
+            }
             modal.style.display = 'none';
             document.body.classList.remove('no-scroll');
         }
@@ -220,7 +256,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
-            const header = document.querySelector('header');
+            const header = document.querySelector
+
+('header');
 
             if (currentScrollY === 0) {
                 header.style.transform = 'translateY(0)';
