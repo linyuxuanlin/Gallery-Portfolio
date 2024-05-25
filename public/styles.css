@@ -50,8 +50,8 @@ header button {
     border: none;
     color: white;
     cursor: pointer;
-    font-size: 24px;
     margin-right: 40px; /* Keep the original margin-right */
+    transition: font-size 0.3s ease-in-out;
 }
 
 footer {
@@ -152,11 +152,10 @@ body.dark footer {
         font-size: 1.5em;
     }
     header a {
-        font-size: 20px;
+        font-size: 24px;
     }
     header button {
-        font-size: 20px;
-        margin-right: 25px;
+        margin-right: 30px;
     }
 }
 
@@ -169,11 +168,10 @@ body.dark footer {
         font-size: 1.75em;
     }
     header a {
-        font-size: 22px;
+        font-size: 24px;
     }
     header button {
-        font-size: 22px;
-        margin-right: 30px;
+        margin-right: 40px;
     }
 }
 
@@ -189,7 +187,6 @@ body.dark footer {
         font-size: 24px;
     }
     header button {
-        font-size: 24px;
         margin-right: 50px;
     }
 }
