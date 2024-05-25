@@ -1,114 +1,115 @@
 /* Gallery styles */
 .gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8em; /* Increase gap to prevent overlap */
-    width: 80%;
-    max-width: 1200px;
-    margin: 100px auto 20px; /* Adjust for header */
-    padding: 10px;
-    flex-grow: 1; /* Ensure gallery takes up available space */
-    align-items: flex-start; /* Align items to the top */
-    opacity: 0; /* Start hidden */
-    transition: opacity 1s; /* Fade-in effect */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8em; /* Increase gap to prevent overlap */
+  width: 80%;
+  max-width: 1200px;
+  margin: 100px auto 20px; /* Adjust for header */
+  padding: 10px;
+  flex-grow: 1; /* Ensure gallery takes up available space */
+  align-items: flex-start; /* Align items to the top */
+  opacity: 0; /* Start hidden */
+  transition: opacity 1s; /* Fade-in effect */
 }
 
 .gallery img {
-    width: 100%;
-    object-fit: cover;
-    border-radius: 5%; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    opacity: 0; /* Start hidden */
-    transition: transform 0.3s, box-shadow 0.3s, opacity 1s; /* Add opacity transition */
-    transform: translateY(0);
+  width: 100%;
+  object-fit: cover;
+  border-radius: 5%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  opacity: 0; /* Start hidden */
+  transition: transform 0.3s, box-shadow 0.3s, opacity 1s; /* Add opacity transition */
+  transform: translateY(0);
 }
 
 .gallery img.loaded {
-    opacity: 1; /* Fade in */
+  opacity: 1; /* Fade in */
 }
 
 .gallery img.loaded:hover {
-    transform: translate(1px, -3px); /* Move to right and up */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transform: translate(1px, -3px); /* Move to right and up */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8em; /* Ensure sufficient space between columns */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em; /* Ensure sufficient space between columns */
 }
 
 /* Modal styles */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.9);
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.9);
 }
 
 .modal-content {
-    margin: auto;
-    margin-top: 100px; /* Top margin */
-    display: block;
-    max-width: 90%;
-    max-height: 80%; /* Adjust to accommodate caption and exif-info */
-    width: auto;
-    height: auto;
+  margin: auto;
+  margin-top: 100px; /* Top margin */
+  display: block;
+  max-width: 90%;
+  max-height: 80%; /* Adjust to accommodate caption and exif-info */
+  width: auto;
+  height: auto;
 }
 
 .close {
-    position: absolute;
-    top: 15px;
-    right: 35px;
-    color: #fff;
-    font-size: 40px;
-    font-weight: bold;
-    transition: 0.3s;
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
 .close:hover,
 .close:focus {
-    color: #bbb;
-    text-decoration: none;
-    cursor: pointer;
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-#caption, #exif-info {
-    margin: auto;
-    display: block;
-    width: 90%;
-    max-width: 700px;
-    text-align: center;
-    color: #ccc;
-    padding: 10px 0;
+#caption,
+#exif-info {
+  margin: auto;
+  display: block;
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
 }
 
 /* Disable scrolling */
 .no-scroll {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 /* Dark theme styles */
 body.dark .gallery img {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Darker shadow for dark mode */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* Darker shadow for dark mode */
 }
 
 body.dark .gallery img.loaded:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8); /* Darker shadow for hover in dark mode */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8); /* Darker shadow for hover in dark mode */
 }
 
 body.dark .close {
-    color: #e0e0e0;
+  color: #e0e0e0;
 }
 
 body.dark #caption,
 body.dark #exif-info {
-    color: #e0e0e0;
+  color: #e0e0e0;
 }

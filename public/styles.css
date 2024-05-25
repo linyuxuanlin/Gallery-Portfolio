@@ -1,198 +1,203 @@
 /* Layout styles */
 body {
-    font-family: 'Roboto', Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-    transition: background-color 0.3s, color 0.3s;
-    min-height: 100vh; /* Ensures footer is at the bottom */
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* iOS Safari */
-    -webkit-touch-callout: none; /* Disable callout, image save panel (iOS Safari) */
-    user-select: none; /* Disable text selection */
-    -ms-touch-action: manipulation; /* IE 10 */
-    touch-action: manipulation; /* Non-prefixed version, currently supported by Chrome, Edge, and Firefox */
+  font-family: "Roboto", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  transition: background-color 0.3s, color 0.3s;
+  min-height: 100vh; /* Ensures footer is at the bottom */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* iOS Safari */
+  -webkit-touch-callout: none; /* Disable callout, image save panel (iOS Safari) */
+  user-select: none; /* Disable text selection */
+  -ms-touch-action: manipulation; /* IE 10 */
+  touch-action: manipulation; /* Non-prefixed version, currently supported by Chrome, Edge, and Firefox */
 }
 
 header {
-    width: 100%;
-    background-color: #004d40; /* 深绿色 */
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    transition: transform 0.3s ease-in-out, height 0.3s ease-in-out, padding 0.3s ease-in-out;
+  width: 100%;
+  background-color: #004d40; /* 深绿色 */
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out, height 0.3s ease-in-out,
+    padding 0.3s ease-in-out;
 }
 
 header h1 {
-    margin: 0;
-    font-size: 2em;
-    transition: font-size 0.3s ease-in-out;
+  margin: 0;
+  font-size: 2em;
+  transition: font-size 0.3s ease-in-out;
 }
 
 .header-buttons {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 header a {
-    color: white;
-    font-size: 1.5em;
-    margin-right: 20px;
-    text-decoration: none;
-    transition: font-size 0.3s ease-in-out;
+  color: white;
+  font-size: 1.5em;
+  margin-right: 20px;
+  text-decoration: none;
+  transition: font-size 0.3s ease-in-out;
 }
 
 header button {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    margin-right: 40px; /* Keep the original margin-right */
-    transition: font-size 0.3s ease-in-out;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 40px; /* Keep the original margin-right */
+  transition: font-size 0.3s ease-in-out;
 }
 
 footer {
-    width: 100%;
-    background-color: #004d40; /* 深绿色 */
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    margin-top: auto; /* Pushes footer to the bottom */
-    opacity: 0; /* Start hidden */
-    transition: opacity 1s; /* Fade-in effect */
+  width: 100%;
+  background-color: #004d40; /* 深绿色 */
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: auto; /* Pushes footer to the bottom */
+  opacity: 0; /* Start hidden */
+  transition: opacity 1s; /* Fade-in effect */
 }
 
 footer a {
-    color: white;
-    text-decoration: none;
+  color: white;
+  text-decoration: none;
 }
 
 .load-more {
-    padding: 10px 20px;
-    margin: 20px 0;
-    background-color: #004d40; /* 深绿色 */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, opacity 1s; /* Fade-in effect for the button */
-    opacity: 0; /* Start hidden */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  padding: 10px 20px;
+  margin: 20px 0;
+  background-color: #004d40; /* 深绿色 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, opacity 1s; /* Fade-in effect for the button */
+  opacity: 0; /* Start hidden */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .load-more.loading {
-    background-color: #a0a0a0; /* 灰色 */
-    cursor: not-allowed;
+  background-color: #a0a0a0; /* 灰色 */
+  cursor: not-allowed;
 }
 
 .load-more.loading::after {
-    content: "";
-    border: 2px solid #fff;
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    margin-left: 10px;
-    animation: spin 1s linear infinite;
+  content: "";
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Dark theme styles */
 body.dark {
-    background-color: #121212;
-    color: #e0e0e0;
+  background-color: #121212;
+  color: #e0e0e0;
 }
 
 body.dark header,
 body.dark footer {
-    background-color: #1E1E1E;
+  background-color: #1e1e1e;
 }
 
 /* Loading animation */
 #loading {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1001;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #loading::after {
-    content: "";
-    border: 4px solid #004d40;
-    border-top: 4px solid transparent;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
+  content: "";
+  border: 4px solid #004d40;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
 }
 
 #loading.hidden {
-    display: none;
+  display: none;
 }
 
 @media (max-width: 600px) {
-    header {
-        height: 2em;
-        padding: 10px 15px;
-    }
-    header h1 {
-        font-size: 1.5em;
-    }
-    header a {
-        font-size: 24px;
-    }
-    header button {
-        margin-right: 30px;
-    }
+  header {
+    height: 2em;
+    padding: 10px 15px;
+  }
+  header h1 {
+    font-size: 1.5em;
+  }
+  header a {
+    font-size: 24px;
+  }
+  header button {
+    margin-right: 30px;
+  }
 }
 
 @media (min-width: 600px) and (max-width: 1200px) {
-    header {
-        height: 2.05em;
-        padding: 15px 20px;
-    }
-    header h1 {
-        font-size: 1.75em;
-    }
-    header a {
-        font-size: 24px;
-    }
-    header button {
-        margin-right: 40px;
-    }
+  header {
+    height: 2.05em;
+    padding: 15px 20px;
+  }
+  header h1 {
+    font-size: 1.75em;
+  }
+  header a {
+    font-size: 24px;
+  }
+  header button {
+    margin-right: 40px;
+  }
 }
 
 @media (min-width: 1200px) {
-    header {
-        height: 2.1em;
-        padding: 20px 30px;
-    }
-    header h1 {
-        font-size: 2em;
-    }
-    header a {
-        font-size: 24px;
-    }
-    header button {
-        margin-right: 50px;
-    }
+  header {
+    height: 2.1em;
+    padding: 20px 30px;
+  }
+  header h1 {
+    font-size: 2em;
+  }
+  header a {
+    font-size: 24px;
+  }
+  header button {
+    margin-right: 50px;
+  }
 }
