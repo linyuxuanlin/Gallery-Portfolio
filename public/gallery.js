@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     let IMAGE_BASE_URL;
+    let columns = 3; // Default number of columns
 
     // Fetch configuration from server
     fetch('/config')
@@ -13,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initGallery() {
         const galleryElement = document.getElementById('gallery');
-        const columns = 3;
-        const columnElements = [];
         const loadMoreButton = document.getElementById('load-more');
         const loadingElement = document.getElementById('loading');
         let imageUrls = [];
@@ -22,13 +21,47 @@ document.addEventListener('DOMContentLoaded', () => {
         const imagesPerLoad = 10;
         let imagesLoadedCount = 0;
         let loadingImagesCount = 0;
+        let columnElements = [];
 
         // 创建列元素
-        for (let i = 0; i < columns; i++) {
-            const column = document.createElement('div');
-            column.classList.add('column');
-            columnElements.push(column);
-            galleryElement.appendChild(column);
+        function createColumns() {
+            columnElements.forEach(column => galleryElement.removeChild(column));
+            columnElements = [];
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.classList.add('column');
+                columnElements.push(column);
+                galleryElement.appendChild(column);
+            }
+        }
+
+        function updateColumns() {
+            const width = window.innerWidth;
+            if (width < 600) {
+                columns = 2;
+            } else if (width < 900) {
+                columns = 3;
+            } else if (width < 1200) {
+                columns = 4;
+            } else if (width < 1500) {
+                columns = 5;
+            } else {
+                columns = 6;
+            }
+            createColumns();
+            distributeImages();
+        }
+
+        function distributeImages() {
+            columnElements.forEach(column => column.innerHTML = '');
+            imageUrls.slice(0, currentIndex).forEach((imageUrl, index) => {
+                const img = document.createElement('img');
+                img.src = imageUrl.thumbnail;
+                img.alt = `Photo ${index + 1}`;
+                img.classList.add('loaded'); // Assume images are loaded after initial load
+                img.onclick = () => openModal(imageUrl.original);
+                columnElements[index % columns].appendChild(img);
+            });
         }
 
         // 从服务器获取所有图片 URL
@@ -37,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(urls => {
                 imageUrls = urls;
                 loadNextImages();
+                updateColumns(); // Initial column update
             })
             .catch(error => console.error('Error loading images:', error));
 
@@ -170,5 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeModal();
             }
         });
+
+        window.addEventListener('resize', updateColumns); // Update columns on window resize
+        updateColumns(); // Initial column setup
     }
 });
