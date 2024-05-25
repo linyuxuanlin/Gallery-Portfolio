@@ -24,10 +24,13 @@ header {
     left: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    transition: transform 0.3s ease-in-out, height 0.3s ease-in-out, padding 0.3s ease-in-out;
 }
 
 header h1 {
     margin: 0;
+    font-size: 2em;
+    transition: font-size 0.3s ease-in-out;
 }
 
 .header-buttons {
@@ -37,7 +40,7 @@ header h1 {
 
 header a {
     color: white;
-    font-size: 24px;
+    font-size: 1.5em;
     margin-right: 20px;
     text-decoration: none;
 }
@@ -138,4 +141,55 @@ body.dark footer {
 
 #loading.hidden {
     display: none;
+}
+
+@media (max-width: 600px) {
+    header {
+        height: 2em;
+        padding: 10px 15px;
+    }
+    header h1 {
+        font-size: 1.5em;
+    }
+    header a {
+        font-size: 20px;
+    }
+    header button {
+        font-size: 20px;
+        margin-right: 25px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 1200px) {
+    header {
+        height: 2.05em;
+        padding: 15px 20px;
+    }
+    header h1 {
+        font-size: 1.75em;
+    }
+    header a {
+        font-size: 22px;
+    }
+    header button {
+        font-size: 22px;
+        margin-right: 30px;
+    }
+}
+
+@media (min-width: 1200px) {
+    header {
+        height: 2.1em;
+        padding: 20px 30px;
+    }
+    header h1 {
+        font-size: 2em;
+    }
+    header a {
+        font-size: 24px;
+    }
+    header button {
+        font-size: 24px;
+        margin-right: 50px;
+    }
 }

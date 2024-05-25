@@ -104,6 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.alt = `Photo ${i + 1}`;
                 img.onload = function() {
                     this.classList.add('loaded'); // Add loaded class when image is loaded
+
+
                     const shortestColumn = getShortestColumn();
                     columnElements[shortestColumn].appendChild(img);
                     imagesLoadedCount++;
@@ -212,5 +214,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('resize', updateColumns); // Update columns on window resize
         updateColumns(); // Initial column setup
+
+        // Hide header on scroll
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > lastScrollY) {
+                document.querySelector('header').style.transform = 'translateY(-100%)';
+            } else {
+                document.querySelector('header').style.transform = 'translateY(0)';
+            }
+            lastScrollY = window.scrollY;
+        });
     }
 });
