@@ -43,6 +43,7 @@ header a {
     font-size: 1.5em;
     margin-right: 20px;
     text-decoration: none;
+    transition: font-size 0.3s ease-in-out;
 }
 
 header button {
