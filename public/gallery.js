@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     let IMAGE_BASE_URL;
     let columns = 3; // Default number of columns
+    let imagesPerLoad = 10; // Default images per load
 
     // Fetch configuration from server
     fetch('/config')
@@ -18,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingElement = document.getElementById('loading');
         let imageUrls = [];
         let currentIndex = 0;
-        const imagesPerLoad = 10;
         let imagesLoadedCount = 0;
         let loadingImagesCount = 0;
         let columnElements = [];
@@ -39,14 +39,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const width = window.innerWidth;
             if (width < 600) {
                 columns = 2;
+                imagesPerLoad = 10;
             } else if (width < 900) {
                 columns = 3;
+                imagesPerLoad = 15;
             } else if (width < 1200) {
                 columns = 4;
+                imagesPerLoad = 20;
             } else if (width < 1500) {
                 columns = 5;
+                imagesPerLoad = 23;
             } else {
                 columns = 6;
+                imagesPerLoad = 25;
             }
             createColumns();
             distributeImages();
