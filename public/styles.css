@@ -156,7 +156,7 @@ body.dark footer {
 
 @media (max-width: 600px) {
   header {
-    height: 2em;
+    height: 2.07em;
     padding: 10px 15px;
   }
   header h1 {
@@ -172,7 +172,7 @@ body.dark footer {
 
 @media (min-width: 600px) and (max-width: 1200px) {
   header {
-    height: 2.05em;
+    height: 2.085em;
     padding: 15px 20px;
   }
   header h1 {
