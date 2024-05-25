@@ -256,9 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
-            const header = document.querySelector
-
-('header');
+            const header = document.querySelector('header');
 
             if (currentScrollY === 0) {
                 header.style.transform = 'translateY(0)';
