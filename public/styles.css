@@ -9,6 +9,11 @@ body {
     background-color: #f0f0f0;
     transition: background-color 0.3s, color 0.3s;
     min-height: 100vh; /* Ensures footer is at the bottom */
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* iOS Safari */
+    -webkit-touch-callout: none; /* Disable callout, image save panel (iOS Safari) */
+    user-select: none; /* Disable text selection */
+    -ms-touch-action: manipulation; /* IE 10 */
+    touch-action: manipulation; /* Non-prefixed version, currently supported by Chrome, Edge, and Firefox */
 }
 
 header {
