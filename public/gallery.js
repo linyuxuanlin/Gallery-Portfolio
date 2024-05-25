@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(urls => {
                 imageUrls = urls;
+                updateColumns(); // Initial column update before loading images
                 loadNextImages();
-                updateColumns(); // Initial column update
             })
             .catch(error => console.error('Error loading images:', error));
 
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const img = document.createElement('img');
                 img.src = imageUrls[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
-                img.onload = function() {
+                img.onload = function () {
                     this.classList.add('loaded'); // Add loaded class when image is loaded
                     const shortestColumn = getShortestColumn();
                     columnElements[shortestColumn].appendChild(img);
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         checkIfAllImagesLoaded();
                     }
                 };
-                img.onclick = function() {
+                img.onclick = function () {
                     openModal(imageUrls[i].original);
                 };
                 img.onerror = () => {
@@ -217,15 +217,15 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        span.onclick = function() {
+        span.onclick = function () {
             closeModal();
         }
 
-        modalContent.onclick = function(event) {
+        modalContent.onclick = function (event) {
             event.stopPropagation(); // Prevent click on image from closing modal
         }
 
-        modal.onclick = function() {
+        modal.onclick = function () {
             closeModal();
         }
 
@@ -241,13 +241,17 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.remove('no-scroll');
         }
 
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 closeModal();
             }
         });
 
-        window.addEventListener('resize', updateColumns); // Update columns on window resize
+        window.addEventListener('resize', () => {
+            updateColumns(); // Update columns on window resize
+            distributeImages(); // Re-distribute images
+        });
+
         updateColumns(); // Initial column setup
 
         // Hide header on scroll
