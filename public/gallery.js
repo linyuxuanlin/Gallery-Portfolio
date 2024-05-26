@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const galleryElement = document.getElementById('gallery');
         const loadMoreButton = document.getElementById('load-more');
         const loadingElement = document.getElementById('loading');
-        const loadingProgressElement = document.getElementById('loading-progress'); // New element for showing progress
         let imageUrls = [];
         let currentIndex = 0;
         let imagesLoadedCount = 0;
@@ -112,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     columnElements[shortestColumn].appendChild(img);
                     imagesLoadedCount++;
                     loadingImagesCount--;
-                    updateLoadingProgress(); // Update progress
                     if (loadingImagesCount === 0) {
                         setLoadingState(false);
                         checkIfAllImagesLoaded();
@@ -124,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.onerror = () => {
                     console.error(`Error loading image: ${imageUrls[i].thumbnail}`);
                     loadingImagesCount--;
-                    updateLoadingProgress(); // Update progress
                     if (loadingImagesCount === 0) {
                         setLoadingState(false);
                         checkIfAllImagesLoaded();
@@ -137,13 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // 更新加载进度
-        function updateLoadingProgress() {
-            const totalImages = imageUrls.length;
-            const progress = Math.round((imagesLoadedCount / totalImages) * 100);
-            loadingProgressElement.textContent = `加载进度: ${progress}%`;
-        }
-
         // 检查是否所有图片都加载完成
         function checkIfAllImagesLoaded() {
             const totalImagesToLoad = Math.min(currentIndex, imageUrls.length);
@@ -152,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('footer').style.opacity = '1'; // Show footer
                 loadMoreButton.style.opacity = '1'; // Show load more button
                 loadingElement.classList.add('hidden'); // Hide loading animation
-                loadingProgressElement.style.display = 'none'; // Hide loading progress
             }
         }
 

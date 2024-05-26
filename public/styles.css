@@ -140,14 +140,6 @@ body.dark footer {
   justify-content: center;
 }
 
-/* Loading progress styles */
-#loading-progress {
-  text-align: center;
-  color: #004d40; /* Match the theme color */
-  font-size: 1.2em;
-  margin-top: 20px;
-}
-
 #loading::after {
   content: "";
   border: 4px solid #004d40;
