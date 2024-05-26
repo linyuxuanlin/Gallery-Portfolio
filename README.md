@@ -47,7 +47,7 @@ npm install
 
 3. 创建 `.env` 文件
 
-在项目根目录下,，将 `.env_template` 文件改名为 `.env`，并根据你的实际配置修改环境变量：
+在项目根目录下，将 `.env_template` 文件改名为 `.env`，并根据你的实际配置修改环境变量：
 
 ```dotenv
 R2_ACCESS_KEY_ID=your-access-key-id
