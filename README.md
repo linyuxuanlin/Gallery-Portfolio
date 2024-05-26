@@ -1,8 +1,20 @@
-# Gallery-Portfolio
+<h1 align="center">
+<img width="27" src="./public/favicon.svg">
+Gallery-Portfolio
+</h1>
 
-![Gallery-Portfolio-1](https://github.com/linyuxuanlin/Gallery-Portfolio/assets/13746617/386088ef-3317-4624-9e63-593f3660c2f2)
+<p align="center">
+  <a href="https://github.com/linyuxuanlin/Gallery-Portfolio/blob/main/LICENSE"><img src="https://img.shields.io/github/license/linyuxuanlin/Gallery-Portfolio?style=flat-square" alt="许可证"></a>
+  <img src="https://img.shields.io/github/repo-size/linyuxuanlin/Gallery-Portfolio?style=flat-square&color=328657" alt="存储库大小">
+</p>
+
+<p align="center">
+    <img src=https://github.com/linyuxuanlin/Gallery-Portfolio/assets/13746617/386088ef-3317-4624-9e63-593f3660c2f2 width=385 />
+</p>
 
 Gallery-Portfolio 是一个简单的 **摄影作品展示站**，你只需要将图片存放在免费的 **Cloudflare R2** 上（或其他支持 **AWS S3** 的对象存储），即可在这里展现你的精选图片。在这里你可以通过 **瀑布流** 的形式浏览图片，也可以 **点开大图** ，查看光圈 / 快门 / ISO 等 **EXIF** 信息。网站基于 Node.js，使用 Material Design 风格的 **响应式设计**，支持 **日夜间模式** 切换，在不同的设备上都有不错的视觉效果。
+
+<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%linyuxuanlin%2FGallery-Portfolio&env=R2_ACCESS_KEY_ID,R2_SECRET_ACCESS_KEY,R2_BUCKET_NAME,R2_ENDPOINT,IMAGE_BASE_URL"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
 
 ## 功能特性
 
