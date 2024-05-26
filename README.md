@@ -106,40 +106,40 @@ Gallery-Portfolio/
 ├── package.json
 ```
 
-### server.js
+### `server.js`
 
-server.js 是项目的后端服务器代码，负责处理图片的获取、缩略图生成以及 EXIF 信息的读取。
+`server.js` 是项目的后端服务器代码，负责处理图片的获取、缩略图生成以及 EXIF 信息的读取。
 
 - 依赖库：
-  - express：用于搭建 Web 服务器
-  - @aws-sdk/client-s3：用于与 Cloudflare R2 进行交互
-  - sharp：用于生成图片缩略图
-  - exif-parser：用于解析图片的 EXIF 信息
-  - dotenv：用于加载环境变量
+  - `express`：用于搭建 Web 服务器
+  - `@aws-sdk/client-s3`：用于与 Cloudflare R2 进行交互
+  - `sharp`：用于生成图片缩略图
+  - `exif-parser`：用于解析图片的 EXIF 信息
+  - `dotenv`：用于加载环境变量
 
-### public/ 目录
+### `public/` 目录
 
-public/ 目录包含前端代码，包括 HTML、CSS 和 JavaScript 文件。
+`public/` 目录包含前端代码，包括 HTML、CSS 和 JavaScript 文件。
 
-- index.html：网页的主要结构，包含标题、加载按钮、相册展示区以及模态窗口等页面结构，以及引用的 CSS、JS 文件。
-- styles.css：全局样式文件，定义了页面的基本样式。
-- gallery.css：瀑布流布局样式文件，定义了图片展示和动画效果。
-- layout.js、gallery.js、exif.js：前端 JavaScript 文件，分别处理页面布局、图片加载及 EXIF 信息的展示逻辑。
+- `index.html`：网页的主要结构，包含标题、加载按钮、相册展示区以及模态窗口等页面结构，以及引用的 CSS、JS 文件。
+- `styles.css`：全局样式文件，定义了页面的基本样式。
+- `gallery.css`：瀑布流布局样式文件，定义了图片展示和动画效果。
+- `layout.js`、`gallery.js`、`exif.js`：前端 JavaScript 文件，分别处理页面布局、图片加载及 EXIF 信息的展示逻辑。
 
 ### 环境变量
 
 项目使用 `.env` 文件或 Vercel 环境变量来配置 Cloudflare R2 相关信息：
 
-- R2_ACCESS_KEY_ID：对象存储的访问密钥 ID
-- R2_SECRET_ACCESS_KEY：对象存储的访问密钥
-- R2_BUCKET_NAME：存储桶名称
-- R2_ENDPOINT：Cloudflare R2 端点，格式例如 `https://your-endpoint.r2.cloudflarestorage.com`
-- R2_REGION：区域，默认为 auto
-- IMAGE_BASE_URL：图片公开访问的 URL，格式例如 `https://media.wiki-power.com`
+- `R2_ACCESS_KEY_ID`：对象存储的访问密钥 ID
+- `R2_SECRET_ACCESS_KEY`：对象存储的访问密钥
+- `R2_BUCKET_NAME`：存储桶名称
+- `R2_ENDPOINT`：Cloudflare R2 端点，格式例如 `https://your-endpoint.r2.cloudflarestorage.com`
+- `R2_REGION`：区域，默认为 auto
+- `IMAGE_BASE_URL`：图片公开访问的 URL，格式例如 `https://media.wiki-power.com`
 
-### vercel.json
+### `vercel.json`
 
-vercel.json 文件是供 Vercel 部署的配置文件，在其中配置了路由和具体的构建设置。
+`vercel.json` 文件是供 Vercel 部署的配置文件，在其中配置了路由和具体的构建设置。
 
 ## 注意事项
 
