@@ -17,7 +17,7 @@ Gallery-Portfolio
 
 **Gallery-Portfolio** 是一个简单的 **摄影作品展示站**，你只需要将图片存放在免费的 **Cloudflare R2** 上（或其他支持 **AWS S3** 的对象存储），即可在这里展现你的精选图片。在这里你可以通过 **瀑布流** 的形式浏览图片，也可以 **点开大图** ，查看光圈 / 快门 / ISO 等 **EXIF** 信息。网站基于 Node.js，使用 **Material Design** 风格的 **响应式设计**，支持 **日夜间模式** 切换，在不同的设备上都有不错的视觉效果。
 
-<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%linyuxuanlin%2FGallery-Portfolio&env=R2_ACCESS_KEY_ID,R2_SECRET_ACCESS_KEY,R2_BUCKET_NAME,R2_ENDPOINT,IMAGE_BASE_URL"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
+<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%linyuxuanlin%2FGallery-Portfolio&env=R2_ACCESS_KEY_ID,R2_SECRET_ACCESS_KEY,R2_BUCKET_NAME,R2_ENDPOINT,R2_IMAGE_BASE_URL"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
 
 ## 功能特性
 
@@ -55,7 +55,7 @@ R2_SECRET_ACCESS_KEY=your-secret-access-key
 R2_BUCKET_NAME=your-bucket-name
 R2_ENDPOINT=https://your-endpoint.r2.cloudflarestorage.com
 R2_REGION=auto
-IMAGE_BASE_URL=https://your-image-base-url.com
+R2_IMAGE_BASE_URL=https://your-image-base-url.com
 ```
 
 4. 运行本地服务器：
@@ -79,7 +79,7 @@ node server.js
    - R2_BUCKET_NAME
    - R2_ENDPOINT
    - R2_REGION
-   - IMAGE_BASE_URL
+   - R2_IMAGE_BASE_URL
 
    环境变量的模板可以参考 [环境变量](#环境变量) 。
 
@@ -135,7 +135,7 @@ Gallery-Portfolio/
 - `R2_BUCKET_NAME`：存储桶名称
 - `R2_ENDPOINT`：Cloudflare R2 端点，格式例如 `https://your-endpoint.r2.cloudflarestorage.com`
 - `R2_REGION`：区域，默认为 auto
-- `IMAGE_BASE_URL`：图片公开访问的 URL，格式例如 `https://media.wiki-power.com`
+- `R2_IMAGE_BASE_URL`：图片公开访问的 URL，格式例如 `https://media.wiki-power.com`
 
 ### `vercel.json`
 

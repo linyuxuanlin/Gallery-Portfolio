@@ -21,7 +21,7 @@ const s3Client = new S3Client({
 });
 
 const BUCKET_NAME = process.env.R2_BUCKET_NAME;
-const IMAGE_BASE_URL = process.env.IMAGE_BASE_URL;
+const IMAGE_BASE_URL = process.env.R2_IMAGE_BASE_URL;
 
 const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
@@ -119,7 +119,7 @@ app.get('/exif/:key', async (req, res) => {
 });
 
 app.get('/config', (req, res) => {
-  res.json({ IMAGE_BASE_URL: process.env.IMAGE_BASE_URL });
+  res.json({ IMAGE_BASE_URL: process.env.R2_IMAGE_BASE_URL });
 });
 
 app.listen(port, () => {
