@@ -17,7 +17,7 @@ Gallery-Portfolio
 
 **Gallery-Portfolio** 是一个简单的 **摄影作品展示站**，你只需要将图片存放在免费的 **Cloudflare R2** 上（或其他支持 **AWS S3** 的对象存储），即可在这里展现你的精选图片。在这里你可以通过 **瀑布流** 的形式浏览图片，也可以 **点开大图** ，查看光圈 / 快门 / ISO 等 **EXIF** 信息。网站基于 Node.js，使用 **Material Design** 风格的 **响应式设计**，支持 **日夜间模式** 切换，在不同的设备上都有不错的视觉效果。
 
-<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%linyuxuanlin%2FGallery-Portfolio&env=R2_ACCESS_KEY_ID,R2_SECRET_ACCESS_KEY,R2_BUCKET_NAME,R2_ENDPOINT,R2_IMAGE_BASE_URL"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
+<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%linyuxuanlin%2FGallery-Portfolio&env=R2_ACCESS_KEY_ID,R2_SECRET_ACCESS_KEY,R2_BUCKET_NAME,R2_ENDPOINT,R2_IMAGE_BASE_URL,R2_IMAGE_DIR"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
 
 ## 功能特性
 
@@ -56,6 +56,7 @@ R2_BUCKET_NAME=your-bucket-name
 R2_ENDPOINT=https://your-endpoint.r2.cloudflarestorage.com
 R2_REGION=auto
 R2_IMAGE_BASE_URL=https://your-image-base-url.com
+R2_IMAGE_DIR=xxx
 ```
 
 4. 运行本地服务器：
@@ -74,12 +75,13 @@ node server.js
 
 3. 在 Vercel 项目的设置中，添加以下环境变量：
 
-   - R2_ACCESS_KEY_ID
-   - R2_SECRET_ACCESS_KEY
-   - R2_BUCKET_NAME
-   - R2_ENDPOINT
-   - R2_REGION
-   - R2_IMAGE_BASE_URL
+   - `R2_ACCESS_KEY_ID`
+   - `R2_SECRET_ACCESS_KEY`
+   - `R2_BUCKET_NAME`
+   - `R2_ENDPOINT`
+   - `R2_REGION`
+   - `R2_IMAGE_BASE_URL`
+   - `R2_IMAGE_DIR`
 
    环境变量的模板可以参考 [环境变量](#环境变量) 。
 
@@ -136,6 +138,7 @@ Gallery-Portfolio/
 - `R2_ENDPOINT`：Cloudflare R2 端点，格式例如 `https://your-endpoint.r2.cloudflarestorage.com`
 - `R2_REGION`：区域，默认为 auto
 - `R2_IMAGE_BASE_URL`：图片公开访问的 URL，格式例如 `https://media.wiki-power.com`
+- `R2_IMAGE_DIR`: 存储桶下存放图片的路径，比如我把图片都存在 `gallery` 文件夹下
 
 ### `vercel.json`
 
@@ -143,6 +146,7 @@ Gallery-Portfolio/
 
 ## 注意事项
 
+- 网站在首次加载时，会进行生成缩略图的操作（比较花时间，需要耐心等待）。缩略图的生成，使用了 `sharp`，将所有图片进行压缩，并储存至存储桶上图片路径下的 `preview` 文件夹中，方便下一次使用。
 - 确保 `.env` 文件中包含所有必需的环境变量。如部署至 Vercel，请确保这些变量在 Vercel 项目的设置中也已正确配置。
 - 如果遇到图片无法加载：请检查 `.env` 文件中的环境变量是否配置正确，并确保 S3 存储桶和图片路径正确。
 - EXIF 信息加载错误：请确保 S3 图片中包含 EXIF 数据。
