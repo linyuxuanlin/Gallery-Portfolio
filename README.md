@@ -122,6 +122,10 @@ public/ 目录包含前端代码，包括 HTML、CSS 和 JavaScript 文件。
 - R2_REGION：区域，默认为 auto
 - IMAGE_BASE_URL：图片公开访问的 URL，格式例如 `https://media.wiki-power.com`
 
+### vercel.json
+
+vercel.json 文件是供 Vercel 部署的配置文件，在其中配置了路由和具体的构建设置。
+
 ## 注意事项
 
 - 确保 `.env` 文件中包含所有必需的环境变量。如部署至 Vercel，请确保这些变量在 Vercel 项目的设置中也已正确配置。
@@ -138,7 +142,7 @@ public/ 目录包含前端代码，包括 HTML、CSS 和 JavaScript 文件。
 
 ---
 
-通过上述步骤，你可以轻松地在本地开发或部署到 Vercel，享受优质的照片展示体验。  
+通过上述步骤，你可以轻松地在本地开发或部署到 Vercel，享受简单优质的照片展示体验。  
 如果你遇到任何问题，请随时在 GitHub 上提交 issue，我会尽快回复并解决你的问题。
 
 ---
