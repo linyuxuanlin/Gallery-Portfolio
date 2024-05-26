@@ -1,5 +1,5 @@
 <h1 align="center">
-<img width="27" src="./public/favicon.svFg">
+<img width="27" src="./public/favicon.svg">
 Gallery-Portfolio
 </h1>
 
