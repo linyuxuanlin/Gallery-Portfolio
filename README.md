@@ -74,6 +74,7 @@ node server.js
 
 本项目的目录结构如下：
 
+```
 Gallery-Portfolio/
 ├── server.js
 ├── public/
@@ -87,6 +88,7 @@ Gallery-Portfolio/
 ├── .env
 ├── vercel.json
 ├── package.json
+```
 
 ### server.js
 
