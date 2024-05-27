@@ -101,11 +101,9 @@ app.get('/images', async (req, res) => {
         return null;
       }
       let thumbnailKey;
-      if (USE_ORIGINAL_IMAGES) {
-        thumbnailKey = item.Key;
-      } else {
-        thumbnailKey = await checkAndCreateThumbnail(item.Key);
-      }
+      
+      thumbnailKey = await checkAndCreateThumbnail(item.Key);
+      
       return {
         original: `${IMAGE_BASE_URL}/${item.Key}`,
         thumbnail: `${IMAGE_BASE_URL}/${thumbnailKey}`,
