@@ -23,11 +23,12 @@ const s3Client = new S3Client({
 const BUCKET_NAME = process.env.R2_BUCKET_NAME;
 const IMAGE_BASE_URL = process.env.R2_IMAGE_BASE_URL;
 const IMAGE_DIR = process.env.R2_IMAGE_DIR;
+const IMAGE_COMPRESSION_QUALITY = parseInt(process.env.IMAGE_COMPRESSION_QUALITY, 10);
 
 const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
 async function checkAndCreateThumbnail(key) {
-  const thumbnailKey = IMAGE_DIR + `/preview/${path.basename(key)}`;
+  const thumbnailKey = `${IMAGE_DIR}/preview/${path.basename(key)}`;
   try {
     await s3Client.send(new HeadObjectCommand({ Bucket: BUCKET_NAME, Key: thumbnailKey }));
     return thumbnailKey;
@@ -42,10 +43,13 @@ async function checkAndCreateThumbnail(key) {
         });
       });
 
-      const thumbnailBuffer = await sharp(imageBuffer)
-        .resize(200)
-        .withMetadata()
-        .toBuffer();
+      const sharpInstance = sharp(imageBuffer).resize(200).withMetadata();
+
+      if (IMAGE_COMPRESSION_QUALITY >= 0 && IMAGE_COMPRESSION_QUALITY <= 100) {
+        sharpInstance.jpeg({ quality: IMAGE_COMPRESSION_QUALITY });
+      }
+
+      const thumbnailBuffer = await sharpInstance.toBuffer();
 
       const uploadParams = {
         Bucket: BUCKET_NAME,
