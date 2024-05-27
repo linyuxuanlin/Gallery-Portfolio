@@ -11,9 +11,10 @@ Gallery-Portfolio
 
 <p align="center">
     <a href="https://gallery-portfolio.wiki-power.com/">
-        <img src="https://github.com/linyuxuanlin/Gallery-Portfolio/assets/13746617/386088ef-3317-4624-9e63-593f3660c2f2" width="550" />
+        <img src="https://media.wiki-power.com/img/mockup2.png" width="550" />
     </a>
 </p>
+
 
 **Gallery-Portfolio** 是一个简单的 **摄影作品展示站**，你只需要将图片存放在免费的 **Cloudflare R2** 上（或其他支持 **AWS S3** 的对象存储），即可在这里展现你的精选图片。在这里你可以通过 **瀑布流** 的形式浏览图片，也可以 **点开大图** ，查看光圈 / 快门 / ISO 等 **EXIF** 信息。网站基于 Node.js，使用 **Material Design** 风格的 **响应式设计**，支持 **日夜间模式** 切换，在不同的设备上都有不错的视觉效果。
 
