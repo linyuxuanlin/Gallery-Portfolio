@@ -24,7 +24,7 @@ const BUCKET_NAME = process.env.R2_BUCKET_NAME;
 const IMAGE_BASE_URL = process.env.R2_IMAGE_BASE_URL;
 const IMAGE_DIR = process.env.R2_IMAGE_DIR;
 const IMAGE_COMPRESSION_QUALITY = parseInt(process.env.IMAGE_COMPRESSION_QUALITY, 10);
-const USE_ORIGINAL_IMAGES = process.env.USE_ORIGINAL_IMAGES === 'False';
+const USE_ORIGINAL_IMAGES = process.env.USE_ORIGINAL_IMAGES;
 
 const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
