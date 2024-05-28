@@ -171,7 +171,7 @@ Gallery-Portfolio/
 通过上述步骤，你可以轻松地在本地开发或部署到 Vercel，享受简单优质的照片展示体验。  
 如果你遇到任何问题，请随时在 GitHub 上提交 issue，我会尽快回复并解决你的问题。
 
-<p align="center">
+<p align="left">
     <a href="https://api.star-history.com/svg?repos=linyuxuanlin/Gallery-Portfolio&type=Date">
         <img src="https://api.star-history.com/svg?repos=linyuxuanlin/Gallery-Portfolio&type=Date" width="550" />
     </a>
