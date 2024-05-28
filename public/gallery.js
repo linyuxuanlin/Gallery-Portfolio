@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     let IMAGE_BASE_URL;
-    let USE_ORIGINAL_IMAGES;
     let columns = 3; // Default number of columns
     let imagesPerLoad = 10; // Default images per load
     const SCROLL_THRESHOLD = 100; // Scroll threshold to start hiding the header
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(config => {
             IMAGE_BASE_URL = config.IMAGE_BASE_URL;
-            USE_ORIGINAL_IMAGES = config.USE_ORIGINAL_IMAGES;
             // Proceed with the rest of the logic
             initGallery();
         })
@@ -66,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             columnElements.forEach(column => column.innerHTML = '');
             imageUrls.slice(0, currentIndex).forEach((imageUrl, index) => {
                 const img = document.createElement('img');
-                img.src = USE_ORIGINAL_IMAGES ? imageUrl.original : imageUrl.thumbnail;
+                img.src = imageUrl.thumbnail;
                 img.alt = `Photo ${index + 1}`;
                 img.classList.add('loaded'); // Assume images are loaded after initial load
                 img.onclick = () => openModal(imageUrl.original);
@@ -105,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             for (let i = currentIndex; i < endIndex; i++) {
                 const img = document.createElement('img');
-                img.src = USE_ORIGINAL_IMAGES ? imageUrls[i].original : imageUrls[i].thumbnail;
+                img.src = imageUrls[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
                 img.onload = function () {
                     this.classList.add('loaded'); // Add loaded class when image is loaded
