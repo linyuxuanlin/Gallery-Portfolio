@@ -15,7 +15,6 @@ Gallery-Portfolio
     </a>
 </p>
 
-
 **Gallery-Portfolio** 是一个简单的 **摄影作品展示站**，你只需要将图片存放在免费的 **Cloudflare R2** 上（或其他支持 **AWS S3** 的对象存储），即可在这里展现你的精选图片。在这里你可以通过 **瀑布流** 的形式浏览图片，也可以 **点开大图** ，查看光圈 / 快门 / ISO 等 **EXIF** 信息。网站基于 Node.js，使用 **Material Design** 风格的 **响应式设计**，支持 **日夜间模式** 切换，在不同的设备上都有不错的视觉效果。
 
 <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%linyuxuanlin%2FGallery-Portfolio&env=R2_ACCESS_KEY_ID,R2_SECRET_ACCESS_KEY,R2_BUCKET_NAME,R2_ENDPOINT,R2_IMAGE_BASE_URL,R2_IMAGE_DIR,IMAGE_COMPRESSION_QUALITY"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
@@ -171,27 +170,3 @@ Gallery-Portfolio/
 
 通过上述步骤，你可以轻松地在本地开发或部署到 Vercel，享受简单优质的照片展示体验。  
 如果你遇到任何问题，请随时在 GitHub 上提交 issue，我会尽快回复并解决你的问题。
-
----
-
-## TODO
-
-- [x] 优化项目 README，加入套壳图等。写详细的说明文档
-- [x] 正常显示 Cloudflare R2 bucket 某个路径下的所有图片
-- [x] 点击图片展示大图
-- [x] 日夜间模式切换按钮
-- [x] 大图显示对应的 exif 信息
-- [x] 每页底部有点击加载的按钮，加载下一页的图片，并保留显示之前的所有图片
-- [x] 在底栏增加版权信息和外链
-- [x] 页面标题栏美化，改名并加顶栏，以便后续放标签等信息
-- [x] 每页最少显示 2 列图片，并随着页面宽度的增加，逐步增加显示的列数，最多显示 6 列图片，在页面宽度增加的时候保持列宽不变；如果显示到 6 列之后屏幕宽度仍然继续增加，则在页面左右两侧增加空白。
-- [x] 根据显示列数动态调整每页加载的图片数量
-- [x] 创建缩略图以供预览加载
-- [ ] 加入标签系统，使用标签筛选图片
-- [x] 压缩图片的过程中保留原图的 metadata 信息，使图片的旋转方向正常
-- [x] 在 R2 目录下所有图片都加载完成后，把“加载更多”按钮的文字替换为“已全部加载”，并变成灰色不可点的状态
-- [ ] 在顶栏 GitHub 按钮左侧，加入一个按钮，可以切换页面滚动到底部自动点击“加载更多”按钮或不自动点击。
-- [ ] 在代码上优化，加快 exif 信息的加载速度。比如让图片和 EXIF 信息并行加载；仅加载需要显示的 exif 信息
-- [ ] 加入 i18n
-- [ ] 加入进度加载显示的百分比
-- [ ] 加入可选预览图片不压缩、或自行设置压缩百分比
