@@ -23,7 +23,8 @@ const s3Client = new S3Client({
 const BUCKET_NAME = process.env.R2_BUCKET_NAME;
 const IMAGE_BASE_URL = process.env.R2_IMAGE_BASE_URL;
 const IMAGE_DIR = process.env.R2_IMAGE_DIR;
-const IMAGE_COMPRESSION_QUALITY = parseInt(process.env.IMAGE_COMPRESSION_QUALITY, 10) || 80;
+const IMAGE_COMPRESSION_QUALITY = parseInt(process.env.IMAGE_COMPRESSION_QUALITY, 10);
+const USE_ORIGINAL_IMAGES = process.env.USE_ORIGINAL_IMAGES === 'false';
 
 const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
@@ -99,7 +100,12 @@ app.get('/images', async (req, res) => {
       if (!validImageExtensions.includes(itemExtension) || !isFile) {
         return null;
       }
-      const thumbnailKey = await checkAndCreateThumbnail(item.Key);
+      let thumbnailKey;
+      if (USE_ORIGINAL_IMAGES) {
+        thumbnailKey = item.Key;
+      } else {
+        thumbnailKey = await checkAndCreateThumbnail(item.Key);
+      }
       return {
         original: `${IMAGE_BASE_URL}/${item.Key}`,
         thumbnail: `${IMAGE_BASE_URL}/${thumbnailKey}`,
@@ -124,7 +130,7 @@ app.get('/exif/:key', async (req, res) => {
 });
 
 app.get('/config', (req, res) => {
-  res.json({ IMAGE_BASE_URL: process.env.R2_IMAGE_BASE_URL });
+  res.json({ IMAGE_BASE_URL: process.env.R2_IMAGE_BASE_URL, USE_ORIGINAL_IMAGES });
 });
 
 app.listen(port, () => {
