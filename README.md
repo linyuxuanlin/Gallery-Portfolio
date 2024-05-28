@@ -168,7 +168,7 @@ Gallery-Portfolio/
 
 ## 参考与致谢
 
-本项目灵感来源是 [**besscroft/PicImpact**](https://github.com/besscroft/PicImpact)，这是一个完成度更高的项目，需要准备一个数据库，支持 AWS S3 API、Cloudflare R2、AList API，也支持在线上传图片。网站设计的风格稍有不同，你也可以去尝试一下~
+本项目灵感来源是 [**besscroft/PicImpact**](https://github.com/besscroft/PicImpact)，这也是一个很不错的摄影作品展示站。它需要准备一个数据库，支持 AWS S3 API、Cloudflare R2、AList API，也支持在线上传图片。网站设计的风格稍有不同，你也可以去尝试一下~
 
 ## 结束语
 
