@@ -1,15 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Theme toggle logic
     const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark');
+            themeIcon.src = '/assets/brightness_7.svg'; // 日间图标
+        } else {
+            document.body.classList.remove('dark');
+            themeIcon.src = '/assets/brightness_4.svg'; // 夜间图标
+        }
+    }
 
     themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark');
-        if (document.body.classList.contains('dark')) {
-            themeToggle.textContent = 'brightness_7';
-        } else {
-            themeToggle.textContent = 'brightness_4';
-        }
+        const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
     });
+
+    // 初始化主题
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+
+    // Add footer dynamically
+    const footer = document.createElement('footer');
+    footer.innerHTML = '<p>© 2024 Power | <a href="https://jiengup.github.io" target="_blank">Gunther\'s Blog</a></p>';
+    document.body.appendChild(footer);
 
     // Add loaded class to images after window load to enable hover effect
     window.addEventListener('load', () => {

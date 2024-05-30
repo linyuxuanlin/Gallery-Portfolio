@@ -98,13 +98,13 @@ node server.js
 Gallery-Portfolio/
 ├── server.js
 ├── public/
-│ ├── favicon.svg
 │ ├── index.html
 │ ├── styles.css
 │ ├── gallery.css
 │ ├── layout.js
 │ ├── gallery.js
 │ ├── exif.js
+│ ├── assets/
 ├── .env
 ├── vercel.json
 ├── package.json
