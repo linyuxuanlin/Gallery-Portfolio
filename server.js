@@ -67,9 +67,11 @@ async function checkAndCreateThumbnail(key) {
 }
 
 async function getExifData(key) {
+  console.info(key)
+  const relativekey = `${IMAGE_DIR}/${path.basename(key)}`;
   const getObjectParams = {
     Bucket: BUCKET_NAME,
-    Key: key,
+    Key: relativekey
   };
   const imageBuffer = await s3Client.send(new GetObjectCommand(getObjectParams)).then(response => {
     return new Promise((resolve, reject) => {
