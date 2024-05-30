@@ -105,7 +105,6 @@ Gallery-Portfolio/
 │ ├── gallery.js
 │ ├── exif.js
 │ ├── assets/
-│ | ├── favicon.svg
 ├── .env
 ├── vercel.json
 ├── package.json

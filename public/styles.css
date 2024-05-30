@@ -57,7 +57,7 @@ header button {
   border: none;
   color: white;
   cursor: pointer;
-  margin-right: 40px; /* Keep the original margin-right */
+
   transition: font-size 0.3s ease-in-out;
 }
 
@@ -75,6 +75,13 @@ footer {
 footer a {
   color: white;
   text-decoration: none;
+}
+
+header button img {
+  width: 26px;
+  height: 26px;
+  transition: font-size 0.3s ease-in-out;
+  margin-right: 0.1em;
 }
 
 .load-more {
