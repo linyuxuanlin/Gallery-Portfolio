@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "include": [
+    {
+      "pattern": "/config",
+      "path": "server.js"
+    },
+    {
+      "pattern": "/images",
+      "path": "server.js"
+    },
+    {
+      "pattern": "/exif/*",
+      "path": "server.js"
+    },
+    {
+      "pattern": "/thumbnails/*",
+      "path": "server.js"
+    },
+    {
+      "pattern": "/*",
+      "path": "public/$1"
+    }
+  ]
+}
