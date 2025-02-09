@@ -13,10 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     themeToggle.addEventListener('click', () => {
-        const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
+        const isDark = document.body.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        themeIcon.src = isDark ? '/assets/brightness_7.svg' : '/assets/brightness_4.svg';
     });
 
     // 初始化主题
@@ -32,7 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('load', () => {
         const images = document.querySelectorAll('.gallery img');
         images.forEach(img => {
-            img.classList.add('loaded');
+            if (img.complete) {
+                img.classList.add('loaded');
+            } else {
+                img.addEventListener('load', () => img.classList.add('loaded'));
+            }
         });
     });
 });

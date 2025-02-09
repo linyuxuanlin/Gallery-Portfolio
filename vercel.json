@@ -16,5 +16,13 @@
     { "src": "/exif/(.*)", "dest": "/server.js" },
     { "src": "/thumbnails/(.*)", "dest": "/server.js" },
     { "src": "/(.*)", "dest": "/public/$1" }
+  ],
+  "cache": [
+    {
+      "src": "/images",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    }
   ]
 }
