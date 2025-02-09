@@ -226,29 +226,76 @@ body.dark footer {
 
 /* 优化点1：使用CSS变量简化主题切换 */
 :root {
-    --primary-color: #004d40;
-    --text-color: #333;
-    --bg-color: #f0f0f0;
-    --shadow-color: rgba(0, 0, 0, 0.2);
+  --primary-color: #6ab04c; /* 更浅的绿色 */
+  --primary-hover: #7bc95f; /* 悬停时稍亮的绿色 */
+  --text-color: #333;
+  --background-color: #f5f5f5;
 }
 
 body.dark {
-    --primary-color: #1e1e1e;
-    --text-color: #e0e0e0;
-    --bg-color: #121212;
-    --shadow-color: rgba(0, 0, 0, 0.6);
+  --primary-color: #6fcf97;
+  --primary-hover: #5cb881;
+  --text-color: #e0e0e0;
+  --background-color: #1a1a1a;
 }
 
 /* 使用变量替换原有颜色值 */
 header, footer, .load-more {
-    background-color: var(--primary-color);
+  background-color: var(--primary-color);
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 .gallery img {
-    box-shadow: 0 4px 8px var(--shadow-color);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+/* 更新标签栏样式 */
+.tag-filter {
+  background-color: #f0faf5; /* 浅绿色背景 */
+  padding: 10px;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 90%;
+}
+
+.tag {
+  background-color: #f0f8e9; /* 更浅的背景色 */
+  color: #333; /* 更深的文字颜色 */
+  border: 1px solid #d1e8c2; /* 更浅的边框 */
+  transition: all 0.3s ease;
+}
+
+.tag:hover {
+  background-color: #e2f3d8; /* 悬停时稍亮的背景 */
+}
+
+/* 更新选中标签样式 */
+.tag[style*="background-color"] {
+  background-color: var(--primary-color) !important; /* 使用主色调 */
+  color: #fff !important; /* 选中时白色文字 */
+}
+
+/* 更新加载按钮样式 */
+.load-more {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.load-more:hover {
+  background-color: var(--primary-hover);
+}
+
+/* 更新模态框样式 */
+.modal-content {
+  border: 3px solid var(--primary-color);
+}
+
+/* 更新页脚样式 */
+footer {
+  background-color: var(--primary-color);
+  color: white;
 }
