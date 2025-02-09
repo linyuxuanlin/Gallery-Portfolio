@@ -134,7 +134,13 @@ body.dark #exif-info {
     border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 100;
+    max-width: calc(100% - 20px); /* 限制标签栏最大宽度，确保两侧有间距 */
+    overflow-x: auto;         /* 超出部分允许横向滚动 */
+}
 
+/* 隐藏Webkit内核浏览器下的滚动条 */
+.tag-filter::-webkit-scrollbar {
+    display: none;
 }
 
 .tag {
