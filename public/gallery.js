@@ -38,6 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const tagContainer = document.createElement('div');
             tagContainer.className = 'tag-filter';
             
+            // 添加鼠标滚轮事件，实现鼠标悬停在标签栏上时通过滚轮水平滚动标签栏
+            tagContainer.addEventListener('wheel', (event) => {
+                event.preventDefault();
+                tagContainer.scrollLeft += event.deltaY;
+            });
+
             // 添加"全部"标签
             const allTag = document.createElement('button');
             allTag.className = 'tag';
