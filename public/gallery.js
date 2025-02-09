@@ -32,63 +32,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const tagContainer = document.createElement('div');
             tagContainer.className = 'tag-filter';
             
-            // 添加滚动提示箭头
-            const leftArrow = document.createElement('div');
-            leftArrow.className = 'scroll-arrow left';
-            leftArrow.innerHTML = '&lt;';
-            leftArrow.style.display = 'none'; // 初始隐藏
-            
-            const rightArrow = document.createElement('div');
-            rightArrow.className = 'scroll-arrow right';
-            rightArrow.innerHTML = '&gt;';
-            rightArrow.style.display = 'none'; // 初始隐藏
-            
-            // 添加箭头点击事件
-            leftArrow.addEventListener('click', () => {
-                tagContainer.scrollBy({ left: -200, behavior: 'smooth' });
-            });
-            
-            rightArrow.addEventListener('click', () => {
-                tagContainer.scrollBy({ left: 200, behavior: 'smooth' });
-            });
-            
-            // 监听滚动事件显示/隐藏箭头
-            tagContainer.addEventListener('scroll', () => {
-                leftArrow.style.display = tagContainer.scrollLeft > 0 ? 'block' : 'none';
-                rightArrow.style.display = tagContainer.scrollLeft < tagContainer.scrollWidth - tagContainer.clientWidth ? 'block' : 'none';
-            });
-            
             // 添加"全部"标签
             const allTag = document.createElement('button');
             allTag.className = 'tag';
             allTag.textContent = 'All';
-            allTag.style.backgroundColor = '#4CAF50';
+            allTag.style.backgroundColor = '#4CAF50'; // 绿色主题色
             allTag.style.color = '#fff';
             allTag.addEventListener('click', () => {
+                // 移除所有标签的选中样式
                 tagContainer.querySelectorAll('.tag').forEach(t => {
                     t.style.backgroundColor = '';
                     t.style.color = '';
                 });
+                // 设置当前标签的选中样式
                 allTag.style.backgroundColor = '#4CAF50';
                 allTag.style.color = '#fff';
                 filterImages('all');
             });
-            
-            // 插入元素
-            tagContainer.appendChild(leftArrow);
             tagContainer.appendChild(allTag);
-            
-            // 添加其他标签
+
+            // 添加其他标签，排除 'preview' 文件夹
             tags.forEach(tag => {
                 if (tag !== 'all' && tag !== 'preview') {
                     const tagButton = document.createElement('button');
                     tagButton.className = 'tag';
                     tagButton.textContent = tag;
                     tagButton.addEventListener('click', () => {
+                        // 移除所有标签的选中样式
                         tagContainer.querySelectorAll('.tag').forEach(t => {
                             t.style.backgroundColor = '';
                             t.style.color = '';
                         });
+                        // 设置当前标签的选中样式
                         tagButton.style.backgroundColor = '#4CAF50';
                         tagButton.style.color = '#fff';
                         filterImages(tag);
@@ -96,18 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     tagContainer.appendChild(tagButton);
                 }
             });
-            
-            tagContainer.appendChild(rightArrow);
-            
+
             // 插入到header和gallery之间
             const header = document.querySelector('header');
             header.insertAdjacentElement('afterend', tagContainer);
-            
-            // 初始检查箭头显示状态
-            setTimeout(() => {
-                leftArrow.style.display = tagContainer.scrollLeft > 0 ? 'block' : 'none';
-                rightArrow.style.display = tagContainer.scrollLeft < tagContainer.scrollWidth - tagContainer.clientWidth ? 'block' : 'none';
-            }, 100);
         }
 
         // 图片筛选功能
