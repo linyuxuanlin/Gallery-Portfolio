@@ -36,12 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // 创建标签栏
         function createTagFilter(tags) {
             const tagContainer = document.createElement('div');
-            tagContainer.className = 'tag-filter';
+            tagContainer.className = 'tag-filter-vertical';
             
-            // 添加鼠标滚轮事件，实现鼠标悬停在标签栏上时通过滚轮水平滚动标签栏
+            // 添加鼠标滚轮事件，实现鼠标悬停在标签栏上时通过滚轮垂直滚动标签栏
             tagContainer.addEventListener('wheel', (event) => {
                 event.preventDefault();
-                tagContainer.scrollLeft += event.deltaY;
+                tagContainer.scrollTop += event.deltaY;
             });
 
             // 添加"全部"标签
