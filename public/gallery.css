@@ -20,7 +20,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   opacity: 0; /* Start hidden */
-  transition: transform 0.3s, box-shadow 0.3s, opacity 1s; /* Add opacity transition */
+  transition: transform 0.3s, box-shadow 0.3s, opacity 0.5s; /* 缩短过渡时间 */
   transform: translateY(0);
 }
 
@@ -112,4 +112,11 @@ body.dark .close {
 body.dark #caption,
 body.dark #exif-info {
   color: #e0e0e0;
+}
+
+#loading {
+  /* ... existing code ... */
+  background: rgba(255, 255, 255, 0.8); /* 添加半透明背景 */
+  padding: 20px;
+  border-radius: 10px;
 }
