@@ -5,7 +5,7 @@
   gap: 0.8em; /* Increase gap to prevent overlap */
   width: 80%;
   max-width: 1200px;
-  margin: 100px auto 20px; /* Adjust for header */
+  margin: 150px auto 20px; /* Adjust for header and tag filter */
   padding: 10px;
   flex-grow: 1; /* Ensure gallery takes up available space */
   align-items: flex-start; /* Align items to the top */
@@ -119,4 +119,45 @@ body.dark #exif-info {
   background: rgba(255, 255, 255, 0.8); /* 添加半透明背景 */
   padding: 20px;
   border-radius: 10px;
+}
+
+/* 标签筛选样式 */
+.tag-filter {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.tag {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 15px;
+    background: #f0f0f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tag:hover {
+    background: #ddd;
+}
+
+body.dark .tag-filter {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+body.dark .tag {
+    background: #333;
+    color: #fff;
+}
+
+body.dark .tag:hover {
+    background: #444;
 }

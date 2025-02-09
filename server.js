@@ -58,19 +58,36 @@ app.get('/images', async (req, res) => {
       Prefix: IMAGE_DIR 
     }));
     
-    // 仅返回图片的基本信息，不检查缩略图
-    const imageUrls = images.Contents
+    // 按文件夹分类图片
+    const imageMap = new Map();
+    images.Contents
       .filter(item => {
         const itemExtension = path.extname(item.Key).toLowerCase();
-        const isFile = item.Key.split('/').length === 2;
-        return validImageExtensions.includes(itemExtension) && isFile;
+        return validImageExtensions.includes(itemExtension);
       })
-      .map(item => ({
-        original: `${IMAGE_BASE_URL}/${item.Key}`,
-        thumbnail: `${IMAGE_BASE_URL}/${IMAGE_DIR}/preview/${path.basename(item.Key)}`
-      }));
+      .forEach(item => {
+        const parts = item.Key.split('/');
+        // 忽略 preview 文件夹
+        if (parts.includes('preview')) return;
+        
+        // 获取文件夹名，如果没有文件夹则归类为 'all'
+        const folder = parts.length > 2 ? parts[1] : 'all';
+        if (!imageMap.has(folder)) {
+          imageMap.set(folder, []);
+        }
+        imageMap.get(folder).push({
+          original: `${IMAGE_BASE_URL}/${item.Key}`,
+          thumbnail: `${IMAGE_BASE_URL}/${IMAGE_DIR}/preview/${path.basename(item.Key)}`
+        });
+      });
+
+    // 将分类结果转换为对象
+    const result = {};
+    for (const [folder, images] of imageMap.entries()) {
+      result[folder] = images;
+    }
     
-    res.json(imageUrls);
+    res.json(result);
   } catch (error) {
     console.error('Error loading images:', error);
     res.status(500).send('Error loading images');

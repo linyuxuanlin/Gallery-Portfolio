@@ -20,11 +20,50 @@ document.addEventListener('DOMContentLoaded', () => {
         const galleryElement = document.getElementById('gallery');
         const loadMoreButton = document.getElementById('load-more');
         const loadingElement = document.getElementById('loading');
-        let imageUrls = [];
+        let imageUrls = {};
         let currentIndex = 0;
         let imagesLoadedCount = 0;
         let loadingImagesCount = 0;
         let columnElements = [];
+        let currentTag = 'all';
+
+        // 创建标签栏
+        function createTagFilter(tags) {
+            const tagContainer = document.createElement('div');
+            tagContainer.className = 'tag-filter';
+            
+            // 添加"全部"标签
+            const allTag = document.createElement('button');
+            allTag.className = 'tag';
+            allTag.textContent = '全部';
+            allTag.addEventListener('click', () => filterImages('all'));
+            tagContainer.appendChild(allTag);
+
+            // 添加其他标签，排除 'preview' 文件夹
+            tags.forEach(tag => {
+                if (tag !== 'all' && tag !== 'preview') {
+                    const tagButton = document.createElement('button');
+                    tagButton.className = 'tag';
+                    tagButton.textContent = tag;
+                    tagButton.addEventListener('click', () => filterImages(tag));
+                    tagContainer.appendChild(tagButton);
+                }
+            });
+
+            // 插入到header和gallery之间
+            const header = document.querySelector('header');
+            header.insertAdjacentElement('afterend', tagContainer);
+        }
+
+        // 图片筛选功能
+        function filterImages(tag) {
+            currentTag = tag;
+            currentIndex = 0;
+            imagesLoadedCount = 0;
+            loadingImagesCount = 0;
+            createColumns();
+            loadNextImages();
+        }
 
         // 创建列元素
         function createColumns() {
@@ -62,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function distributeImages() {
             columnElements.forEach(column => column.innerHTML = '');
-            imageUrls.slice(0, currentIndex).forEach((imageUrl, index) => {
+            imageUrls[currentTag].forEach((imageUrl, index) => {
                 const img = document.createElement('img');
                 img.src = imageUrl.thumbnail;
                 img.alt = `Photo ${index + 1}`;
@@ -75,9 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // 从服务器获取所有图片 URL
         fetch('/images')
             .then(response => response.json())
-            .then(urls => {
-                imageUrls = urls;
-                updateColumns(); // Initial column update before loading images
+            .then(data => {
+                imageUrls = data;
+                createTagFilter(Object.keys(data));
+                updateColumns();
                 loadNextImages();
             })
             .catch(error => console.error('Error loading images:', error));
@@ -98,17 +138,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // 加载下一批图片
         function loadNextImages() {
             setLoadingState(true);
-            const endIndex = Math.min(currentIndex + imagesPerLoad, imageUrls.length);
+            const images = imageUrls[currentTag] || [];
+            const endIndex = Math.min(currentIndex + imagesPerLoad, images.length);
             loadingImagesCount = endIndex - currentIndex;
 
             for (let i = currentIndex; i < endIndex; i++) {
                 const img = document.createElement('img');
-                
-                // 先尝试加载缩略图
-                img.src = imageUrls[i].thumbnail;
+                img.src = images[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
                 
-                // 立即将图片添加到最短列中
                 const shortestColumn = getShortestColumn();
                 columnElements[shortestColumn].appendChild(img);
                 
@@ -124,13 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 
                 img.onerror = () => {
-                    // 如果缩略图加载失败，尝试生成缩略图
-                    fetch(`/thumbnail/${encodeURIComponent(imageUrls[i].original.replace(IMAGE_BASE_URL + '/', ''))}`)
+                    fetch(`/thumbnail/${encodeURIComponent(images[i].original.replace(IMAGE_BASE_URL + '/', ''))}`)
                         .then(() => {
-                            img.src = imageUrls[i].thumbnail; // 重新尝试加载缩略图
+                            img.src = images[i].thumbnail;
                         })
                         .catch(error => {
-                            console.error(`Error loading image: ${imageUrls[i].thumbnail}`, error);
+                            console.error(`Error loading image: ${images[i].thumbnail}`, error);
                             loadingImagesCount--;
                             if (loadingImagesCount === 0) {
                                 setLoadingState(false);
@@ -140,18 +177,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 
                 img.onclick = function () {
-                    openModal(imageUrls[i].original);
+                    openModal(images[i].original);
                 };
             }
             currentIndex = endIndex;
-            if (currentIndex >= imageUrls.length) {
+            if (currentIndex >= images.length) {
                 loadMoreButton.style.display = 'none';
             }
         }
 
         // 检查是否所有图片都加载完成
         function checkIfAllImagesLoaded() {
-            const totalImagesToLoad = Math.min(currentIndex, imageUrls.length);
+            const totalImagesToLoad = Math.min(currentIndex, imageUrls[currentTag].length);
             if (imagesLoadedCount >= totalImagesToLoad) {
                 document.querySelector('.gallery').style.opacity = '1'; // Show gallery
                 document.querySelector('footer').style.opacity = '1'; // Show footer
