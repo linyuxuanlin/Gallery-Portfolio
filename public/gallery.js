@@ -204,14 +204,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const endIndex = Math.min(currentIndex + imagesPerLoad, images.length);
             loadingImagesCount = endIndex - currentIndex;
 
-            // 使用 requestAnimationFrame 优化图片加载
-            const loadImage = (i) => {
-                if (i >= endIndex) return;
-                
+            for (let i = currentIndex; i < endIndex; i++) {
                 const img = document.createElement('img');
                 img.src = images[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
                 
+                // 获取最短列
                 const shortestColumn = getShortestColumn();
                 columnElements[shortestColumn].appendChild(img);
                 
@@ -220,6 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     imagesLoadedCount++;
                     loadingImagesCount--;
                     
+                    // 检查并重新分配图片到最短列
                     const newShortestColumn = getShortestColumn();
                     if (shortestColumn !== newShortestColumn) {
                         columnElements[newShortestColumn].appendChild(this);
@@ -229,9 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         setLoadingState(false);
                     }
                     checkIfAllImagesLoaded();
-                    
-                    // 加载下一张图片
-                    requestAnimationFrame(() => loadImage(i + 1));
                 };
                 
                 img.onerror = () => {
@@ -252,9 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.onclick = function () {
                     openModal(images[i].original);
                 };
-            };
-
-            loadImage(currentIndex);
+            }
             currentIndex = endIndex;
             if (currentIndex >= images.length) {
                 loadMoreButton.style.display = 'none';
@@ -284,6 +278,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadMoreButton.disabled = false;
             }
         }
+
+        loadMoreButton.onclick = loadNextImages;
 
         // 动态设置 gallery 的 margin-top
         function setGalleryMarginTop() {
@@ -382,34 +378,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 将事件监听器提取到单独的函数中
-        function setupEventListeners() {
-            loadMoreButton.onclick = loadNextImages;
-            window.addEventListener('resize', () => {
-                updateColumns();
-                distributeImages();
-                setGalleryMarginTop();
-            });
-            // ... other event listeners ...
-        }
+        window.addEventListener('resize', () => {
+            updateColumns(); // Update columns on window resize
+            distributeImages(); // Re-distribute images
+            setGalleryMarginTop(); // Update gallery margin-top on window resize
+        });
 
-        // 将初始化逻辑提取到单独的函数中
-        function initializeGallery() {
-            createColumns();
-            setGalleryMarginTop();
-            fetch('/images')
-                .then(response => response.json())
-                .then(data => {
-                    imageUrls = data;
-                    createTagFilter(Object.keys(data));
-                    filterImages('all');
-                    updateColumns();
-                })
-                .catch(error => console.error('Error loading images:', error));
-        }
-
-        setupEventListeners();
-        initializeGallery();
+        updateColumns(); // Initial column setup
+        setGalleryMarginTop(); // Initial gallery margin-top setup
 
         // Hide header on scroll
         let lastScrollY = window.scrollY;
