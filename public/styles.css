@@ -6,7 +6,7 @@ body {
   align-items: center;
   margin: 0;
   padding: 0;
-  background-color: #f0f0f0;
+  background-color: var(--bg-color);
   transition: background-color 0.3s, color 0.3s;
   min-height: 100vh; /* Ensures footer is at the bottom */
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* iOS Safari */
@@ -14,11 +14,12 @@ body {
   user-select: none; /* Disable text selection */
   -ms-touch-action: manipulation; /* IE 10 */
   touch-action: manipulation; /* Non-prefixed version, currently supported by Chrome, Edge, and Firefox */
+  color: var(--text-color);
 }
 
 header {
   width: 100%;
-  background-color: #004d40; /* 深绿色 */
+  background-color: var(--primary-color);
   color: white;
   padding: 15px 20px;
   display: flex;
@@ -27,7 +28,7 @@ header {
   position: fixed;
   top: 0;
   left: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--shadow-color);
   z-index: 1000;
   transition: transform 0.3s ease-in-out, height 0.3s ease-in-out,
     padding 0.3s ease-in-out;
@@ -79,7 +80,7 @@ header a img {
 
 footer {
   width: 100%;
-  background-color: #004d40; /* 深绿色 */
+  background-color: var(--primary-color);
   color: white;
   text-align: center;
   padding: 10px 0;
@@ -96,7 +97,7 @@ footer a {
 .load-more {
   padding: 10px 20px;
   margin: 20px 0;
-  background-color: #004d40; /* 深绿色 */
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 5px;
@@ -135,13 +136,17 @@ footer a {
 
 /* Dark theme styles */
 body.dark {
-  background-color: #121212;
-  color: #e0e0e0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  --primary-color: var(--primary-color);
+  --text-color: var(--text-color);
+  --bg-color: var(--bg-color);
+  --shadow-color: var(--shadow-color);
 }
 
 body.dark header,
 body.dark footer {
-  background-color: #1e1e1e;
+  background-color: var(--primary-color);
 }
 
 /* Loading animation */
@@ -158,12 +163,13 @@ body.dark footer {
 
 #loading::after {
   content: "";
-  border: 4px solid #004d40;
+  border: 4px solid var(--primary-color);
   border-top: 4px solid transparent;
   border-radius: 50%;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
+  will-change: transform; /* 优化动画性能 */
 }
 
 #loading.hidden {
@@ -216,4 +222,33 @@ body.dark footer {
   header button {
     margin-right: 50px;
   }
+}
+
+/* 优化点1：使用CSS变量简化主题切换 */
+:root {
+    --primary-color: #004d40;
+    --text-color: #333;
+    --bg-color: #f0f0f0;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+body.dark {
+    --primary-color: #1e1e1e;
+    --text-color: #e0e0e0;
+    --bg-color: #121212;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+}
+
+/* 使用变量替换原有颜色值 */
+header, footer, .load-more {
+    background-color: var(--primary-color);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.gallery img {
+    box-shadow: 0 4px 8px var(--shadow-color);
 }
