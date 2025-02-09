@@ -136,17 +136,39 @@ footer a {
 
 /* Dark theme styles */
 body.dark {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  --primary-color: var(--primary-color);
-  --text-color: var(--text-color);
-  --bg-color: var(--bg-color);
-  --shadow-color: var(--shadow-color);
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  --primary-color: #3d3d3d;
+  --text-color: #e0e0e0;
+  --bg-color: #121212;
+  --shadow-color: rgba(0, 0, 0, 0.6);
 }
 
 body.dark header,
 body.dark footer {
-  background-color: var(--primary-color);
+  background-color: #3d3d3d;
+  border-bottom: 1px solid #4d4d4d;
+}
+
+body.dark .tag-filter {
+  background-color: #3d3d3d;
+}
+
+body.dark .tag {
+  background-color: #4d4d4d;
+  color: #e0e0e0;
+}
+
+body.dark .modal {
+  background-color: rgba(61, 61, 61, 0.9);
+}
+
+body.dark .modal-content {
+  background-color: #4d4d4d;
+}
+
+body.dark #exif-info {
+  color: #e0e0e0;
 }
 
 /* Loading animation */
