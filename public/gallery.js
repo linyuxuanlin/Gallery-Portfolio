@@ -106,15 +106,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.src = imageUrls[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
                 img.onload = function () {
-                    this.classList.add('loaded'); // Add loaded class when image is loaded
+                    this.classList.add('loaded'); // 图片加载完成后立即添加 loaded 类
                     const shortestColumn = getShortestColumn();
                     columnElements[shortestColumn].appendChild(img);
                     imagesLoadedCount++;
                     loadingImagesCount--;
+                    
+                    // 每张图片加载完成后立即更新状态
                     if (loadingImagesCount === 0) {
                         setLoadingState(false);
-                        checkIfAllImagesLoaded();
                     }
+                    checkIfAllImagesLoaded(); // 检查是否所有图片都已加载
                 };
                 img.onclick = function () {
                     openModal(imageUrls[i].original);
@@ -124,8 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadingImagesCount--;
                     if (loadingImagesCount === 0) {
                         setLoadingState(false);
-                        checkIfAllImagesLoaded();
                     }
+                    checkIfAllImagesLoaded(); // 检查是否所有图片都已加载
                 };
             }
             currentIndex = endIndex;
