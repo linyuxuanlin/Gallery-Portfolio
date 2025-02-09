@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             for (let i = currentIndex; i < endIndex; i++) {
                 const img = document.createElement('img');
-                img.loading = "lazy"; // 添加懒加载属性
+                //img.loading = "lazy"; // 添加懒加载属性
                 img.src = imageUrls[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
                 img.onload = function () {
