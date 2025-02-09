@@ -39,14 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
             allTag.style.backgroundColor = '#4CAF50'; // 绿色主题色
             allTag.style.color = '#fff';
             allTag.addEventListener('click', () => {
-                // 移除所有标签的选中样式
-                tagContainer.querySelectorAll('.tag').forEach(t => {
-                    t.style.backgroundColor = '';
-                    t.style.color = '';
-                });
-                // 设置当前标签的选中样式
-                allTag.style.backgroundColor = '#4CAF50';
-                allTag.style.color = '#fff';
+                updateURL('all');
+                selectTag(allTag);
                 filterImages('all');
             });
             tagContainer.appendChild(allTag);
@@ -58,14 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     tagButton.className = 'tag';
                     tagButton.textContent = tag;
                     tagButton.addEventListener('click', () => {
-                        // 移除所有标签的选中样式
-                        tagContainer.querySelectorAll('.tag').forEach(t => {
-                            t.style.backgroundColor = '';
-                            t.style.color = '';
-                        });
-                        // 设置当前标签的选中样式
-                        tagButton.style.backgroundColor = '#4CAF50';
-                        tagButton.style.color = '#fff';
+                        updateURL(tag);
+                        selectTag(tagButton);
                         filterImages(tag);
                     });
                     tagContainer.appendChild(tagButton);
@@ -75,6 +63,32 @@ document.addEventListener('DOMContentLoaded', () => {
             // 插入到header和gallery之间
             const header = document.querySelector('header');
             header.insertAdjacentElement('afterend', tagContainer);
+        }
+
+        function updateURL(tag) {
+            const url = new URL(window.location);
+            url.pathname = `/${tag}`;
+            window.history.pushState({ path: url.href }, '', url.href);
+        }
+
+        function selectTag(selectedButton) {
+            const tagContainer = document.querySelector('.tag-filter');
+            tagContainer.querySelectorAll('.tag').forEach(t => {
+                t.style.backgroundColor = '';
+                t.style.color = '';
+            });
+            selectedButton.style.backgroundColor = '#4CAF50';
+            selectedButton.style.color = '#fff';
+        }
+
+        function initializeFromURL() {
+            const path = window.location.pathname;
+            const tag = path.split('/')[1] || 'all';
+            const tagButton = Array.from(document.querySelectorAll('.tag')).find(button => button.textContent.toLowerCase() === tag.toLowerCase());
+            if (tagButton) {
+                selectTag(tagButton);
+                filterImages(tag);
+            }
         }
 
         // 图片筛选功能
@@ -164,8 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 imageUrls = data;
                 createTagFilter(Object.keys(data));
-                // 首次加载时自动选择 "All" 标签
-                filterImages('all');
+                initializeFromURL(); // 根据URL初始化页面
                 updateColumns();
             })
             .catch(error => console.error('Error loading images:', error));
