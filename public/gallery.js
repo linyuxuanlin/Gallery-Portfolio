@@ -103,31 +103,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
             for (let i = currentIndex; i < endIndex; i++) {
                 const img = document.createElement('img');
+                
+                // 先尝试加载缩略图
                 img.src = imageUrls[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
+                
                 img.onload = function () {
-                    this.classList.add('loaded'); // 图片加载完成后立即添加 loaded 类
+                    this.classList.add('loaded');
                     const shortestColumn = getShortestColumn();
                     columnElements[shortestColumn].appendChild(img);
                     imagesLoadedCount++;
                     loadingImagesCount--;
                     
-                    // 每张图片加载完成后立即更新状态
                     if (loadingImagesCount === 0) {
                         setLoadingState(false);
                     }
-                    checkIfAllImagesLoaded(); // 检查是否所有图片都已加载
+                    checkIfAllImagesLoaded();
                 };
+                
+                img.onerror = () => {
+                    // 如果缩略图加载失败，尝试生成缩略图
+                    fetch(`/thumbnail/${encodeURIComponent(imageUrls[i].original.replace(IMAGE_BASE_URL + '/', ''))}`)
+                        .then(() => {
+                            img.src = imageUrls[i].thumbnail; // 重新尝试加载缩略图
+                        })
+                        .catch(error => {
+                            console.error(`Error loading image: ${imageUrls[i].thumbnail}`, error);
+                            loadingImagesCount--;
+                            if (loadingImagesCount === 0) {
+                                setLoadingState(false);
+                            }
+                            checkIfAllImagesLoaded();
+                        });
+                };
+                
                 img.onclick = function () {
                     openModal(imageUrls[i].original);
-                };
-                img.onerror = () => {
-                    console.error(`Error loading image: ${imageUrls[i].thumbnail}`);
-                    loadingImagesCount--;
-                    if (loadingImagesCount === 0) {
-                        setLoadingState(false);
-                    }
-                    checkIfAllImagesLoaded(); // 检查是否所有图片都已加载
                 };
             }
             currentIndex = endIndex;

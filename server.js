@@ -27,45 +27,6 @@ const IMAGE_COMPRESSION_QUALITY = parseInt(process.env.IMAGE_COMPRESSION_QUALITY
 
 const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
-async function checkAndCreateThumbnail(key) {
-  const thumbnailKey = `${IMAGE_DIR}/preview/${path.basename(key)}`;
-  try {
-    await s3Client.send(new HeadObjectCommand({ Bucket: BUCKET_NAME, Key: thumbnailKey }));
-    return thumbnailKey;
-  } catch (error) {
-    if (error.name === 'NotFound') {
-      const imageBuffer = await s3Client.send(new GetObjectCommand({ Bucket: BUCKET_NAME, Key: key })).then(response => {
-        return new Promise((resolve, reject) => {
-          const chunks = [];
-          response.Body.on('data', (chunk) => chunks.push(chunk));
-          response.Body.on('end', () => resolve(Buffer.concat(chunks)));
-          response.Body.on('error', reject);
-        });
-      });
-
-      const sharpInstance = sharp(imageBuffer).resize(200).withMetadata();
-
-      if (IMAGE_COMPRESSION_QUALITY >= 0 && IMAGE_COMPRESSION_QUALITY <= 100) {
-        sharpInstance.jpeg({ quality: IMAGE_COMPRESSION_QUALITY });
-      }
-
-      const thumbnailBuffer = await sharpInstance.toBuffer();
-
-      const uploadParams = {
-        Bucket: BUCKET_NAME,
-        Key: thumbnailKey,
-        Body: thumbnailBuffer,
-        ContentType: 'image/jpeg',
-      };
-
-      await s3Client.send(new PutObjectCommand(uploadParams));
-
-      return thumbnailKey;
-    }
-    throw error;
-  }
-}
-
 async function getExifData(key) {
   const getObjectParams = {
     Bucket: BUCKET_NAME,
@@ -92,23 +53,73 @@ app.use(express.static('public'));
 
 app.get('/images', async (req, res) => {
   try {
-    const images = await s3Client.send(new ListObjectsCommand({ Bucket: BUCKET_NAME, Prefix: IMAGE_DIR }));
-    const imageUrls = await Promise.all(images.Contents.map(async (item) => {
-      const itemExtension = path.extname(item.Key).toLowerCase();
-      const isFile = item.Key.split('/').length === 2;
-      if (!validImageExtensions.includes(itemExtension) || !isFile) {
-        return null;
-      }
-      const thumbnailKey = await checkAndCreateThumbnail(item.Key);
-      return {
-        original: `${IMAGE_BASE_URL}/${item.Key}`,
-        thumbnail: `${IMAGE_BASE_URL}/${thumbnailKey}`,
-      };
+    const images = await s3Client.send(new ListObjectsCommand({ 
+      Bucket: BUCKET_NAME, 
+      Prefix: IMAGE_DIR 
     }));
-    res.json(imageUrls.filter(url => url !== null));
+    
+    // 仅返回图片的基本信息，不检查缩略图
+    const imageUrls = images.Contents
+      .filter(item => {
+        const itemExtension = path.extname(item.Key).toLowerCase();
+        const isFile = item.Key.split('/').length === 2;
+        return validImageExtensions.includes(itemExtension) && isFile;
+      })
+      .map(item => ({
+        original: `${IMAGE_BASE_URL}/${item.Key}`,
+        thumbnail: `${IMAGE_BASE_URL}/${IMAGE_DIR}/preview/${path.basename(item.Key)}`
+      }));
+    
+    res.json(imageUrls);
   } catch (error) {
     console.error('Error loading images:', error);
     res.status(500).send('Error loading images');
+  }
+});
+
+app.get('/thumbnail/:key', async (req, res) => {
+  const key = decodeURIComponent(req.params.key);
+  const thumbnailKey = `${IMAGE_DIR}/preview/${path.basename(key)}`;
+  
+  try {
+    // 检查缩略图是否存在
+    await s3Client.send(new HeadObjectCommand({ 
+      Bucket: BUCKET_NAME, 
+      Key: thumbnailKey 
+    }));
+    res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
+  } catch (error) {
+    if (error.name === 'NotFound') {
+      // 如果不存在，生成缩略图
+      const imageBuffer = await s3Client.send(new GetObjectCommand({ 
+        Bucket: BUCKET_NAME, 
+        Key: key 
+      })).then(response => {
+        return new Promise((resolve, reject) => {
+          const chunks = [];
+          response.Body.on('data', (chunk) => chunks.push(chunk));
+          response.Body.on('end', () => resolve(Buffer.concat(chunks)));
+          response.Body.on('error', reject);
+        });
+      });
+
+      const sharpInstance = sharp(imageBuffer).resize(200).withMetadata();
+      if (IMAGE_COMPRESSION_QUALITY >= 0 && IMAGE_COMPRESSION_QUALITY <= 100) {
+        sharpInstance.jpeg({ quality: IMAGE_COMPRESSION_QUALITY });
+      }
+
+      const thumbnailBuffer = await sharpInstance.toBuffer();
+      await s3Client.send(new PutObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: thumbnailKey,
+        Body: thumbnailBuffer,
+        ContentType: 'image/jpeg',
+      }));
+
+      res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
+    } else {
+      throw error;
+    }
   }
 });
 
