@@ -85,22 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const path = window.location.pathname;
             const tag = path.split('/')[1] || 'all';
             const tagButton = Array.from(document.querySelectorAll('.tag')).find(button => button.textContent.toLowerCase() === tag.toLowerCase());
-            
             if (tagButton) {
                 selectTag(tagButton);
                 filterImages(tag);
             } else {
-                // 如果没有找到匹配的标签，默认选择 'all'
+                // If no matching tag is found, default to 'all'
                 const allTagButton = document.querySelector('.tag-filter .tag:first-child');
                 selectTag(allTagButton);
                 filterImages('all');
-            }
-            
-            // 如果选择的是 'all' 标签，移除 URL 中的标签部分
-            if (tag === 'all') {
-                const url = new URL(window.location);
-                url.pathname = '/';
-                window.history.replaceState({ path: url.href }, '', url.href);
             }
         }
 
