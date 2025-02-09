@@ -31,12 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function createTagFilter(tags) {
             const tagContainer = document.createElement('div');
             tagContainer.className = 'tag-filter';
-            tagContainer.style.overflowX = 'auto';
-            tagContainer.style.whiteSpace = 'nowrap';
-            tagContainer.style.scrollbarWidth = 'none'; // 隐藏滚动条
-            tagContainer.style.msOverflowStyle = 'none'; // 隐藏滚动条（IE）
-            tagContainer.style.WebkitOverflowScrolling = 'touch'; // 平滑滚动
-
+            
             // 添加"全部"标签
             const allTag = document.createElement('button');
             allTag.className = 'tag';
