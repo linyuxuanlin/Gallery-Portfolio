@@ -108,10 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.src = imageUrls[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
                 
+                // 立即将图片添加到最短列中
+                const shortestColumn = getShortestColumn();
+                columnElements[shortestColumn].appendChild(img);
+                
                 img.onload = function () {
                     this.classList.add('loaded');
-                    const shortestColumn = getShortestColumn();
-                    columnElements[shortestColumn].appendChild(img);
                     imagesLoadedCount++;
                     loadingImagesCount--;
                     
