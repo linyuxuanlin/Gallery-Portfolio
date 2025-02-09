@@ -146,7 +146,7 @@ body.dark #exif-info {
 }
 
 .tag:hover {
-    background: #ddd;
+    background: #45a049; /* 更深的绿色 */
 }
 
 body.dark .tag-filter {
@@ -159,5 +159,5 @@ body.dark .tag {
 }
 
 body.dark .tag:hover {
-    background: #444;
+    background: #388E3C; /* 深色模式下的绿色 */
 }

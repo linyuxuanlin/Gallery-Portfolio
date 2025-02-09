@@ -35,8 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
             // 添加"全部"标签
             const allTag = document.createElement('button');
             allTag.className = 'tag';
-            allTag.textContent = '全部';
-            allTag.addEventListener('click', () => filterImages('all'));
+            allTag.textContent = 'All';
+            allTag.style.backgroundColor = '#4CAF50'; // 绿色主题色
+            allTag.style.color = '#fff';
+            allTag.addEventListener('click', () => {
+                // 移除所有标签的选中样式
+                tagContainer.querySelectorAll('.tag').forEach(t => {
+                    t.style.backgroundColor = '';
+                    t.style.color = '';
+                });
+                // 设置当前标签的选中样式
+                allTag.style.backgroundColor = '#4CAF50';
+                allTag.style.color = '#fff';
+                filterImages('all');
+            });
             tagContainer.appendChild(allTag);
 
             // 添加其他标签，排除 'preview' 文件夹
@@ -45,7 +57,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tagButton = document.createElement('button');
                     tagButton.className = 'tag';
                     tagButton.textContent = tag;
-                    tagButton.addEventListener('click', () => filterImages(tag));
+                    tagButton.addEventListener('click', () => {
+                        // 移除所有标签的选中样式
+                        tagContainer.querySelectorAll('.tag').forEach(t => {
+                            t.style.backgroundColor = '';
+                            t.style.color = '';
+                        });
+                        // 设置当前标签的选中样式
+                        tagButton.style.backgroundColor = '#4CAF50';
+                        tagButton.style.color = '#fff';
+                        filterImages(tag);
+                    });
                     tagContainer.appendChild(tagButton);
                 }
             });
@@ -62,6 +84,18 @@ document.addEventListener('DOMContentLoaded', () => {
             imagesLoadedCount = 0;
             loadingImagesCount = 0;
             createColumns();
+            
+            // 如果是"全部"标签，显示所有图片（包括根目录和子文件夹，排除preview）
+            if (tag === 'all') {
+                const allImages = [];
+                for (const key in imageUrls) {
+                    if (key !== 'preview') {
+                        allImages.push(...imageUrls[key]);
+                    }
+                }
+                imageUrls['all'] = allImages;
+            }
+            
             loadNextImages();
         }
 
