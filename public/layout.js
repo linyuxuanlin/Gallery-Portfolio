@@ -3,13 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeIcon = document.getElementById('theme-icon');
 
     function setTheme(theme) {
-        if (theme === 'dark') {
-            document.body.classList.add('dark');
-            themeIcon.src = '/assets/brightness_7.svg'; // 日间图标
-        } else {
-            document.body.classList.remove('dark');
-            themeIcon.src = '/assets/brightness_4.svg'; // 夜间图标
-        }
+        // 使用 requestAnimationFrame 优化性能
+        requestAnimationFrame(() => {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                themeIcon.src = '/assets/brightness_7.svg'; // 日间图标
+            } else {
+                document.body.classList.remove('dark');
+                themeIcon.src = '/assets/brightness_4.svg'; // 夜间图标
+            }
+        });
     }
 
     themeToggle.addEventListener('click', () => {

@@ -20,12 +20,13 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   opacity: 0; /* Start hidden */
-  transition: transform 0.3s, box-shadow 0.3s, opacity 1s; /* Add opacity transition */
-  transform: translateY(0);
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .gallery img.loaded {
-  opacity: 1; /* Fade in */
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .gallery img.loaded:hover {
