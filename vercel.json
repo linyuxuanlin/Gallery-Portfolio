@@ -16,19 +16,5 @@
     { "src": "/exif/(.*)", "dest": "/server.js" },
     { "src": "/thumbnail/(.*)", "dest": "/server.js" },
     { "src": "/(.*)", "dest": "/public/$1" }
-  ],
-  "cache": [
-    {
-      "src": "/images",
-      "headers": {
-        "Cache-Control": "public, max-age=3600"
-      }
-    },
-    {
-      "src": "/thumbnail/*",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000"
-      }
-    }
   ]
 }
