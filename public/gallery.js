@@ -164,8 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 imageUrls = data;
                 createTagFilter(Object.keys(data));
+                // 首次加载时自动选择 "All" 标签
+                filterImages('all');
                 updateColumns();
-                loadNextImages();
             })
             .catch(error => console.error('Error loading images:', error));
 

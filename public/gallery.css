@@ -124,7 +124,7 @@ body.dark #exif-info {
 /* 标签筛选样式 */
 .tag-filter {
     position: fixed;
-    top: 80px;
+    top: 90px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
