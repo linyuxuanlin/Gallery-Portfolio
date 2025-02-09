@@ -123,18 +123,30 @@ body.dark #exif-info {
 
 /* 标签筛选样式 */
 .tag-filter {
-    position: fixed;
-    top: 90px;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
-    gap: 10px;
-    padding: 10px;
-    background: rgba(250, 250, 250, 0.9);
-    border-radius: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 100;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px 0;
+    margin: 20px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #4CAF50 #f1f1f1;
+}
 
+.tag-filter::-webkit-scrollbar {
+    height: 8px;
+}
+
+.tag-filter::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.tag-filter::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 4px;
+}
+
+.tag-filter::-webkit-scrollbar-thumb:hover {
+    background: #45a049;
 }
 
 .tag {
@@ -144,6 +156,8 @@ body.dark #exif-info {
     background-color: #e1e1e1; 
     cursor: pointer;
     transition: all 0.3s ease;
+    flex: 0 0 auto;
+    margin: 0 8px;
 }
 
 .tag:hover {
