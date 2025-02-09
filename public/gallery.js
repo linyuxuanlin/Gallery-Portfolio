@@ -181,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.src = images[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
                 
+                // 获取最短列
                 const shortestColumn = getShortestColumn();
                 columnElements[shortestColumn].appendChild(img);
                 
@@ -188,6 +189,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     this.classList.add('loaded');
                     imagesLoadedCount++;
                     loadingImagesCount--;
+                    
+                    // 检查并重新分配图片到最短列
+                    const newShortestColumn = getShortestColumn();
+                    if (shortestColumn !== newShortestColumn) {
+                        columnElements[newShortestColumn].appendChild(this);
+                    }
                     
                     if (loadingImagesCount === 0) {
                         setLoadingState(false);
