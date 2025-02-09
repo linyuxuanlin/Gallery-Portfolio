@@ -287,3 +287,14 @@ body {
 .gallery img {
     box-shadow: 0 4px 8px var(--shadow-color);
 }
+
+.tag-filter {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.08); /* 将透明度从0.05调整为0.08 */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
