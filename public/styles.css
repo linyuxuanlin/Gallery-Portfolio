@@ -184,15 +184,6 @@ body.dark footer {
   header button {
     margin-right: 30px;
   }
-  .gallery {
-    width: 95%;
-    gap: 0.5em;
-  }
-  
-  .modal-content {
-    margin-top: 50px;
-    max-width: 95%;
-  }
 }
 
 @media (min-width: 600px) and (max-width: 1200px) {

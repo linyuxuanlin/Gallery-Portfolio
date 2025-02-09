@@ -4,9 +4,6 @@ const sharp = require('sharp');
 const dotenv = require('dotenv');
 const path = require('path');
 const exifParser = require('exif-parser');
-const rateLimit = require('express-rate-limit');
-const NodeCache = require('node-cache');
-const helmet = require('helmet');
 
 dotenv.config();
 
@@ -29,26 +26,6 @@ const IMAGE_DIR = process.env.R2_IMAGE_DIR;
 const IMAGE_COMPRESSION_QUALITY = parseInt(process.env.IMAGE_COMPRESSION_QUALITY, 10);
 
 const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15分钟
-  max: 100 // 限制每个IP 100个请求
-});
-
-app.use(limiter);
-
-app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            imgSrc: ["'self'", "data:", "blob:", process.env.R2_IMAGE_BASE_URL],
-            scriptSrc: ["'self'"],
-            styleSrc: ["'self'"]
-        }
-    }
-}));
-
-const cache = new NodeCache({ stdTTL: 600 }); // 10分钟缓存
 
 async function checkAndCreateThumbnail(key) {
   const thumbnailKey = `${IMAGE_DIR}/preview/${path.basename(key)}`;
@@ -85,12 +62,6 @@ async function checkAndCreateThumbnail(key) {
 
       return thumbnailKey;
     }
-    console.error('Error in checkAndCreateThumbnail:', {
-      key,
-      errorName: error.name,
-      errorMessage: error.message,
-      stack: error.stack
-    });
     throw error;
   }
 }
@@ -120,10 +91,6 @@ async function getExifData(key) {
 app.use(express.static('public'));
 
 app.get('/images', async (req, res) => {
-  const cachedImages = cache.get('images');
-  if (cachedImages) {
-    return res.json(cachedImages);
-  }
   try {
     const images = await s3Client.send(new ListObjectsCommand({ Bucket: BUCKET_NAME, Prefix: IMAGE_DIR }));
     const imageUrls = await Promise.all(images.Contents.map(async (item) => {
@@ -138,7 +105,6 @@ app.get('/images', async (req, res) => {
         thumbnail: `${IMAGE_BASE_URL}/${thumbnailKey}`,
       };
     }));
-    cache.set('images', imageUrls);
     res.json(imageUrls.filter(url => url !== null));
   } catch (error) {
     console.error('Error loading images:', error);
@@ -159,15 +125,6 @@ app.get('/exif/:key', async (req, res) => {
 
 app.get('/config', (req, res) => {
   res.json({ IMAGE_BASE_URL: process.env.R2_IMAGE_BASE_URL });
-});
-
-// 添加统一的错误处理中间件
-app.use((err, req, res, next) => {
-    console.error('错误:', err);
-    res.status(500).json({
-        error: '服务器内部错误',
-        message: process.env.NODE_ENV === 'development' ? err.message : undefined
-    });
 });
 
 app.listen(port, () => {

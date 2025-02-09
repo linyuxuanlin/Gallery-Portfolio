@@ -103,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             for (let i = currentIndex; i < endIndex; i++) {
                 const img = document.createElement('img');
-                img.loading = "lazy"; // 添加懒加载属性
                 img.src = imageUrls[i].thumbnail;
                 img.alt = `Photo ${i + 1}`;
                 img.onload = function () {
@@ -293,16 +292,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // 将图片加载逻辑抽离为单独模块
-    const ImageLoader = {
-        loadImage(url) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => resolve(img);
-                img.onerror = reject;
-                img.src = url;
-            });
-        }
-    };
 });
