@@ -37,5 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.addEventListener('load', () => img.classList.add('loaded'));
             }
         });
+        document.querySelector('footer').style.opacity = '1'; // 显示底栏
     });
 });
