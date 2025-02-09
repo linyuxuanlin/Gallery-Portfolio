@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SCROLL_THRESHOLD = 100; // Scroll threshold to start hiding the header
     let currentImageRequest = null; // Variable to hold the current image request
     let currentExifRequest = null; // Variable to hold the current EXIF request
+    let isPageLoading = true; // 页面加载标志
 
     // Fetch configuration from server
     fetch('/config')
@@ -15,6 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
             initGallery();
         })
         .catch(error => console.error('Error loading config:', error));
+
+    // 在页面加载完成后设置标志
+    window.addEventListener('load', () => {
+        isPageLoading = false;
+    });
 
     function initGallery() {
         const galleryElement = document.getElementById('gallery');
@@ -281,6 +287,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const span = document.getElementsByClassName('close')[0];
 
         function openModal(src) {
+            if (isPageLoading) {
+                console.log('页面正在加载，无法打开大图');
+                return; // 如果页面正在加载，直接返回
+            }
             // Cancel any ongoing image or EXIF requests
             if (currentImageRequest) {
                 currentImageRequest.abort();
