@@ -131,9 +131,9 @@ body.dark #exif-info {
     flex-wrap: nowrap; /* 防止换行，使标签始终在同一行 */
     gap: 10px;
     padding: 10px;
-     /* width: 90%;          设置较窄的宽度 */
+    /* width: 90%;          设置较窄的宽度 */
     /* max-width: 600px;     最大宽度限制 */
-    max-width: 95%;     
+    max-width: 90%;     
     background: rgba(250, 250, 250, 0.9);
     border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -141,6 +141,13 @@ body.dark #exif-info {
     overflow-x: auto;     /* 启用横向滚动 */
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch; /* 平滑滚动 */
+    
+    /* 隐藏滚动条 */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+.tag-filter::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Webkit */
 }
 
 .tag {
