@@ -96,6 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageUrls['all'] = allImages;
             }
             
+            // 重新分配图片到最短列
+            const images = imageUrls[currentTag] || [];
+            images.forEach((imageUrl, index) => {
+                const img = document.createElement('img');
+                img.src = imageUrl.thumbnail;
+                img.alt = `Photo ${index + 1}`;
+                img.classList.add('loaded');
+                img.onclick = () => openModal(imageUrl.original);
+                
+                const shortestColumn = getShortestColumn();
+                columnElements[shortestColumn].appendChild(img);
+            });
+            
             loadNextImages();
         }
 
