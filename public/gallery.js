@@ -160,14 +160,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function distributeImages() {
             columnElements.forEach(column => column.innerHTML = '');
-            imageUrls[currentTag].forEach((imageUrl, index) => {
-                const img = document.createElement('img');
-                img.src = imageUrl.thumbnail;
-                img.alt = `Photo ${index + 1}`;
-                img.classList.add('loaded'); // Assume images are loaded after initial load
-                img.onclick = () => openModal(imageUrl.original);
-                columnElements[index % columns].appendChild(img);
-            });
+            if (imageUrls[currentTag]) {
+                imageUrls[currentTag].forEach((imageUrl, index) => {
+                    const img = document.createElement('img');
+                    img.src = imageUrl.thumbnail;
+                    img.alt = `Photo ${index + 1}`;
+                    img.classList.add('loaded'); // Assume images are loaded after initial load
+                    img.onclick = () => openModal(imageUrl.original);
+                    columnElements[index % columns].appendChild(img);
+                });
+            }
         }
 
         // 从服务器获取所有图片 URL
