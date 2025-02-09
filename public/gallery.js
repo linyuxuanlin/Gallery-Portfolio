@@ -88,6 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tagButton) {
                 selectTag(tagButton);
                 filterImages(tag);
+            } else {
+                // If no matching tag is found, default to 'all'
+                const allTagButton = document.querySelector('.tag-filter .tag:first-child');
+                selectTag(allTagButton);
+                filterImages('all');
             }
         }
 

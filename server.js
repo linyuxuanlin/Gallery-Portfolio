@@ -155,6 +155,11 @@ app.get('/config', (req, res) => {
   res.json({ IMAGE_BASE_URL: process.env.R2_IMAGE_BASE_URL });
 });
 
+// Add a catch-all route to serve the index.html for any path
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
