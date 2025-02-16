@@ -96,8 +96,12 @@ app.get('/images', async (req, res) => {
 
 app.get('/thumbnail/:key', async (req, res) => {
   const key = decodeURIComponent(req.params.key);
-  const thumbnailKey = `${IMAGE_DIR}/preview/${path.basename(key)}`;
-  
+  // 定义预览图的格式，可选 'webp'、'heif' 或 'jpeg'（默认使用 webp）
+  const previewFormat = process.env.IMAGE_PREVIEW_FORMAT || 'webp';
+  // 根据预览图格式设置文件扩展名：如果为 jpeg，则使用原始扩展名，否则替换为相应格式
+  const newExt = (previewFormat === 'jpeg') ? path.extname(key) : `.${previewFormat}`;
+  const thumbnailKey = `${IMAGE_DIR}/preview/${path.basename(key, path.extname(key))}${newExt}`;
+
   try {
     // 检查缩略图是否存在
     await s3Client.send(new HeadObjectCommand({ 
@@ -107,7 +111,7 @@ app.get('/thumbnail/:key', async (req, res) => {
     res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
   } catch (error) {
     if (error.name === 'NotFound') {
-      // 如果不存在，生成缩略图
+      // 如果预览图不存在，则生成
       const imageBuffer = await s3Client.send(new GetObjectCommand({ 
         Bucket: BUCKET_NAME, 
         Key: key 
@@ -121,16 +125,33 @@ app.get('/thumbnail/:key', async (req, res) => {
       });
 
       const sharpInstance = sharp(imageBuffer).resize(200).withMetadata();
+      
+      // 根据预览图格式选择相应的压缩方式（并设置压缩质量）
       if (IMAGE_COMPRESSION_QUALITY >= 0 && IMAGE_COMPRESSION_QUALITY <= 100) {
-        sharpInstance.jpeg({ quality: IMAGE_COMPRESSION_QUALITY });
+        if (previewFormat === 'webp') {
+          sharpInstance.webp({ quality: IMAGE_COMPRESSION_QUALITY });
+        } else if (previewFormat === 'heif') {
+          sharpInstance.heif({ quality: IMAGE_COMPRESSION_QUALITY });
+        } else {
+          sharpInstance.jpeg({ quality: IMAGE_COMPRESSION_QUALITY });
+        }
       }
 
       const thumbnailBuffer = await sharpInstance.toBuffer();
+
+      // 根据生成的格式设置 Content-Type
+      let contentType = 'image/jpeg';
+      if (previewFormat === 'webp') {
+        contentType = 'image/webp';
+      } else if (previewFormat === 'heif') {
+        contentType = 'image/heif';
+      }
+
       await s3Client.send(new PutObjectCommand({
         Bucket: BUCKET_NAME,
         Key: thumbnailKey,
         Body: thumbnailBuffer,
-        ContentType: 'image/jpeg',
+        ContentType: contentType,
       }));
 
       res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
