@@ -191,26 +191,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 更新列数及每次加载的图片数，并重新分配已加载图片（使用贪心算法）
         function updateColumns() {
-            // 保存当前所有已加载的图片
-            const loadedImages = Array.from(document.querySelectorAll('.gallery img'));
-            
             const width = window.innerWidth;
+            let computedColumns, computedImagesPerLoad;
             if (width < 600) {
-                columns = 2;
-                imagesPerLoad = 10;
+                computedColumns = 2;
+                computedImagesPerLoad = 10;
             } else if (width < 900) {
-                columns = 3;
-                imagesPerLoad = 15;
+                computedColumns = 3;
+                computedImagesPerLoad = 15;
             } else if (width < 1200) {
-                columns = 4;
-                imagesPerLoad = 20;
+                computedColumns = 4;
+                computedImagesPerLoad = 20;
             } else if (width < 1500) {
-                columns = 5;
-                imagesPerLoad = 23;
+                computedColumns = 5;
+                computedImagesPerLoad = 23;
             } else {
-                columns = 6;
-                imagesPerLoad = 25;
+                computedColumns = 6;
+                computedImagesPerLoad = 25;
             }
+            
+            if (computedColumns === columns) {
+                // 如果列数没有变化，仅更新加载图片数量，并不重新排布图片
+                imagesPerLoad = computedImagesPerLoad;
+                return;
+            }
+            
+            // 如果列数变化，则更新全局变量并重新分配已加载图片
+            columns = computedColumns;
+            imagesPerLoad = computedImagesPerLoad;
+            
+            const loadedImages = Array.from(document.querySelectorAll('.gallery img'));
             createColumns();
             distributeImages(loadedImages);
             setupLoadMoreObserver();
