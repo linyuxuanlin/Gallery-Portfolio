@@ -105,6 +105,23 @@ document.addEventListener('DOMContentLoaded', () => {
             // 插入到header和gallery之间
             const header = document.querySelector('header');
             header.insertAdjacentElement('afterend', tagContainer);
+
+            // 利用 IntersectionObserver 监听各个标签按钮是否完全可见
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // 如果标签没有完全展示，则降低透明度，实现"淡化"效果
+                    if (entry.intersectionRatio < 1) {
+                        entry.target.style.opacity = '0.6';
+                    } else {
+                        entry.target.style.opacity = '1';
+                    }
+                });
+            }, { root: tagContainer, threshold: 1.0 });
+
+            // 对所有的标签按钮进行观察
+            tagContainer.querySelectorAll('.tag').forEach(tagButton => {
+                observer.observe(tagButton);
+            });
         }
 
         // 图片筛选功能
