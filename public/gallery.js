@@ -77,6 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 tagContainer.scrollTop += event.deltaY;
             });
 
+            // 辅助函数：将选中的标签滚动到中间
+            function centerTagButton(btn) {
+                const containerHeight = tagContainer.clientHeight;
+                const btnOffsetTop = btn.offsetTop;
+                const btnHeight = btn.clientHeight;
+                const scrollTarget = btnOffsetTop - (containerHeight / 2) + (btnHeight / 2);
+                tagContainer.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+            }
+
             // 添加"全部"标签
             const allTag = document.createElement('button');
             allTag.className = 'tag';
@@ -95,10 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 更新 URL 为根路径，表示全部
                 history.pushState(null, '', '/');
                 filterImages('all');
+                // 滚动到正中间
+                centerTagButton(allTag);
             });
             tagContainer.appendChild(allTag);
 
-            // 添加其他标签，排除 'preview' 文件夹
+            // 添加其他标签，排除 'all' 和 'preview'
             tags.forEach(tag => {
                 if (tag !== 'all' && tag !== 'preview') {
                     const tagButton = document.createElement('button');
@@ -116,6 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         // 更新 URL 为 /标签名
                         history.pushState(null, '', `/${tag}`);
                         filterImages(tag);
+                        // 滚动到正中间
+                        centerTagButton(tagButton);
                     });
                     tagContainer.appendChild(tagButton);
                 }
