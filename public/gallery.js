@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const observerOptions = {
                 root: null, // 使用视口作为根
                 rootMargin: '0px',
-                threshold: 1  // 当按钮 100% 可见时触发
+                threshold: 0.5  // 当按钮 100% 可见时触发
             };
 
             const observer = new IntersectionObserver((entries) => {
