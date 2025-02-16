@@ -515,26 +515,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.target === loadMoreButton) {
-                        // 当按钮可见且没有禁用且还未启动倒计时时
+                        // 当按钮可见且没有禁用且还未启动倒计时时，启动倒计时自动加载
                         if (entry.isIntersecting && !loadMoreButton.disabled && !countdownTimer) {
-                            if (manualLoadMoreDone) {
-                                // 如果已经手动点击过，启动倒计时自动加载
-                                countdownRemaining = 3;
-                                loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
-                                countdownTimer = setInterval(() => {
-                                    countdownRemaining--;
-                                    if (countdownRemaining > 0) {
-                                        loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
-                                    } else {
-                                        clearInterval(countdownTimer);
-                                        countdownTimer = null;
-                                        loadNextImages();
-                                    }
-                                }, 1000);
-                            } else {
-                                // 首页第一次不自动加载，保持加载按钮原文本
-                                loadMoreButton.textContent = '加载更多';
-                            }
+                            countdownRemaining = 3;
+                            loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
+                            countdownTimer = setInterval(() => {
+                                countdownRemaining--;
+                                if (countdownRemaining > 0) {
+                                    loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
+                                } else {
+                                    clearInterval(countdownTimer);
+                                    countdownTimer = null;
+                                    loadNextImages();
+                                }
+                            }, 1000);
                         }
                     }
                 });
