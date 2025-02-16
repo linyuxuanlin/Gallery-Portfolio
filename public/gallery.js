@@ -33,6 +33,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let columnElements = [];
         let currentTag = 'all';
 
+        // 新增：记录倒计时定时器和倒计时剩余秒数
+        let countdownTimer = null;
+        let countdownRemaining = 0;
+
+        // 修改点击事件：如果用户点击则取消倒计时，跳过等待直接加载下一批图片
+        loadMoreButton.onclick = () => {
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
+            loadNextImages();
+        };
+
         // 创建标签栏
         function createTagFilter(tags) {
             const tagContainer = document.createElement('div');
@@ -164,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             createColumns();
             distributeImages(loadedImages);
+            setupLoadMoreObserver();
         }
 
         // 重新分配当前所有已加载图片，根据图片实际高度分配到最短列，实现均衡布局
@@ -256,8 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadMoreButton.disabled = false;
             }
         }
-
-        loadMoreButton.onclick = loadNextImages;
 
         // 动态设置 gallery 的 margin-top
         function setGalleryMarginTop() {
@@ -386,11 +398,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             lastScrollY = currentScrollY;
 
-            // Check if the user has scrolled to the bottom
-            // if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            // 移除自动点击 loadMoreButton 的逻辑，避免提前调用点击事件而跳过倒计时
+            // if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
             //     setTimeout(() => {
             //         loadMoreButton.click();
-            //     }, 500); // Delay of 0.5 seconds
+            //     }, 500); // 延时 0.5 秒
             // }
         });
 
@@ -405,5 +417,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateColumns();
             })
             .catch(error => console.error('Error loading images:', error));
+
+        // 重新定义 setupLoadMoreObserver，使其支持倒计时加载功能
+        function setupLoadMoreObserver() {
+            const observerOptions = {
+                root: null, // 使用视口作为根
+                rootMargin: '0px',
+                threshold: 1  // 当按钮 100% 可见时触发
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.target === loadMoreButton) {
+                        // 当按钮可见且没有禁用且还未启动倒计时时，开始倒计时
+                        if (entry.isIntersecting && !loadMoreButton.disabled && !countdownTimer) {
+                            countdownRemaining = 3;
+                            loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
+                            countdownTimer = setInterval(() => {
+                                countdownRemaining--;
+                                if (countdownRemaining > 0) {
+                                    loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
+                                } else {
+                                    clearInterval(countdownTimer);
+                                    countdownTimer = null;
+                                    loadNextImages();
+                                }
+                            }, 1000);
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            observer.observe(loadMoreButton);
+        }
+
+        // 调用 setupLoadMoreObserver 来启动自动加载倒计时处理
+        setupLoadMoreObserver();
     }
 });
