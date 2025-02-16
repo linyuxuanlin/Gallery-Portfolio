@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPageLoading = true; // 页面加载标志
     let manualLoadMoreDone = false; // 新增：用于标记是否已手动点击加载更多
 
+    // 在文件顶部新增一个变量，用于记录上一次的屏幕宽度
+    let lastWidth = window.innerWidth;
+
     // Fetch configuration from server
     fetch('/config')
         .then(response => response.json())
@@ -108,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function filterImages(tag) {
             manualLoadMoreDone = false; // 重置手动点击标识
 
-            // 移除底部“已全部加载完成”的提示消息（如果存在）
+            // 移除底部"已全部加载完成"的提示消息（如果存在）
             const loadedMsg = document.getElementById('all-loaded-message');
             if (loadedMsg) {
                 loadedMsg.remove();
@@ -387,9 +390,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // 修改 resize 事件处理：仅在宽度变化时，重新分配图片
         window.addEventListener('resize', () => {
-            updateColumns(); // 根据新的屏幕宽度更新列数并重新分配图片
-            setGalleryMarginTop(); // 更新 gallery 的 margin-top
+            if (window.innerWidth !== lastWidth) {
+                updateColumns(); // 当屏幕宽度变化时，根据新的宽度更新列数并重新分配图片
+                lastWidth = window.innerWidth;
+            }
+            setGalleryMarginTop(); // 始终更新 gallery 的 margin-top，以确保 header 距离正确
         });
 
         updateColumns(); // Initial column setup
