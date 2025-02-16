@@ -51,6 +51,21 @@ document.addEventListener('DOMContentLoaded', () => {
             manualLoadMoreDone = true; // 标记第一次加载已手动触发
         };
 
+        // 新增函数：从 URL 中获取默认标签
+        function getTagFromUrl() {
+            // 优先检测查询参数 ?tag=xxx
+            const urlParams = new URLSearchParams(window.location.search);
+            let tag = urlParams.get('tag');
+            if (tag) {
+                return tag;
+            }
+            // 如果查询参数中没有，则从 pathname 中获取（例如 http://domain.com/landscape）
+            if (window.location.pathname && window.location.pathname !== '/' && window.location.pathname !== '/index.html') {
+                return window.location.pathname.slice(1);
+            }
+            return 'all';
+        }
+
         // 创建标签栏
         function createTagFilter(tags) {
             const tagContainer = document.createElement('div');
@@ -86,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 设置当前标签的选中样式
                 allTag.style.backgroundColor = '#4CAF50';
                 allTag.style.color = '#fff';
+                // 更新 URL 为根路径，表示全部
+                history.pushState(null, '', '/');
                 filterImages('all');
                 // 滚动到正中间
                 centerTagButton(allTag);
@@ -107,6 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         // 设置当前标签的选中样式
                         tagButton.style.backgroundColor = '#4CAF50';
                         tagButton.style.color = '#fff';
+                        // 更新 URL 为 /标签名
+                        history.pushState(null, '', `/${tag}`);
                         filterImages(tag);
                         // 滚动到正中间
                         centerTagButton(tagButton);
@@ -503,6 +522,19 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 imageUrls = data;
                 createTagFilter(Object.keys(data));
+                // 根据 URL 获取初始标签，若不存在则默认使用 'all'
+                const initialTag = getTagFromUrl();
+                // 查找匹配的标签按钮（忽略大小写）
+                const tagButton = Array.from(document.querySelectorAll('.tag')).find(btn => {
+                    return btn.textContent.trim().toLowerCase() === (initialTag || 'all').toLowerCase();
+                });
+                if (tagButton) {
+                    // 模拟点击对应的标签按钮
+                    tagButton.click();
+                } else {
+                    // 如果找不到对应的标签按钮，则直接显示 'all'
+                    filterImages('all');
+                }
                 updateColumns();
             })
             .catch(error => console.error('Error loading images:', error));
