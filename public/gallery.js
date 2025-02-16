@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentImageRequest = null; // Variable to hold the current image request
     let currentExifRequest = null; // Variable to hold the current EXIF request
     let isPageLoading = true; // 页面加载标志
+    let manualLoadMoreDone = false; // 新增：用于标记是否已手动点击加载更多
 
     // Fetch configuration from server
     fetch('/config')
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 countdownTimer = null;
             }
             loadNextImages();
+            manualLoadMoreDone = true; // 标记第一次加载已手动触发
         };
 
         // 创建标签栏
@@ -104,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 图片筛选功能
         function filterImages(tag) {
+            manualLoadMoreDone = false; // 重置手动点击标识
             currentTag = tag;
             currentIndex = 0;
             imagesLoadedCount = 0;
@@ -429,20 +432,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.target === loadMoreButton) {
-                        // 当按钮可见且没有禁用且还未启动倒计时时，开始倒计时
+                        // 当按钮可见且没有禁用且还未启动倒计时时
                         if (entry.isIntersecting && !loadMoreButton.disabled && !countdownTimer) {
-                            countdownRemaining = 3;
-                            loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
-                            countdownTimer = setInterval(() => {
-                                countdownRemaining--;
-                                if (countdownRemaining > 0) {
-                                    loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
-                                } else {
-                                    clearInterval(countdownTimer);
-                                    countdownTimer = null;
-                                    loadNextImages();
-                                }
-                            }, 1000);
+                            if (manualLoadMoreDone) {
+                                // 如果已经手动点击过，启动倒计时自动加载
+                                countdownRemaining = 3;
+                                loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
+                                countdownTimer = setInterval(() => {
+                                    countdownRemaining--;
+                                    if (countdownRemaining > 0) {
+                                        loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
+                                    } else {
+                                        clearInterval(countdownTimer);
+                                        countdownTimer = null;
+                                        loadNextImages();
+                                    }
+                                }, 1000);
+                            } else {
+                                // 首页第一次不自动加载，保持加载按钮原文本
+                                loadMoreButton.textContent = '加载更多';
+                            }
                         }
                     }
                 });
