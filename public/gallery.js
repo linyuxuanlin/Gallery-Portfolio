@@ -490,12 +490,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             lastScrollY = currentScrollY;
 
-            // 移除自动点击 loadMoreButton 的逻辑，避免提前调用点击事件而跳过倒计时
-            // if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight) {
-            //     setTimeout(() => {
-            //         loadMoreButton.click();
-            //     }, 500); // 延时 0.5 秒
-            // }
         });
 
         // 从服务器获取所有图片 URL
