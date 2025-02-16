@@ -115,6 +115,7 @@ footer a {
 }
 
 .load-more.loading::after {
+  display: inline-block;
   content: "";
   border: 2px solid #fff;
   border-top: 2px solid transparent;
