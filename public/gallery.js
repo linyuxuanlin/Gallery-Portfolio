@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('页面正在加载，无法打开大图');
                 return; // 如果页面正在加载，直接返回
             }
-            // Cancel any ongoing image or EXIF requests
+            // 取消正在进行的图片或 EXIF 请求
             if (currentImageRequest) {
                 currentImageRequest.abort();
             }
@@ -344,21 +344,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
             modal.style.display = 'block';
             document.body.classList.add('no-scroll');
-            exifInfo.innerHTML = 'Loading original image and EXIF data...'; // Placeholder text
+            exifInfo.innerHTML = 'Loading original image and EXIF data...'; // 占位文本
 
-            // Create a new AbortController for the current requests
+            // 为当前请求创建新的 AbortController
             const imageController = new AbortController();
             const exifController = new AbortController();
             currentImageRequest = imageController;
             currentExifRequest = exifController;
 
-            // Fetch EXIF data first
+            // 先获取 EXIF 数据
             fetch(`/exif/${encodeURIComponent(src.replace(IMAGE_BASE_URL + '/', ''))}`, { signal: exifController.signal })
                 .then(response => response.json())
                 .then(data => {
                     if (!exifController.signal.aborted) {
+                        let shutterDisplay = 'N/A';
+                        if (data.ExposureTime) {
+                            if (data.ExposureTime < 1) {
+                                const denominator = Math.round(1 / data.ExposureTime);
+                                shutterDisplay = `1/${denominator}s`;
+                            } else {
+                                shutterDisplay = `${data.ExposureTime}s`;
+                            }
+                        }
                         exifInfo.innerHTML = `
-                            <p>光圈: ${data.FNumber ? `f/${data.FNumber}` : 'N/A'}  ·  快门: ${data.ExposureTime ? `${data.ExposureTime}s` : 'N/A'}  ·  ISO: ${data.ISO ? data.ISO : 'N/A'}</p>
+                            <p>光圈: ${data.FNumber ? `f/${data.FNumber}` : 'N/A'}  ·  快门: ${shutterDisplay}  ·  ISO: ${data.ISO ? data.ISO : 'N/A'}</p>
                         `;
                     }
                 })
@@ -369,11 +378,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
 
-            // Load the image after fetching EXIF data
+            // 获取图片
             modalImg.src = src;
             modalImg.onload = () => {
                 if (!imageController.signal.aborted) {
-                    currentImageRequest = null; // Clear the current image request when loaded
+                    currentImageRequest = null; // 图片加载后清空当前请求
                 }
             };
             modalImg.onerror = () => {
