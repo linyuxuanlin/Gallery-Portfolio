@@ -115,7 +115,9 @@ footer a {
 }
 
 .load-more.loading::after {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   content: "";
   border: 2px solid #fff;
   border-top: 2px solid transparent;
