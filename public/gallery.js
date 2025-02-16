@@ -97,6 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingImagesCount = 0;
             createColumns();
 
+            // 新增：重置"加载更多"按钮的显示状态
+            loadMoreButton.style.display = 'block';
+
             // 如果是 "all" 标签，则组合所有图片（排除 preview 文件夹）
             if (tag === 'all') {
                 const allImages = [];
