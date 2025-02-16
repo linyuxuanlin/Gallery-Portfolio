@@ -410,11 +410,11 @@ document.addEventListener('DOMContentLoaded', () => {
             lastScrollY = currentScrollY;
 
             // Check if the user has scrolled to the bottom
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-                setTimeout(() => {
-                    loadMoreButton.click();
-                }, 500); // Delay of 0.5 seconds
-            }
+            // if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            //     setTimeout(() => {
+            //         loadMoreButton.click();
+            //     }, 500); // Delay of 0.5 seconds
+            // }
         });
     }
 });
