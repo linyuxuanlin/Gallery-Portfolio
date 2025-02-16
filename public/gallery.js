@@ -96,8 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
             imagesLoadedCount = 0;
             loadingImagesCount = 0;
             createColumns();
-            
-            // 如果是"全部"标签，显示所有图片（包括根目录和子文件夹，排除preview）
+
+            // 如果是 "all" 标签，则组合所有图片（排除 preview 文件夹）
             if (tag === 'all') {
                 const allImages = [];
                 for (const key in imageUrls) {
@@ -107,20 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 imageUrls['all'] = allImages;
             }
-            
-            // 重新分配图片到最短列
-            const images = imageUrls[currentTag] || [];
-            images.forEach((imageUrl, index) => {
-                const img = document.createElement('img');
-                img.src = imageUrl.thumbnail;
-                img.alt = `Photo ${index + 1}`;
-                img.classList.add('loaded');
-                img.onclick = () => openModal(imageUrl.original);
-                
-                const shortestColumn = getShortestColumn();
-                columnElements[shortestColumn].appendChild(img);
-            });
-            
+
+            // 分页加载第一批图片
             loadNextImages();
         }
 
@@ -136,6 +124,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // 获取最短列的索引（根据当前列的 offsetHeight）
+        function getShortestColumn() {
+            let minIndex = 0;
+            let minHeight = columnElements[0].offsetHeight;
+            for (let i = 1; i < columnElements.length; i++) {
+                if (columnElements[i].offsetHeight < minHeight) {
+                    minHeight = columnElements[i].offsetHeight;
+                    minIndex = i;
+                }
+            }
+            return minIndex;
+        }
+
+        // 更新列数及每次加载的图片数，并重新分配已加载图片（使用贪心算法）
         function updateColumns() {
             const width = window.innerWidth;
             if (width < 600) {
@@ -158,46 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
             distributeImages();
         }
 
+        // 重新分配当前所有已加载图片，根据图片实际高度分配到最短列，实现均衡布局
         function distributeImages() {
+            // 清空所有列
             columnElements.forEach(column => column.innerHTML = '');
-            if (imageUrls[currentTag]) {
-                imageUrls[currentTag].forEach((imageUrl, index) => {
-                    const img = document.createElement('img');
-                    img.src = imageUrl.thumbnail;
-                    img.alt = `Photo ${index + 1}`;
-                    img.classList.add('loaded'); // Assume images are loaded after initial load
-                    img.onclick = () => openModal(imageUrl.original);
-                    columnElements[index % columns].appendChild(img);
-                });
-            }
+            // 获取画廊中所有图片元素（注意：顺序可能会被改变，但能保证高度平衡）
+            const allImages = document.querySelectorAll('.gallery img');
+            allImages.forEach(img => {
+                const shortestColumn = getShortestColumn();
+                columnElements[shortestColumn].appendChild(img);
+            });
         }
 
-        // 从服务器获取所有图片 URL
-        fetch('/images')
-            .then(response => response.json())
-            .then(data => {
-                imageUrls = data;
-                createTagFilter(Object.keys(data));
-                // 首次加载时自动选择 "All" 标签
-                filterImages('all');
-                updateColumns();
-            })
-            .catch(error => console.error('Error loading images:', error));
-
-        // 获取最短列的索引
-        function getShortestColumn() {
-            let minIndex = 0;
-            let minHeight = columnElements[0].offsetHeight;
-            for (let i = 1; i < columnElements.length; i++) {
-                if (columnElements[i].offsetHeight < minHeight) {
-                    minHeight = columnElements[i].offsetHeight;
-                    minIndex = i;
-                }
-            }
-            return minIndex;
-        }
-
-        // 加载下一批图片
+        // 加载下一批图片，优化点在于：等图片加载完毕后，再根据真实高度检测最短列后插入 DOM
         function loadNextImages() {
             setLoadingState(true);
             const images = imageUrls[currentTag] || [];
@@ -205,38 +180,20 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingImagesCount = endIndex - currentIndex;
 
             for (let i = currentIndex; i < endIndex; i++) {
+                const imageData = images[i];
                 const img = document.createElement('img');
-                img.src = images[i].thumbnail;
+                img.src = imageData.thumbnail;
                 img.alt = `Photo ${i + 1}`;
-                
-                // 获取最短列
-                const shortestColumn = getShortestColumn();
-                columnElements[shortestColumn].appendChild(img);
-                
-                img.onload = function () {
-                    this.classList.add('loaded');
-                    imagesLoadedCount++;
-                    loadingImagesCount--;
-                    
-                    // 检查并重新分配图片到最短列
-                    const newShortestColumn = getShortestColumn();
-                    if (shortestColumn !== newShortestColumn) {
-                        columnElements[newShortestColumn].appendChild(this);
-                    }
-                    
-                    if (loadingImagesCount === 0) {
-                        setLoadingState(false);
-                    }
-                    checkIfAllImagesLoaded();
-                };
-                
+                img.onclick = () => openModal(imageData.original);
+
+                // 加载出错时，尝试通过 /thumbnail 接口重新加载
                 img.onerror = () => {
-                    fetch(`/thumbnail/${encodeURIComponent(images[i].original.replace(IMAGE_BASE_URL + '/', ''))}`)
+                    fetch(`/thumbnail/${encodeURIComponent(imageData.original.replace(IMAGE_BASE_URL + '/', ''))}`)
                         .then(() => {
-                            img.src = images[i].thumbnail;
+                            img.src = imageData.thumbnail;
                         })
                         .catch(error => {
-                            console.error(`Error loading image: ${images[i].thumbnail}`, error);
+                            console.error(`Error loading image: ${imageData.thumbnail}`, error);
                             loadingImagesCount--;
                             if (loadingImagesCount === 0) {
                                 setLoadingState(false);
@@ -244,10 +201,23 @@ document.addEventListener('DOMContentLoaded', () => {
                             checkIfAllImagesLoaded();
                         });
                 };
-                
-                img.onclick = function () {
-                    openModal(images[i].original);
+
+                // 图片加载完成后再插入到当前最短的列中
+                img.onload = () => {
+                    img.classList.add('loaded');
+                    imagesLoadedCount++;
+                    loadingImagesCount--;
+
+                    const shortestColumn = getShortestColumn();
+                    columnElements[shortestColumn].appendChild(img);
+
+                    if (loadingImagesCount === 0) {
+                        setLoadingState(false);
+                    }
+                    checkIfAllImagesLoaded();
                 };
+
+                // 注意：不再提前插入图片到 DOM 中，等待图片加载完成后再分配
             }
             currentIndex = endIndex;
             if (currentIndex >= images.length) {
@@ -416,5 +386,17 @@ document.addEventListener('DOMContentLoaded', () => {
             //     }, 500); // Delay of 0.5 seconds
             // }
         });
+
+        // 从服务器获取所有图片 URL
+        fetch('/images')
+            .then(response => response.json())
+            .then(data => {
+                imageUrls = data;
+                createTagFilter(Object.keys(data));
+                // 首次加载时自动选择 "All" 标签
+                filterImages('all');
+                updateColumns();
+            })
+            .catch(error => console.error('Error loading images:', error));
     }
 });
