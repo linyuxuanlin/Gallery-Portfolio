@@ -26,18 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         isPageLoading = false;
     });
 
-    // 在 DOMContentLoaded 回调内添加 popstate 监听器，当浏览器历史记录发生变化时自动更新标签
-    window.addEventListener('popstate', () => {
-        let newTag = window.location.pathname;
-        if (newTag === '/' || newTag === '/index.html') {
-            newTag = 'all';
-        } else {
-            newTag = decodeURIComponent(newTag.slice(1)); // 去掉前面的 "/"
-        }
-        updateTagSelection(newTag);
-        filterImages(newTag);
-    });
-
     function initGallery() {
         const galleryElement = document.getElementById('gallery');
         const loadMoreButton = document.getElementById('load-more');
@@ -473,14 +461,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 imageUrls = data;
                 createTagFilter(Object.keys(data));
-                // 根据当前 URL 设置初始标签（默认为 'all'）
-                const urlPath = window.location.pathname;
-                let initialTag = 'all';
-                if (urlPath && urlPath !== '/' && urlPath !== '/index.html') {
-                    initialTag = decodeURIComponent(urlPath.slice(1));
-                }
-                updateTagSelection(initialTag);
-                filterImages(initialTag);
+                // 首次加载时自动选择 "All" 标签
+                filterImages('all');
                 updateColumns();
             })
             .catch(error => console.error('Error loading images:', error));
@@ -526,21 +508,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 调用 setupLoadMoreObserver 来启动自动加载倒计时处理
         setupLoadMoreObserver();
-
-        // 新增：用于更新标签按钮的选中样式
-        function updateTagSelection(selectedTag) {
-            const tagContainer = document.querySelector('.tag-filter-vertical');
-            if (tagContainer) {
-                tagContainer.querySelectorAll('.tag').forEach(btn => {
-                    if (btn.textContent.toLowerCase() === selectedTag.toLowerCase()) {
-                        btn.style.backgroundColor = '#4CAF50';
-                        btn.style.color = '#fff';
-                    } else {
-                        btn.style.backgroundColor = '';
-                        btn.style.color = '';
-                    }
-                });
-            }
-        }
     }
 });
