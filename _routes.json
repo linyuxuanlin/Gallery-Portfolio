@@ -14,12 +14,28 @@
       "path": "server.js"
     },
     {
-      "pattern": "/thumbnails/*",
+      "pattern": "/thumbnail/*",
       "path": "server.js"
     },
     {
-      "pattern": "/*",
+      "pattern": "/assets/*",
       "path": "public/$1"
+    },
+    {
+      "pattern": "/styles/*",
+      "path": "public/$1"
+    },
+    {
+      "pattern": "/gallery.js",
+      "path": "public/gallery.js"
+    },
+    {
+      "pattern": "/layout.js",
+      "path": "public/layout.js"
+    },
+    {
+      "pattern": "/*",
+      "path": "public/index.html"
     }
   ]
 }
