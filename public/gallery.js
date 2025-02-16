@@ -259,8 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     messageContainer.style.textAlign = 'center';
                     messageContainer.style.color = 'gray';
                     messageContainer.style.margin = '20px 0';
-                    messageContainer.innerHTML = '<hr/><p>已全部加载完成</p>';
+                    messageContainer.innerHTML = '<hr style="width:100%; margin:0 auto;"/><p>已全部加载完成</p>';
                     loadMoreButton.insertAdjacentElement('afterend', messageContainer);
+                   
                 }
             }
         }
