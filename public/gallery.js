@@ -208,19 +208,19 @@ document.addEventListener('DOMContentLoaded', () => {
             let computedColumns, computedImagesPerLoad;
             if (width < 600) {
                 computedColumns = 2;
-                computedImagesPerLoad = 10;
+                computedImagesPerLoad = 6;
             } else if (width < 900) {
                 computedColumns = 3;
-                computedImagesPerLoad = 15;
+                computedImagesPerLoad = 9;
             } else if (width < 1200) {
                 computedColumns = 4;
-                computedImagesPerLoad = 20;
+                computedImagesPerLoad = 12;
             } else if (width < 1500) {
                 computedColumns = 5;
-                computedImagesPerLoad = 23;
+                computedImagesPerLoad = 16;
             } else {
                 computedColumns = 6;
-                computedImagesPerLoad = 25;
+                computedImagesPerLoad = 20;
             }
             
             if (computedColumns === columns) {
