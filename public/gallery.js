@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const img = document.createElement('img');
                 img.src = imageData.thumbnail;
                 img.alt = `Photo ${i + 1}`;
-                img.onclick = () => openModal(imageData.original);
+                img.onclick = () => openModal(imageData.original, imageData.thumbnail);
 
                 // 加载出错时，尝试通过 /thumbnail 接口重新加载
                 img.onerror = () => {
@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const exifInfo = document.getElementById('exif-info');
         const span = document.getElementsByClassName('close')[0];
 
-        function openModal(src) {
+        function openModal(originalSrc, previewSrc) {
             if (isPageLoading) {
                 console.log('页面正在加载，无法打开大图');
                 return; // 如果页面正在加载，直接返回
@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             modal.style.display = 'block';
             document.body.classList.add('no-scroll');
-            exifInfo.innerHTML = 'Loading original image and EXIF data...'; // 占位文本
+            exifInfo.innerHTML = 'Loading original image and EXIF data...';
 
             // 为当前请求创建新的 AbortController
             const imageController = new AbortController();
@@ -352,8 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
             currentImageRequest = imageController;
             currentExifRequest = exifController;
 
-            // 先获取 EXIF 数据
-            fetch(`/exif/${encodeURIComponent(src.replace(IMAGE_BASE_URL + '/', ''))}`, { signal: exifController.signal })
+            // 获取 EXIF 数据（使用高清图地址）
+            fetch(`/exif/${encodeURIComponent(originalSrc.replace(IMAGE_BASE_URL + '/', ''))}`, { signal: exifController.signal })
                 .then(response => response.json())
                 .then(data => {
                     if (!exifController.signal.aborted) {
@@ -378,16 +378,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
 
-            // 获取图片
-            modalImg.src = src;
-            modalImg.onload = () => {
+            // 先展示预览图并添加模糊效果
+            modalImg.src = previewSrc;
+            modalImg.style.filter = 'blur(20px)';
+
+            // 创建新的 Image 对象加载高清图
+            const highResImage = new Image();
+            highResImage.src = originalSrc;
+            highResImage.onload = () => {
                 if (!imageController.signal.aborted) {
-                    currentImageRequest = null; // 图片加载后清空当前请求
+                    // 切换显示高清图并去除模糊效果
+                    modalImg.src = originalSrc;
+                    modalImg.style.transition = 'filter 0.5s ease';
+                    modalImg.style.filter = 'blur(0px)';
+                    currentImageRequest = null;
                 }
             };
-            modalImg.onerror = () => {
+            highResImage.onerror = () => {
                 if (!imageController.signal.aborted) {
-                    console.error('Error loading image');
+                    console.error('Error loading high resolution image');
+                    modalImg.style.filter = 'blur(0px)';
                 }
             };
         }
