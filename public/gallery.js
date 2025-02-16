@@ -128,12 +128,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 如果是 "all" 标签，则组合所有图片（排除 preview 文件夹）
             if (tag === 'all') {
-                const allImages = [];
-                for (const key in imageUrls) {
-                    if (key !== 'preview') {
-                        allImages.push(...imageUrls[key]);
-                    }
+                // 获取所有非 preview 的文件夹名
+                const folderKeys = Object.keys(imageUrls).filter(key => key !== 'preview');
+                // 使用 Fisher-Yates 算法随机打乱文件夹顺序
+                for (let i = folderKeys.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [folderKeys[i], folderKeys[j]] = [folderKeys[j], folderKeys[i]];
                 }
+                const allImages = [];
+                folderKeys.forEach(key => {
+                    // 同一个文件夹内的图片保持连续顺序
+                    allImages.push(...imageUrls[key]);
+                });
                 imageUrls['all'] = allImages;
             }
 
