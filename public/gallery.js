@@ -142,6 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 更新列数及每次加载的图片数，并重新分配已加载图片（使用贪心算法）
         function updateColumns() {
+            // 保存当前所有已加载的图片
+            const loadedImages = Array.from(document.querySelectorAll('.gallery img'));
+            
             const width = window.innerWidth;
             if (width < 600) {
                 columns = 2;
@@ -160,16 +163,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 imagesPerLoad = 25;
             }
             createColumns();
-            distributeImages();
+            distributeImages(loadedImages);
         }
 
         // 重新分配当前所有已加载图片，根据图片实际高度分配到最短列，实现均衡布局
-        function distributeImages() {
-            // 清空所有列
+        function distributeImages(images) {
+            // 如果未传入图片集合，则从 DOM 中获取所有图片
+            if (!images) {
+                images = Array.from(document.querySelectorAll('.gallery img'));
+            }
+            // 先清空所有列
             columnElements.forEach(column => column.innerHTML = '');
-            // 获取画廊中所有图片元素（注意：顺序可能会被改变，但能保证高度平衡）
-            const allImages = document.querySelectorAll('.gallery img');
-            allImages.forEach(img => {
+            images.forEach(img => {
                 const shortestColumn = getShortestColumn();
                 columnElements[shortestColumn].appendChild(img);
             });
@@ -352,9 +357,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         window.addEventListener('resize', () => {
-            updateColumns(); // Update columns on window resize
-            distributeImages(); // Re-distribute images
-            setGalleryMarginTop(); // Update gallery margin-top on window resize
+            updateColumns(); // 根据新的屏幕宽度更新列数并重新分配图片
+            setGalleryMarginTop(); // 更新 gallery 的 margin-top
         });
 
         updateColumns(); // Initial column setup
