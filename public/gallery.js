@@ -317,12 +317,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 检查是否所有图片都加载完成
         function checkIfAllImagesLoaded() {
-            const totalImagesToLoad = Math.min(currentIndex, imageUrls[currentTag].length);
-            if (imagesLoadedCount >= totalImagesToLoad) {
-                document.querySelector('.gallery').style.opacity = '1'; // Show gallery
-                document.querySelector('footer').style.opacity = '1'; // Show footer
-                loadMoreButton.style.opacity = '1'; // Show load more button
-                loadingElement.classList.add('hidden'); // Hide loading animation
+            const galleryElement = document.querySelector('.gallery');
+            // 如果画廊还未显示（opacity !== '1'）则立即显示
+            if (galleryElement.style.opacity !== '1') {
+                galleryElement.style.opacity = '1';             // 显示 gallery
+                document.querySelector('footer').style.opacity = '1'; // 显示 footer
+                loadMoreButton.style.opacity = '1';               // 显示加载更多按钮
+                loadingElement.classList.add('hidden');           // 隐藏加载动画
             }
         }
 
