@@ -107,6 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // 图片筛选功能
         function filterImages(tag) {
             manualLoadMoreDone = false; // 重置手动点击标识
+
+            // 移除底部“已全部加载完成”的提示消息（如果存在）
+            const loadedMsg = document.getElementById('all-loaded-message');
+            if (loadedMsg) {
+                loadedMsg.remove();
+            }
+
             currentTag = tag;
             currentIndex = 0;
             imagesLoadedCount = 0;
@@ -241,12 +248,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     checkIfAllImagesLoaded();
                 };
-
-                // 注意：不再提前插入图片到 DOM 中，等待图片加载完成后再分配
             }
             currentIndex = endIndex;
             if (currentIndex >= images.length) {
                 loadMoreButton.style.display = 'none';
+                // 在加载完全部图片后添加底部横线和提示信息
+                if (!document.getElementById('all-loaded-message')) {
+                    const messageContainer = document.createElement('div');
+                    messageContainer.id = 'all-loaded-message';
+                    messageContainer.style.textAlign = 'center';
+                    messageContainer.style.color = 'gray';
+                    messageContainer.style.margin = '20px 0';
+                    messageContainer.innerHTML = '<hr/><p>已全部加载完成</p>';
+                    loadMoreButton.insertAdjacentElement('afterend', messageContainer);
+                }
             }
         }
 
