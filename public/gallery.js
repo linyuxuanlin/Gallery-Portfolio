@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (entry.target === loadMoreButton) {
                         // 当按钮可见且没有禁用且还未启动倒计时时，启动倒计时自动加载
                         if (entry.isIntersecting && !loadMoreButton.disabled && !countdownTimer) {
-                            countdownRemaining = 3;
+                            countdownRemaining = 2;
                             loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
                             countdownTimer = setInterval(() => {
                                 countdownRemaining--;
