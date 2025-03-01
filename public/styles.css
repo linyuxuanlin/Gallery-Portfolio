@@ -307,3 +307,25 @@ body.dark .tag-filter-vertical {
     background-color: rgba(255, 255, 255, 0.1); /* 使用半透明白色背景，降低突兀感 */
     /* 可根据需要调整内边距、圆角等其他样式 */
 }
+
+/* 加载指示器样式 */
+#temp-loading-msg {
+    text-align: center;
+    margin: 20px 0;
+    padding: 10px;
+    color: #777;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+    animation: fadeInOut 1.5s infinite alternate;
+}
+
+@keyframes fadeInOut {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
+
+/* 适配深色模式 */
+body.dark #temp-loading-msg {
+    color: #aaa;
+    background-color: rgba(255, 255, 255, 0.05);
+}

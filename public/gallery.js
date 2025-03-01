@@ -6,11 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentImageRequest = null; // Variable to hold the current image request
     let currentExifRequest = null; // Variable to hold the current EXIF request
     let isPageLoading = true; // 页面加载标志
-    let manualLoadMoreDone = false; // 新增：用于标记是否已手动点击加载更多
-
-    // 在文件顶部新增一个变量，用于记录上一次的屏幕宽度
     let lastWidth = window.innerWidth;
-
+    
     // Fetch configuration from server
     fetch('/config')
         .then(response => response.json())
@@ -28,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initGallery() {
         const galleryElement = document.getElementById('gallery');
-        const loadMoreButton = document.getElementById('load-more');
         const loadingElement = document.getElementById('loading');
         let imageUrls = {};
         let currentIndex = 0;
@@ -36,22 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let loadingImagesCount = 0;
         let columnElements = [];
         let currentTag = 'all';
-
-        // 新增：记录倒计时定时器和倒计时剩余秒数
-        let countdownTimer = null;
-        let countdownRemaining = 0;
-
-        // 修改点击事件：如果用户点击则取消倒计时，跳过等待直接加载下一批图片
-        loadMoreButton.onclick = () => {
-            if (countdownTimer) {
-                clearInterval(countdownTimer);
-                countdownTimer = null;
-            }
-            loadNextImages();
-            manualLoadMoreDone = true; // 标记第一次加载已手动触发
-        };
-
-        // 创建标签栏 - 优化版本
+        let isScrollLoading = false;
+        let scrollTriggerTimeout = null;
+        
+        // 用于追踪已加载图片，避免重复加载
+        let loadedImageUrls = new Set();
+        
+        // 创建标签筛选器函数（保持不变）
         function createTagFilter(tags) {
             const tagContainer = document.createElement('div');
             tagContainer.className = 'tag-filter-vertical';
@@ -144,24 +131,30 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 图片筛选功能
+        // 图片筛选功能 - 修复重置逻辑
         function filterImages(tag) {
-            manualLoadMoreDone = false; // 重置手动点击标识
-
             // 移除底部"已全部加载完成"的提示消息（如果存在）
             const loadedMsg = document.getElementById('all-loaded-message');
             if (loadedMsg) {
                 loadedMsg.remove();
             }
+            
+            // 移除临时加载消息（如果存在）
+            const tempMsg = document.getElementById('temp-loading-msg');
+            if (tempMsg) {
+                tempMsg.remove();
+            }
+            
+            // 重要：重置已加载图片集合
+            loadedImageUrls.clear();
 
             currentTag = tag;
             currentIndex = 0;
             imagesLoadedCount = 0;
             loadingImagesCount = 0;
+            
+            // 清除所有列并重新创建
             createColumns();
-
-            // 新增：重置"加载更多"按钮的显示状态
-            loadMoreButton.style.display = 'block';
 
             // 如果是 "all" 标签，则组合所有图片（排除 preview 文件夹）
             if (tag === 'all') {
@@ -180,14 +173,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageUrls['all'] = allImages;
             }
 
-            // 分页加载第一批图片 - 确保调用一次初始加载
+            // 分页加载第一批图片
             loadNextImages();
         }
 
         // 创建列元素
         function createColumns() {
-            columnElements.forEach(column => galleryElement.removeChild(column));
+            // 清空旧的列
+            columnElements.forEach(column => {
+                if (column.parentNode === galleryElement) {
+                    galleryElement.removeChild(column);
+                }
+            });
             columnElements = [];
+            
             for (let i = 0; i < columns; i++) {
                 const column = document.createElement('div');
                 column.classList.add('column');
@@ -196,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // 获取最短列的索引（根据当前列的 offsetHeight）
+        // 获取最短列的索引
         function getShortestColumn() {
             let minIndex = 0;
             let minHeight = columnElements[0].offsetHeight;
@@ -209,27 +208,27 @@ document.addEventListener('DOMContentLoaded', () => {
             return minIndex;
         }
 
-        // 更新列数及每次加载的图片数，并重新分配已加载图片（使用贪心算法）
+        // 更新列数及每次加载的图片数
         function updateColumns() {
             const width = window.innerWidth;
             let computedColumns, computedImagesPerLoad;
             
-            // 计算应用的列数和每次加载图片数量（保持不变）
+            // 计算应用的列数和每次加载图片数量
             if (width < 600) {
                 computedColumns = 2;
-                computedImagesPerLoad = 6;
+                computedImagesPerLoad = 8; // 增加每批次加载数量
             } else if (width < 900) {
                 computedColumns = 3;
-                computedImagesPerLoad = 9;
+                computedImagesPerLoad = 12;
             } else if (width < 1200) {
                 computedColumns = 4;
-                computedImagesPerLoad = 12;
+                computedImagesPerLoad = 16;
             } else if (width < 1500) {
                 computedColumns = 5;
-                computedImagesPerLoad = 16;
+                computedImagesPerLoad = 20;
             } else {
                 computedColumns = 6;
-                computedImagesPerLoad = 20;
+                computedImagesPerLoad = 24;
             }
             
             // 如果列数没有变化，仅更新加载图片数量，不重新排布
@@ -238,10 +237,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // 如果列数变化，则获取所有已加载的图片，并记录它们的原始顺序
+            // 记录现有图片
             const loadedImages = Array.from(document.querySelectorAll('.gallery img'));
             
-            // 如果图片已有序号属性，按照序号排序；否则维持当前DOM顺序
+            // 根据原始顺序排序图片
             loadedImages.sort((a, b) => {
                 const orderA = parseInt(a.dataset.originalOrder || 0);
                 const orderB = parseInt(b.dataset.originalOrder || 0);
@@ -255,15 +254,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // 创建新列
             createColumns();
             
-            // 使用原始顺序重新分配图片
+            // 重新分配图片
             distributeImagesInOriginalOrder(loadedImages);
             
-            // 设置其他必要的更新
-            setupLoadMoreObserver();
+            // 更新其他设置
             setTimeout(updateHoverEffects, 300);
+            
+            // 检查是否需要加载更多图片
+            checkIfMoreImagesNeeded();
         }
 
-        // 新增：按照原始顺序分配图片的函数
+        // 按照原始顺序分配图片
         function distributeImagesInOriginalOrder(images) {
             if (images.length === 0) return;
             
@@ -281,13 +282,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     images[i].dataset.originalOrder = i;
                 }
                 
-                // 将图片添加到最短的列（基于图片的高宽比估算高度）
+                // 将图片添加到最短的列
                 const shortestColumnIndex = getShortestColumn();
                 columnElements[shortestColumnIndex].appendChild(images[i]);
             }
         }
 
-        // 修改 loadNextImages 函数，实现逐次加载并立即呈现
+        // 检查是否需要加载更多图片
+        function checkIfMoreImagesNeeded() {
+            // 检查当前内容高度是否填满屏幕
+            const viewportHeight = window.innerHeight;
+            const contentHeight = Math.max(...columnElements.map(col => col.offsetHeight || 0));
+            
+            // 如果内容不足以填满屏幕+额外两行，加载更多
+            if (contentHeight < viewportHeight * 1.5) {
+                if (currentIndex < (imageUrls[currentTag] || []).length) {
+                    // 使用setTimeout确保DOM更新后再检查
+                    setTimeout(() => {
+                        loadNextImages();
+                    }, 100);
+                }
+            }
+        }
+
+        // 修改 loadNextImages 函数，添加去重逻辑
         function loadNextImages() {
             const images = imageUrls[currentTag] || [];
             
@@ -297,185 +315,181 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // 立即设置加载状态，防止多次触发加载
-            setLoadingState(true);
+            // 设置加载状态
+            const tempLoadingMsg = document.createElement('div');
+            tempLoadingMsg.id = 'temp-loading-msg';
+            tempLoadingMsg.textContent = '加载中...';
+            tempLoadingMsg.style.textAlign = 'center';
+            tempLoadingMsg.style.margin = '20px 0';
+            tempLoadingMsg.style.padding = '10px';
+            tempLoadingMsg.style.color = '#777';
             
-            // 增加一个延迟变量来追踪当前批次的图片加载
-            const currentBatchId = Date.now();
-            loadingBatchId = currentBatchId;
-            
-            // 确保gallery可见，不等待图片全部加载完成
-            const galleryElement = document.querySelector('.gallery');
-            if (galleryElement.style.opacity !== '1') {
-                galleryElement.style.opacity = '1';             // 立即显示 gallery
-                document.querySelector('footer').style.opacity = '1'; // 显示 footer
-                loadMoreButton.style.opacity = '1';             // 显示加载更多按钮
-                loadingElement.classList.add('hidden');         // 隐藏加载动画
+            // 只有在不存在加载消息时才添加
+            if (!document.getElementById('temp-loading-msg')) {
+                document.querySelector('footer').before(tempLoadingMsg);
             }
             
-            // 计算需要加载的图片数量（填满屏幕+额外两行）
+            // 确保gallery可见
+            const galleryElement = document.querySelector('.gallery');
+            if (galleryElement.style.opacity !== '1') {
+                galleryElement.style.opacity = '1';
+                document.querySelector('footer').style.opacity = '1';
+                loadingElement.classList.add('hidden');
+            }
+            
+            // 计算需要加载的图片数量
             const viewportHeight = window.innerHeight;
             const headerHeight = document.querySelector('header').offsetHeight;
             const availableHeight = viewportHeight - headerHeight;
-            
-            // 估算每张图片的平均高度（初始值设为200px）
             const avgImageHeight = 200; 
-            
-            // 估算每行图片数量（就是当前列数）
             const imagesPerRow = columns;
-            
-            // 计算填满屏幕需要的行数（多加一行确保填满）
             const rowsToFillScreen = Math.ceil(availableHeight / avgImageHeight) + 1;
-            
-            // 额外加载两行
-            const additionalRows = 2;
-            
-            // 计算需要加载的总行数
+            const additionalRows = 3; // 确保预加载至少3行
             const totalRowsToLoad = rowsToFillScreen + additionalRows;
-            
-            // 计算需要加载的图片总数
             const maxImagesToLoad = totalRowsToLoad * imagesPerRow;
             
-            // 当前已加载的图片数
-            const loadedImages = document.querySelectorAll('.gallery img').length;
+            // 确保至少加载一定数量的图片
+            let remainingToLoad = Math.max(imagesPerRow * 3, maxImagesToLoad - document.querySelectorAll('.gallery img').length);
             
-            // 计算还需加载的图片数
-            let remainingToLoad = maxImagesToLoad - loadedImages;
-            if (remainingToLoad <= 0) {
-                // 如果已经加载足够的图片，则退出加载
-                setLoadingState(false);
-                return;
-            }
+            // 单张图片加载计数器
+            let loadedInThisBatch = 0;
+            const batchStart = Date.now();
             
-            // 单张图片加载逻辑
+            // 递归加载单张图片
             function loadSingleImage(index) {
-                // 如果已经加载了足够数量的图片，或者到达了图片末尾，则停止加载
+                // 检查是否完成加载
                 if (index >= images.length || remainingToLoad <= 0) {
-                    setLoadingState(false);
+                    // 移除加载消息
+                    const tempMsg = document.getElementById('temp-loading-msg');
+                    if (tempMsg) tempMsg.remove();
                     
-                    // 如果已加载所有图片，显示完成消息
                     if (index >= images.length) {
                         handleAllImagesLoaded();
+                    } else {
+                        // 预加载下一批
+                        preloadNextBatchImages();
+                        
+                        // 再次检查是否需要加载更多
+                        checkIfMoreImagesNeeded();
                     }
+                    
+                    // 重置滚动加载状态
+                    setTimeout(() => {
+                        isScrollLoading = false;
+                    }, 200);
+                    
                     return;
                 }
                 
                 const imageData = images[index];
+                const imageUrl = imageData.thumbnail;
+                
+                // 检查图片是否已加载，避免重复
+                if (loadedImageUrls.has(imageUrl)) {
+                    currentIndex++;
+                    loadSingleImage(currentIndex);
+                    return;
+                }
+                
                 const img = new Image();
                 
                 img.onload = function() {
-                    // 图片加载完成后，立即添加到最短的列并显示
+                    // 添加到已加载集合
+                    loadedImageUrls.add(imageUrl);
+                    
+                    // 添加到最短列
                     const shortestColumnIndex = getShortestColumn();
                     columnElements[shortestColumnIndex].appendChild(img);
                     
-                    // 使用setTimeout确保图片被添加到DOM后再添加loaded类，避免动画问题
+                    // 设置加载动画
                     setTimeout(() => {
                         img.classList.add('loaded');
                     }, 10);
                     
-                    // 更新计数器
+                    // 更新计数
                     currentIndex++;
                     imagesLoadedCount++;
                     remainingToLoad--;
+                    loadedInThisBatch++;
                     
-                    // 添加原始序号
-                    img.dataset.originalOrder = currentIndex - 1; // 当前图片的序号
+                    // 添加序号
+                    img.dataset.originalOrder = currentIndex - 1;
                     
-                    // 图片加载完成后，设置悬停效果
+                    // 更新悬停效果
                     updateHoverEffects();
                     
-                    // 如果还有需要加载的图片且未到末尾，继续加载
-                    if (remainingToLoad > 0 && currentIndex < images.length) {
-                        loadSingleImage(currentIndex);
+                    // 控制加载速度，防止一次加载过多图片导致卡顿
+                    const timeElapsed = Date.now() - batchStart;
+                    if (loadedInThisBatch >= 20 && timeElapsed < 500) {
+                        // 加载速度过快，稍微延迟下一张
+                        setTimeout(() => {
+                            if (remainingToLoad > 0 && currentIndex < images.length) {
+                                loadSingleImage(currentIndex);
+                            } else {
+                                // 移除加载消息
+                                const tempMsg = document.getElementById('temp-loading-msg');
+                                if (tempMsg) tempMsg.remove();
+                                
+                                if (currentIndex >= images.length) {
+                                    handleAllImagesLoaded();
+                                } else {
+                                    preloadNextBatchImages();
+                                }
+                                
+                                // 重置滚动加载状态
+                                isScrollLoading = false;
+                            }
+                        }, 50);
                     } else {
-                        // 完成当前批次加载
-                        setLoadingState(false);
-                        
-                        // 如果已经加载完所有图片，显示完成消息
-                        if (currentIndex >= images.length) {
-                            handleAllImagesLoaded();
+                        // 正常加载速度，立即加载下一张
+                        if (remainingToLoad > 0 && currentIndex < images.length) {
+                            loadSingleImage(currentIndex);
+                        } else {
+                            // 移除加载消息
+                            const tempMsg = document.getElementById('temp-loading-msg');
+                            if (tempMsg) tempMsg.remove();
+                            
+                            if (currentIndex >= images.length) {
+                                handleAllImagesLoaded();
+                            } else {
+                                preloadNextBatchImages();
+                            }
+                            
+                            // 重置滚动加载状态
+                            isScrollLoading = false;
                         }
                     }
                 };
                 
                 img.onerror = function() {
-                    console.error('图片加载失败:', imageData.thumbnail);
-                    // 跳过失败的图片，继续加载下一张
+                    console.error('图片加载失败:', imageUrl);
                     currentIndex++;
-                    remainingToLoad--;
                     loadSingleImage(currentIndex);
                 };
                 
                 // 设置图片属性
-                img.src = imageData.thumbnail;
+                img.src = imageUrl;
                 img.setAttribute('data-original', imageData.original);
                 img.setAttribute('data-preview', imageData.thumbnail);
                 img.alt = '图片';
                 
-                // 添加点击事件，打开模态窗口
+                // 添加点击事件
                 img.addEventListener('click', function() {
                     openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
                 });
             }
             
             // 开始加载第一张图片
+            isScrollLoading = true;
             loadSingleImage(currentIndex);
         }
 
-        // 判断是否应该继续加载更多图片
-        function shouldLoadMoreImages() {
-            // 如果当前正在加载中，则不应该再次触发加载
-            if (loadingImagesCount > 0) {
-                return false;
-            }
-            
-            // 确保 imageUrls 和 currentTag 有效
-            if (!imageUrls || !imageUrls[currentTag]) {
-                return false;
-            }
-            
-            // 如果还有图片可加载，并且内容高度不足以填满页面或触发滚动，则继续加载
-            if (currentIndex >= imageUrls[currentTag].length) {
-                return false; // 没有更多图片了
-            }
-            
-            // 获取页面可见区域高度
-            const viewportHeight = window.innerHeight;
-            
-            // 确保 columnElements 已初始化且包含元素
-            if (!columnElements || columnElements.length === 0) {
-                return true; // 如果列还未初始化，则需要加载图片
-            }
-            
-            // 获取内容总高度 - 使用更安全的方法
-            const contentHeight = Math.max(...columnElements.map(col => col.offsetHeight || 0));
-            
-            // 获取滚动位置
-            const scrollPosition = window.scrollY + viewportHeight;
-            
-            // 初始加载或内容不足时，继续加载
-            if (contentHeight === 0) {
-                return true;
-            }
-            
-            // 图片很少的情况下，如果未满3张图，继续加载
-            const totalImages = document.querySelectorAll('.gallery img').length;
-            if (totalImages < columns * 2) {  // 确保至少有2行图片
-                return true;
-            }
-            
-            // 对所有标签使用同样的流畅瀑布流逻辑
-            // 如果内容高度小于视口高度的2倍，或者滚动位置接近内容底部，则加载更多
-            return contentHeight < viewportHeight * 2 || scrollPosition > contentHeight - 300;
-        }
-
-        // 修改滚动事件处理，实现智能滚动加载
+        // 优化滚动检测
         let lastScrollY = window.scrollY;
         let scrollDelta = 0;
-        let isScrollLoading = false; // 新增：防止滚动事件重复触发加载
 
         window.addEventListener('scroll', () => {
-            // 现有的 header 隐藏逻辑保持不变
+            // header 隐藏逻辑
             const currentScrollY = window.scrollY;
             const header = document.querySelector('header');
 
@@ -493,52 +507,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
             lastScrollY = currentScrollY;
             
-            // 避免重复触发加载
-            if (isScrollLoading || loadMoreButton.disabled) return;
-            
-            // 计算还有多少空间需要滚动到底部
-            const windowHeight = window.innerHeight;
-            const documentHeight = Math.max(
-                document.body.scrollHeight,
-                document.documentElement.scrollHeight
-            );
-            const scrollRemaining = documentHeight - (windowHeight + currentScrollY);
-            
-            // 预加载阈值：当用户滚动到距离底部两行图片高度的位置时触发加载
-            // 假设每行图片平均高度为200px
-            const rowHeight = 200;
-            const preloadThreshold = rowHeight * 3; // 提前3行触发预加载
-            
-            // 当滚动接近底部时，加载更多图片
-            if (scrollRemaining < preloadThreshold) {
-                if (currentIndex < (imageUrls[currentTag] || []).length) {
-                    isScrollLoading = true;
-                    loadNextImages();
-                    
-                    // 重置滚动加载标志
-                    setTimeout(() => {
-                        isScrollLoading = false;
-                    }, 500); // 500ms防抖
-                }
+            // 防止重复触发加载事件
+            if (scrollTriggerTimeout) {
+                clearTimeout(scrollTriggerTimeout);
             }
+            
+            // 快速检测是否需要加载更多图片
+            scrollTriggerTimeout = setTimeout(() => {
+                // 避免重复加载
+                if (isScrollLoading) return;
+                
+                // 检查是否还有图片可加载
+                if (currentIndex >= (imageUrls[currentTag] || []).length) return;
+                
+                // 计算滚动位置
+                const windowHeight = window.innerHeight;
+                const documentHeight = Math.max(
+                    document.body.scrollHeight,
+                    document.documentElement.scrollHeight
+                );
+                const scrollRemaining = documentHeight - (windowHeight + currentScrollY);
+                
+                // 预加载阈值 - 更积极地提前加载
+                const rowHeight = 200;
+                const preloadThreshold = rowHeight * 5; // 提前5行触发加载
+                
+                if (scrollRemaining < preloadThreshold) {
+                    loadNextImages();
+                }
+            }, 120); // 减少延迟，更快响应滚动
         });
 
         // 更智能的预加载图片函数
         function preloadNextBatchImages() {
             const images = imageUrls[currentTag] || [];
             
-            // 计算预加载两行需要的图片数量
+            // 如果没有更多图片，直接返回
+            if (currentIndex >= images.length) return;
+            
+            // 计算预加载行数
             const imagesPerRow = columns;
-            const rowsToPreload = 2;
+            const rowsToPreload = 4; // 增加预加载行数到4行
             const preloadCount = imagesPerRow * rowsToPreload;
             
             // 计算预加载范围
             const endIndex = Math.min(currentIndex + preloadCount, images.length);
             
-            // 如果已经到达末尾，不需要预加载
-            if (currentIndex >= endIndex) return;
-            
-            // 创建一个隐藏的预加载容器
+            // 创建预加载容器
             let preloadContainer = document.getElementById('preload-container');
             if (!preloadContainer) {
                 preloadContainer = document.createElement('div');
@@ -561,46 +576,85 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`预加载了${endIndex - currentIndex}张图片，相当于${Math.ceil((endIndex - currentIndex) / imagesPerRow)}行`);
         }
 
-        // 检查是否所有图片都加载完成 - 简化版本
-        function checkIfAllImagesLoaded() {
-            const galleryElement = document.querySelector('.gallery');
-            // 确保gallery显示
-            if (galleryElement.style.opacity !== '1') {
-                galleryElement.style.opacity = '1';             // 显示 gallery
-                document.querySelector('footer').style.opacity = '1'; // 显示 footer
-                loadMoreButton.style.opacity = '1';               // 显示加载更多按钮
-                loadingElement.classList.add('hidden');           // 隐藏加载动画
+        // 处理所有图片加载完成的情况
+        function handleAllImagesLoaded() {
+            // 添加"已全部加载完成"的提示（如果不存在）
+            if (!document.getElementById('all-loaded-message')) {
+                const loadedMsg = document.createElement('div');
+                loadedMsg.id = 'all-loaded-message';
+                loadedMsg.textContent = '————  已全部加载完毕  ————';
+                loadedMsg.style.textAlign = 'center';
+                loadedMsg.style.margin = '20px 0';
+                loadedMsg.style.padding = '10px';
+                loadedMsg.style.color = 'var(--text-color)';
+                loadedMsg.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+                loadedMsg.style.borderRadius = '5px';
+                loadedMsg.style.animation = 'fadeIn 1s';
+                document.querySelector('footer').before(loadedMsg);
+                
+                // 添加淡入动画
+                if (!document.getElementById('fadeInStyle')) {
+                    const style = document.createElement('style');
+                    style.id = 'fadeInStyle';
+                    style.textContent = `
+                        @keyframes fadeIn {
+                            from { opacity: 0; }
+                            to { opacity: 1; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
             }
+            
+            // 触发布局调整
+            setTimeout(() => {
+                window.scrollBy(0, 1);
+                window.scrollBy(0, -1);
+            }, 200);
         }
 
-        // 设置加载按钮状态
-        function setLoadingState(isLoading) {
-            if (isLoading) {
-                // 正在加载中 - 显示灰色加载中按钮
-                loadMoreButton.disabled = true;
-                loadMoreButton.textContent = '加载中...';
-                loadMoreButton.style.backgroundColor = '#ccc';
-                loadMoreButton.style.cursor = 'not-allowed';
-                loadMoreButton.style.display = 'block'; // 始终显示按钮，只是变灰
-            } else if (currentIndex >= (imageUrls[currentTag] || []).length) {
-                // 所有图片都已加载 - 隐藏按钮
-                handleAllImagesLoaded();
-            } else {
-                // 加载完成但还有更多图片 - 恢复按钮状态
-                loadMoreButton.disabled = false;
-                loadMoreButton.textContent = '加载更多';
-                loadMoreButton.style.backgroundColor = '';
-                loadMoreButton.style.cursor = 'pointer';
+        // 监听窗口大小变化
+        window.addEventListener('resize', () => {
+            if (window.innerWidth !== lastWidth) {
+                updateColumns();
+                lastWidth = window.innerWidth;
+                
+                // 重新设置悬停效果
+                setTimeout(updateHoverEffects, 300);
             }
-        }
+            
+            // 设置gallery上边距
+            setGalleryMarginTop();
+        });
 
-        // 动态设置 gallery 的 margin-top
+        // 设置 gallery 的 margin-top
         function setGalleryMarginTop() {
             const headerHeight = document.querySelector('header').offsetHeight;
-            galleryElement.style.marginTop = `${headerHeight + 20}px`; // 20px 是 header 和 gallery 之间的间距
+            galleryElement.style.marginTop = `${headerHeight + 20}px`;
         }
 
-        // 模态窗口逻辑
+        // 初始设置
+        updateColumns();
+        setGalleryMarginTop();
+
+        // 从服务器获取所有图片 URL
+        fetch('/images')
+            .then(response => response.json())
+            .then(data => {
+                imageUrls = data;
+                createTagFilter(Object.keys(data));
+                // 首次加载时选择 "All" 标签
+                filterImages('all');
+                updateColumns();
+                
+                // 初始加载后检查是否需要更多图片
+                setTimeout(() => {
+                    checkIfMoreImagesNeeded();
+                }, 500);
+            })
+            .catch(error => console.error('Error loading images:', error));
+
+        // 模态窗口逻辑 (保持不变)
         const modal = document.getElementById('myModal');
         const modalContent = document.querySelector('.modal-content');
         const modalImg = document.getElementById('img01');
@@ -613,17 +667,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.classList.remove('hover-active');
             });
             
-            // 临时禁用悬停效果
             document.body.classList.add('modal-open');
-            
-            // 确保模态窗口开始时是不透明的
             modal.style.opacity = '1';
             
             if (isPageLoading) {
                 console.log('页面正在加载，无法打开大图');
-                return; // 如果页面正在加载，直接返回
+                return;
             }
-            // 取消正在进行的图片或 EXIF 请求
+            
             if (currentImageRequest) {
                 currentImageRequest.abort();
             }
@@ -635,13 +686,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('no-scroll');
             exifInfo.innerHTML = 'Loading original image and EXIF data...';
 
-            // 为当前请求创建新的 AbortController
             const imageController = new AbortController();
             const exifController = new AbortController();
             currentImageRequest = imageController;
             currentExifRequest = exifController;
 
-            // 获取 EXIF 数据（使用高清图地址）
+            // 获取 EXIF 数据
             fetch(`/exif/${encodeURIComponent(original.replace(IMAGE_BASE_URL + '/', ''))}`, { signal: exifController.signal })
                 .then(response => response.json())
                 .then(data => {
@@ -671,12 +721,11 @@ document.addEventListener('DOMContentLoaded', () => {
             modalImg.src = preview;
             modalImg.style.filter = 'blur(20px)';
 
-            // 创建新的 Image 对象加载高清图
+            // 加载高清图
             const highResImage = new Image();
             highResImage.src = original;
             highResImage.onload = () => {
                 if (!imageController.signal.aborted) {
-                    // 切换显示高清图并去除模糊效果
                     modalImg.src = original;
                     modalImg.style.transition = 'filter 0.5s ease';
                     modalImg.style.filter = 'blur(0px)';
@@ -696,7 +745,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         modalContent.onclick = function (event) {
-            event.stopPropagation(); // Prevent click on image from closing modal
+            event.stopPropagation();
         }
 
         modal.onclick = function () {
@@ -704,12 +753,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function closeModal() {
-            // 添加淡出动画
             modal.style.opacity = '0';
             
-            // 延迟移除模态窗口，等待动画完成
             setTimeout(() => {
-                // Abort any ongoing image or EXIF requests
                 if (currentImageRequest) {
                     currentImageRequest.abort();
                 }
@@ -717,18 +763,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     currentExifRequest.abort();
                 }
                 
-                // 隐藏模态窗口
                 modal.style.display = 'none';
                 document.body.classList.remove('no-scroll');
-                
-                // 重置透明度，为下次打开做准备
                 modal.style.opacity = '1';
                 
-                // 延迟重新启用悬停效果，确保平滑过渡
                 setTimeout(() => {
                     document.body.classList.remove('modal-open');
-                }, 300); // 延迟300ms再恢复悬停效果
-            }, 300); // 与CSS过渡时间匹配
+                }, 300);
+            }, 300);
         }
 
         document.addEventListener('keydown', function (event) {
@@ -737,100 +779,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 修改 resize 事件处理：仅在宽度变化时，重新分配图片
-        window.addEventListener('resize', () => {
-            if (window.innerWidth !== lastWidth) {
-                updateColumns();
-                lastWidth = window.innerWidth;
-                // 重新设置悬停效果
-                setTimeout(updateHoverEffects, 300);
-            }
-            setGalleryMarginTop();
-        });
-
-        updateColumns(); // Initial column setup
-        setGalleryMarginTop(); // Initial gallery margin-top setup
-
-        // 从服务器获取所有图片 URL
-        fetch('/images')
-            .then(response => response.json())
-            .then(data => {
-                imageUrls = data;
-                createTagFilter(Object.keys(data));
-                // 首次加载时自动选择 "All" 标签 - filterImages内部会调用loadNextImages
-                filterImages('all');
-                updateColumns();
-            })
-            .catch(error => console.error('Error loading images:', error));
-
-        // 简化 setupLoadMoreObserver 函数
-        function setupLoadMoreObserver() {
-            // 直接触发初始加载，不等待
-            if (currentIndex < (imageUrls[currentTag] || []).length) {
-                loadNextImages();
-                
-                // 初始加载后预加载下两行图片
-                setTimeout(() => {
-                    preloadNextBatchImages();
-                }, 500);
-            }
-        }
-
-        // 添加新函数，处理所有图片加载完成的情况
-        function handleAllImagesLoaded() {
-            loadMoreButton.style.display = 'none';
-            
-            // 添加"已全部加载完成"的提示（如果不存在）
-            if (!document.getElementById('all-loaded-message')) {
-                const loadedMsg = document.createElement('div');
-                loadedMsg.id = 'all-loaded-message';
-                loadedMsg.textContent = '————  已全部加载  ————';
-                loadedMsg.style.textAlign = 'center';
-                loadedMsg.style.margin = '20px 0';
-                loadedMsg.style.padding = '10px';
-                loadedMsg.style.color = 'var(--text-color)';
-                loadedMsg.style.backgroundColor = 'rgba(76, 175, 80, 0.1)'; // 轻微的绿色背景
-                loadedMsg.style.borderRadius = '5px';
-                loadedMsg.style.animation = 'fadeIn 1s';
-                document.querySelector('footer').before(loadedMsg);
-                
-                // 添加淡入动画
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes fadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            // 滚动到当前位置附近，触发加载完成后的布局调整
-            setTimeout(() => {
-                window.scrollBy(0, 1);
-                window.scrollBy(0, -1);
-            }, 200);
-        }
-
-        // 替换当前的setupImageHoverEffects和updateHoverEffects函数
-        // 使用更可靠的方法实现图片悬停效果
-
+        // 图片悬停效果
         function setupImageHoverEffects() {
-            // 使用MutationObserver监视图片添加到DOM
             if (window.hoverEffectObserver) {
                 window.hoverEffectObserver.disconnect();
             }
             
-            // 创建监视器，监听DOM变化
             window.hoverEffectObserver = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
                     if (mutation.addedNodes) {
                         mutation.addedNodes.forEach(function(node) {
-                            // 检查是否是新添加的图片
                             if (node.tagName === 'IMG') {
                                 addHoverEffect(node);
                             } else if (node.querySelectorAll) {
-                                // 如果是容器元素，检查其中的图片
                                 node.querySelectorAll('img').forEach(addHoverEffect);
                             }
                         });
@@ -838,25 +799,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
             
-            // 立即为现有图片添加效果
+            // 为现有图片添加效果
             document.querySelectorAll('.gallery img').forEach(addHoverEffect);
             
-            // 开始监视整个gallery元素
+            // 观察gallery元素
             window.hoverEffectObserver.observe(galleryElement, {
                 childList: true,
                 subtree: true
             });
-            
-            console.log('已设置悬停效果监视器');
         }
 
-        // 为单个图片添加悬停效果
         function addHoverEffect(img) {
-            if (img.dataset.hoverInitialized) return; // 避免重复初始化
+            if (img.dataset.hoverInitialized) return;
             
             img.dataset.hoverInitialized = 'true';
             
-            // 添加更简单的事件监听
             img.addEventListener('mouseenter', function() {
                 this.classList.add('hover-active');
             });
@@ -864,11 +821,8 @@ document.addEventListener('DOMContentLoaded', () => {
             img.addEventListener('mouseleave', function() {
                 this.classList.remove('hover-active');
             });
-            
-            console.log('已为图片添加悬停效果', img.src);
         }
 
-        // 更新悬停效果 (不需要频繁调用，只在重大布局更改后)
         function updateHoverEffects() {
             setupImageHoverEffects();
         }
