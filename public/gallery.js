@@ -498,6 +498,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // 临时禁用悬停效果
             document.body.classList.add('modal-open');
             
+            // 确保模态窗口开始时是不透明的
+            modal.style.opacity = '1';
+            
             if (isPageLoading) {
                 console.log('页面正在加载，无法打开大图');
                 return; // 如果页面正在加载，直接返回
@@ -583,19 +586,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function closeModal() {
-            // Abort any ongoing image or EXIF requests when closing the modal
-            if (currentImageRequest) {
-                currentImageRequest.abort();
-            }
-            if (currentExifRequest) {
-                currentExifRequest.abort();
-            }
+            // 添加淡出动画
+            modal.style.opacity = '0';
             
-            // 移除模态窗口类，重新启用悬停效果
-            document.body.classList.remove('modal-open');
-            
-            modal.style.display = 'none';
-            document.body.classList.remove('no-scroll');
+            // 延迟移除模态窗口，等待动画完成
+            setTimeout(() => {
+                // Abort any ongoing image or EXIF requests
+                if (currentImageRequest) {
+                    currentImageRequest.abort();
+                }
+                if (currentExifRequest) {
+                    currentExifRequest.abort();
+                }
+                
+                // 隐藏模态窗口
+                modal.style.display = 'none';
+                document.body.classList.remove('no-scroll');
+                
+                // 重置透明度，为下次打开做准备
+                modal.style.opacity = '1';
+                
+                // 延迟重新启用悬停效果，确保平滑过渡
+                setTimeout(() => {
+                    document.body.classList.remove('modal-open');
+                }, 300); // 延迟300ms再恢复悬停效果
+            }, 300); // 与CSS过渡时间匹配
         }
 
         document.addEventListener('keydown', function (event) {

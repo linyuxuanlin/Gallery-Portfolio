@@ -37,13 +37,15 @@
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.9);
+  opacity: 1;
+  transition: opacity 0.3s ease; /* 添加平滑过渡 */
 }
 
 .modal-content {
@@ -244,4 +246,11 @@ body.modal-open .gallery img.hover-active {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
   z-index: 1 !important;
   transition: none !important;
+}
+
+/* 改进悬停效果在模态关闭后的恢复 */
+body:not(.modal-open) .gallery img.loaded:hover,
+body:not(.modal-open) .gallery img.loaded.hover-active {
+  transition: transform 2s cubic-bezier(0.19, 1, 0.22, 1), 
+              box-shadow 2s cubic-bezier(0.19, 1, 0.22, 1) !important;
 }
