@@ -213,6 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
         function updateColumns() {
             const width = window.innerWidth;
             let computedColumns, computedImagesPerLoad;
+            
+            // 计算应用的列数和每次加载图片数量（保持不变）
             if (width < 600) {
                 computedColumns = 2;
                 computedImagesPerLoad = 6;
@@ -230,35 +232,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 computedImagesPerLoad = 20;
             }
             
+            // 如果列数没有变化，仅更新加载图片数量，不重新排布
             if (computedColumns === columns) {
-                // 如果列数没有变化，仅更新加载图片数量，并不重新排布图片
                 imagesPerLoad = computedImagesPerLoad;
                 return;
             }
             
-            // 如果列数变化，则更新全局变量并重新分配已加载图片
+            // 如果列数变化，则获取所有已加载的图片，并记录它们的原始顺序
+            const loadedImages = Array.from(document.querySelectorAll('.gallery img'));
+            
+            // 如果图片已有序号属性，按照序号排序；否则维持当前DOM顺序
+            loadedImages.sort((a, b) => {
+                const orderA = parseInt(a.dataset.originalOrder || 0);
+                const orderB = parseInt(b.dataset.originalOrder || 0);
+                return orderA - orderB;
+            });
+            
+            // 更新全局变量
             columns = computedColumns;
             imagesPerLoad = computedImagesPerLoad;
             
-            const loadedImages = Array.from(document.querySelectorAll('.gallery img'));
+            // 创建新列
             createColumns();
-            distributeImages(loadedImages);
+            
+            // 使用原始顺序重新分配图片
+            distributeImagesInOriginalOrder(loadedImages);
+            
+            // 设置其他必要的更新
             setupLoadMoreObserver();
             setTimeout(updateHoverEffects, 300);
         }
 
-        // 重新分配当前所有已加载图片，根据图片实际高度分配到最短列，实现均衡布局
-        function distributeImages(images) {
-            // 如果未传入图片集合，则从 DOM 中获取所有图片
-            if (!images) {
-                images = Array.from(document.querySelectorAll('.gallery img'));
-            }
-            // 先清空所有列
-            columnElements.forEach(column => column.innerHTML = '');
+        // 新增：按照原始顺序分配图片的函数
+        function distributeImagesInOriginalOrder(images) {
+            if (images.length === 0) return;
+            
+            // 移除所有图片
             images.forEach(img => {
-                const shortestColumn = getShortestColumn();
-                columnElements[shortestColumn].appendChild(img);
+                if (img.parentNode) {
+                    img.parentNode.removeChild(img);
+                }
             });
+            
+            // 创建足够的图片容器
+            for (let i = 0; i < images.length; i++) {
+                // 如果图片没有原始序号，则添加一个
+                if (!images[i].dataset.originalOrder) {
+                    images[i].dataset.originalOrder = i;
+                }
+                
+                // 将图片添加到最短的列（基于图片的高宽比估算高度）
+                const shortestColumnIndex = getShortestColumn();
+                columnElements[shortestColumnIndex].appendChild(images[i]);
+            }
         }
 
         // 修改 loadNextImages 函数，实现逐次加载并立即呈现
@@ -318,6 +344,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // 图片加载完成后，设置悬停效果
                     updateHoverEffects();
+
+                    // 添加原始序号
+                    img.dataset.originalOrder = currentIndex - 1; // 当前图片的序号
                 };
                 
                 img.onerror = function() {
