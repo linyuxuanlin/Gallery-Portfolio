@@ -244,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
             createColumns();
             distributeImages(loadedImages);
             setupLoadMoreObserver();
+            setTimeout(updateHoverEffects, 300);
         }
 
         // 重新分配当前所有已加载图片，根据图片实际高度分配到最短列，实现均衡布局
@@ -268,18 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 如果已经加载完所有图片，显示提示并返回
             if (currentIndex >= images.length) {
                 setLoadingState(false);
-                loadMoreButton.style.display = 'none';
-                
-                // 添加"已全部加载完成"的提示
-                if (!document.getElementById('all-loaded-message')) {
-                    const loadedMsg = document.createElement('div');
-                    loadedMsg.id = 'all-loaded-message';
-                    loadedMsg.textContent = '已全部加载完成';
-                    loadedMsg.style.textAlign = 'center';
-                    loadedMsg.style.margin = '20px 0';
-                    loadedMsg.style.color = 'var(--text-color)';
-                    document.querySelector('footer').before(loadedMsg);
-                }
+                handleAllImagesLoaded();
                 return;
             }
             
@@ -289,6 +279,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     // 所有图片加载完成
                     setLoadingState(false);
                     checkIfAllImagesLoaded();
+                    
+                    // 没有更多图片时，立即隐藏"加载更多"按钮并显示完成消息
+                    handleAllImagesLoaded();
                     return;
                 }
                 
@@ -314,9 +307,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         setLoadingState(false);
                         checkIfAllImagesLoaded();
                         
-                        // 预加载下一批图片
-                        preloadNextBatchImages();
+                        // 检查是否已加载所有图片
+                        if (currentIndex >= images.length) {
+                            handleAllImagesLoaded();
+                        } else {
+                            // 预加载下一批图片
+                            preloadNextBatchImages();
+                        }
                     }
+                    
+                    // 图片加载完成后，设置悬停效果
+                    updateHoverEffects();
                 };
                 
                 img.onerror = function() {
@@ -373,8 +374,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 return true;
             }
             
-            // 如果内容高度小于视口高度的1.5倍，或者滚动位置接近内容底部，则加载更多
-            return contentHeight < viewportHeight * 1.5 || scrollPosition > contentHeight - 200;
+            // 图片很少的情况下，如果未满3张图，继续加载
+            const totalImages = document.querySelectorAll('.gallery img').length;
+            if (totalImages < columns * 2) {  // 确保至少有2行图片
+                return true;
+            }
+            
+            // 对所有标签使用同样的流畅瀑布流逻辑
+            // 如果内容高度小于视口高度的2倍，或者滚动位置接近内容底部，则加载更多
+            return contentHeight < viewportHeight * 2 || scrollPosition > contentHeight - 300;
         }
 
         // 预加载下一批图片 - 比当前版面多预加载8张
@@ -540,10 +548,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // 修改 resize 事件处理：仅在宽度变化时，重新分配图片
         window.addEventListener('resize', () => {
             if (window.innerWidth !== lastWidth) {
-                updateColumns(); // 当屏幕宽度变化时，根据新的宽度更新列数并重新分配图片
+                updateColumns();
                 lastWidth = window.innerWidth;
+                // 重新设置悬停效果
+                setTimeout(updateHoverEffects, 300);
             }
-            setGalleryMarginTop(); // 始终更新 gallery 的 margin-top，以确保 header 距离正确
+            setGalleryMarginTop();
         });
 
         updateColumns(); // Initial column setup
@@ -599,6 +609,83 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadNextImages();
                 }
             }, 100);
+        }
+
+        // 添加新函数，处理所有图片加载完成的情况
+        function handleAllImagesLoaded() {
+            loadMoreButton.style.display = 'none';
+            
+            // 添加"已全部加载完成"的提示（如果不存在）
+            if (!document.getElementById('all-loaded-message')) {
+                const loadedMsg = document.createElement('div');
+                loadedMsg.id = 'all-loaded-message';
+                loadedMsg.textContent = '————  已全部加载完成  ————';
+                loadedMsg.style.textAlign = 'center';
+                loadedMsg.style.margin = '20px 0';
+                loadedMsg.style.color = 'var(--text-color)';
+                document.querySelector('footer').before(loadedMsg);
+            }
+        }
+
+        // 替换当前的setupImageHoverEffects和updateHoverEffects函数
+        // 使用更可靠的方法实现图片悬停效果
+
+        function setupImageHoverEffects() {
+            // 使用MutationObserver监视图片添加到DOM
+            if (window.hoverEffectObserver) {
+                window.hoverEffectObserver.disconnect();
+            }
+            
+            // 创建监视器，监听DOM变化
+            window.hoverEffectObserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes) {
+                        mutation.addedNodes.forEach(function(node) {
+                            // 检查是否是新添加的图片
+                            if (node.tagName === 'IMG') {
+                                addHoverEffect(node);
+                            } else if (node.querySelectorAll) {
+                                // 如果是容器元素，检查其中的图片
+                                node.querySelectorAll('img').forEach(addHoverEffect);
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // 立即为现有图片添加效果
+            document.querySelectorAll('.gallery img').forEach(addHoverEffect);
+            
+            // 开始监视整个gallery元素
+            window.hoverEffectObserver.observe(galleryElement, {
+                childList: true,
+                subtree: true
+            });
+            
+            console.log('已设置悬停效果监视器');
+        }
+
+        // 为单个图片添加悬停效果
+        function addHoverEffect(img) {
+            if (img.dataset.hoverInitialized) return; // 避免重复初始化
+            
+            img.dataset.hoverInitialized = 'true';
+            
+            // 添加更简单的事件监听
+            img.addEventListener('mouseenter', function() {
+                this.classList.add('hover-active');
+            });
+            
+            img.addEventListener('mouseleave', function() {
+                this.classList.remove('hover-active');
+            });
+            
+            console.log('已为图片添加悬停效果', img.src);
+        }
+
+        // 更新悬停效果 (不需要频繁调用，只在重大布局更改后)
+        function updateHoverEffects() {
+            setupImageHoverEffects();
         }
     }
 });
