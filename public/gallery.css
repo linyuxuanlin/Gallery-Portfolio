@@ -255,3 +255,87 @@ body:not(.modal-open) .gallery img.loaded.hover-active {
   transition: transform 2s cubic-bezier(0.19, 1, 0.22, 1), 
               box-shadow 2s cubic-bezier(0.19, 1, 0.22, 1) !important;
 }
+
+/* 图片占位符样式 */
+.image-placeholder {
+  width: 100%;
+  height: 180px; /* 默认占位高度 */
+  background-color: rgba(200, 200, 200, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.8em;
+  position: relative;
+  overflow: hidden;
+}
+
+.image-placeholder::after {
+  content: "";
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 1.5s infinite;
+  transform: skewX(-20deg);
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(150%) skewX(-20deg);
+  }
+}
+
+/* 深色模式下的占位符样式 */
+body.dark .image-placeholder {
+  background-color: rgba(60, 60, 60, 0.3);
+}
+
+body.dark .image-placeholder::after {
+  background: linear-gradient(90deg, transparent, rgba(80, 80, 80, 0.4), transparent);
+}
+
+/* 当缩略图准备好时淡入效果 */
+.gallery img.loaded {
+  animation: flyIn 0.5s ease-out forwards; /* 将动画时间从0.8s减少到0.5s使动画更快 */
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), 
+              box-shadow 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+              z-index 0.1s;
+  will-change: transform, box-shadow;
+  opacity: 1; /* 确保图片可见，不依赖动画 */
+}
+
+/* 加载消息增强样式 */
+#temp-loading-msg {
+  text-align: center;
+  margin: 20px 0;
+  padding: 10px 15px;
+  color: var(--text-color);
+  background-color: rgba(76, 175, 80, 0.1);
+  border-radius: 20px;
+  animation: pulse 1.5s infinite alternate;
+  font-weight: 500;
+  display: inline-block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+    transform: translateX(-50%) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* 深色模式加载消息样式 */
+body.dark #temp-loading-msg {
+  background-color: rgba(76, 175, 80, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}

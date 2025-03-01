@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentExifRequest = null; // Variable to hold the current EXIF request
     let isPageLoading = true; // 页面加载标志
     let lastWidth = window.innerWidth;
+    let loadingThumbnails = new Set(); // 存储正在生成缩略图的URL
     
     // Fetch configuration from server
     fetch('/config')
@@ -363,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 设置加载状态
             const tempLoadingMsg = document.createElement('div');
             tempLoadingMsg.id = 'temp-loading-msg';
-            tempLoadingMsg.textContent = '缩略图生成中...';
+            tempLoadingMsg.textContent = '加载中...';
             tempLoadingMsg.style.textAlign = 'center';
             tempLoadingMsg.style.margin = '20px 0';
             tempLoadingMsg.style.padding = '10px';
@@ -442,17 +443,50 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 
+                // 创建占位元素，在缩略图生成过程中显示
+                const placeholderContainer = document.createElement('div');
+                placeholderContainer.className = 'image-placeholder';
+                placeholderContainer.dataset.imageUrl = imageUrl;
+                placeholderContainer.dataset.originalUrl = originalUrl;
+                
+                // 添加到最短列
+                const shortestColumnIndex = getShortestColumn();
+                columnElements[shortestColumnIndex].appendChild(placeholderContainer);
+                
                 // 图片加载
                 const img = new Image();
                 
-                // 添加标记，表示图片正在加载中
-                img.dataset.loading = 'true';
+                // 标记图片加载状态
+                loadingThumbnails.add(imageUrl);
+                
+                // 更新加载提示消息
+                const tempMsg = document.getElementById('temp-loading-msg');
+                if (tempMsg && loadingThumbnails.size > 0) {
+                    tempMsg.textContent = `缩略图生成中 (${loadingThumbnails.size}张)...`;
+                }
                 
                 img.onload = function() {
                     try {
+                        // 从加载集合中移除
+                        loadingThumbnails.delete(imageUrl);
+                        
+                        // 更新加载提示
+                        const tempMsg = document.getElementById('temp-loading-msg');
+                        if (tempMsg) {
+                            if (loadingThumbnails.size > 0) {
+                                tempMsg.textContent = `缩略图生成中 (${loadingThumbnails.size}张)...`;
+                            } else {
+                                tempMsg.textContent = '加载中...';
+                            }
+                        }
+                        
                         // 再次检查DOM中是否已存在此图片（确保在加载过程中没有被其他过程添加）
                         if (document.querySelector(`.gallery img[data-original="${originalUrl}"]`)) {
                             console.log(`图片已存在于DOM中: ${originalUrl}`);
+                            // 删除占位符
+                            if (placeholderContainer.parentNode) {
+                                placeholderContainer.parentNode.removeChild(placeholderContainer);
+                            }
                             currentIndex++;
                             loadSingleImage(currentIndex);
                             return;
@@ -461,15 +495,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         // 添加到已加载集合
                         loadedImageUrls.add(imageUrl);
                         
-                        // 添加到最短列
-                        const shortestColumnIndex = getShortestColumn();
-                        columnElements[shortestColumnIndex].appendChild(img);
+                        // 替换占位符
+                        if (placeholderContainer.parentNode) {
+                            placeholderContainer.parentNode.replaceChild(img, placeholderContainer);
+                        } else {
+                            // 如果占位符不存在，添加到最短列
+                            const shortestColumnIndex = getShortestColumn();
+                            columnElements[shortestColumnIndex].appendChild(img);
+                        }
                         
                         // 设置加载动画
                         setTimeout(() => {
                             img.classList.add('loaded');
-                            // 图片完全加载后移除加载标记
-                            img.dataset.loading = 'false';
                         }, 10);
                         
                         // 更新计数
@@ -480,6 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         // 添加序号
                         img.dataset.originalOrder = currentIndex - 1;
+                        img.dataset.isLoaded = "true"; // 标记图片已加载完成
                         
                         // 更新悬停效果
                         updateHoverEffects();
@@ -527,6 +565,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     } catch (err) {
                         console.error(`图片处理过程中发生错误:`, err);
+                        // 从加载集合中移除
+                        loadingThumbnails.delete(imageUrl);
+                        // 删除占位符
+                        if (placeholderContainer.parentNode) {
+                            placeholderContainer.parentNode.removeChild(placeholderContainer);
+                        }
                         currentIndex++;
                         loadSingleImage(currentIndex);
                     }
@@ -534,6 +578,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 img.onerror = function() {
                     console.error('图片加载失败:', imageUrl);
+                    // 从加载集合中移除
+                    loadingThumbnails.delete(imageUrl);
+                    // 删除占位符
+                    if (placeholderContainer.parentNode) {
+                        placeholderContainer.parentNode.removeChild(placeholderContainer);
+                    }
                     currentIndex++;
                     loadSingleImage(currentIndex);
                 };
@@ -544,15 +594,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.setAttribute('data-preview', imageData.thumbnail);
                 img.alt = '图片';
                 
-                // 添加点击事件，但只在图片完全加载后才响应
-                img.addEventListener('click', function(e) {
-                    // 如果图片还在加载中，不打开模态窗口
-                    if (this.dataset.loading === 'true') {
-                        console.log('图片正在加载中，禁止打开大图');
-                        e.preventDefault();
-                        return false;
+                // 添加点击事件
+                img.addEventListener('click', function() {
+                    // 仅当图片加载完成时才允许打开大图
+                    if (this.classList.contains('loaded') && this.dataset.isLoaded === "true") {
+                        openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
+                    } else {
+                        console.log('图片尚未加载完成，无法打开大图');
                     }
-                    openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
                 });
             }
             
@@ -731,7 +780,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Error loading images:', error));
 
-        // 模态窗口逻辑
+        // 模态窗口逻辑 (保持不变)
         const modal = document.getElementById('myModal');
         const modalContent = document.querySelector('.modal-content');
         const modalImg = document.getElementById('img01');
@@ -739,13 +788,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const span = document.getElementsByClassName('close')[0];
 
         function openModal(original, preview) {
-            // 检查是否点击的图片还在加载中
-            const clickedImg = document.querySelector(`.gallery img[data-original="${original}"]`);
-            if (clickedImg && clickedImg.dataset.loading === 'true') {
-                console.log('图片正在加载中，禁止打开大图');
-                return;
-            }
-            
             // 移除所有图片的悬停状态
             document.querySelectorAll('.gallery img.hover-active').forEach(img => {
                 img.classList.remove('hover-active');
@@ -756,6 +798,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (isPageLoading) {
                 console.log('页面正在加载，无法打开大图');
+                return;
+            }
+            
+            // 检查是否有正在生成的缩略图
+            const imgElement = document.querySelector(`.gallery img[data-original="${original}"]`);
+            if (!imgElement || !imgElement.classList.contains('loaded') || imgElement.dataset.isLoaded !== "true") {
+                console.log('图片尚未加载完成，无法打开大图');
                 return;
             }
             
