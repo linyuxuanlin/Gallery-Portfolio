@@ -289,15 +289,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 修改 loadNextImages 函数，实现逐次加载并立即呈现
         function loadNextImages() {
-            setLoadingState(true);
             const images = imageUrls[currentTag] || [];
             
-            // 如果已经加载完所有图片，显示提示并返回
+            // 检查是否还有更多图片需要加载
             if (currentIndex >= images.length) {
-                setLoadingState(false);
                 handleAllImagesLoaded();
                 return;
             }
+
+            // 立即设置加载状态，防止多次触发加载
+            setLoadingState(true);
+            
+            // 增加一个延迟变量来追踪当前批次的图片加载
+            const currentBatchId = Date.now();
+            loadingBatchId = currentBatchId;
             
             // 单张图片加载逻辑
             function loadSingleImage(index) {
@@ -374,6 +379,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 判断是否应该继续加载更多图片
         function shouldLoadMoreImages() {
+            // 如果当前正在加载中，则不应该再次触发加载
+            if (loadingImagesCount > 0) {
+                return false;
+            }
+            
             // 确保 imageUrls 和 currentTag 有效
             if (!imageUrls || !imageUrls[currentTag]) {
                 return false;
@@ -448,13 +458,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // 设置加载按钮状态
         function setLoadingState(isLoading) {
             if (isLoading) {
-                loadMoreButton.textContent = '加载中…';
-                loadMoreButton.classList.add('loading');
+                // 正在加载中 - 显示灰色加载中按钮
                 loadMoreButton.disabled = true;
+                loadMoreButton.textContent = '加载中...';
+                loadMoreButton.style.backgroundColor = '#ccc';
+                loadMoreButton.style.cursor = 'not-allowed';
+                loadMoreButton.style.display = 'block'; // 始终显示按钮，只是变灰
+            } else if (currentIndex >= (imageUrls[currentTag] || []).length) {
+                // 所有图片都已加载 - 隐藏按钮
+                handleAllImagesLoaded();
             } else {
-                loadMoreButton.textContent = '加载更多';
-                loadMoreButton.classList.remove('loading');
+                // 加载完成但还有更多图片 - 恢复按钮状态
                 loadMoreButton.disabled = false;
+                loadMoreButton.textContent = '加载更多';
+                loadMoreButton.style.backgroundColor = '';
+                loadMoreButton.style.cursor = 'pointer';
             }
         }
 
@@ -611,8 +629,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             lastScrollY = currentScrollY;
             
-            // 新增：检查是否需要加载更多图片
-            if (!loadMoreButton.disabled && shouldLoadMoreImages()) {
+            // 检查是否需要加载更多图片，并确保按钮状态正确
+            if (loadingImagesCount > 0) {
+                // 如果有图片正在加载，确保显示加载中状态
+                setLoadingState(true);
+            } else if (!loadMoreButton.disabled && shouldLoadMoreImages()) {
                 loadNextImages();
             }
         });
@@ -648,7 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!document.getElementById('all-loaded-message')) {
                 const loadedMsg = document.createElement('div');
                 loadedMsg.id = 'all-loaded-message';
-                loadedMsg.textContent = '————  已全部加载完成  ————';
+                loadedMsg.textContent = '————  已全部加载  ————';
                 loadedMsg.style.textAlign = 'center';
                 loadedMsg.style.margin = '20px 0';
                 loadedMsg.style.color = 'var(--text-color)';
