@@ -260,25 +260,72 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 加载下一批图片，优化点在于：等图片加载完毕后，再根据真实高度检测最短列后插入 DOM
+        // 加载下一批图片，实现单张依次加载的瀑布流布局
         function loadNextImages() {
             setLoadingState(true);
             const images = imageUrls[currentTag] || [];
             const endIndex = Math.min(currentIndex + imagesPerLoad, images.length);
             loadingImagesCount = endIndex - currentIndex;
-            // 添加预加载函数
-            function preloadNextBatchImages() {
-                const images = imageUrls[currentTag] || [];
-                const endIndex = Math.min(currentIndex + imagesPerLoad, images.length);
-                    // 如果已经到达末尾，不需要预加载
-                    if (currentIndex >= endIndex) return;
-                    
+
+            if (currentIndex >= images.length) {
+                // 所有图片加载完成，显示提示信息
+                const loadedMsg = document.createElement('div');
+                loadedMsg.id = 'all-loaded-message';
+                loadedMsg.textContent = '已全部加载';
+                loadedMsg.className = 'all-loaded';
+                loadMoreButton.style.display = 'none';
+                galleryElement.after(loadedMsg);
+                setLoadingState(false);
+                return;
+            }
+
+            // 单张图片加载函数
+            function loadSingleImage(index) {
+                if (index >= endIndex) {
+                    setLoadingState(false);
+                    currentIndex = endIndex;
                     // 预加载下一批图片
-                    for (let i = currentIndex; i < endIndex; i++) {
-                        const imageData = images[i];
-                        const preloadImg = new Image();
-                        preloadImg.src = imageData.thumbnail;
-                    }
+                    preloadNextBatchImages();
+                    return;
+                }
+
+                const imageData = images[index];
+                const img = new Image();
+                img.onload = () => {
+                    // 创建图片容器
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'image-container';
+                    imgContainer.onclick = () => openModal(imageData.url, imageData.thumbnail);
+
+                    // 设置图片属性
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    img.alt = '';
+                    imgContainer.appendChild(img);
+
+                    // 将图片添加到最短的列中
+                    const shortestColumnIndex = getShortestColumn();
+                    columnElements[shortestColumnIndex].appendChild(imgContainer);
+
+                    // 加载下一张图片
+                    loadSingleImage(index + 1);
+                };
+                img.src = imageData.thumbnail;
+            }
+
+            // 开始加载第一张图片
+            loadSingleImage(currentIndex);
+
+            // 预加载下一批图片
+            function preloadNextBatchImages() {
+                const nextStartIndex = endIndex;
+                const nextEndIndex = Math.min(nextStartIndex + imagesPerLoad, images.length);
+                
+                for (let i = nextStartIndex; i < nextEndIndex; i++) {
+                    const imageData = images[i];
+                    const preloadImg = new Image();
+                    preloadImg.src = imageData.thumbnail;
+                }
             }
         }
         // 检查是否所有图片都加载完成
@@ -291,10 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadMoreButton.style.opacity = '1';               // 显示加载更多按钮
                 loadingElement.classList.add('hidden');           // 隐藏加载动画
             }
-            // 添加预加载逻辑
-            if (!isPageLoading && imagesLoadedCount > 0) {
-                preloadNextBatchImages();
-            }
+            // 不再需要在这里调用预加载，因为预加载已经集成到loadNextImages函数中
         }
         // 设置加载按钮状态
         function setLoadingState(isLoading) {
