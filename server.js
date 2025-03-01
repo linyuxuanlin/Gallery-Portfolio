@@ -231,17 +231,37 @@ app.get('/thumbnail/:key', async (req, res) => {
     thumbnailKey = `${IMAGE_DIR}/preview/${path.basename(key)}`;
   }
   
+  console.log(`处理缩略图请求: 原图=${key}, 缩略图=${thumbnailKey}`);
+  
   try {
     // 检查缩略图是否存在
     await s3Client.send(new HeadObjectCommand({ 
       Bucket: BUCKET_NAME, 
       Key: thumbnailKey 
     }));
+    console.log(`缩略图已存在: ${thumbnailKey}`);
     res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
   } catch (error) {
     if (error.name === 'NotFound') {
       // 如果不存在，生成缩略图
       try {
+        console.log(`缩略图不存在，准备生成: ${thumbnailKey}`);
+        
+        // 首先检查原始图片是否存在
+        try {
+          await s3Client.send(new HeadObjectCommand({ 
+            Bucket: BUCKET_NAME, 
+            Key: key 
+          }));
+        } catch (originalError) {
+          if (originalError.name === 'NotFound') {
+            console.error(`原始图片不存在: ${key}`);
+            return res.status(404).send('原始图片不存在');
+          }
+          throw originalError;
+        }
+        
+        // 获取原图数据
         const imageBuffer = await s3Client.send(new GetObjectCommand({ 
           Bucket: BUCKET_NAME, 
           Key: key 
@@ -291,6 +311,9 @@ app.get('/thumbnail/:key', async (req, res) => {
           contentType = 'image/jpeg';
         }
 
+        // 确保preview目录存在（如果使用的是本地文件系统）
+        // 对于S3/R2存储这一步不是必需的
+        
         // 保存到存储
         await s3Client.send(new PutObjectCommand({
           Bucket: BUCKET_NAME,
@@ -305,16 +328,16 @@ app.get('/thumbnail/:key', async (req, res) => {
         const compressedSize = thumbnailBuffer.length;
         const ratio = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
         console.log(`缩略图生成完成: ${key} -> ${thumbnailKey}`);
-        console.log(`压缩率: ${ratio}%, 原始: ${originalSize/1024}KB, 压缩后: ${compressedSize/1024}KB`);
+        console.log(`压缩率: ${ratio}%, 原始: ${(originalSize/1024).toFixed(1)}KB, 压缩后: ${(compressedSize/1024).toFixed(1)}KB`);
 
         res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
       } catch (genError) {
-        console.error('生成缩略图失败:', genError);
-        res.status(500).send('生成缩略图失败');
+        console.error(`生成缩略图失败(${key}):`, genError);
+        res.status(500).send(`生成缩略图失败: ${genError.message}`);
       }
     } else {
-      console.error('访问缩略图出错:', error);
-      res.status(500).send('访问缩略图出错');
+      console.error(`访问缩略图出错(${key}):`, error);
+      res.status(500).send(`访问缩略图出错: ${error.message}`);
     }
   }
 });
