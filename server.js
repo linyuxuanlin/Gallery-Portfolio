@@ -280,11 +280,6 @@ app.get('/thumbnail/:key', async (req, res) => {
         // 基础图像处理 - 调整大小并保留元数据
         let sharpInstance = sharp(imageBuffer).resize(THUMBNAIL_SIZE);
         
-        // 修改：保留原图的旋转方向等元数据
-        sharpInstance = sharpInstance.withMetadata({
-          orientation: compressionParams.isPhoto ? undefined : 1 // 保留照片的原始方向，图形类图片固定为1
-        });
-        
         // 优化：对于某些图像可以适当锐化以提高缩略图清晰度
         if (compressionParams.isPhoto) {
           sharpInstance = sharpInstance.sharpen({
