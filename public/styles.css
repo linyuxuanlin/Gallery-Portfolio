@@ -307,3 +307,25 @@ body.dark .tag-filter-vertical {
     background-color: rgba(255, 255, 255, 0.1); /* 使用半透明白色背景，降低突兀感 */
     /* 可根据需要调整内边距、圆角等其他样式 */
 }
+
+/* 添加加载指示器样式 */
+.loading-indicator {
+    text-align: center;
+    padding: 15px;
+    margin: 20px auto;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+    color: var(--text-color);
+    max-width: 200px;
+    opacity: 0.8;
+    animation: fadeIn 0.5s;
+}
+
+body.dark .loading-indicator {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 移除加载更多按钮，因为我们使用自动加载 */
+.load-more {
+    display: none !important;
+}
