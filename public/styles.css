@@ -249,61 +249,78 @@ body.dark #exif-info {
   }
 }
 
-/* 浅色模式 */
+/* 浅色模式 - 优化配色，减少视觉疲劳 */
 :root {
-  --primary-color: #4CAF50; /* 统一绿色主题色 */
-  --background-color: #ffffff;
-  --text-color: #333333;
-  --header-bg: #f5f5f5;
-  --button-bg: #4CAF50; /* 统一绿色 */
-  --button-text: #ffffff;
-  --tag-bg: #4CAF50; /* 统一绿色 */
-  --tag-text: #ffffff;
-  --modal-bg: rgba(255, 255, 255, 0.9);
-  --modal-text: #333333;
+    --primary-color: #4CAF50; /* 保持原有的绿色主题色 */
+    --background-color: #f8f8f8; /* 更柔和的背景色，不再使用纯白 */
+    --text-color: #333333;
+    --header-bg: #f5f5f5;
+    --button-bg: #4CAF50; 
+    --button-text: #ffffff;
+    --tag-bg: #4CAF50; 
+    --tag-text: #ffffff;
+    --modal-bg: rgba(248, 248, 248, 0.95);
+    --modal-text: #333333;
+    --footer-bg: #4CAF50;
+    --shadow-color: rgba(0, 0, 0, 0.1); /* 更柔和的阴影 */
+    --bg-color: #f8f8f8; /* 页面背景色 */
+    --gallery-bg: #f8f8f8; /* 画廊背景色 */
+    --card-bg: #ffffff; /* 卡片背景色 */
 }
 
-/* 深色模式 */
+/* 深色模式保持不变 */
 .dark {
-  --primary-color: #4CAF50; /* 保持绿色主题 */
-  --background-color: #121212;
-  --text-color: #e0e0e0;
-  --header-bg: #1e1e1e;
-  --button-bg: #4CAF50; /* 保持绿色 */
-  --button-text: #ffffff;
-  --tag-bg: #4CAF50; /* 保持绿色 */
-  --tag-text: #ffffff;
-  --modal-bg: rgba(18, 18, 18, 0.9);
-  --modal-text: #e0e0e0;
+    --primary-color: #4CAF50;
+    --background-color: #121212;
+    --text-color: #e0e0e0;
+    --header-bg: #1e1e1e;
+    --button-bg: #4CAF50;
+    --button-text: #ffffff;
+    --tag-bg: #4CAF50;
+    --tag-text: #ffffff;
+    --modal-bg: rgba(18, 18, 18, 0.95);
+    --modal-text: #e0e0e0;
+    --footer-bg: #3d3d3d;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+    --bg-color: #121212;
+    --gallery-bg: #121212;
+    --card-bg: #1e1e1e;
 }
 
-/* 使用变量替换原有颜色值 */
-header, footer, .load-more {
-    background-color: var(--primary-color);
-}
-
+/* 应用新变量到相关元素 */
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
 }
 
+.gallery {
+    background-color: var(--gallery-bg);
+}
+
 .gallery img {
+    background-color: var(--card-bg);
     box-shadow: 0 4px 8px var(--shadow-color);
 }
 
-.tag-filter {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.08); /* 将透明度从0.05调整为0.08 */
-    position: sticky;
-    top: 0;
-    z-index: 1;
+header, footer {
+    background-color: var(--primary-color);
 }
 
-/* 优化暗黑模式下垂直标签栏的背景 */
-body.dark .tag-filter-vertical {
-    background-color: rgba(255, 255, 255, 0.1); /* 使用半透明白色背景，降低突兀感 */
-    /* 可根据需要调整内边距、圆角等其他样式 */
+/* 优化加载完成提示的样式 */
+#all-loaded-message {
+    color: var(--text-color);
+    opacity: 0.8; /* 稍微降低完成提示的不透明度 */
+    font-size: 0.9em;
+    letter-spacing: 1px;
+}
+
+/* 调整垂直标签栏在浅色模式下的样式 */
+.tag-filter-vertical {
+    background: rgba(250, 250, 250, 0.85); /* 更透明的背景 */
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+/* 浅色模式下，调整图片荧光效果 */
+body:not(.dark) .gallery img.loaded:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* 更柔和的悬停阴影 */
 }
