@@ -16,7 +16,7 @@
 /* Keyframes for image fly-in effect */
 @keyframes flyIn {
   0% {
-    transform: translateY(100px);
+    transform: translateY(30px); /* 减少初始位移距离，从100px减到30px */
     opacity: 0;
   }
   100% {
@@ -211,11 +211,12 @@ body.dark .tag:hover {
 
 /* 已加载图片的基本样式 */
 .gallery img.loaded {
-  animation: flyIn 0.8s ease-out forwards;
-  transition: transform 2s cubic-bezier(0.19, 1, 0.22, 1), 
-              box-shadow 2s cubic-bezier(0.19, 1, 0.22, 1),
+  animation: flyIn 0.5s ease-out forwards; /* 将动画时间从0.8s减少到0.5s使动画更快 */
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), 
+              box-shadow 0.3s cubic-bezier(0.19, 1, 0.22, 1),
               z-index 0.1s;
   will-change: transform, box-shadow;
+  opacity: 1; /* 确保图片可见，不依赖动画 */
 }
 
 /* 悬停样式 - 使用更长的动画时间 */
