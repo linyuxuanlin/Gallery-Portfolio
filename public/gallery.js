@@ -489,7 +489,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const exifInfo = document.getElementById('exif-info');
         const span = document.getElementsByClassName('close')[0];
 
-        function openModal(originalSrc, previewSrc) {
+        function openModal(original, preview) {
+            // 移除所有图片的悬停状态
+            document.querySelectorAll('.gallery img.hover-active').forEach(img => {
+                img.classList.remove('hover-active');
+            });
+            
+            // 临时禁用悬停效果
+            document.body.classList.add('modal-open');
+            
             if (isPageLoading) {
                 console.log('页面正在加载，无法打开大图');
                 return; // 如果页面正在加载，直接返回
@@ -513,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentExifRequest = exifController;
 
             // 获取 EXIF 数据（使用高清图地址）
-            fetch(`/exif/${encodeURIComponent(originalSrc.replace(IMAGE_BASE_URL + '/', ''))}`, { signal: exifController.signal })
+            fetch(`/exif/${encodeURIComponent(original.replace(IMAGE_BASE_URL + '/', ''))}`, { signal: exifController.signal })
                 .then(response => response.json())
                 .then(data => {
                     if (!exifController.signal.aborted) {
@@ -539,16 +547,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
             // 先展示预览图并添加模糊效果
-            modalImg.src = previewSrc;
+            modalImg.src = preview;
             modalImg.style.filter = 'blur(20px)';
 
             // 创建新的 Image 对象加载高清图
             const highResImage = new Image();
-            highResImage.src = originalSrc;
+            highResImage.src = original;
             highResImage.onload = () => {
                 if (!imageController.signal.aborted) {
                     // 切换显示高清图并去除模糊效果
-                    modalImg.src = originalSrc;
+                    modalImg.src = original;
                     modalImg.style.transition = 'filter 0.5s ease';
                     modalImg.style.filter = 'blur(0px)';
                     currentImageRequest = null;
@@ -582,6 +590,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentExifRequest) {
                 currentExifRequest.abort();
             }
+            
+            // 移除模态窗口类，重新启用悬停效果
+            document.body.classList.remove('modal-open');
+            
             modal.style.display = 'none';
             document.body.classList.remove('no-scroll');
         }

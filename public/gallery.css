@@ -236,3 +236,12 @@ body.dark .gallery img.loaded.hover-active {
   z-index: 9;
   pointer-events: none;
 }
+
+/* 当模态窗口打开时禁用悬停效果 */
+body.modal-open .gallery img:hover,
+body.modal-open .gallery img.hover-active {
+  transform: none !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  z-index: 1 !important;
+  transition: none !important;
+}
