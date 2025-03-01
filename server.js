@@ -29,11 +29,19 @@ const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
 async function getExifData(key) {
   try {
+    console.log(`获取EXIF数据: ${key}`);
     const getObjectParams = {
       Bucket: BUCKET_NAME,
       Key: key,
     };
-    const imageBuffer = await s3Client.send(new GetObjectCommand(getObjectParams)).then(response => {
+    
+    // 添加超时处理
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('获取图片数据超时')), 5000);
+    });
+    
+    // 获取图片数据，添加超时限制
+    const imageBufferPromise = s3Client.send(new GetObjectCommand(getObjectParams)).then(response => {
       return new Promise((resolve, reject) => {
         const chunks = [];
         response.Body.on('data', (chunk) => chunks.push(chunk));
@@ -42,17 +50,33 @@ async function getExifData(key) {
       });
     });
     
+    // 使用 Promise.race 确保请求不会挂起太久
+    const imageBuffer = await Promise.race([imageBufferPromise, timeoutPromise]);
+    
     // 添加错误处理
     try {
+      // 检查图片格式是否支持EXIF
+      const isJpeg = key.toLowerCase().endsWith('.jpg') || key.toLowerCase().endsWith('.jpeg');
+      if (!isJpeg) {
+        console.log(`图片格式不支持EXIF: ${key}`);
+        return {
+          FNumber: null,
+          ExposureTime: null,
+          ISO: null,
+        };
+      }
+      
       const parser = exifParser.create(imageBuffer);
       const exifData = parser.parse().tags;
+      
+      // 返回整理后的EXIF数据
       return {
-        FNumber: exifData.FNumber,
-        ExposureTime: exifData.ExposureTime,
-        ISO: exifData.ISO,
+        FNumber: exifData.FNumber ? parseFloat(exifData.FNumber.toFixed(1)) : null,
+        ExposureTime: exifData.ExposureTime ? parseFloat(exifData.ExposureTime.toFixed(4)) : null,
+        ISO: exifData.ISO || null,
       };
     } catch (exifError) {
-      console.warn(`无法解析EXIF数据: ${exifError.message}`);
+      console.warn(`无法解析EXIF数据(${key}): ${exifError.message}`);
       return {
         FNumber: null,
         ExposureTime: null,
@@ -60,8 +84,14 @@ async function getExifData(key) {
       };
     }
   } catch (error) {
-    console.error(`获取图片数据失败: ${error.message}`);
-    throw error;
+    console.error(`获取图片EXIF数据失败(${key}): ${error.message}`);
+    // 返回空数据但不影响整体流程
+    return {
+      FNumber: null,
+      ExposureTime: null,
+      ISO: null,
+      error: error.message
+    };
   }
 }
 

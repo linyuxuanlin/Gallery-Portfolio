@@ -147,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 重要：重置已加载图片集合
             loadedImageUrls.clear();
+            console.log(`标签切换到: ${tag}, 已清空已加载图片缓存`);
 
             currentTag = tag;
             currentIndex = 0;
@@ -166,10 +167,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     [folderKeys[i], folderKeys[j]] = [folderKeys[j], folderKeys[i]];
                 }
                 const allImages = [];
+                
+                // 在组合图片时进行去重，防止不同文件夹中存在相同图片
+                const uniqueImageUrls = new Set();
+                
                 folderKeys.forEach(key => {
                     // 同一个文件夹内的图片保持连续顺序
-                    allImages.push(...imageUrls[key]);
+                    imageUrls[key].forEach(img => {
+                        // 使用原图URL作为唯一标识
+                        if (!uniqueImageUrls.has(img.original)) {
+                            uniqueImageUrls.add(img.original);
+                            allImages.push(img);
+                        }
+                    });
                 });
+                
+                console.log(`全部标签: 收集了 ${allImages.length} 张唯一图片`);
                 imageUrls['all'] = allImages;
             }
 
@@ -237,15 +250,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
+            console.log(`调整列数: ${columns} -> ${computedColumns}`);
+            
             // 记录现有图片
             const loadedImages = Array.from(document.querySelectorAll('.gallery img'));
             
-            // 根据原始顺序排序图片
-            loadedImages.sort((a, b) => {
+            // 创建图片URL的集合，用于去重
+            const imageUrlSet = new Set();
+            
+            // 根据原始顺序排序图片，并去除重复
+            const uniqueImages = loadedImages.filter(img => {
+                const originalUrl = img.getAttribute('data-original');
+                if (imageUrlSet.has(originalUrl)) {
+                    // 如果已经有相同URL的图片，删除这个重复的
+                    if (img.parentNode) {
+                        console.log('发现重复图片，删除:', originalUrl);
+                        img.parentNode.removeChild(img);
+                    }
+                    return false;
+                }
+                imageUrlSet.add(originalUrl);
+                return true;
+            }).sort((a, b) => {
                 const orderA = parseInt(a.dataset.originalOrder || 0);
                 const orderB = parseInt(b.dataset.originalOrder || 0);
                 return orderA - orderB;
             });
+            
+            console.log(`调整布局: 共有 ${loadedImages.length} 张图片，去重后 ${uniqueImages.length} 张`);
             
             // 更新全局变量
             columns = computedColumns;
@@ -255,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
             createColumns();
             
             // 重新分配图片
-            distributeImagesInOriginalOrder(loadedImages);
+            distributeImagesInOriginalOrder(uniqueImages);
             
             // 更新其他设置
             setTimeout(updateHoverEffects, 300);
@@ -275,16 +307,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             
-            // 创建足够的图片容器
+            // 创建图片URL的集合，用于最后一次检查去重
+            const finalImageUrlSet = new Set();
+            
+            // 逐个将图片添加到最短的列，确保不会有重复
             for (let i = 0; i < images.length; i++) {
+                const img = images[i];
+                const originalUrl = img.getAttribute('data-original');
+                
+                // 最后一次去重检查
+                if (finalImageUrlSet.has(originalUrl)) {
+                    console.log('分配时发现重复图片，跳过:', originalUrl);
+                    continue;
+                }
+                finalImageUrlSet.add(originalUrl);
+                
                 // 如果图片没有原始序号，则添加一个
-                if (!images[i].dataset.originalOrder) {
-                    images[i].dataset.originalOrder = i;
+                if (!img.dataset.originalOrder) {
+                    img.dataset.originalOrder = i;
                 }
                 
                 // 将图片添加到最短的列
                 const shortestColumnIndex = getShortestColumn();
-                columnElements[shortestColumnIndex].appendChild(images[i]);
+                columnElements[shortestColumnIndex].appendChild(img);
             }
         }
 
@@ -351,6 +396,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // 确保至少加载一定数量的图片
             let remainingToLoad = Math.max(imagesPerRow * 3, maxImagesToLoad - document.querySelectorAll('.gallery img').length);
             
+            console.log(`准备加载一批新图片: 目标数量 ${remainingToLoad}, 当前索引 ${currentIndex}, 总图片数 ${images.length}`);
+            
             // 单张图片加载计数器
             let loadedInThisBatch = 0;
             const batchStart = Date.now();
@@ -364,8 +411,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (tempMsg) tempMsg.remove();
                     
                     if (index >= images.length) {
+                        console.log('所有图片已加载完毕');
                         handleAllImagesLoaded();
                     } else {
+                        console.log(`本批次加载完成，共加载 ${loadedInThisBatch} 张图片`);
                         // 预加载下一批
                         preloadNextBatchImages();
                         
@@ -383,46 +432,77 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const imageData = images[index];
                 const imageUrl = imageData.thumbnail;
+                const originalUrl = imageData.original;
                 
-                // 检查图片是否已加载，避免重复
-                if (loadedImageUrls.has(imageUrl)) {
+                // 更严格的去重：检查缩略图和原图URL
+                if (loadedImageUrls.has(imageUrl) || document.querySelector(`.gallery img[data-original="${originalUrl}"]`)) {
+                    console.log(`跳过已加载图片: ${imageUrl}`);
                     currentIndex++;
                     loadSingleImage(currentIndex);
                     return;
                 }
                 
+                // 图片加载
                 const img = new Image();
                 
                 img.onload = function() {
-                    // 添加到已加载集合
-                    loadedImageUrls.add(imageUrl);
-                    
-                    // 添加到最短列
-                    const shortestColumnIndex = getShortestColumn();
-                    columnElements[shortestColumnIndex].appendChild(img);
-                    
-                    // 设置加载动画
-                    setTimeout(() => {
-                        img.classList.add('loaded');
-                    }, 10);
-                    
-                    // 更新计数
-                    currentIndex++;
-                    imagesLoadedCount++;
-                    remainingToLoad--;
-                    loadedInThisBatch++;
-                    
-                    // 添加序号
-                    img.dataset.originalOrder = currentIndex - 1;
-                    
-                    // 更新悬停效果
-                    updateHoverEffects();
-                    
-                    // 控制加载速度，防止一次加载过多图片导致卡顿
-                    const timeElapsed = Date.now() - batchStart;
-                    if (loadedInThisBatch >= 20 && timeElapsed < 500) {
-                        // 加载速度过快，稍微延迟下一张
+                    try {
+                        // 再次检查DOM中是否已存在此图片（确保在加载过程中没有被其他过程添加）
+                        if (document.querySelector(`.gallery img[data-original="${originalUrl}"]`)) {
+                            console.log(`图片已存在于DOM中: ${originalUrl}`);
+                            currentIndex++;
+                            loadSingleImage(currentIndex);
+                            return;
+                        }
+                        
+                        // 添加到已加载集合
+                        loadedImageUrls.add(imageUrl);
+                        
+                        // 添加到最短列
+                        const shortestColumnIndex = getShortestColumn();
+                        columnElements[shortestColumnIndex].appendChild(img);
+                        
+                        // 设置加载动画
                         setTimeout(() => {
+                            img.classList.add('loaded');
+                        }, 10);
+                        
+                        // 更新计数
+                        currentIndex++;
+                        imagesLoadedCount++;
+                        remainingToLoad--;
+                        loadedInThisBatch++;
+                        
+                        // 添加序号
+                        img.dataset.originalOrder = currentIndex - 1;
+                        
+                        // 更新悬停效果
+                        updateHoverEffects();
+                        
+                        // 控制加载速度，防止一次加载过多图片导致卡顿
+                        const timeElapsed = Date.now() - batchStart;
+                        if (loadedInThisBatch >= 20 && timeElapsed < 500) {
+                            // 加载速度过快，稍微延迟下一张
+                            setTimeout(() => {
+                                if (remainingToLoad > 0 && currentIndex < images.length) {
+                                    loadSingleImage(currentIndex);
+                                } else {
+                                    // 移除加载消息
+                                    const tempMsg = document.getElementById('temp-loading-msg');
+                                    if (tempMsg) tempMsg.remove();
+                                    
+                                    if (currentIndex >= images.length) {
+                                        handleAllImagesLoaded();
+                                    } else {
+                                        preloadNextBatchImages();
+                                    }
+                                    
+                                    // 重置滚动加载状态
+                                    isScrollLoading = false;
+                                }
+                            }, 50);
+                        } else {
+                            // 正常加载速度，立即加载下一张
                             if (remainingToLoad > 0 && currentIndex < images.length) {
                                 loadSingleImage(currentIndex);
                             } else {
@@ -439,25 +519,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 // 重置滚动加载状态
                                 isScrollLoading = false;
                             }
-                        }, 50);
-                    } else {
-                        // 正常加载速度，立即加载下一张
-                        if (remainingToLoad > 0 && currentIndex < images.length) {
-                            loadSingleImage(currentIndex);
-                        } else {
-                            // 移除加载消息
-                            const tempMsg = document.getElementById('temp-loading-msg');
-                            if (tempMsg) tempMsg.remove();
-                            
-                            if (currentIndex >= images.length) {
-                                handleAllImagesLoaded();
-                            } else {
-                                preloadNextBatchImages();
-                            }
-                            
-                            // 重置滚动加载状态
-                            isScrollLoading = false;
                         }
+                    } catch (err) {
+                        console.error(`图片处理过程中发生错误:`, err);
+                        currentIndex++;
+                        loadSingleImage(currentIndex);
                     }
                 };
                 
@@ -675,6 +741,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
+            // 取消之前的请求
             if (currentImageRequest) {
                 currentImageRequest.abort();
             }
@@ -684,60 +751,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
             modal.style.display = 'block';
             document.body.classList.add('no-scroll');
-            exifInfo.innerHTML = 'Loading original image and EXIF data...';
+            
+            // 显示友好的加载状态
+            exifInfo.innerHTML = '<p>加载原图及EXIF数据中...</p>';
 
+            // 创建新的控制器
             const imageController = new AbortController();
             const exifController = new AbortController();
             currentImageRequest = imageController;
             currentExifRequest = exifController;
 
-            // 获取 EXIF 数据
-            fetch(`/exif/${encodeURIComponent(original.replace(IMAGE_BASE_URL + '/', ''))}`, { signal: exifController.signal })
-                .then(response => response.json())
-                .then(data => {
-                    if (!exifController.signal.aborted) {
-                        let shutterDisplay = 'N/A';
-                        if (data.ExposureTime) {
-                            if (data.ExposureTime < 1) {
-                                const denominator = Math.round(1 / data.ExposureTime);
-                                shutterDisplay = `1/${denominator}s`;
-                            } else {
-                                shutterDisplay = `${data.ExposureTime}s`;
-                            }
-                        }
-                        exifInfo.innerHTML = `
-                            <p>光圈: ${data.FNumber ? `f/${data.FNumber}` : 'N/A'}  ·  快门: ${shutterDisplay}  ·  ISO: ${data.ISO ? data.ISO : 'N/A'}</p>
-                        `;
-                    }
-                })
-                .catch(error => {
-                    if (error.name !== 'AbortError') {
-                        console.error('Error fetching EXIF data:', error);
-                        exifInfo.innerHTML = 'Error loading EXIF data';
-                    }
-                });
-
             // 先展示预览图并添加模糊效果
             modalImg.src = preview;
-            modalImg.style.filter = 'blur(20px)';
+            modalImg.style.filter = 'blur(10px)'; // 降低模糊程度，减少处理负担
+            
+            // 确保模糊效果有平滑过渡
+            modalImg.style.transition = 'filter 0.3s ease';
 
             // 加载高清图
             const highResImage = new Image();
-            highResImage.src = original;
             highResImage.onload = () => {
                 if (!imageController.signal.aborted) {
                     modalImg.src = original;
-                    modalImg.style.transition = 'filter 0.5s ease';
                     modalImg.style.filter = 'blur(0px)';
                     currentImageRequest = null;
                 }
             };
+            
             highResImage.onerror = () => {
                 if (!imageController.signal.aborted) {
-                    console.error('Error loading high resolution image');
+                    console.error('加载高清图失败:', original);
+                    // 失败时直接使用预览图并移除模糊
                     modalImg.style.filter = 'blur(0px)';
+                    exifInfo.innerHTML += '<p style="color:red;">原图加载失败</p>';
                 }
             };
+            
+            // 开始加载高清图
+            highResImage.src = original;
+
+            // 获取 EXIF 数据 - 与图片加载分离处理
+            setTimeout(() => {
+                if (exifController.signal.aborted) return;
+                
+                fetch(`/exif/${encodeURIComponent(original.replace(IMAGE_BASE_URL + '/', ''))}`, { 
+                    signal: exifController.signal,
+                    headers: { 'Cache-Control': 'no-cache' } // 避免缓存问题
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误 ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!exifController.signal.aborted) {
+                        try {
+                            let shutterDisplay = 'N/A';
+                            if (data.ExposureTime) {
+                                if (data.ExposureTime < 1) {
+                                    const denominator = Math.round(1 / data.ExposureTime);
+                                    shutterDisplay = `1/${denominator}s`;
+                                } else {
+                                    shutterDisplay = `${data.ExposureTime}s`;
+                                }
+                            }
+                            exifInfo.innerHTML = `
+                                <p>光圈: ${data.FNumber ? `f/${data.FNumber}` : 'N/A'}  ·  快门: ${shutterDisplay}  ·  ISO: ${data.ISO ? data.ISO : 'N/A'}</p>
+                            `;
+                        } catch (error) {
+                            console.error('EXIF数据处理错误:', error);
+                            exifInfo.innerHTML = '<p>EXIF数据处理出错</p>';
+                        }
+                        
+                        currentExifRequest = null;
+                    }
+                })
+                .catch(error => {
+                    if (error.name !== 'AbortError') {
+                        console.error('获取EXIF数据出错:', error);
+                        if (!exifController.signal.aborted) {
+                            exifInfo.innerHTML = '<p>无法加载EXIF数据</p>';
+                        }
+                    }
+                });
+            }, 100); // 延迟执行EXIF数据获取，优先加载图片
         }
 
         span.onclick = function () {
