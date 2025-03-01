@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageUrls['all'] = allImages;
             }
 
-            // 分页加载第一批图片
+            // 分页加载第一批图片 - 确保调用一次初始加载
             loadNextImages();
         }
 
@@ -260,27 +260,142 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 加载下一批图片，优化点在于：等图片加载完毕后，再根据真实高度检测最短列后插入 DOM
+        // 修改 loadNextImages 函数，实现逐次加载并立即呈现
         function loadNextImages() {
             setLoadingState(true);
             const images = imageUrls[currentTag] || [];
-            const endIndex = Math.min(currentIndex + imagesPerLoad, images.length);
-            loadingImagesCount = endIndex - currentIndex;
-            // 添加预加载函数
-            function preloadNextBatchImages() {
-                const images = imageUrls[currentTag] || [];
-                const endIndex = Math.min(currentIndex + imagesPerLoad, images.length);
-                    // 如果已经到达末尾，不需要预加载
-                    if (currentIndex >= endIndex) return;
-                    
-                    // 预加载下一批图片
-                    for (let i = currentIndex; i < endIndex; i++) {
-                        const imageData = images[i];
-                        const preloadImg = new Image();
-                        preloadImg.src = imageData.thumbnail;
-                    }
+            
+            // 如果已经加载完所有图片，显示提示并返回
+            if (currentIndex >= images.length) {
+                setLoadingState(false);
+                loadMoreButton.style.display = 'none';
+                
+                // 添加"已全部加载完成"的提示
+                if (!document.getElementById('all-loaded-message')) {
+                    const loadedMsg = document.createElement('div');
+                    loadedMsg.id = 'all-loaded-message';
+                    loadedMsg.textContent = '已全部加载完成';
+                    loadedMsg.style.textAlign = 'center';
+                    loadedMsg.style.margin = '20px 0';
+                    loadedMsg.style.color = 'var(--text-color)';
+                    document.querySelector('footer').before(loadedMsg);
+                }
+                return;
             }
+            
+            // 单张图片加载逻辑
+            function loadSingleImage(index) {
+                if (index >= images.length) {
+                    // 所有图片加载完成
+                    setLoadingState(false);
+                    checkIfAllImagesLoaded();
+                    return;
+                }
+                
+                const imageData = images[index];
+                const img = new Image();
+                
+                img.onload = function() {
+                    // 图片加载完成后，添加到最短的列
+                    const shortestColumnIndex = getShortestColumn();
+                    columnElements[shortestColumnIndex].appendChild(img);
+                    img.classList.add('loaded');
+                    
+                    // 更新计数器
+                    currentIndex++;
+                    imagesLoadedCount++;
+                    
+                    // 检查是否需要继续加载图片
+                    if (shouldLoadMoreImages()) {
+                        // 继续加载下一张图片
+                        loadSingleImage(currentIndex);
+                    } else {
+                        // 当前批次加载完成
+                        setLoadingState(false);
+                        checkIfAllImagesLoaded();
+                        
+                        // 预加载下一批图片
+                        preloadNextBatchImages();
+                    }
+                };
+                
+                img.onerror = function() {
+                    console.error('图片加载失败:', imageData.thumbnail);
+                    // 跳过失败的图片，继续加载下一张
+                    currentIndex++;
+                    loadSingleImage(currentIndex);
+                };
+                
+                // 设置图片属性
+                img.src = imageData.thumbnail;
+                img.setAttribute('data-original', imageData.original);
+                img.setAttribute('data-preview', imageData.thumbnail);
+                img.alt = '图片';
+                
+                // 添加点击事件，打开模态窗口
+                img.addEventListener('click', function() {
+                    openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
+                });
+            }
+            
+            // 开始加载第一张图片
+            loadSingleImage(currentIndex);
         }
+
+        // 判断是否应该继续加载更多图片
+        function shouldLoadMoreImages() {
+            // 确保 imageUrls 和 currentTag 有效
+            if (!imageUrls || !imageUrls[currentTag]) {
+                return false;
+            }
+            
+            // 如果还有图片可加载，并且内容高度不足以填满页面或触发滚动，则继续加载
+            if (currentIndex >= imageUrls[currentTag].length) {
+                return false; // 没有更多图片了
+            }
+            
+            // 获取页面可见区域高度
+            const viewportHeight = window.innerHeight;
+            
+            // 确保 columnElements 已初始化且包含元素
+            if (!columnElements || columnElements.length === 0) {
+                return true; // 如果列还未初始化，则需要加载图片
+            }
+            
+            // 获取内容总高度 - 使用更安全的方法
+            const contentHeight = Math.max(...columnElements.map(col => col.offsetHeight || 0));
+            
+            // 获取滚动位置
+            const scrollPosition = window.scrollY + viewportHeight;
+            
+            // 初始加载或内容不足时，继续加载
+            if (contentHeight === 0) {
+                return true;
+            }
+            
+            // 如果内容高度小于视口高度的1.5倍，或者滚动位置接近内容底部，则加载更多
+            return contentHeight < viewportHeight * 1.5 || scrollPosition > contentHeight - 200;
+        }
+
+        // 预加载下一批图片 - 比当前版面多预加载8张
+        function preloadNextBatchImages() {
+            const images = imageUrls[currentTag] || [];
+            // 修改为imagesPerLoad + 8，确保预加载比显示的多8张
+            const endIndex = Math.min(currentIndex + imagesPerLoad + 8, images.length);
+            
+            // 如果已经到达末尾，不需要预加载
+            if (currentIndex >= endIndex) return;
+            
+            // 预加载下一批图片
+            for (let i = currentIndex; i < endIndex; i++) {
+                const imageData = images[i];
+                const preloadImg = new Image();
+                preloadImg.src = imageData.thumbnail;
+            }
+            
+            console.log(`预加载了${endIndex - currentIndex}张图片`);
+        }
+
         // 检查是否所有图片都加载完成
         function checkIfAllImagesLoaded() {
             const galleryElement = document.querySelector('.gallery');
@@ -291,11 +406,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadMoreButton.style.opacity = '1';               // 显示加载更多按钮
                 loadingElement.classList.add('hidden');           // 隐藏加载动画
             }
-            // 添加预加载逻辑
-            if (!isPageLoading && imagesLoadedCount > 0) {
-                preloadNextBatchImages();
-            }
         }
+
         // 设置加载按钮状态
         function setLoadingState(isLoading) {
             if (isLoading) {
@@ -437,11 +549,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateColumns(); // Initial column setup
         setGalleryMarginTop(); // Initial gallery margin-top setup
 
-        // Hide header on scroll
+        // 修改滚动事件处理，实现滚动加载
         let lastScrollY = window.scrollY;
         let scrollDelta = 0;
 
         window.addEventListener('scroll', () => {
+            // 现有的 header 隐藏逻辑保持不变
             const currentScrollY = window.scrollY;
             const header = document.querySelector('header');
 
@@ -458,7 +571,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             lastScrollY = currentScrollY;
-
+            
+            // 新增：检查是否需要加载更多图片
+            if (!loadMoreButton.disabled && shouldLoadMoreImages()) {
+                loadNextImages();
+            }
         });
 
         // 从服务器获取所有图片 URL
@@ -467,46 +584,21 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 imageUrls = data;
                 createTagFilter(Object.keys(data));
-                // 首次加载时自动选择 "All" 标签
+                // 首次加载时自动选择 "All" 标签 - filterImages内部会调用loadNextImages
                 filterImages('all');
                 updateColumns();
             })
             .catch(error => console.error('Error loading images:', error));
 
-        // 重新定义 setupLoadMoreObserver，使其支持倒计时加载功能
+        // 简化 setupLoadMoreObserver 函数
         function setupLoadMoreObserver() {
-            const observerOptions = {
-                root: null, // 使用视口作为根
-                rootMargin: '0px',
-                threshold: 0.5  // 当按钮 100% 可见时触发
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.target === loadMoreButton) {
-                        // 当按钮可见且没有禁用且还未启动倒计时时，启动倒计时自动加载
-                        if (entry.isIntersecting && !loadMoreButton.disabled && !countdownTimer) {
-                            countdownRemaining = 2;
-                            loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
-                            countdownTimer = setInterval(() => {
-                                countdownRemaining--;
-                                if (countdownRemaining > 0) {
-                                    loadMoreButton.textContent = `加载更多（${countdownRemaining}s）`;
-                                } else {
-                                    clearInterval(countdownTimer);
-                                    countdownTimer = null;
-                                    loadNextImages();
-                                }
-                            }, 1000);
-                        }
-                    }
-                });
-            }, observerOptions);
-
-            observer.observe(loadMoreButton);
+            // 只在合适的时候触发初始加载
+            setTimeout(() => {
+                // 延迟执行以确保DOM已完全渲染
+                if (shouldLoadMoreImages()) {
+                    loadNextImages();
+                }
+            }, 100);
         }
-
-        // 调用 setupLoadMoreObserver 来启动自动加载倒计时处理
-        setupLoadMoreObserver();
     }
 });
