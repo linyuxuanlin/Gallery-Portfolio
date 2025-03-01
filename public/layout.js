@@ -38,11 +38,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         document.querySelector('footer').style.opacity = '1'; // 显示底栏
-        
-        // 隐藏加载更多按钮，将使用自动加载功能
-        const loadMoreButton = document.getElementById('load-more');
-        if (loadMoreButton) {
-            loadMoreButton.style.display = 'none';
-        }
     });
 });
