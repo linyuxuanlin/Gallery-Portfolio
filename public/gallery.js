@@ -571,46 +571,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 img.onerror = function() {
                     console.error('图片加载失败:', imageUrl);
-                    
-                    // 检查是否为缩略图加载失败
-                    if (imageUrl.includes('/preview/')) {
-                        // 确保配置已加载
-                        if (!IMAGE_BASE_URL) {
-                            console.error('配置尚未加载完成，无法生成缩略图');
-                            // 延迟一段时间后重试这张图片
-                            setTimeout(() => {
-                                img.src = `${imageUrl}?retry=1`;
-                            }, 1000);
-                            return;
-                        }
-                        
-                        // 从URL中提取原始图片路径
-                        const originalKey = imageData.original.replace(`${IMAGE_BASE_URL}/`, '');
-                        console.log(`尝试生成缩略图: ${originalKey}`);
-                        
-                        // 触发缩略图生成
-                        fetch(`/thumbnail/${encodeURIComponent(originalKey)}`)
-                            .then(response => {
-                                if (response.ok) {
-                                    console.log(`缩略图已生成，重新加载图片`);
-                                    // 添加时间戳防止浏览器缓存
-                                    img.src = `${imageUrl}?t=${new Date().getTime()}`;
-                                } else {
-                                    console.error('缩略图生成失败，跳到下一张');
-                                    currentIndex++;
-                                    loadSingleImage(currentIndex);
-                                }
-                            })
-                            .catch(err => {
-                                console.error('缩略图请求出错:', err);
-                                currentIndex++;
-                                loadSingleImage(currentIndex);
-                            });
-                    } else {
-                        // 非缩略图加载失败，直接跳到下一张
-                        currentIndex++;
-                        loadSingleImage(currentIndex);
-                    }
+                    currentIndex++;
+                    loadSingleImage(currentIndex);
                 };
                 
                 // 添加到最短列，让IntersectionObserver进行真正的图片加载
@@ -680,93 +642,79 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 120); // 减少延迟，更快响应滚动
         });
 
-        // 预加载下一批图片的缩略图
+        // 更智能的预加载图片函数
         function preloadNextBatchImages() {
             const images = imageUrls[currentTag] || [];
-            const startIndex = currentIndex;
-            const endIndex = Math.min(startIndex + imagesPerLoad, images.length);
             
-            // 如果没有更多图片需要预加载，则退出
-            if (startIndex >= endIndex) return;
+            // 如果没有更多图片，直接返回
+            if (currentIndex >= images.length) return;
             
-            console.log(`预加载下一批图片缩略图: ${startIndex} - ${endIndex-1}`);
+            // 计算预加载行数
+            const imagesPerRow = columns;
+            const rowsToPreload = 4; // 增加预加载行数到4行
+            const preloadCount = imagesPerRow * rowsToPreload;
             
-            // 创建一个队列来控制并发请求数量
-            const queue = [];
-            const MAX_CONCURRENT = 3; // 最大并发数量
-            let activeRequests = 0;
+            // 计算预加载范围
+            const endIndex = Math.min(currentIndex + preloadCount, images.length);
             
-            // 预加载处理函数
-            function processQueue() {
-                if (queue.length === 0 || activeRequests >= MAX_CONCURRENT) return;
-                
-                activeRequests++;
-                const imageData = queue.shift();
-                const imageUrl = imageData.thumbnail;
-                
-                // 检查是否需要预加载
-                if (loadedImageUrls.has(imageUrl) || document.querySelector(`.gallery img[data-original="${imageData.original}"]`)) {
-                    // 已加载过，跳过
-                    activeRequests--;
-                    processQueue();
-                    return;
-                }
-                
-                // 从URL中提取原始图片路径
-                if (imageUrl.includes('/preview/') && IMAGE_BASE_URL) {
-                    const originalKey = imageData.original.replace(`${IMAGE_BASE_URL}/`, '');
-                    
-                    // 静默请求缩略图生成，不等待结果
-                    fetch(`/thumbnail/${encodeURIComponent(originalKey)}`)
-                        .then(() => {
-                            // 完成后减少活跃请求计数并继续队列
-                            activeRequests--;
-                            processQueue();
-                        })
-                        .catch(err => {
-                            console.error('预加载缩略图出错:', err);
-                            activeRequests--;
-                            processQueue();
-                        });
-                } else {
-                    activeRequests--;
-                    processQueue();
-                }
+            // 创建预加载容器
+            let preloadContainer = document.getElementById('preload-container');
+            if (!preloadContainer) {
+                preloadContainer = document.createElement('div');
+                preloadContainer.id = 'preload-container';
+                preloadContainer.style.display = 'none';
+                document.body.appendChild(preloadContainer);
             }
             
-            // 将需要预加载的图片添加到队列
-            for (let i = startIndex; i < endIndex; i++) {
-                queue.push(images[i]);
+            // 清空之前的预加载图片
+            preloadContainer.innerHTML = '';
+            
+            // 预加载下一批图片
+            for (let i = currentIndex; i < endIndex; i++) {
+                const imageData = images[i];
+                const preloadImg = new Image();
+                preloadImg.src = imageData.thumbnail;
+                preloadContainer.appendChild(preloadImg);
             }
             
-            // 开始处理队列
-            for (let i = 0; i < Math.min(MAX_CONCURRENT, queue.length); i++) {
-                processQueue();
-            }
+            console.log(`预加载了${endIndex - currentIndex}张图片，相当于${Math.ceil((endIndex - currentIndex) / imagesPerRow)}行`);
         }
-        
-        // 在初始化加载完成后调用
+
+        // 处理所有图片加载完成的情况
         function handleAllImagesLoaded() {
-            console.log('所有图片已加载完毕');
-            const loadedMsg = document.createElement('div');
-            loadedMsg.id = 'all-loaded-message';
-            loadedMsg.style.textAlign = 'center';
-            loadedMsg.style.margin = '20px 0';
-            loadedMsg.style.padding = '10px';
-            loadedMsg.style.color = '#777';
-            loadedMsg.textContent = '已全部加载完成';
-            
-            // 添加到底部
+            // 添加"已全部加载完成"的提示（如果不存在）
             if (!document.getElementById('all-loaded-message')) {
+                const loadedMsg = document.createElement('div');
+                loadedMsg.id = 'all-loaded-message';
+                loadedMsg.textContent = '————  已全部加载完毕  ————';
+                loadedMsg.style.textAlign = 'center';
+                loadedMsg.style.margin = '20px 0';
+                loadedMsg.style.padding = '10px';
+                loadedMsg.style.color = 'var(--text-color)';
+                loadedMsg.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+                loadedMsg.style.borderRadius = '5px';
+                loadedMsg.style.animation = 'fadeIn 1s';
                 document.querySelector('footer').before(loadedMsg);
+                
+                // 添加淡入动画
+                if (!document.getElementById('fadeInStyle')) {
+                    const style = document.createElement('style');
+                    style.id = 'fadeInStyle';
+                    style.textContent = `
+                        @keyframes fadeIn {
+                            from { opacity: 0; }
+                            to { opacity: 1; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
             }
             
-            // 移除加载消息
-            const tempMsg = document.getElementById('temp-loading-msg');
-            if (tempMsg) tempMsg.remove();
-            
-            // 重置滚动加载状态
-            isScrollLoading = false;
+            // 触发布局调整
+            setTimeout(() => {
+                window.scrollBy(0, 1);
+                window.scrollBy(0, -1);
+            }, 200);
         }
 
         // 监听窗口大小变化
