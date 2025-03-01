@@ -204,7 +204,7 @@ body.dark .tag:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   opacity: 0;
-  transform: translateY(100px);
+  transform: translateY(30px); /* 修改为与flyIn动画一致的值 */
   position: relative;
   z-index: 1;
 }
