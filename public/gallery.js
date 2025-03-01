@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 设置加载状态
             const tempLoadingMsg = document.createElement('div');
             tempLoadingMsg.id = 'temp-loading-msg';
-            tempLoadingMsg.textContent = '加载中...';
+            tempLoadingMsg.textContent = '缩略图生成中...';
             tempLoadingMsg.style.textAlign = 'center';
             tempLoadingMsg.style.margin = '20px 0';
             tempLoadingMsg.style.padding = '10px';
@@ -445,6 +445,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 图片加载
                 const img = new Image();
                 
+                // 添加标记，表示图片正在加载中
+                img.dataset.loading = 'true';
+                
                 img.onload = function() {
                     try {
                         // 再次检查DOM中是否已存在此图片（确保在加载过程中没有被其他过程添加）
@@ -465,6 +468,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         // 设置加载动画
                         setTimeout(() => {
                             img.classList.add('loaded');
+                            // 图片完全加载后移除加载标记
+                            img.dataset.loading = 'false';
                         }, 10);
                         
                         // 更新计数
@@ -539,8 +544,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.setAttribute('data-preview', imageData.thumbnail);
                 img.alt = '图片';
                 
-                // 添加点击事件
-                img.addEventListener('click', function() {
+                // 添加点击事件，但只在图片完全加载后才响应
+                img.addEventListener('click', function(e) {
+                    // 如果图片还在加载中，不打开模态窗口
+                    if (this.dataset.loading === 'true') {
+                        console.log('图片正在加载中，禁止打开大图');
+                        e.preventDefault();
+                        return false;
+                    }
                     openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
                 });
             }
@@ -720,7 +731,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Error loading images:', error));
 
-        // 模态窗口逻辑 (保持不变)
+        // 模态窗口逻辑
         const modal = document.getElementById('myModal');
         const modalContent = document.querySelector('.modal-content');
         const modalImg = document.getElementById('img01');
@@ -728,6 +739,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const span = document.getElementsByClassName('close')[0];
 
         function openModal(original, preview) {
+            // 检查是否点击的图片还在加载中
+            const clickedImg = document.querySelector(`.gallery img[data-original="${original}"]`);
+            if (clickedImg && clickedImg.dataset.loading === 'true') {
+                console.log('图片正在加载中，禁止打开大图');
+                return;
+            }
+            
             // 移除所有图片的悬停状态
             document.querySelectorAll('.gallery img.hover-active').forEach(img => {
                 img.classList.remove('hover-active');
