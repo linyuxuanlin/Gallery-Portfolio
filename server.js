@@ -28,25 +28,41 @@ const IMAGE_COMPRESSION_QUALITY = parseInt(process.env.IMAGE_COMPRESSION_QUALITY
 const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
 async function getExifData(key) {
-  const getObjectParams = {
-    Bucket: BUCKET_NAME,
-    Key: key,
-  };
-  const imageBuffer = await s3Client.send(new GetObjectCommand(getObjectParams)).then(response => {
-    return new Promise((resolve, reject) => {
-      const chunks = [];
-      response.Body.on('data', (chunk) => chunks.push(chunk));
-      response.Body.on('end', () => resolve(Buffer.concat(chunks)));
-      response.Body.on('error', reject);
+  try {
+    const getObjectParams = {
+      Bucket: BUCKET_NAME,
+      Key: key,
+    };
+    const imageBuffer = await s3Client.send(new GetObjectCommand(getObjectParams)).then(response => {
+      return new Promise((resolve, reject) => {
+        const chunks = [];
+        response.Body.on('data', (chunk) => chunks.push(chunk));
+        response.Body.on('end', () => resolve(Buffer.concat(chunks)));
+        response.Body.on('error', reject);
+      });
     });
-  });
-  const parser = exifParser.create(imageBuffer);
-  const exifData = parser.parse().tags;
-  return {
-    FNumber: exifData.FNumber,
-    ExposureTime: exifData.ExposureTime,
-    ISO: exifData.ISO,
-  };
+    
+    // 添加错误处理
+    try {
+      const parser = exifParser.create(imageBuffer);
+      const exifData = parser.parse().tags;
+      return {
+        FNumber: exifData.FNumber,
+        ExposureTime: exifData.ExposureTime,
+        ISO: exifData.ISO,
+      };
+    } catch (exifError) {
+      console.warn(`无法解析EXIF数据: ${exifError.message}`);
+      return {
+        FNumber: null,
+        ExposureTime: null,
+        ISO: null,
+      };
+    }
+  } catch (error) {
+    console.error(`获取图片数据失败: ${error.message}`);
+    throw error;
+  }
 }
 
 app.use(express.static('public'));

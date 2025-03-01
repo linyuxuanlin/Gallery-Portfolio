@@ -51,17 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
             manualLoadMoreDone = true; // 标记第一次加载已手动触发
         };
 
-        // 创建标签栏
+        // 创建标签栏 - 优化版本
         function createTagFilter(tags) {
             const tagContainer = document.createElement('div');
             tagContainer.className = 'tag-filter-vertical';
+            
+            // 使用文档片段提高性能
+            const fragment = document.createDocumentFragment();
             
             // 添加鼠标滚轮事件，实现鼠标悬停在标签栏上时通过滚轮垂直滚动标签栏
             tagContainer.addEventListener('wheel', (event) => {
                 event.preventDefault();
                 tagContainer.scrollTop += event.deltaY;
             });
-
+        
             // 辅助函数：将选中的标签滚动到中间
             function centerTagButton(btn) {
                 const containerHeight = tagContainer.clientHeight;
@@ -70,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const scrollTarget = btnOffsetTop - (containerHeight / 2) + (btnHeight / 2);
                 tagContainer.scrollTo({ top: scrollTarget, behavior: 'smooth' });
             }
-
+        
             // 添加"全部"标签
             const allTag = document.createElement('button');
             allTag.className = 'tag';
@@ -90,35 +93,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 滚动到正中间
                 centerTagButton(allTag);
             });
-            tagContainer.appendChild(allTag);
-
-            // 添加其他标签，排除 'all' 和 'preview'
-            tags.forEach(tag => {
-                if (tag !== 'all' && tag !== 'preview') {
-                    const tagButton = document.createElement('button');
-                    tagButton.className = 'tag';
-                    tagButton.textContent = tag;
-                    tagButton.addEventListener('click', () => {
-                        // 移除所有标签的选中样式
-                        tagContainer.querySelectorAll('.tag').forEach(t => {
-                            t.style.backgroundColor = '';
-                            t.style.color = '';
-                        });
-                        // 设置当前标签的选中样式
-                        tagButton.style.backgroundColor = '#4CAF50';
-                        tagButton.style.color = '#fff';
-                        filterImages(tag);
-                        // 滚动到正中间
-                        centerTagButton(tagButton);
+            fragment.appendChild(allTag);
+        
+            // 过滤掉 'all' 和 'preview' 标签，并按字母顺序排序
+            const filteredTags = tags.filter(tag => tag !== 'all' && tag !== 'preview').sort();
+            
+            // 添加其他标签
+            filteredTags.forEach(tag => {
+                const tagButton = document.createElement('button');
+                tagButton.className = 'tag';
+                tagButton.textContent = tag;
+                tagButton.addEventListener('click', () => {
+                    // 移除所有标签的选中样式
+                    tagContainer.querySelectorAll('.tag').forEach(t => {
+                        t.style.backgroundColor = '';
+                        t.style.color = '';
                     });
-                    tagContainer.appendChild(tagButton);
-                }
+                    // 设置当前标签的选中样式
+                    tagButton.style.backgroundColor = '#4CAF50';
+                    tagButton.style.color = '#fff';
+                    filterImages(tag);
+                    // 滚动到正中间
+                    centerTagButton(tagButton);
+                });
+                fragment.appendChild(tagButton);
             });
-
+        
+            // 一次性添加所有标签
+            tagContainer.appendChild(fragment);
+        
             // 插入到header和gallery之间
             const header = document.querySelector('header');
             header.insertAdjacentElement('afterend', tagContainer);
-
+        
             // 利用 IntersectionObserver 监听各个标签按钮是否完全可见
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -130,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }, { root: tagContainer, threshold: 1.0 });
-
+        
             // 对所有的标签按钮进行观察
             tagContainer.querySelectorAll('.tag').forEach(tagButton => {
                 observer.observe(tagButton);
@@ -259,62 +266,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const images = imageUrls[currentTag] || [];
             const endIndex = Math.min(currentIndex + imagesPerLoad, images.length);
             loadingImagesCount = endIndex - currentIndex;
-
-            for (let i = currentIndex; i < endIndex; i++) {
-                const imageData = images[i];
-                const img = document.createElement('img');
-                img.src = imageData.thumbnail;
-                img.alt = `Photo ${i + 1}`;
-                img.onclick = () => openModal(imageData.original, imageData.thumbnail);
-
-                // 加载出错时，尝试通过 /thumbnail 接口重新加载
-                img.onerror = () => {
-                    fetch(`/thumbnail/${encodeURIComponent(imageData.original.replace(IMAGE_BASE_URL + '/', ''))}`)
-                        .then(() => {
-                            img.src = imageData.thumbnail;
-                        })
-                        .catch(error => {
-                            console.error(`Error loading image: ${imageData.thumbnail}`, error);
-                            loadingImagesCount--;
-                            if (loadingImagesCount === 0) {
-                                setLoadingState(false);
-                            }
-                            checkIfAllImagesLoaded();
-                        });
-                };
-
-                // 图片加载完成后再插入到当前最短的列中
-                img.onload = () => {
-                    img.classList.add('loaded');
-                    imagesLoadedCount++;
-                    loadingImagesCount--;
-
-                    const shortestColumn = getShortestColumn();
-                    columnElements[shortestColumn].appendChild(img);
-
-                    if (loadingImagesCount === 0) {
-                        setLoadingState(false);
+            // 添加预加载函数
+            function preloadNextBatchImages() {
+                const images = imageUrls[currentTag] || [];
+                const endIndex = Math.min(currentIndex + imagesPerLoad, images.length);
+                    // 如果已经到达末尾，不需要预加载
+                    if (currentIndex >= endIndex) return;
+                    
+                    // 预加载下一批图片
+                    for (let i = currentIndex; i < endIndex; i++) {
+                        const imageData = images[i];
+                        const preloadImg = new Image();
+                        preloadImg.src = imageData.thumbnail;
                     }
-                    checkIfAllImagesLoaded();
-                };
-            }
-            currentIndex = endIndex;
-            if (currentIndex >= images.length) {
-                loadMoreButton.style.display = 'none';
-                // 在加载完全部图片后添加底部横线和提示信息
-                if (!document.getElementById('all-loaded-message')) {
-                    const messageContainer = document.createElement('div');
-                    messageContainer.id = 'all-loaded-message';
-                    messageContainer.style.textAlign = 'center';
-                    messageContainer.style.color = 'gray';
-                    messageContainer.style.margin = '20px 0';
-                    messageContainer.innerHTML = '<hr style="width:100%; margin:0 auto;"/><p>已全部加载完成</p>';
-                    loadMoreButton.insertAdjacentElement('afterend', messageContainer);
-                   
-                }
             }
         }
-
         // 检查是否所有图片都加载完成
         function checkIfAllImagesLoaded() {
             const galleryElement = document.querySelector('.gallery');
@@ -325,8 +291,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadMoreButton.style.opacity = '1';               // 显示加载更多按钮
                 loadingElement.classList.add('hidden');           // 隐藏加载动画
             }
+            // 添加预加载逻辑
+            if (!isPageLoading && imagesLoadedCount > 0) {
+                preloadNextBatchImages();
+            }
         }
-
         // 设置加载按钮状态
         function setLoadingState(isLoading) {
             if (isLoading) {
