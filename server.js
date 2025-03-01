@@ -4,16 +4,11 @@ const sharp = require('sharp');
 const dotenv = require('dotenv');
 const path = require('path');
 const exifParser = require('exif-parser');
-const { Semaphore } = require('async-mutex');
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-// 创建多线程控制信号量，默认允许3个并发请求
-const MAX_CONCURRENT_THUMBNAILS = 3;
-const thumbnailSemaphore = new Semaphore(MAX_CONCURRENT_THUMBNAILS);
 
 const s3Client = new S3Client({
   region: process.env.R2_REGION,
@@ -30,50 +25,7 @@ const IMAGE_BASE_URL = process.env.R2_IMAGE_BASE_URL;
 const IMAGE_DIR = process.env.R2_IMAGE_DIR;
 const IMAGE_COMPRESSION_QUALITY = parseInt(process.env.IMAGE_COMPRESSION_QUALITY, 10);
 
-const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-
-// 检测图片复杂度并返回适合的压缩质量
-async function determineOptimalQuality(imageBuffer) {
-  try {
-    const metadata = await sharp(imageBuffer).metadata();
-    
-    // 获取图片的宽高和格式
-    const { width, height, format } = metadata;
-    
-    // 判断图片复杂度的简单算法
-    // 1. 图片分辨率越高，适当降低质量以减小文件大小
-    // 2. 不同格式采用不同的基准质量
-    
-    let baseQuality = 75; // 默认基础质量
-    
-    // 根据格式调整基础质量
-    if (['jpeg', 'jpg'].includes(format)) {
-      baseQuality = 75;
-    } else if (format === 'png') {
-      baseQuality = 80; // PNG通常需要较高质量
-    } else if (format === 'webp') {
-      baseQuality = 75; // WebP本身就有较好的压缩率
-    }
-    
-    // 根据分辨率调整质量
-    const resolution = width * height;
-    
-    if (resolution > 4000000) { // 超过400万像素
-      baseQuality -= 10;
-    } else if (resolution > 2000000) { // 超过200万像素
-      baseQuality -= 5;
-    }
-    
-    // 确保质量在合理范围内
-    const finalQuality = Math.max(60, Math.min(baseQuality, 90));
-    console.log(`图片[${width}x${height}]格式[${format}]计算得出最佳压缩质量: ${finalQuality}`);
-    
-    return finalQuality;
-  } catch (error) {
-    console.error('计算最佳压缩质量时出错:', error);
-    return 75; // 出错时返回默认质量
-  }
-}
+const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
 
 async function getExifData(key) {
   try {
@@ -169,14 +121,9 @@ app.get('/images', async (req, res) => {
         if (!imageMap.has(folder)) {
           imageMap.set(folder, []);
         }
-        
-        // 使用WebP格式的缩略图路径
-        const originalBasename = path.basename(item.Key);
-        const thumbnailBasename = path.parse(originalBasename).name + '.webp';
-        
         imageMap.get(folder).push({
           original: `${IMAGE_BASE_URL}/${item.Key}`,
-          thumbnail: `${IMAGE_BASE_URL}/${IMAGE_DIR}/preview/${thumbnailBasename}`
+          thumbnail: `${IMAGE_BASE_URL}/${IMAGE_DIR}/preview/${path.basename(item.Key)}`
         });
       });
 
@@ -195,11 +142,7 @@ app.get('/images', async (req, res) => {
 
 app.get('/thumbnail/:key', async (req, res) => {
   const key = decodeURIComponent(req.params.key);
-  const originalKey = `${IMAGE_DIR}/${key}`;
-  
-  // 为缩略图创建WebP文件名 (替换扩展名为.webp)
-  const parsedKey = path.parse(key);
-  const thumbnailKey = `${IMAGE_DIR}/preview/${parsedKey.name}.webp`;
+  const thumbnailKey = `${IMAGE_DIR}/preview/${path.basename(key)}`;
   
   try {
     // 检查缩略图是否存在
@@ -210,62 +153,35 @@ app.get('/thumbnail/:key', async (req, res) => {
     res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
   } catch (error) {
     if (error.name === 'NotFound') {
-      try {
-        // 使用信号量控制并发处理数量
-        const release = await thumbnailSemaphore.acquire();
-        console.log(`生成WebP缩略图: ${thumbnailKey}，当前并发数: ${MAX_CONCURRENT_THUMBNAILS - thumbnailSemaphore.getValue()}`);
-        
-        try {
-          // 如果不存在，生成缩略图
-          const imageBuffer = await s3Client.send(new GetObjectCommand({ 
-            Bucket: BUCKET_NAME, 
-            Key: originalKey 
-          })).then(response => {
-            return new Promise((resolve, reject) => {
-              const chunks = [];
-              response.Body.on('data', (chunk) => chunks.push(chunk));
-              response.Body.on('end', () => resolve(Buffer.concat(chunks)));
-              response.Body.on('error', reject);
-            });
-          });
+      // 如果不存在，生成缩略图
+      const imageBuffer = await s3Client.send(new GetObjectCommand({ 
+        Bucket: BUCKET_NAME, 
+        Key: key 
+      })).then(response => {
+        return new Promise((resolve, reject) => {
+          const chunks = [];
+          response.Body.on('data', (chunk) => chunks.push(chunk));
+          response.Body.on('end', () => resolve(Buffer.concat(chunks)));
+          response.Body.on('error', reject);
+        });
+      });
 
-          // 获取原始图片元数据
-          const metadata = await sharp(imageBuffer).metadata();
-          console.log(`原始图片[${metadata.width}x${metadata.height}]格式[${metadata.format}]大小[${(imageBuffer.length/1024).toFixed(2)}KB]`);
-          
-          // 确定最佳压缩质量
-          const optimalQuality = await determineOptimalQuality(imageBuffer);
-          
-          // 创建缩略图，保留方向信息
-          const sharpInstance = sharp(imageBuffer)
-            .resize(300) // 增加缩略图尺寸为300像素宽度
-            .withMetadata() // 保留元数据(包括方向信息)
-            .webp({ quality: optimalQuality }); // 使用WebP格式，根据复杂度自动调整质量
-          
-          const thumbnailBuffer = await sharpInstance.toBuffer();
-          
-          console.log(`生成的WebP缩略图大小: ${(thumbnailBuffer.length/1024).toFixed(2)}KB，压缩率: ${((1 - thumbnailBuffer.length/imageBuffer.length) * 100).toFixed(2)}%`);
-          
-          // 上传到S3存储
-          await s3Client.send(new PutObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: thumbnailKey,
-            Body: thumbnailBuffer,
-            ContentType: 'image/webp',
-          }));
-
-          res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
-        } finally {
-          // 无论成功失败，都释放信号量
-          release();
-        }
-      } catch (err) {
-        console.error(`生成缩略图失败: ${err.message}`);
-        res.status(500).send('生成缩略图失败');
+      const sharpInstance = sharp(imageBuffer).resize(200).withMetadata();
+      if (IMAGE_COMPRESSION_QUALITY >= 0 && IMAGE_COMPRESSION_QUALITY <= 100) {
+        sharpInstance.jpeg({ quality: IMAGE_COMPRESSION_QUALITY });
       }
+
+      const thumbnailBuffer = await sharpInstance.toBuffer();
+      await s3Client.send(new PutObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: thumbnailKey,
+        Body: thumbnailBuffer,
+        ContentType: 'image/jpeg',
+      }));
+
+      res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
     } else {
-      console.error(`获取缩略图失败: ${error.message}`);
-      res.status(500).send('获取缩略图失败');
+      throw error;
     }
   }
 });

@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.583.0",
-    "async-mutex": "^0.5.0",
     "aws-sdk": "^2.1626.0",
     "dotenv": "^16.4.5",
     "exif-parser": "^0.1.12",
