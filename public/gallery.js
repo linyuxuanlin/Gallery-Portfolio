@@ -7,16 +7,36 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentExifRequest = null; // Variable to hold the current EXIF request
     let isPageLoading = true; // 页面加载标志
     let lastWidth = window.innerWidth;
+    let useWebP = true; // 默认使用WebP格式，将从服务器获取实际配置
     
     // Fetch configuration from server
     fetch('/config')
         .then(response => response.json())
         .then(config => {
             IMAGE_BASE_URL = config.IMAGE_BASE_URL;
+            useWebP = config.USE_WEBP !== false; // 获取WebP配置
+            console.log(`配置加载完成: IMAGE_BASE_URL=${IMAGE_BASE_URL}, 使用WebP=${useWebP}`);
             // Proceed with the rest of the logic
             initGallery();
         })
         .catch(error => console.error('Error loading config:', error));
+
+    // 检查浏览器是否支持WebP
+    function checkWebPSupport() {
+        const webpTest = new Image();
+        webpTest.onload = function() {
+            useWebP = true; // 浏览器支持WebP
+            console.log('浏览器支持WebP格式');
+        };
+        webpTest.onerror = function() {
+            useWebP = false; // 浏览器不支持WebP
+            console.log('浏览器不支持WebP格式，将使用JPEG');
+        };
+        webpTest.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vv9UAA=';
+    }
+    
+    // 执行WebP支持检查
+    checkWebPSupport();
 
     // 在页面加载完成后设置标志
     window.addEventListener('load', () => {
@@ -442,10 +462,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 
-                // 图片加载
+                // 图片加载 - 采用懒加载策略
                 const img = new Image();
                 
+                // 设置数据属性而不是直接设置src，让IntersectionObserver处理加载
+                img.dataset.src = imageUrl;
+                img.setAttribute('data-original', imageData.original);
+                img.setAttribute('data-preview', imageData.thumbnail);
+                img.alt = '图片';
+                
+                // 添加loading="lazy"属性作为浏览器原生懒加载支持
+                img.loading = 'lazy';
+                
+                // 设置空白占位符，避免页面跳动
+                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3C/svg%3E';
+                
+                // 添加点击事件
+                img.addEventListener('click', function() {
+                    openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
+                });
+                
                 img.onload = function() {
+                    // 只有当实际图片加载完成时才处理
+                    if (this.src !== img.dataset.src && this.src.indexOf('data:image/svg+xml') === 0) {
+                        return;
+                    }
+                    
                     try {
                         // 再次检查DOM中是否已存在此图片（确保在加载过程中没有被其他过程添加）
                         if (document.querySelector(`.gallery img[data-original="${originalUrl}"]`)) {
@@ -533,16 +575,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadSingleImage(currentIndex);
                 };
                 
-                // 设置图片属性
-                img.src = imageUrl;
-                img.setAttribute('data-original', imageData.original);
-                img.setAttribute('data-preview', imageData.thumbnail);
-                img.alt = '图片';
+                // 添加到最短列，让IntersectionObserver进行真正的图片加载
+                const shortestColumnIndex = getShortestColumn();
+                columnElements[shortestColumnIndex].appendChild(img);
                 
-                // 添加点击事件
-                img.addEventListener('click', function() {
-                    openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
-                });
+                // 应用懒加载
+                setupLazyLoading();
             }
             
             // 开始加载第一张图片
@@ -768,8 +806,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // 确保模糊效果有平滑过渡
             modalImg.style.transition = 'filter 0.3s ease';
 
+            // 如果使用WebP且是预览图，检查是否需要转换URL
+            if (useWebP && preview.indexOf('.webp') === -1 && preview.indexOf('/preview/') !== -1) {
+                const previewBase = preview.substring(0, preview.lastIndexOf('.'));
+                preview = `${previewBase}.webp`;
+            }
+
             // 加载高清图
             const highResImage = new Image();
+            
+            // 可以考虑根据网络状况动态降低高清图质量
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (connection && (connection.saveData || connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g')) {
+                // 如果是省流量模式或网络很慢，尝试使用中等质量的图片
+                console.log('检测到网络状况不佳，降低图片质量');
+                // 这里可以根据服务器的实际实现调整URL
+                // 例如: original = original.replace('/original/', '/medium/');
+            }
+            
             highResImage.onload = () => {
                 if (!imageController.signal.aborted) {
                     modalImg.src = original;
@@ -923,6 +977,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function updateHoverEffects() {
             setupImageHoverEffects();
+        }
+
+        // 图片加载优化函数 - 使用IntersectionObserver实现懒加载
+        function setupLazyLoading() {
+            if ('IntersectionObserver' in window) {
+                const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.removeAttribute('data-src');
+                                observer.unobserve(img);
+                            }
+                        }
+                    });
+                }, {
+                    rootMargin: '200px 0px', // 提前200px开始加载
+                    threshold: 0.01 // 只要有1%可见就开始加载
+                });
+                
+                // 观察所有带有data-src属性的图片
+                document.querySelectorAll('img[data-src]').forEach(img => {
+                    lazyImageObserver.observe(img);
+                });
+            } else {
+                // 回退到简单的scroll事件监听
+                const lazyLoadImages = () => {
+                    const lazyImages = document.querySelectorAll('img[data-src]');
+                    lazyImages.forEach(img => {
+                        const rect = img.getBoundingClientRect();
+                        if (rect.top < window.innerHeight + 200) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                    });
+                    
+                    if (document.querySelectorAll('img[data-src]').length === 0) {
+                        window.removeEventListener('scroll', lazyLoad);
+                    }
+                };
+                
+                const lazyLoad = () => {
+                    requestAnimationFrame(lazyLoadImages);
+                };
+                
+                window.addEventListener('scroll', lazyLoad);
+                lazyLoad(); // 初始检查
+            }
         }
     }
 });
