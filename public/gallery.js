@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentExifRequest = null; // Variable to hold the current EXIF request
     let isPageLoading = true; // 页面加载标志
     let lastWidth = window.innerWidth;
+    let lastScrollY = window.scrollY;
+    let scrollDelta = 0;
+    let scrollThrottleTimer = null;
+    let isScrollLoading = false; // 是否正在通过滚动加载图片
     
     // Fetch configuration from server
     fetch('/config')
@@ -33,7 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let columnElements = [];
         let currentTag = 'all';
         let isScrollLoading = false;
-        let scrollTriggerTimeout = null;
+        let scrollThrottleTimer = null;
+        let lastScrollY = window.scrollY;
+        let scrollDelta = 0;
         
         // 用于追踪已加载图片，避免重复加载
         let loadedImageUrls = new Set();
@@ -340,8 +346,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const contentHeight = Math.max(...columnElements.map(col => col.offsetHeight || 0));
             
             // 如果内容不足以填满屏幕+额外两行，加载更多
-            // 假设每行图片高度约为200px，两行则为400px
-            if (contentHeight < viewportHeight + 400) {
+            // 每行图片高度约为200px，所以两行图片高度大约是400px
+            const rowHeight = 200; // 预估每行高度
+            const requiredHeight = viewportHeight + (rowHeight * 2); // 可视区域 + 两行
+
+            console.log(`检查是否需要加载更多: 内容高度=${contentHeight}, 所需高度=${requiredHeight}`);
+            
+            if (contentHeight < requiredHeight) {
                 if (currentIndex < (imageUrls[currentTag] || []).length) {
                     // 使用setTimeout确保DOM更新后再检查
                     setTimeout(() => {
@@ -389,15 +400,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const availableHeight = viewportHeight - headerHeight;
             const avgImageHeight = 200; 
             const imagesPerRow = columns;
-            const rowsToFillScreen = Math.ceil(availableHeight / avgImageHeight) + 1;
-            const additionalRows = 3; // 确保预加载至少3行
+            
+            // 计算屏幕能显示多少行
+            const rowsToFillScreen = Math.ceil(availableHeight / avgImageHeight);
+            // 额外加载2行
+            const additionalRows = 2; 
             const totalRowsToLoad = rowsToFillScreen + additionalRows;
             const maxImagesToLoad = totalRowsToLoad * imagesPerRow;
             
-            // 确保至少加载一定数量的图片
-            let remainingToLoad = Math.max(imagesPerRow * 3, maxImagesToLoad - document.querySelectorAll('.gallery img').length);
+            // 计算当前已加载的图片数量
+            const loadedImagesCount = document.querySelectorAll('.gallery img').length;
             
-            console.log(`准备加载一批新图片: 目标数量 ${remainingToLoad}, 当前索引 ${currentIndex}, 总图片数 ${images.length}`);
+            // 计算还需要加载多少图片
+            let remainingToLoad = Math.max(imagesPerRow, maxImagesToLoad - loadedImagesCount);
+            
+            console.log(`准备加载图片: 当前已加载=${loadedImagesCount}, 目标总数=${maxImagesToLoad}, 还需加载=${remainingToLoad}`);
             
             // 单张图片加载计数器
             let loadedInThisBatch = 0;
@@ -569,55 +586,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 优化滚动检测
-        let lastScrollY = window.scrollY;
-        let scrollDelta = 0;
-
         window.addEventListener('scroll', () => {
-            // header 隐藏逻辑
-            const currentScrollY = window.scrollY;
-            const header = document.querySelector('header');
-
-            if (currentScrollY === 0) {
-                header.style.transform = 'translateY(0)';
-            } else if (currentScrollY > lastScrollY) {
-                scrollDelta += currentScrollY - lastScrollY;
-                if (scrollDelta > SCROLL_THRESHOLD) {
-                    header.style.transform = 'translateY(-100%)';
-                }
-            } else {
-                scrollDelta = 0;
-                header.style.transform = 'translateY(0)';
-            }
-
-            lastScrollY = currentScrollY;
+            // 如果正在加载图片，不触发新的加载
+            if (isScrollLoading) return;
             
-            // 防止重复触发加载事件
-            if (scrollTriggerTimeout) {
-                clearTimeout(scrollTriggerTimeout);
-            }
+            // 节流处理，避免频繁触发
+            if (scrollThrottleTimer) return;
             
-            // 快速检测是否需要加载更多图片
-            scrollTriggerTimeout = setTimeout(() => {
-                // 避免重复加载
-                if (isScrollLoading) return;
+            scrollThrottleTimer = setTimeout(() => {
+                scrollThrottleTimer = null;
                 
-                // 检查是否还有图片可加载
-                if (currentIndex >= (imageUrls[currentTag] || []).length) return;
+                // 计算滚动方向和距离
+                const currentScrollY = window.scrollY;
+                scrollDelta = currentScrollY - lastScrollY;
+                lastScrollY = currentScrollY;
                 
-                // 计算滚动位置
-                const windowHeight = window.innerHeight;
-                const documentHeight = Math.max(
-                    document.body.scrollHeight,
-                    document.documentElement.scrollHeight
-                );
-                const scrollRemaining = documentHeight - (windowHeight + currentScrollY);
+                // 检查是否滚动到底部附近
+                const documentHeight = document.documentElement.scrollHeight;
+                const scrollPosition = window.scrollY + window.innerHeight;
+                const scrollThreshold = 500; // 距离底部多远时触发加载
                 
-                // 预加载阈值 - 更积极地提前加载
-                const rowHeight = 200;
-                const preloadThreshold = rowHeight * 5; // 提前5行触发加载
+                // 计算页面高度和内容高度
+                const viewportHeight = window.innerHeight;
+                const contentHeight = Math.max(...columnElements.map(col => col.offsetHeight || 0));
                 
-                if (scrollRemaining < preloadThreshold) {
-                    loadNextImages();
+                // 判断是否需要加载更多图片
+                const needsMoreContent = contentHeight < (viewportHeight + (2 * 200)); // 视口高度 + 两行
+                
+                if ((scrollPosition > documentHeight - scrollThreshold) || needsMoreContent) {
+                    // 如果接近底部或内容不足，检查是否需要加载更多
+                    if (currentIndex < (imageUrls[currentTag] || []).length && !isScrollLoading) {
+                        console.log(`触发滚动加载: 滚动位置=${scrollPosition}, 文档高度=${documentHeight}, 内容高度=${contentHeight}`);
+                        isScrollLoading = true;
+                        loadNextImages();
+                    }
                 }
             }, 120); // 减少延迟，更快响应滚动
         });

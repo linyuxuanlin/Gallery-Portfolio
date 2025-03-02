@@ -154,15 +154,17 @@ app.get('/images', async (req, res) => {
     images.Contents
       .filter(item => {
         const itemExtension = path.extname(item.Key).toLowerCase();
-        return validImageExtensions.includes(itemExtension);
+        // 检查是否为图片文件
+        const isValidImage = validImageExtensions.includes(itemExtension);
+        
+        // 检查是否在0_preview文件夹中
+        const isInPreviewFolder = item.Key.includes('/0_preview/');
+        
+        // 只返回有效的图片文件且不在预览文件夹中的项目
+        return isValidImage && !isInPreviewFolder;
       })
       .forEach(item => {
         const parts = item.Key.split('/');
-        // 忽略 0_preview 文件夹
-        if (parts.includes('0_preview')) {
-          console.log(`跳过缩略图: ${item.Key}`);
-          return;
-        }
         
         // 获取文件夹名，如果没有文件夹则归类为 'all'
         const folder = parts.length > 2 ? parts[1] : 'all';
