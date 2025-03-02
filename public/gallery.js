@@ -82,8 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             fragment.appendChild(allTag);
         
-            // 过滤掉 'all' 和 'preview' 标签，并按字母顺序排序
-            const filteredTags = tags.filter(tag => tag !== 'all' && tag !== 'preview').sort();
+            // 过滤掉 'all' 和 '0_preview' 标签，并按字母顺序排序
+            const filteredTags = tags.filter(tag => tag !== 'all' && tag !== '0_preview').sort();
             
             // 添加其他标签
             filteredTags.forEach(tag => {
@@ -157,10 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // 清除所有列并重新创建
             createColumns();
 
-            // 如果是 "all" 标签，则组合所有图片（排除 preview 文件夹）
+            // 如果是 "all" 标签，则组合所有图片（排除 0_preview 文件夹）
             if (tag === 'all') {
-                // 获取所有非 preview 的文件夹名
-                const folderKeys = Object.keys(imageUrls).filter(key => key !== 'preview');
+                // 获取所有非 0_preview 的文件夹名
+                const folderKeys = Object.keys(imageUrls).filter(key => key !== '0_preview');
                 // 使用 Fisher-Yates 算法随机打乱文件夹顺序
                 for (let i = folderKeys.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
@@ -529,19 +529,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 img.onerror = function() {
                     console.error('图片加载失败:', imageUrl);
-                    currentIndex++;
-                    loadSingleImage(currentIndex);
+                    // 在图片加载失败时添加重试逻辑
+                    console.log('尝试直接从服务器请求缩略图...');
+                    setTimeout(() => {
+                        currentIndex++;
+                        loadSingleImage(currentIndex);
+                    }, 500); // 添加延迟，避免频繁请求
                 };
                 
+                // 构建完整URL (如果需要)
+                let fullImageUrl = imageUrl;
+                if (imageUrl.startsWith('/thumbnail/')) {
+                    // 这是相对路径，需要添加域名
+                    fullImageUrl = window.location.origin + imageUrl;
+                    console.log(`缩略图路径转换: ${imageUrl} -> ${fullImageUrl}`);
+                }
+                
                 // 设置图片属性
-                img.src = imageUrl;
+                img.src = fullImageUrl;
                 img.setAttribute('data-original', imageData.original);
                 img.setAttribute('data-preview', imageData.thumbnail);
                 img.alt = '图片';
                 
                 // 添加点击事件
                 img.addEventListener('click', function() {
-                    openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
+                    // 使用完整URL打开模态窗口
+                    let previewUrl = this.getAttribute('data-preview');
+                    if (previewUrl.startsWith('/thumbnail/')) {
+                        previewUrl = window.location.origin + previewUrl;
+                    }
+                    openModal(this.getAttribute('data-original'), previewUrl);
                 });
             }
             
@@ -635,7 +652,16 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = currentIndex; i < endIndex; i++) {
                 const imageData = images[i];
                 const preloadImg = new Image();
-                preloadImg.src = imageData.thumbnail;
+                
+                // 构建完整URL (如果需要)
+                let thumbnailUrl = imageData.thumbnail;
+                if (thumbnailUrl.startsWith('/thumbnail/')) {
+                    // 这是相对路径，需要添加域名
+                    thumbnailUrl = window.location.origin + thumbnailUrl;
+                    console.log(`预加载图片路径转换: ${imageData.thumbnail} -> ${thumbnailUrl}`);
+                }
+                
+                preloadImg.src = thumbnailUrl;
                 preloadContainer.appendChild(preloadImg);
             }
             
@@ -728,6 +754,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const span = document.getElementsByClassName('close')[0];
 
         function openModal(original, preview) {
+            // 确保 preview 是完整URL
+            if (preview && preview.startsWith('/thumbnail/')) {
+                preview = window.location.origin + preview;
+                console.log(`模态窗口中转换预览图路径: ${preview}`);
+            }
+            
             // 移除所有图片的悬停状态
             document.querySelectorAll('.gallery img.hover-active').forEach(img => {
                 img.classList.remove('hover-active');
@@ -762,6 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentExifRequest = exifController;
 
             // 先展示预览图并添加模糊效果
+            console.log(`设置模态窗口预览图: ${preview}`);
             modalImg.src = preview;
             modalImg.style.filter = 'blur(10px)'; // 降低模糊程度，减少处理负担
             
@@ -772,6 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const highResImage = new Image();
             highResImage.onload = () => {
                 if (!imageController.signal.aborted) {
+                    console.log(`高清图加载完成，设置到模态窗口: ${original}`);
                     modalImg.src = original;
                     modalImg.style.filter = 'blur(0px)';
                     currentImageRequest = null;
@@ -794,7 +828,10 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 if (exifController.signal.aborted) return;
                 
-                fetch(`/exif/${encodeURIComponent(original.replace(IMAGE_BASE_URL + '/', ''))}`, { 
+                // 确保使用正确的路径格式获取EXIF数据
+                console.log(`准备获取EXIF数据: ${original}`);
+                
+                fetch(`/exif/${encodeURIComponent(original)}`, { 
                     signal: exifController.signal,
                     headers: { 'Cache-Control': 'no-cache' } // 避免缓存问题
                 })
@@ -807,6 +844,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => {
                     if (!exifController.signal.aborted) {
                         try {
+                            console.log(`获取到EXIF数据: ${JSON.stringify(data)}`);
+                            
+                            // 检查是否有错误信息
+                            if (data.error) {
+                                console.warn(`EXIF数据包含错误: ${data.error}`);
+                                exifInfo.innerHTML = '<p>EXIF数据不可用</p>';
+                                return;
+                            }
+                            
                             let shutterDisplay = 'N/A';
                             if (data.ExposureTime) {
                                 if (data.ExposureTime < 1) {
