@@ -7,16 +7,36 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentExifRequest = null; // Variable to hold the current EXIF request
     let isPageLoading = true; // 页面加载标志
     let lastWidth = window.innerWidth;
+    let useWebP = true; // 默认使用WebP格式，将从服务器获取实际配置
     
     // Fetch configuration from server
     fetch('/config')
         .then(response => response.json())
         .then(config => {
             IMAGE_BASE_URL = config.IMAGE_BASE_URL;
+            useWebP = config.USE_WEBP !== false; // 获取WebP配置
+            console.log(`配置加载完成: IMAGE_BASE_URL=${IMAGE_BASE_URL}, 使用WebP=${useWebP}`);
             // Proceed with the rest of the logic
             initGallery();
         })
         .catch(error => console.error('Error loading config:', error));
+
+    // 检查浏览器是否支持WebP
+    function checkWebPSupport() {
+        const webpTest = new Image();
+        webpTest.onload = function() {
+            useWebP = true; // 浏览器支持WebP
+            console.log('浏览器支持WebP格式');
+        };
+        webpTest.onerror = function() {
+            useWebP = false; // 浏览器不支持WebP
+            console.log('浏览器不支持WebP格式，将使用JPEG');
+        };
+        webpTest.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vv9UAA=';
+    }
+    
+    // 执行WebP支持检查
+    checkWebPSupport();
 
     // 在页面加载完成后设置标志
     window.addEventListener('load', () => {
@@ -361,18 +381,33 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // 设置加载状态
-            const tempLoadingMsg = document.createElement('div');
-            tempLoadingMsg.id = 'temp-loading-msg';
-            tempLoadingMsg.textContent = '加载中...';
-            tempLoadingMsg.style.textAlign = 'center';
-            tempLoadingMsg.style.margin = '20px 0';
-            tempLoadingMsg.style.padding = '10px';
-            tempLoadingMsg.style.color = '#777';
-            
-            // 只有在不存在加载消息时才添加
-            if (!document.getElementById('temp-loading-msg')) {
+            let tempLoadingMsg = document.getElementById('temp-loading-msg');
+            if (!tempLoadingMsg) {
+                tempLoadingMsg = document.createElement('div');
+                tempLoadingMsg.id = 'temp-loading-msg';
                 document.querySelector('footer').before(tempLoadingMsg);
             }
+            
+            // 创建一个动态的加载状态，可以跟踪缩略图生成
+            tempLoadingMsg.innerHTML = `
+                <div style="text-align:center; margin:20px 0; padding:10px; color:#777;">
+                    <div>加载中...</div>
+                    <div id="thumbnail-generation-status" style="margin-top:5px; font-size:0.9em;"></div>
+                </div>
+            `;
+            
+            // 维护缩略图生成状态的计数
+            window.thumbnailGenerationCount = window.thumbnailGenerationCount || 0;
+            
+            // 更新缩略图生成状态的函数
+            window.updateThumbnailStatus = function() {
+                const statusElement = document.getElementById('thumbnail-generation-status');
+                if (statusElement && window.thumbnailGenerationCount > 0) {
+                    statusElement.textContent = `正在生成 ${window.thumbnailGenerationCount} 张缩略图...`;
+                } else if (statusElement) {
+                    statusElement.textContent = '';
+                }
+            };
             
             // 确保gallery可见
             const galleryElement = document.querySelector('.gallery');
@@ -442,10 +477,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 
-                // 图片加载
+                // 图片加载 - 采用懒加载策略
                 const img = new Image();
                 
+                // 设置数据属性而不是直接设置src，让IntersectionObserver处理加载
+                img.dataset.src = imageUrl;
+                img.setAttribute('data-original', imageData.original);
+                img.setAttribute('data-preview', imageData.thumbnail);
+                img.alt = '图片';
+                
+                // 添加loading="lazy"属性作为浏览器原生懒加载支持
+                img.loading = 'lazy';
+                
+                // 设置空白占位符，避免页面跳动
+                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3C/svg%3E';
+                
+                // 添加点击事件
+                img.addEventListener('click', function() {
+                    openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
+                });
+                
                 img.onload = function() {
+                    // 只有当实际图片加载完成时才处理
+                    if (this.src !== img.dataset.src && this.src.indexOf('data:image/svg+xml') === 0) {
+                        return;
+                    }
+                    
                     try {
                         // 再次检查DOM中是否已存在此图片（确保在加载过程中没有被其他过程添加）
                         if (document.querySelector(`.gallery img[data-original="${originalUrl}"]`)) {
@@ -529,20 +586,117 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 img.onerror = function() {
                     console.error('图片加载失败:', imageUrl);
-                    currentIndex++;
-                    loadSingleImage(currentIndex);
+                    
+                    // 检查是否为缩略图加载失败
+                    if (imageUrl.includes('/preview/')) {
+                        // 确保配置已加载
+                        if (!IMAGE_BASE_URL) {
+                            console.error('配置尚未加载完成，无法生成缩略图');
+                            // 延迟一段时间后重试这张图片
+                            setTimeout(() => {
+                                img.src = `${imageUrl}?retry=1`;
+                            }, 1000);
+                            return;
+                        }
+                        
+                        // 从URL中提取原始图片路径
+                        const originalKey = imageData.original.replace(`${IMAGE_BASE_URL}/`, '');
+                        console.log(`尝试生成缩略图: ${originalKey}`);
+                        
+                        // 更新缩略图生成计数
+                        window.thumbnailGenerationCount = (window.thumbnailGenerationCount || 0) + 1;
+                        if (typeof window.updateThumbnailStatus === 'function') {
+                            window.updateThumbnailStatus();
+                        }
+                        
+                        // 创建生成中提示，显示在图片位置
+                        const generatingIndicator = document.createElement('div');
+                        generatingIndicator.className = 'thumbnail-generating';
+                        generatingIndicator.textContent = '缩略图生成中...';
+                        generatingIndicator.style.position = 'absolute';
+                        generatingIndicator.style.top = '50%';
+                        generatingIndicator.style.left = '50%';
+                        generatingIndicator.style.transform = 'translate(-50%, -50%)';
+                        generatingIndicator.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                        generatingIndicator.style.color = 'white';
+                        generatingIndicator.style.padding = '8px 12px';
+                        generatingIndicator.style.borderRadius = '4px';
+                        generatingIndicator.style.fontSize = '12px';
+                        generatingIndicator.style.zIndex = '5';
+                        
+                        // 获取图片容器并添加相对定位
+                        const imgContainer = img.parentElement;
+                        if (imgContainer) {
+                            imgContainer.style.position = 'relative';
+                            imgContainer.appendChild(generatingIndicator);
+                        }
+                        
+                        // 触发缩略图生成
+                        fetch(`/thumbnail/${encodeURIComponent(originalKey)}`)
+                            .then(response => {
+                                if (response.ok) {
+                                    console.log(`缩略图已生成，重新加载图片`);
+                                    // 添加时间戳防止浏览器缓存
+                                    img.src = `${imageUrl}?t=${new Date().getTime()}`;
+                                    // 缩略图加载成功后设置图片状态
+                                    img.dataset.thumbnailLoaded = 'true';
+                                    
+                                    // 移除生成提示
+                                    if (imgContainer && generatingIndicator.parentElement === imgContainer) {
+                                        imgContainer.removeChild(generatingIndicator);
+                                    }
+                                    
+                                    // 更新缩略图生成计数
+                                    window.thumbnailGenerationCount = Math.max(0, (window.thumbnailGenerationCount || 0) - 1);
+                                    if (typeof window.updateThumbnailStatus === 'function') {
+                                        window.updateThumbnailStatus();
+                                    }
+                                } else {
+                                    console.error('缩略图生成失败，跳到下一张');
+                                    // 移除生成提示
+                                    if (imgContainer && generatingIndicator.parentElement === imgContainer) {
+                                        imgContainer.removeChild(generatingIndicator);
+                                    }
+                                    
+                                    // 更新缩略图生成计数
+                                    window.thumbnailGenerationCount = Math.max(0, (window.thumbnailGenerationCount || 0) - 1);
+                                    if (typeof window.updateThumbnailStatus === 'function') {
+                                        window.updateThumbnailStatus();
+                                    }
+                                    
+                                    currentIndex++;
+                                    loadSingleImage(currentIndex);
+                                }
+                            })
+                            .catch(err => {
+                                console.error('缩略图请求出错:', err);
+                                // 移除生成提示
+                                if (imgContainer && generatingIndicator.parentElement === imgContainer) {
+                                    imgContainer.removeChild(generatingIndicator);
+                                }
+                                
+                                // 更新缩略图生成计数
+                                window.thumbnailGenerationCount = Math.max(0, (window.thumbnailGenerationCount || 0) - 1);
+                                if (typeof window.updateThumbnailStatus === 'function') {
+                                    window.updateThumbnailStatus();
+                                }
+                                
+                                currentIndex++;
+                                loadSingleImage(currentIndex);
+                            });
+                    } else {
+                        // 非缩略图加载失败，直接跳到下一张
+                        currentIndex++;
+                        loadSingleImage(currentIndex);
+                    }
                 };
                 
-                // 设置图片属性
-                img.src = imageUrl;
-                img.setAttribute('data-original', imageData.original);
-                img.setAttribute('data-preview', imageData.thumbnail);
-                img.alt = '图片';
+                // 添加到最短列，让IntersectionObserver进行真正的图片加载
+                const shortestColumnIndex = getShortestColumn();
+                columnElements[shortestColumnIndex].appendChild(img);
                 
-                // 添加点击事件
-                img.addEventListener('click', function() {
-                    openModal(this.getAttribute('data-original'), this.getAttribute('data-preview'));
-                });
+                // 应用懒加载
+                setupLazyLoading();
             }
             
             // 开始加载第一张图片
@@ -604,79 +758,113 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 120); // 减少延迟，更快响应滚动
         });
 
-        // 更智能的预加载图片函数
+        // 预加载下一批图片的缩略图
         function preloadNextBatchImages() {
             const images = imageUrls[currentTag] || [];
+            const startIndex = currentIndex;
+            const endIndex = Math.min(startIndex + imagesPerLoad, images.length);
             
-            // 如果没有更多图片，直接返回
-            if (currentIndex >= images.length) return;
+            // 如果没有更多图片需要预加载，则退出
+            if (startIndex >= endIndex) return;
             
-            // 计算预加载行数
-            const imagesPerRow = columns;
-            const rowsToPreload = 4; // 增加预加载行数到4行
-            const preloadCount = imagesPerRow * rowsToPreload;
+            console.log(`预加载下一批图片缩略图: ${startIndex} - ${endIndex-1}`);
             
-            // 计算预加载范围
-            const endIndex = Math.min(currentIndex + preloadCount, images.length);
+            // 创建一个队列来控制并发请求数量
+            const queue = [];
+            const MAX_CONCURRENT = 3; // 最大并发数量
+            let activeRequests = 0;
             
-            // 创建预加载容器
-            let preloadContainer = document.getElementById('preload-container');
-            if (!preloadContainer) {
-                preloadContainer = document.createElement('div');
-                preloadContainer.id = 'preload-container';
-                preloadContainer.style.display = 'none';
-                document.body.appendChild(preloadContainer);
-            }
-            
-            // 清空之前的预加载图片
-            preloadContainer.innerHTML = '';
-            
-            // 预加载下一批图片
-            for (let i = currentIndex; i < endIndex; i++) {
-                const imageData = images[i];
-                const preloadImg = new Image();
-                preloadImg.src = imageData.thumbnail;
-                preloadContainer.appendChild(preloadImg);
-            }
-            
-            console.log(`预加载了${endIndex - currentIndex}张图片，相当于${Math.ceil((endIndex - currentIndex) / imagesPerRow)}行`);
-        }
-
-        // 处理所有图片加载完成的情况
-        function handleAllImagesLoaded() {
-            // 添加"已全部加载完成"的提示（如果不存在）
-            if (!document.getElementById('all-loaded-message')) {
-                const loadedMsg = document.createElement('div');
-                loadedMsg.id = 'all-loaded-message';
-                loadedMsg.textContent = '————  已全部加载完毕  ————';
-                loadedMsg.style.textAlign = 'center';
-                loadedMsg.style.margin = '20px 0';
-                loadedMsg.style.padding = '10px';
-                loadedMsg.style.color = 'var(--text-color)';
-                loadedMsg.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
-                loadedMsg.style.borderRadius = '5px';
-                loadedMsg.style.animation = 'fadeIn 1s';
-                document.querySelector('footer').before(loadedMsg);
+            // 预加载处理函数
+            function processQueue() {
+                if (queue.length === 0 || activeRequests >= MAX_CONCURRENT) return;
                 
-                // 添加淡入动画
-                if (!document.getElementById('fadeInStyle')) {
-                    const style = document.createElement('style');
-                    style.id = 'fadeInStyle';
-                    style.textContent = `
-                        @keyframes fadeIn {
-                            from { opacity: 0; }
-                            to { opacity: 1; }
-                        }
-                    `;
-                    document.head.appendChild(style);
+                activeRequests++;
+                const imageData = queue.shift();
+                const imageUrl = imageData.thumbnail;
+                
+                // 检查是否需要预加载
+                if (loadedImageUrls.has(imageUrl) || document.querySelector(`.gallery img[data-original="${imageData.original}"]`)) {
+                    // 已加载过，跳过
+                    activeRequests--;
+                    processQueue();
+                    return;
+                }
+                
+                // 从URL中提取原始图片路径
+                if (imageUrl.includes('/preview/') && IMAGE_BASE_URL) {
+                    const originalKey = imageData.original.replace(`${IMAGE_BASE_URL}/`, '');
+                    
+                    // 更新缩略图生成计数
+                    window.thumbnailGenerationCount = (window.thumbnailGenerationCount || 0) + 1;
+                    if (typeof window.updateThumbnailStatus === 'function') {
+                        window.updateThumbnailStatus();
+                    }
+                    
+                    // 静默请求缩略图生成，不等待结果
+                    fetch(`/thumbnail/${encodeURIComponent(originalKey)}`)
+                        .then(() => {
+                            // 完成后减少活跃请求计数并继续队列
+                            activeRequests--;
+                            
+                            // 更新缩略图生成计数
+                            window.thumbnailGenerationCount = Math.max(0, (window.thumbnailGenerationCount || 0) - 1);
+                            if (typeof window.updateThumbnailStatus === 'function') {
+                                window.updateThumbnailStatus();
+                            }
+                            
+                            processQueue();
+                        })
+                        .catch(err => {
+                            console.error('预加载缩略图出错:', err);
+                            activeRequests--;
+                            
+                            // 更新缩略图生成计数
+                            window.thumbnailGenerationCount = Math.max(0, (window.thumbnailGenerationCount || 0) - 1);
+                            if (typeof window.updateThumbnailStatus === 'function') {
+                                window.updateThumbnailStatus();
+                            }
+                            
+                            processQueue();
+                        });
+                } else {
+                    activeRequests--;
+                    processQueue();
                 }
             }
             
-            // 触发布局调整
-            setTimeout(() => {
-                window.scrollBy(0, 1);
-                window.scrollBy(0, -1);
-            }, 200);
+            // 将需要预加载的图片添加到队列
+            for (let i = startIndex; i < endIndex; i++) {
+                queue.push(images[i]);
+            }
+            
+            // 开始处理队列
+            for (let i = 0; i < Math.min(MAX_CONCURRENT, queue.length); i++) {
+                processQueue();
+            }
+        }
+        
+        // 在初始化加载完成后调用
+        function handleAllImagesLoaded() {
+            console.log('所有图片已加载完毕');
+            const loadedMsg = document.createElement('div');
+            loadedMsg.id = 'all-loaded-message';
+            loadedMsg.style.textAlign = 'center';
+            loadedMsg.style.margin = '20px 0';
+            loadedMsg.style.padding = '10px';
+            loadedMsg.style.color = '#777';
+            loadedMsg.textContent = '已全部加载完成';
+            
+            // 添加到底部
+            if (!document.getElementById('all-loaded-message')) {
+                document.querySelector('footer').before(loadedMsg);
+            }
+            
+            // 移除加载消息
+            const tempMsg = document.getElementById('temp-loading-msg');
+            if (tempMsg) tempMsg.remove();
+            
+            // 重置滚动加载状态
+            isScrollLoading = false;
         }
 
         // 监听窗口大小变化
@@ -728,6 +916,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const span = document.getElementsByClassName('close')[0];
 
         function openModal(original, preview) {
+            // 检查缩略图是否已加载完成
+            const img = document.querySelector(`.gallery img[data-original="${original}"]`);
+            if (img && !img.classList.contains('loaded')) {
+                console.log('缩略图尚未加载完成，无法打开大图');
+                
+                // 添加一个提示
+                const notification = document.createElement('div');
+                notification.textContent = '缩略图正在加载，请稍候...';
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.left = '50%';
+                notification.style.transform = 'translateX(-50%)';
+                notification.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                notification.style.color = 'white';
+                notification.style.padding = '10px 20px';
+                notification.style.borderRadius = '4px';
+                notification.style.zIndex = '9999';
+                document.body.appendChild(notification);
+                
+                // 3秒后移除提示
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        document.body.removeChild(notification);
+                    }
+                }, 3000);
+                
+                return;
+            }
+            
             // 移除所有图片的悬停状态
             document.querySelectorAll('.gallery img.hover-active').forEach(img => {
                 img.classList.remove('hover-active');
@@ -768,8 +985,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // 确保模糊效果有平滑过渡
             modalImg.style.transition = 'filter 0.3s ease';
 
+            // 如果使用WebP且是预览图，检查是否需要转换URL
+            if (useWebP && preview.indexOf('.webp') === -1 && preview.indexOf('/preview/') !== -1) {
+                const previewBase = preview.substring(0, preview.lastIndexOf('.'));
+                preview = `${previewBase}.webp`;
+            }
+
             // 加载高清图
             const highResImage = new Image();
+            
+            // 可以考虑根据网络状况动态降低高清图质量
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (connection && (connection.saveData || connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g')) {
+                // 如果是省流量模式或网络很慢，尝试使用中等质量的图片
+                console.log('检测到网络状况不佳，降低图片质量');
+                // 这里可以根据服务器的实际实现调整URL
+                // 例如: original = original.replace('/original/', '/medium/');
+            }
+            
             highResImage.onload = () => {
                 if (!imageController.signal.aborted) {
                     modalImg.src = original;
@@ -923,6 +1156,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function updateHoverEffects() {
             setupImageHoverEffects();
+        }
+
+        // 图片加载优化函数 - 使用IntersectionObserver实现懒加载
+        function setupLazyLoading() {
+            if ('IntersectionObserver' in window) {
+                const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.removeAttribute('data-src');
+                                observer.unobserve(img);
+                            }
+                        }
+                    });
+                }, {
+                    rootMargin: '200px 0px', // 提前200px开始加载
+                    threshold: 0.01 // 只要有1%可见就开始加载
+                });
+                
+                // 观察所有带有data-src属性的图片
+                document.querySelectorAll('img[data-src]').forEach(img => {
+                    lazyImageObserver.observe(img);
+                });
+            } else {
+                // 回退到简单的scroll事件监听
+                const lazyLoadImages = () => {
+                    const lazyImages = document.querySelectorAll('img[data-src]');
+                    lazyImages.forEach(img => {
+                        const rect = img.getBoundingClientRect();
+                        if (rect.top < window.innerHeight + 200) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                    });
+                    
+                    if (document.querySelectorAll('img[data-src]').length === 0) {
+                        window.removeEventListener('scroll', lazyLoad);
+                    }
+                };
+                
+                const lazyLoad = () => {
+                    requestAnimationFrame(lazyLoadImages);
+                };
+                
+                window.addEventListener('scroll', lazyLoad);
+                lazyLoad(); // 初始检查
+            }
         }
     }
 });

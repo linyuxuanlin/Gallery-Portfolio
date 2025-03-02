@@ -3,6 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="图片展示库 - 支持WebP格式和智能压缩的图片浏览体验" />
+    <meta name="theme-color" content="#4CAF50" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- 预加载关键资源 -->
+    <link rel="preload" href="styles.css" as="style" />
+    <link rel="preload" href="gallery.css" as="style" />
+    <link rel="preload" href="layout.js" as="script" />
+    <link rel="preload" href="gallery.js" as="script" />
+    
     <title>Gallery-Portfolio</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="gallery.css" />
@@ -37,6 +47,12 @@
     <div id="loading"></div>
     <div class="gallery" id="gallery"></div>
 
+    <!-- 图片格式支持状态 -->
+    <div id="format-support" class="format-support">
+      <span id="webp-support-status"></span>
+      <span id="thumbnail-info"></span>
+    </div>
+
     <!-- Modal for image display -->
     <div id="myModal" class="modal">
       <span class="close">&times;</span>
@@ -47,5 +63,50 @@
     <script src="layout.js"></script>
     <script src="gallery.js"></script>
     <script src="exif.js"></script>
+    
+    <!-- 添加WebP检测逻辑 -->
+    <script>
+      // 状态显示区域
+      const formatSupportEl = document.getElementById('format-support');
+      const webpStatusEl = document.getElementById('webp-support-status');
+      const thumbnailInfoEl = document.getElementById('thumbnail-info');
+      
+      // 检查WebP支持
+      function checkWebPSupport() {
+        const webpTest = new Image();
+        webpTest.onload = function() {
+          webpStatusEl.textContent = '✓ WebP格式支持';
+          webpStatusEl.classList.add('supported');
+          formatSupportEl.classList.add('show');
+        };
+        webpTest.onerror = function() {
+          webpStatusEl.textContent = '✗ WebP格式不支持';
+          webpStatusEl.classList.add('not-supported');
+          formatSupportEl.classList.add('show');
+        };
+        webpTest.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vv9UAA=';
+      
+        // 获取缩略图状态信息
+        fetch('/thumbnail-status')
+          .then(response => response.json())
+          .then(data => {
+            thumbnailInfoEl.textContent = `图片格式: ${data.format}, 尺寸: ${data.size}px`;
+            formatSupportEl.classList.add('show');
+          })
+          .catch(error => {
+            console.error('获取缩略图状态失败:', error);
+          });
+      }
+      
+      // 执行检测
+      window.addEventListener('load', () => {
+        setTimeout(checkWebPSupport, 2000); // 延迟2秒执行，避免干扰主要内容加载
+        
+        // 5秒后隐藏状态信息
+        setTimeout(() => {
+          formatSupportEl.classList.remove('show');
+        }, 7000);
+      });
+    </script>
   </body>
 </html>
