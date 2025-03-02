@@ -1,5 +1,6 @@
 const express = require('express');
 const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
+const { Upload } = require('@aws-sdk/lib-storage');
 const sharp = require('sharp');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -215,43 +216,22 @@ app.get('/thumbnail/:key', async (req, res) => {
         const thumbnailBuffer = await sharpInstance.toBuffer();
         console.log(`缩略图生成成功，大小: ${thumbnailBuffer.length} 字节`);
         
-        // 确保目标目录存在 (先创建父目录)
-        const previewFolderKey = `${IMAGE_DIR}/0_preview/`;
-        console.log(`创建主缩略图目录: ${previewFolderKey}`);
-        try {
-          await s3Client.send(new PutObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: previewFolderKey,
-            Body: '',
-            ContentType: 'application/x-directory',
-          }));
-        } catch (dirError) {
-          console.log(`主缩略图目录已存在或创建错误: ${dirError.message}`);
-          // 忽略错误继续执行
-        }
-        
-        // 创建子目录
-        const subFolderKey = `${IMAGE_DIR}/0_preview/${folderName}/`;
-        console.log(`创建子缩略图目录: ${subFolderKey}`);
-        try {
-          await s3Client.send(new PutObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: subFolderKey,
-            Body: '',
-            ContentType: 'application/x-directory',
-          }));
-        } catch (dirError) {
-          console.log(`子缩略图目录已存在或创建错误: ${dirError.message}`);
-          // 忽略错误继续执行
-        }
-        
+        // 在 S3/R2 中，"目录"只是对象键的前缀，不需要显式创建
+        // 直接上传缩略图，S3 会自动处理前缀路径
         console.log(`上传缩略图: ${thumbnailKey}`);
-        await s3Client.send(new PutObjectCommand({
-          Bucket: BUCKET_NAME,
-          Key: thumbnailKey,
-          Body: thumbnailBuffer,
-          ContentType: 'image/jpeg',
-        }));
+        
+        // 使用 Upload 类处理上传，解决流长度未知的问题
+        const upload = new Upload({
+          client: s3Client,
+          params: {
+            Bucket: BUCKET_NAME,
+            Key: thumbnailKey,
+            Body: thumbnailBuffer,
+            ContentType: 'image/jpeg',
+          }
+        });
+        
+        await upload.done();
         console.log(`缩略图上传成功`);
 
         console.log(`重定向到缩略图: ${IMAGE_BASE_URL}/${thumbnailKey}`);
