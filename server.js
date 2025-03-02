@@ -11,6 +11,47 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// 存储所有的SSE客户端连接
+const clients = [];
+
+// 用于发送通知消息到所有连接的客户端
+function sendNotification(message) {
+  console.log(`通知消息: ${message}`);
+  const notification = JSON.stringify({ message });
+  
+  // 发送到所有客户端
+  clients.forEach(client => {
+    try {
+      client.write(`data: ${notification}\n\n`);
+    } catch (error) {
+      console.error('发送通知失败:', error);
+    }
+  });
+}
+
+// SSE endpoint
+app.get('/notifications', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.flushHeaders();
+  
+  const clientId = Date.now();
+  clients.push(res);
+  
+  console.log(`客户端连接到通知服务: ${clientId}`);
+  
+  // 当客户端断开连接时移除它
+  req.on('close', () => {
+    console.log(`客户端断开连接: ${clientId}`);
+    const index = clients.indexOf(res);
+    if (index !== -1) {
+      clients.splice(index, 1);
+    }
+  });
+});
+
 const s3Client = new S3Client({
   region: process.env.R2_REGION,
   endpoint: process.env.R2_ENDPOINT,
@@ -171,8 +212,9 @@ app.get('/thumbnail/:key', async (req, res) => {
     // 示例: "folder/image.jpg" -> folder
     folderName = keyParts.length > 2 ? keyParts[1] : (keyParts.length > 1 ? keyParts[0] : 'all');
     
-    // 打印诊断信息
-    console.log(`原始路径: ${key}, 解析的文件夹: ${folderName}, 路径部分: ${keyParts.join('|')}`);
+    // 打印诊断信息，并发送通知
+    const logMessage = `原始路径: ${path.basename(key)}, 文件夹: ${folderName}`;
+    console.log(logMessage);
   }
   
   // 构建缩略图存储路径
@@ -187,10 +229,13 @@ app.get('/thumbnail/:key', async (req, res) => {
       Key: thumbnailKey 
     }));
     console.log(`缩略图已存在，重定向到: ${IMAGE_BASE_URL}/${thumbnailKey}`);
+    
     res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
   } catch (error) {
     if (error.name === 'NotFound') {
       console.log(`缩略图不存在，需要创建: ${thumbnailKey}`);
+      sendNotification(`正在生成缩略图: ${path.basename(key)}`);
+      
       // 如果不存在，生成缩略图
       try {
         console.log(`开始获取原图: ${key}`);

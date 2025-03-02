@@ -18,6 +18,10 @@
       "path": "server.js"
     },
     {
+      "pattern": "/notifications",
+      "path": "server.js"
+    },
+    {
       "pattern": "/*",
       "path": "public/$1"
     }

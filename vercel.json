@@ -15,6 +15,7 @@
     { "src": "/images", "dest": "/server.js" },
     { "src": "/exif/(.*)", "dest": "/server.js" },
     { "src": "/thumbnail/(.*)", "dest": "/server.js" },
+    { "src": "/notifications", "dest": "/server.js" },
     { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }

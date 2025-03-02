@@ -329,3 +329,46 @@ body.dark #temp-loading-msg {
     color: #aaa;
     background-color: rgba(255, 255, 255, 0.05);
 }
+
+/* 通知系统样式 */
+.notification-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  max-width: 300px;
+}
+
+.notification {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.3s, transform 0.3s, top 0.3s;
+  position: relative;
+  word-wrap: break-word;
+  max-width: 100%;
+  font-size: 14px;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notification.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* 深色模式下的通知样式 */
+body.dark .notification {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #f0f0f0;
+}
