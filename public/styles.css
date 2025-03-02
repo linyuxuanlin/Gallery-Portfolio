@@ -346,8 +346,8 @@ body.dark #temp-loading-msg {
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 12px 16px;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   opacity: 0;
   transform: translateX(50px);
   transition: opacity 0.3s, transform 0.3s, top 0.3s;
@@ -355,6 +355,8 @@ body.dark #temp-loading-msg {
   word-wrap: break-word;
   max-width: 100%;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .notification.show {
@@ -367,8 +369,24 @@ body.dark #temp-loading-msg {
   transform: translateY(-10px);
 }
 
+/* 带加载图标的通知 */
+.notification.with-spinner {
+  padding-left: 16px; /* 减小左侧内边距，与普通通知一致 */
+}
+
+.notification .spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
 /* 深色模式下的通知样式 */
 body.dark .notification {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: #1e1e1e; /* 改为不透明背景 */
   color: #f0f0f0;
+  border: 1px solid rgba(80, 80, 80, 0.5); /* 添加边框 */
 }

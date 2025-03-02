@@ -340,7 +340,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const contentHeight = Math.max(...columnElements.map(col => col.offsetHeight || 0));
             
             // 如果内容不足以填满屏幕+额外两行，加载更多
-            if (contentHeight < viewportHeight * 1.5) {
+            // 假设每行图片高度约为200px，两行则为400px
+            if (contentHeight < viewportHeight + 400) {
                 if (currentIndex < (imageUrls[currentTag] || []).length) {
                     // 使用setTimeout确保DOM更新后再检查
                     setTimeout(() => {
@@ -630,7 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 计算预加载行数
             const imagesPerRow = columns;
-            const rowsToPreload = 4; // 增加预加载行数到4行
+            const rowsToPreload = 2; // 只预加载比可视页面多2行的图片
             const preloadCount = imagesPerRow * rowsToPreload;
             
             // 计算预加载范围

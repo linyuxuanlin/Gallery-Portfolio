@@ -234,7 +234,8 @@ app.get('/thumbnail/:key', async (req, res) => {
   } catch (error) {
     if (error.name === 'NotFound') {
       console.log(`缩略图不存在，需要创建: ${thumbnailKey}`);
-      sendNotification(`正在生成缩略图: ${path.basename(key)}`);
+      const fileName = path.basename(key);
+      sendNotification(`正在生成缩略图: ${fileName}`);
       
       // 如果不存在，生成缩略图
       try {
@@ -278,17 +279,24 @@ app.get('/thumbnail/:key', async (req, res) => {
         
         await upload.done();
         console.log(`缩略图上传成功`);
+        
+        // 发送缩略图生成完成的通知
+        sendNotification(`缩略图生成完成: ${fileName}`);
 
         console.log(`重定向到缩略图: ${IMAGE_BASE_URL}/${thumbnailKey}`);
         res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
       } catch (imageError) {
         console.error(`处理图片失败 (${key}): ${imageError.message}`, imageError);
         console.error(`错误栈: ${imageError.stack}`);
+        // 发送缩略图生成失败的通知
+        sendNotification(`缩略图生成失败: ${fileName}`);
         res.status(500).send(`处理图片失败: ${imageError.message}`);
       }
     } else {
       console.error(`检查缩略图失败 (${thumbnailKey}): ${error.message}`, error);
       console.error(`错误栈: ${error.stack}`);
+      // 发送检查缩略图失败的通知
+      sendNotification(`缩略图生成失败: ${path.basename(key)}`);
       res.status(500).send(`检查缩略图失败: ${error.message}`);
     }
   }
