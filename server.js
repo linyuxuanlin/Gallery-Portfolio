@@ -37,6 +37,11 @@ async function analyzeImageForCompression(imageBuffer) {
     // 获取图像元数据
     const metadata = await sharp(imageBuffer).metadata();
     
+    // 记录原始方向信息（如果存在）
+    if (metadata.orientation) {
+      console.log(`检测到图像方向信息: orientation=${metadata.orientation}`);
+    }
+    
     // 根据图像尺寸和格式确定基础质量
     let baseQuality = IMAGE_COMPRESSION_QUALITY;
     
@@ -280,10 +285,8 @@ app.get('/thumbnail/:key', async (req, res) => {
         // 基础图像处理 - 调整大小并保留元数据
         let sharpInstance = sharp(imageBuffer).resize(THUMBNAIL_SIZE);
         
-        // 修改：保留原图的旋转方向等元数据
-        sharpInstance = sharpInstance.withMetadata({
-          orientation: compressionParams.isPhoto ? undefined : 1 // 保留照片的原始方向，图形类图片固定为1
-        });
+        // 修改：保留原图的所有元数据，包括旋转方向信息
+        sharpInstance = sharpInstance.withMetadata();
         
         // 优化：对于某些图像可以适当锐化以提高缩略图清晰度
         if (compressionParams.isPhoto) {
@@ -334,6 +337,7 @@ app.get('/thumbnail/:key', async (req, res) => {
         const ratio = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
         console.log(`缩略图生成完成: ${key} -> ${thumbnailKey}`);
         console.log(`压缩率: ${ratio}%, 原始: ${(originalSize/1024).toFixed(1)}KB, 压缩后: ${(compressedSize/1024).toFixed(1)}KB`);
+        console.log(`元数据处理: 已保留原始方向信息`);
 
         res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
       } catch (genError) {
