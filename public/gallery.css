@@ -16,7 +16,7 @@
 /* Keyframes for image fly-in effect */
 @keyframes flyIn {
   0% {
-    transform: translateY(100px);
+    transform: translateY(30px); /* 减少初始位移距离，从100px减到30px */
     opacity: 0;
   }
   100% {
@@ -25,45 +25,27 @@
   }
 }
 
-.gallery img {
-  width: 100%;
-  object-fit: cover;
-  border-radius: 10px; /* Set a fixed border-radius value */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  opacity: 0; /* Start hidden */
-  transform: translateY(100px); /* Start positioned below */
-  /* Remove default transition to avoid conflicting with flyIn animation */
-}
-
-.gallery img.loaded {
-  animation: flyIn 0.8s ease-out forwards;
-  transition: transform 0.3s, box-shadow 0.3s; /* Enable hover transition after animation */
-}
-
-.gallery img.loaded:hover {
-  transform: translate(1px, -3px); /* Slight movement on hover */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.column {
+.gallery .column {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.8em; /* Ensure sufficient space between columns */
+  gap: 0.8em;
+  position: relative; /* 确保子元素的z-index正常工作 */
 }
 
 /* Modal styles */
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.9);
+  opacity: 1;
+  transition: opacity 0.3s ease; /* 添加平滑过渡 */
 }
 
 .modal-content {
@@ -212,4 +194,64 @@ body.dark .tag:hover {
 .tag-filter-vertical::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 10px;
+}
+
+/* 基础图片样式 */
+.gallery img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(30px); /* 修改为与flyIn动画一致的值 */
+  position: relative;
+  z-index: 1;
+}
+
+/* 已加载图片的基本样式 */
+.gallery img.loaded {
+  animation: flyIn 0.5s ease-out forwards; /* 将动画时间从0.8s减少到0.5s使动画更快 */
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), 
+              box-shadow 0.3s cubic-bezier(0.19, 1, 0.22, 1),
+              z-index 0.1s;
+  will-change: transform, box-shadow;
+  opacity: 1; /* 确保图片可见，不依赖动画 */
+}
+
+/* 悬停样式 - 使用更长的动画时间 */
+.gallery img.loaded:hover,
+.gallery img.loaded.hover-active {
+  transform: translate(1px, -2px) !important;
+  box-shadow: -5px 12px 20px rgba(0, 0, 0, 0.5) !important;
+  z-index: 10 !important;
+}
+
+/* 深色模式下的效果 */
+body.dark .gallery img.loaded:hover,
+body.dark .gallery img.loaded.hover-active {
+  box-shadow: -5px 12px 20px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* 添加悬停区域占位元素样式 */
+.hover-guard {
+  position: absolute;
+  z-index: 9;
+  pointer-events: none;
+}
+
+/* 当模态窗口打开时禁用悬停效果 */
+body.modal-open .gallery img:hover,
+body.modal-open .gallery img.hover-active {
+  transform: none !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  z-index: 1 !important;
+  transition: none !important;
+}
+
+/* 改进悬停效果在模态关闭后的恢复 */
+body:not(.modal-open) .gallery img.loaded:hover,
+body:not(.modal-open) .gallery img.loaded.hover-active {
+  transition: transform 2s cubic-bezier(0.19, 1, 0.22, 1), 
+              box-shadow 2s cubic-bezier(0.19, 1, 0.22, 1) !important;
 }
