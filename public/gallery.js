@@ -11,7 +11,100 @@ document.addEventListener('DOMContentLoaded', () => {
     let scrollDelta = 0;
     let scrollThrottleTimer = null;
     let isScrollLoading = false; // 是否正在通过滚动加载图片
+    let autoScrollEnabled = false; // 自动滚动状态
+    let autoScrollSpeed = 1; // 自动滚动速度（像素/帧）
+    let autoScrollAnimationFrame = null; // 自动滚动动画帧
+    let lastLoadedImagesCount = 0; // 上次检查时已加载的图片数量
     
+    // 创建置底按钮和自动滚动指示器
+    const scrollButton = document.createElement('button');
+    scrollButton.className = 'scroll-to-bottom';
+    scrollButton.innerHTML = `<svg viewBox="0 0 24 24">
+        <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
+    </svg>`;
+    document.body.appendChild(scrollButton);
+
+    const scrollIndicator = document.createElement('div');
+    scrollIndicator.className = 'auto-scroll-indicator';
+    scrollIndicator.textContent = '自动滚动中';
+    document.body.appendChild(scrollIndicator);
+
+    // 自动滚动函数
+    function autoScroll() {
+        if (!autoScrollEnabled) return;
+
+        // 获取当前已加载的图片数量
+        const currentImagesCount = document.querySelectorAll('.gallery img').length;
+        
+        // 根据新加载的图片数量调整滚动速度
+        if (currentImagesCount > lastLoadedImagesCount) {
+            // 新图片加载时，临时提高滚动速度
+            autoScrollSpeed = 4;
+            setTimeout(() => {
+                // 1秒后恢复正常速度
+                if (autoScrollEnabled) autoScrollSpeed = 3;
+            }, 1000);
+        }
+        lastLoadedImagesCount = currentImagesCount;
+
+        // 计算页面总高度和当前滚动位置
+        const totalHeight = document.documentElement.scrollHeight;
+        const currentScroll = window.scrollY;
+        const windowHeight = window.innerHeight;
+
+        // 如果还没到底，继续滚动
+        if (currentScroll + windowHeight < totalHeight) {
+            window.scrollBy(0, autoScrollSpeed);
+            autoScrollAnimationFrame = requestAnimationFrame(autoScroll);
+        } else {
+            // 到达底部时，等待新图片加载
+            setTimeout(() => {
+                if (autoScrollEnabled) {
+                    autoScrollAnimationFrame = requestAnimationFrame(autoScroll);
+                }
+            }, 500);
+        }
+    }
+
+    // 切换自动滚动状态
+    function toggleAutoScroll() {
+        autoScrollEnabled = !autoScrollEnabled;
+        scrollButton.classList.toggle('active');
+        scrollIndicator.classList.toggle('visible');
+        
+        if (autoScrollEnabled) {
+            autoScrollSpeed = 1;
+            autoScrollAnimationFrame = requestAnimationFrame(autoScroll);
+            scrollButton.style.transform = 'rotate(180deg)';
+        } else {
+            if (autoScrollAnimationFrame) {
+                cancelAnimationFrame(autoScrollAnimationFrame);
+            }
+            scrollButton.style.transform = 'none';
+        }
+    }
+
+    // 监听置底按钮点击事件
+    scrollButton.addEventListener('click', toggleAutoScroll);
+
+    // 显示置底按钮的条件
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        
+        // 当页面滚动超过一屏时显示按钮
+        if (scrollTop > windowHeight / 2) {
+            scrollButton.classList.add('visible');
+        } else {
+            scrollButton.classList.remove('visible');
+            // 如果按钮隐藏，同时关闭自动滚动
+            if (autoScrollEnabled) {
+                toggleAutoScroll();
+            }
+        }
+    });
+
     // Fetch configuration from server
     fetch('/config')
         .then(response => response.json())
