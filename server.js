@@ -224,100 +224,77 @@ app.get('/thumbnail/:key', async (req, res) => {
   
   // 提取文件夹名称 (改进路径解析逻辑)
   if (keyParts.length > 1) {
-    // 检查路径格式，确保正确提取文件夹名
-    // 示例: "gallery/folder/image.jpg" -> folder
-    // 示例: "folder/image.jpg" -> folder
     folderName = keyParts.length > 2 ? keyParts[1] : (keyParts.length > 1 ? keyParts[0] : 'all');
-    
-    // 打印诊断信息，并发送通知
-    const logMessage = `原始路径: ${path.basename(key)}, 文件夹: ${folderName}`;
-    console.log(logMessage);
   }
   
   // 构建缩略图存储路径
   const thumbnailKey = `${IMAGE_DIR}/0_preview/${folderName}/${path.basename(key)}`;
   console.log(`构建的缩略图路径: ${thumbnailKey}`);
   
+  // 直接返回缩略图URL，不检查是否存在
+  const thumbnailUrl = `${IMAGE_BASE_URL}/${thumbnailKey}`;
+  console.log(`返回缩略图URL: ${thumbnailUrl}`);
+  res.redirect(thumbnailUrl);
+
+  // 异步检查并生成缩略图（如果不存在）
   try {
-    // 检查缩略图是否存在
-    console.log(`检查缩略图是否存在: ${thumbnailKey}`);
     await s3Client.send(new HeadObjectCommand({ 
       Bucket: BUCKET_NAME, 
       Key: thumbnailKey 
     }));
-    console.log(`缩略图已存在，重定向到: ${IMAGE_BASE_URL}/${thumbnailKey}`);
-    
-    res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
+    console.log(`缩略图已存在: ${thumbnailKey}`);
   } catch (error) {
     if (error.name === 'NotFound') {
-      console.log(`缩略图不存在，需要创建: ${thumbnailKey}`);
-      const fileName = path.basename(key);
-      sendNotification(`正在生成缩略图: ${fileName}`);
-      
-      // 如果不存在，生成缩略图
-      try {
-        console.log(`开始获取原图: ${key}`);
-        const imageBuffer = await s3Client.send(new GetObjectCommand({ 
-          Bucket: BUCKET_NAME, 
-          Key: key 
-        })).then(response => {
-          return new Promise((resolve, reject) => {
-            const chunks = [];
-            response.Body.on('data', (chunk) => chunks.push(chunk));
-            response.Body.on('end', () => resolve(Buffer.concat(chunks)));
-            response.Body.on('error', reject);
-          });
-        });
-        console.log(`原图获取成功，大小: ${imageBuffer.length} 字节`);
-
-        console.log(`处理图片中...`);
-        const sharpInstance = sharp(imageBuffer).resize(200).withMetadata();
-        if (IMAGE_COMPRESSION_QUALITY >= 0 && IMAGE_COMPRESSION_QUALITY <= 100) {
-          sharpInstance.jpeg({ quality: IMAGE_COMPRESSION_QUALITY });
-        }
-
-        const thumbnailBuffer = await sharpInstance.toBuffer();
-        console.log(`缩略图生成成功，大小: ${thumbnailBuffer.length} 字节`);
-        
-        // 在 S3/R2 中，"目录"只是对象键的前缀，不需要显式创建
-        // 直接上传缩略图，S3 会自动处理前缀路径
-        console.log(`上传缩略图: ${thumbnailKey}`);
-        
-        // 使用 Upload 类处理上传，解决流长度未知的问题
-        const upload = new Upload({
-          client: s3Client,
-          params: {
-            Bucket: BUCKET_NAME,
-            Key: thumbnailKey,
-            Body: thumbnailBuffer,
-            ContentType: 'image/jpeg',
-          }
-        });
-        
-        await upload.done();
-        console.log(`缩略图上传成功`);
-        
-        // 发送缩略图生成完成的通知
-        sendNotification(`缩略图生成完成: ${fileName}`);
-
-        console.log(`重定向到缩略图: ${IMAGE_BASE_URL}/${thumbnailKey}`);
-        res.redirect(`${IMAGE_BASE_URL}/${thumbnailKey}`);
-      } catch (imageError) {
-        console.error(`处理图片失败 (${key}): ${imageError.message}`, imageError);
-        console.error(`错误栈: ${imageError.stack}`);
-        // 发送缩略图生成失败的通知
-        sendNotification(`缩略图生成失败: ${fileName}`);
-        res.status(500).send(`处理图片失败: ${imageError.message}`);
-      }
-    } else {
-      console.error(`检查缩略图失败 (${thumbnailKey}): ${error.message}`, error);
-      console.error(`错误栈: ${error.stack}`);
-      // 发送检查缩略图失败的通知
-      sendNotification(`缩略图生成失败: ${path.basename(key)}`);
-      res.status(500).send(`检查缩略图失败: ${error.message}`);
+      console.log(`缩略图不存在，开始异步生成: ${thumbnailKey}`);
+      generateThumbnail(key, thumbnailKey).catch(err => {
+        console.error(`生成缩略图失败 (${key}): ${err.message}`);
+        sendNotification(`缩略图生成失败: ${path.basename(key)}`);
+      });
     }
   }
 });
+
+// 将缩略图生成逻辑抽取为独立函数
+async function generateThumbnail(originalKey, thumbnailKey) {
+  sendNotification(`正在生成缩略图: ${path.basename(originalKey)}`);
+  
+  const imageBuffer = await s3Client.send(new GetObjectCommand({ 
+    Bucket: BUCKET_NAME, 
+    Key: originalKey 
+  })).then(response => {
+    return new Promise((resolve, reject) => {
+      const chunks = [];
+      response.Body.on('data', (chunk) => chunks.push(chunk));
+      response.Body.on('end', () => resolve(Buffer.concat(chunks)));
+      response.Body.on('error', reject);
+    });
+  });
+  
+  console.log(`原图获取成功，大小: ${imageBuffer.length} 字节`);
+  console.log(`处理图片中...`);
+  
+  const sharpInstance = sharp(imageBuffer).resize(200).withMetadata();
+  if (IMAGE_COMPRESSION_QUALITY >= 0 && IMAGE_COMPRESSION_QUALITY <= 100) {
+    sharpInstance.jpeg({ quality: IMAGE_COMPRESSION_QUALITY });
+  }
+
+  const thumbnailBuffer = await sharpInstance.toBuffer();
+  console.log(`缩略图生成成功，大小: ${thumbnailBuffer.length} 字节`);
+  
+  const upload = new Upload({
+    client: s3Client,
+    params: {
+      Bucket: BUCKET_NAME,
+      Key: thumbnailKey,
+      Body: thumbnailBuffer,
+      ContentType: 'image/jpeg',
+    }
+  });
+  
+  await upload.done();
+  console.log(`缩略图上传成功`);
+  sendNotification(`缩略图生成完成: ${path.basename(originalKey)}`);
+}
 
 app.get('/exif/:key', async (req, res) => {
   const key = decodeURIComponent(req.params.key);
