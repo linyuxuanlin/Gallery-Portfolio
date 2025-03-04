@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let scrollThrottleTimer = null;
         let lastScrollY = window.scrollY;
         let scrollDelta = 0;
+        let loadingImages = []; // 正在加载中的图片
         
         // 用于追踪已加载图片，避免重复加载
         let loadedImageUrls = new Set();
@@ -153,6 +154,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 重要：重置已加载图片集合
             loadedImageUrls.clear();
+            // 重要：取消正在加载中的图片
+            loadingImages.forEach((img) => {
+                img.src = ""; // 清空图片 src，取消加载
+                img.onload = null; // 清理 onload 事件监听器
+                img.onerror = null; // 清理 onerror 事件监听器
+                img.removeEventListener("click", img.imgClickHandler); // 清理 click 事件监听器
+            });
+            loadingImages = [];
             console.log(`标签切换到: ${tag}, 已清空已加载图片缓存`);
 
             currentTag = tag;
@@ -193,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // 分页加载第一批图片
-            loadNextImages();
+            loadNextImages(tag);
         }
 
         // 创建列元素
@@ -356,14 +365,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (currentIndex < (imageUrls[currentTag] || []).length) {
                     // 使用setTimeout确保DOM更新后再检查
                     setTimeout(() => {
-                        loadNextImages();
+                        loadNextImages(currentTag);
                     }, 100);
                 }
             }
         }
 
         // 修改 loadNextImages 函数，添加去重逻辑
-        function loadNextImages() {
+        function loadNextImages(tag) {
             const images = imageUrls[currentTag] || [];
             
             // 检查是否还有更多图片需要加载
@@ -464,6 +473,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const img = new Image();
                 
                 img.onload = function() {
+                    if (tag !== currentTag) {
+                        console.log(`tag已经切换：当前选中tag:${currentTag}，本请求tag:${tag}，跳过加载`);
+                        return;
+                    }
+                    loadingImages.splice(loadingImages.indexOf(img), 1);
                     try {
                         // 再次检查DOM中是否已存在此图片（确保在加载过程中没有被其他过程添加）
                         if (document.querySelector(`.gallery img[data-original="${originalUrl}"]`)) {
@@ -570,14 +584,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.alt = '图片';
                 
                 // 添加点击事件
-                img.addEventListener('click', function() {
+                const imgClickHandler = function() {
                     // 使用完整URL打开模态窗口
                     let previewUrl = this.getAttribute('data-preview');
                     if (previewUrl.startsWith('/thumbnail/')) {
                         previewUrl = window.location.origin + previewUrl;
                     }
                     openModal(this.getAttribute('data-original'), previewUrl);
-                });
+                }
+                img.imgClickHandler = imgClickHandler;
+                img.addEventListener('click', imgClickHandler);
+                loadingImages.push(img);
             }
             
             // 开始加载第一张图片
@@ -618,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (currentIndex < (imageUrls[currentTag] || []).length && !isScrollLoading) {
                         console.log(`触发滚动加载: 滚动位置=${scrollPosition}, 文档高度=${documentHeight}, 内容高度=${contentHeight}`);
                         isScrollLoading = true;
-                        loadNextImages();
+                        loadNextImages(currentTag);
                     }
                 }
             }, 120); // 减少延迟，更快响应滚动
