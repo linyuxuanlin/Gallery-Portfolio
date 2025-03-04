@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let autoScrollSpeed = 1; // 自动滚动速度（像素/帧）
     let autoScrollAnimationFrame = null; // 自动滚动动画帧
     let lastLoadedImagesCount = 0; // 上次检查时已加载的图片数量
+    let lastWheelTime = 0; // 上次滚轮事件时间戳
     
     // 创建置底按钮和自动滚动指示器
     const scrollButton = document.createElement('button');
@@ -29,6 +30,23 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollIndicator.textContent = '自动滚动中';
     document.body.appendChild(scrollIndicator);
 
+    // 监听鼠标滚轮事件
+    window.addEventListener('wheel', (event) => {
+        // 获取当前时间戳
+        const now = Date.now();
+        
+        // 如果自动滚动已启用，并且检测到向上滚动
+        if (autoScrollEnabled && event.deltaY < 0) {
+            // 确保不会因为触控板的微小滚动而过于敏感
+            // 添加50ms的防抖，避免触控板的连续滚动事件
+            if (now - lastWheelTime > 50) {
+                console.log('检测到向上滚动，停止自动滚动');
+                toggleAutoScroll();
+            }
+        }
+        lastWheelTime = now;
+    }, { passive: true }); // 使用 passive 监听器提高性能
+
     // 自动滚动函数
     function autoScroll() {
         if (!autoScrollEnabled) return;
@@ -42,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             autoScrollSpeed = 4;
             setTimeout(() => {
                 // 1秒后恢复正常速度
-                if (autoScrollEnabled) autoScrollSpeed = 3;
+                if (autoScrollEnabled) autoScrollSpeed = 4;
             }, 1000);
         }
         lastLoadedImagesCount = currentImagesCount;
