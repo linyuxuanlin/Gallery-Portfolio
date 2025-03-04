@@ -1,5 +1,5 @@
 const express = require('express');
-const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, GetObjectCommand, PutObjectCommand, ListObjectsV2Command, HeadObjectCommand } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
 const sharp = require('sharp');
 const dotenv = require('dotenv');
@@ -142,48 +142,61 @@ app.use(express.static('public'));
 app.get('/images', async (req, res) => {
   try {
     console.log('获取图片列表...');
-    const images = await s3Client.send(new ListObjectsCommand({ 
-      Bucket: BUCKET_NAME, 
-      Prefix: IMAGE_DIR 
-    }));
     
-    console.log(`找到 ${images.Contents?.length || 0} 个对象`);
-    
-    // 按文件夹分类图片
     const imageMap = new Map();
-    images.Contents
-      .filter(item => {
-        const itemExtension = path.extname(item.Key).toLowerCase();
-        // 检查是否为图片文件
-        const isValidImage = validImageExtensions.includes(itemExtension);
-        
-        // 检查是否在0_preview文件夹中
-        const isInPreviewFolder = item.Key.includes('/0_preview/');
-        
-        // 只返回有效的图片文件且不在预览文件夹中的项目
-        return isValidImage && !isInPreviewFolder;
-      })
-      .forEach(item => {
-        const parts = item.Key.split('/');
-        
-        // 获取文件夹名，如果没有文件夹则归类为 'all'
-        const folder = parts.length > 2 ? parts[1] : 'all';
-        if (!imageMap.has(folder)) {
-          imageMap.set(folder, []);
-        }
-        
-        // 构建缩略图路径：按原图所在文件夹分类
-        // 此处不需要构建完整路径，只需提供相对路径供 /thumbnail 路由使用
-        const thumbnailPath = `/thumbnail/${encodeURIComponent(item.Key)}`;
-        
-        console.log(`添加图片: ${item.Key}, 文件夹: ${folder}`);
-        
-        imageMap.get(folder).push({
-          original: `${IMAGE_BASE_URL}/${item.Key}`,
-          thumbnail: thumbnailPath
+    let continuationToken = undefined;
+    let totalImages = 0;
+    
+    do {
+      // 使用 ListObjectsV2Command 替代 ListObjectsCommand
+      const images = await s3Client.send(new ListObjectsV2Command({ 
+        Bucket: BUCKET_NAME, 
+        Prefix: IMAGE_DIR,
+        MaxKeys: 1000,
+        ContinuationToken: continuationToken
+      }));
+      
+      const currentBatchSize = images.Contents?.length || 0;
+      totalImages += currentBatchSize;
+      console.log(`本次获取 ${currentBatchSize} 个对象，累计总数：${totalImages}`);
+      console.log(`NextContinuationToken: ${images.NextContinuationToken}`);
+      console.log(`IsTruncated: ${images.IsTruncated}`);
+      
+      // 处理当前页的图片
+      images.Contents
+        .filter(item => {
+          const itemExtension = path.extname(item.Key).toLowerCase();
+          const isValidImage = validImageExtensions.includes(itemExtension);
+          const isInPreviewFolder = item.Key.includes('/0_preview/');
+          return isValidImage && !isInPreviewFolder;
+        })
+        .forEach(item => {
+          const parts = item.Key.split('/');
+          const folder = parts.length > 2 ? parts[1] : 'all';
+          
+          if (!imageMap.has(folder)) {
+            imageMap.set(folder, []);
+            console.log(`创建新文件夹: ${folder}`);
+          }
+          
+          const thumbnailPath = `/thumbnail/${encodeURIComponent(item.Key)}`;
+          imageMap.get(folder).push({
+            original: `${IMAGE_BASE_URL}/${item.Key}`,
+            thumbnail: thumbnailPath
+          });
         });
-      });
-
+      
+      // 使用 IsTruncated 和 NextContinuationToken 来判断是否还有更多数据
+      continuationToken = images.IsTruncated ? images.NextContinuationToken : undefined;
+      
+      if (images.IsTruncated) {
+        console.log('还有更多数据需要获取...');
+      } else {
+        console.log('已获取所有数据');
+      }
+      
+    } while (continuationToken);
+    
     // 将分类结果转换为对象
     const result = {};
     for (const [folder, images] of imageMap.entries()) {
@@ -191,10 +204,12 @@ app.get('/images', async (req, res) => {
       console.log(`文件夹 "${folder}" 包含 ${images.length} 张图片`);
     }
     
-    console.log('图片列表已发送到客户端');
+    console.log(`处理完成：总共 ${totalImages} 个对象，${Object.keys(result).length} 个文件夹`);
     res.json(result);
+    
   } catch (error) {
-    console.error('获取图片列表失败:', error);
+    console.error('获取图片列表失败:', error.message);
+    console.error('错误详情:', error);
     res.status(500).send('获取图片列表失败');
   }
 });
@@ -340,3 +355,4 @@ app.get('/config', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
