@@ -203,9 +203,9 @@ Gallery-Portfolio/
 
 本项目灵感来源是 [**besscroft/PicImpact**](https://github.com/besscroft/PicImpact)，这也是一个很不错的摄影作品展示站。它需要准备一个数据库，支持 AWS S3 API、Cloudflare R2、AList API，也支持在线上传图片。网站设计的风格稍有不同，你也可以去尝试一下~
 
-## 结束语
 
-通过上述步骤，你可以轻松地在本地开发或部署到 Vercel，享受简单优质的照片展示体验。  
+
+以上，你可以轻松地在本地开发或部署到 Vercel，享受简单优质的照片展示体验。  
 如果你遇到任何问题，请随时在 GitHub 上提交 issue，我会尽快回复并解决你的问题。
 
 <p align="left">
