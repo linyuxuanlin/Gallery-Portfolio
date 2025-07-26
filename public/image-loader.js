@@ -691,6 +691,10 @@ class ImageLoader {
         const clickedImg = document.querySelector(`img[data-original="${original}"]`);
         if (!clickedImg) return;
         
+        // 检查是否已加载高清图
+        const isHighResLoaded = clickedImg.getAttribute('data-highres-loaded') === 'true';
+        const imageToUse = isHighResLoaded ? original : preview;
+        
         const imgRect = clickedImg.getBoundingClientRect();
         const modalRect = modal.getBoundingClientRect();
         
@@ -721,8 +725,8 @@ class ImageLoader {
         modalImg.style.transition = 'none';
         modalImg.style.zIndex = '1001';
         
-        // 显示预览图
-        modalImg.src = preview;
+        // 显示图片（使用已加载的原图或预览图）
+        modalImg.src = imageToUse;
         
         // 开始动画
         requestAnimationFrame(() => {
@@ -747,8 +751,21 @@ class ImageLoader {
                 modalImg.style.transition = 'none';
                 modalImg.style.zIndex = 'auto';
                 
-                // 加载高清图
-                this.loadHighResForModal(original, preview, exifInfo);
+                // 如果使用了预览图，加载高清图
+                if (!isHighResLoaded) {
+                    this.loadHighResForModal(original, preview, exifInfo);
+                } else {
+                    // 如果已经加载了高清图，直接显示EXIF信息
+                    this.getExifInfo(original).then(exifData => {
+                        exifInfo.innerHTML = this.createExifInfo(exifData);
+                    }).catch(error => {
+                        console.error('获取EXIF信息失败:', error);
+                        exifInfo.innerHTML = '<p>EXIF信息获取失败</p>';
+                    });
+                }
+                
+                // 隐藏加载遮罩
+                this.hideLoadingOverlay(original);
             }, 400);
         });
     }
@@ -792,6 +809,13 @@ class ImageLoader {
         
         // 设置高清图
         modalImg.src = original;
+        
+        // 更新对应的图片元素，替换为原图
+        const clickedImg = document.querySelector(`img[data-original="${original}"]`);
+        if (clickedImg) {
+            clickedImg.src = original;
+            clickedImg.setAttribute('data-highres-loaded', 'true');
+        }
         
         // 获取EXIF信息
         this.getExifInfo(original).then(exifData => {
@@ -928,9 +952,14 @@ class ImageLoader {
             transition: opacity 0.3s ease;
         `;
         
-        // 设置父元素为相对定位
-        imgElement.parentElement.style.position = 'relative';
-        imgElement.parentElement.appendChild(overlay);
+        // 确保图片容器是相对定位
+        const imgContainer = imgElement.parentElement;
+        if (imgContainer.style.position !== 'relative') {
+            imgContainer.style.position = 'relative';
+        }
+        
+        // 将遮罩添加到图片容器中
+        imgContainer.appendChild(overlay);
         
         // 显示遮罩
         setTimeout(() => {
@@ -961,16 +990,10 @@ class ImageLoader {
                         <p>已加载完成</p>
                     </div>
                 `;
-                // 3秒后隐藏遮罩
-                setTimeout(() => {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => {
-                        if (overlay.parentElement) {
-                            overlay.parentElement.removeChild(overlay);
-                        }
-                        this.loadingOverlays.delete(originalUrl);
-                    }, 300);
-                }, 3000);
+                // 加载完成后替换预览图为原图
+                imgElement.src = originalUrl;
+                imgElement.setAttribute('data-highres-loaded', 'true');
+                // 不自动隐藏遮罩，等待用户点击大图
                 break;
             case 'error':
                 overlay.innerHTML = `
@@ -1068,6 +1091,20 @@ class ImageLoader {
         };
         
         highResImage.src = originalUrl;
+    }
+
+    // 隐藏加载遮罩
+    hideLoadingOverlay(originalUrl) {
+        const overlay = this.loadingOverlays.get(originalUrl);
+        if (!overlay) return;
+        
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            if (overlay.parentElement) {
+                overlay.parentElement.removeChild(overlay);
+            }
+            this.loadingOverlays.delete(originalUrl);
+        }, 300);
     }
 }
 
