@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "build": "echo 'No build step needed for Workers'",
+    "dev": "wrangler dev"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +17,7 @@
     "dotenv": "^16.4.5",
     "exif-parser": "^0.1.12",
     "express": "^4.19.2",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "cloudflare-workers": "^1.0.0"
   }
 }

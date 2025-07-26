@@ -1,0 +1,20 @@
+name = "gallery-portfolio"
+type = "javascript"
+
+account_id = "264358695bf65a3cb883dfd59b42fe7f"
+workers_dev = true
+compatibility_date = "2025-07-26"
+
+# [[env.production.kv_namespaces]]
+# binding = "MY_KV"
+# id = "your-namespace-id"
+
+[build]
+command = "npm install && npm run build"
+cwd = "./"
+
+[build.upload]
+dir = "dist"
+
+[[env.production.pages]]
+dir = "./public"
