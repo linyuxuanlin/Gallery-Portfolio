@@ -17,7 +17,10 @@ Gallery-Portfolio
 
 **Gallery-Portfolio** 是一个简单的 **摄影作品展示站**，你只需要将图片存放在免费的 **Cloudflare R2** 上（或其他任意图床），即可在这里展现你的大作。在这里你可以通过 **瀑布流** 的形式浏览图片，也可以 **点开大图** ，查看光圈 / 快门 / ISO 等 **EXIF** 信息。网站基于 Node.js，使用 **Material Design** 风格的 **响应式设计**，支持 **日夜间模式** 切换，在不同的设备上都有不错的视觉效果。
 
-<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%linyuxuanlin%2FGallery-Portfolio&env=R2_ACCESS_KEY_ID,R2_SECRET_ACCESS_KEY,R2_BUCKET_NAME,R2_ENDPOINT,R2_IMAGE_BASE_URL,R2_IMAGE_DIR,IMAGE_COMPRESSION_QUALITY"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
+<p align="center">
+  <a href="https://dash.cloudflare.com/?to=https://dash.cloudflare.com/pages"><img src="https://img.shields.io/badge/Deploy%20to%20Cloudflare%20Pages-4285F4?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Deploy to Cloudflare Pages"/></a>
+  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flinyuxuanlin%2FGallery-Portfolio"><img src="https://img.shields.io/badge/Deploy%20to%20Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Deploy to Vercel"/></a>
+</p>
 
 ## ✨ 特性
 
@@ -29,6 +32,9 @@ Gallery-Portfolio
 - 📱 **移动端优化** - 完美适配移动设备观片
 - 🚀 **静态部署** - 零服务器成本，快速加载
 - 🖼️ **预览图优化** - 先加载预览图，点击查看高清原图
+- 🔄 **智能加载** - 预览图缺失时自动加载原图
+- 📸 **EXIF信息** - 显示光圈、快门、ISO等摄影参数
+- 🌍 **跨平台支持** - 提供Windows、Linux和MacOS脚本
 
 ## 🏗️ 项目结构
 
@@ -46,10 +52,14 @@ Gallery-Portfolio/
 │   ├── image-loader.js       # 图片加载模块
 │   ├── auto-scroll.js        # 自动滚动模块
 │   └── assets/               # 图标资源
-├── generate-gallery-index.bat # 生成图片索引脚本
-├── generate-previews.bat      # 生成预览图脚本
-├── deploy.bat                # 部署脚本
-└── _headers                  # Cloudflare Pages 配置
+├── generate-gallery-index.bat # Windows图片索引生成脚本
+├── generate-gallery-index.sh  # Linux/macOS图片索引生成脚本
+├── generate-previews.bat      # Windows预览图生成脚本
+├── generate-previews.sh       # Linux/macOS预览图生成脚本
+├── deploy.bat                # Windows部署脚本
+├── deploy.sh                 # Linux/macOS部署脚本
+├── _headers                  # Cloudflare Pages 配置
+└── package.json              # 项目配置
 ```
 
 ## 🚀 快速开始
@@ -73,20 +83,30 @@ C:\Users\Power\Wiki-media\gallery\
 
 ### 2. 生成预览图
 
-运行预览图生成脚本：
-
+#### Windows 用户
 ```bash
 generate-previews.bat
+```
+
+#### Linux/macOS 用户
+```bash
+chmod +x generate-previews.sh
+./generate-previews.sh
 ```
 
 **注意：** 需要先安装 [ImageMagick](https://imagemagick.org/script/download.php#windows)
 
 ### 3. 生成作品索引
 
-运行索引生成脚本：
-
+#### Windows 用户
 ```bash
 generate-gallery-index.bat
+```
+
+#### Linux/macOS 用户
+```bash
+chmod +x generate-gallery-index.sh
+./generate-gallery-index.sh
 ```
 
 这将生成 `gallery-index.json` 文件，包含所有摄影作品的信息。
@@ -107,13 +127,18 @@ npx serve .
 
 ### 5. 部署到 Cloudflare Pages
 
-#### 方法一：使用部署脚本
-
+#### Windows 用户
 ```bash
 deploy.bat
 ```
 
-#### 方法二：手动部署
+#### Linux/macOS 用户
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+#### 手动部署
 
 1. 安装 Wrangler CLI：
    ```bash
@@ -139,21 +164,43 @@ deploy.bat
 - **原图**: `https://media.wiki-power.com/gallery/{分类}/{文件名}`
 - **预览图**: `https://media.wiki-power.com/gallery/0_preview/{分类}/{文件名}`
 
+### 预览图缺失检测
+
+系统具备智能预览图检测功能：
+- 如果预览图加载失败，会自动尝试加载原图
+- 确保即使预览图缺失，用户仍能正常浏览作品
+- 提供友好的错误提示和降级处理
+
 ### 修改作品源
 
+#### Windows 用户
 编辑 `generate-gallery-index.bat` 文件中的以下变量：
 
 ```batch
 set "SOURCE_DIR=C:\Users\Power\Wiki-media\gallery"
 ```
 
+#### Linux/macOS 用户
+编辑 `generate-gallery-index.sh` 文件中的以下变量：
+
+```bash
+SOURCE_DIR="/home/user/Wiki-media/gallery"
+```
+
 ### 自定义图床域名
 
 修改脚本中的域名部分：
 
+#### Windows 用户
 ```batch
 set "original_url=https://your-domain.com/gallery/!category_name!/!file_name!!file_ext!"
 set "preview_url=https://your-domain.com/gallery/0_preview/!category_name!/!file_name!!file_ext!"
+```
+
+#### Linux/macOS 用户
+```bash
+original_url="https://your-domain.com/gallery/$category_name/$file_name.$file_ext"
+preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name.$file_ext"
 ```
 
 ## 🛠️ 开发

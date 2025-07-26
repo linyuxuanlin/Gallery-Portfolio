@@ -312,6 +312,9 @@ class ImageLoader {
             // 图片加载
             const img = new Image();
             
+            // 预览图缺失检测
+            let previewFailed = false;
+            
             img.onload = () => {
                 if (tag !== this.currentTag) {
                     console.log(`tag已经切换：当前选中tag:${this.currentTag}，本请求tag:${tag}，跳过加载`);
@@ -349,66 +352,50 @@ class ImageLoader {
                     // 添加序号
                     img.dataset.originalOrder = this.currentIndex - 1;
                     
-                    // 更新悬停效果
-                    this.updateHoverEffects();
+                    // 继续加载下一张图片
+                    loadSingleImage(this.currentIndex);
                     
-                    // 控制加载速度
-                    const timeElapsed = Date.now() - batchStart;
-                    if (loadedInThisBatch >= 20 && timeElapsed < 500) {
-                        setTimeout(() => {
-                            if (remainingToLoad > 0 && this.currentIndex < images.length) {
-                                loadSingleImage(this.currentIndex);
-                            } else {
-                                this.hideLoadingMessage();
-                                if (this.currentIndex >= images.length) {
-                                    this.handleAllImagesLoaded();
-                                } else {
-                                    this.preloadNextBatchImages();
-                                }
-                                this.isScrollLoading = false;
-                            }
-                        }, 50);
-                    } else {
-                        if (remainingToLoad > 0 && this.currentIndex < images.length) {
-                            loadSingleImage(this.currentIndex);
-                        } else {
-                            this.hideLoadingMessage();
-                            if (this.currentIndex >= images.length) {
-                                this.handleAllImagesLoaded();
-                            } else {
-                                this.preloadNextBatchImages();
-                            }
-                            this.isScrollLoading = false;
-                        }
-                    }
-                } catch (err) {
-                    console.error(`图片处理过程中发生错误:`, err);
+                } catch (error) {
+                    console.error('处理图片加载时出错:', error);
                     this.currentIndex++;
                     loadSingleImage(this.currentIndex);
                 }
             };
             
             img.onerror = () => {
-                console.error('图片加载失败:', imageUrl);
-                setTimeout(() => {
-                    this.currentIndex++;
-                    loadSingleImage(this.currentIndex);
-                }, 500);
+                console.warn(`预览图加载失败: ${imageUrl}`);
+                this.loadingImages.splice(this.loadingImages.indexOf(img), 1);
+                
+                // 如果预览图加载失败，尝试加载原图
+                if (!previewFailed) {
+                    previewFailed = true;
+                    console.log(`尝试加载原图: ${originalUrl}`);
+                    img.src = originalUrl;
+                    return;
+                }
+                
+                // 如果原图也加载失败，跳过这张图片
+                console.error(`原图也加载失败，跳过: ${originalUrl}`);
+                this.currentIndex++;
+                loadSingleImage(this.currentIndex);
             };
             
             // 设置图片属性
             img.src = imageUrl;
-            img.setAttribute('data-original', imageData.original);
-            img.setAttribute('data-preview', imageData.preview);
-            img.alt = '图片';
+            img.alt = imageData.name || 'Gallery Image';
+            img.dataset.original = originalUrl;
+            img.dataset.preview = imageUrl;
+            img.dataset.category = imageData.category || 'unknown';
+            
+            // 添加到加载中列表
+            this.loadingImages.push(img);
             
             // 添加点击事件
             const imgClickHandler = () => {
-                this.openModal(imageData.original, imageData.preview);
+                this.openModal(originalUrl, imageUrl);
             };
-            img.imgClickHandler = imgClickHandler;
             img.addEventListener('click', imgClickHandler);
-            this.loadingImages.push(img);
+            img.imgClickHandler = imgClickHandler;
         };
         
         // 开始加载第一张图片
@@ -710,22 +697,115 @@ class ImageLoader {
         modal.style.display = 'block';
         document.body.classList.add('no-scroll');
         
-        // 显示友好的加载状态
-        exifInfo.innerHTML = '<p>加载原图中...</p>';
-
+        // 创建加载动画
+        const createLoadingSpinner = () => {
+            return `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>加载原图中...</p>
+                </div>
+            `;
+        };
+        
+        // 创建EXIF信息显示
+        const createExifInfo = (exifData) => {
+            if (!exifData) return '<p>无EXIF信息</p>';
+            
+            let exifHtml = '<div class="exif-info">';
+            
+            // 基本信息
+            if (exifData.aperture) {
+                exifHtml += `<p><strong>光圈:</strong> f/${exifData.aperture}</p>`;
+            }
+            if (exifData.shutterSpeed) {
+                exifHtml += `<p><strong>快门:</strong> ${exifData.shutterSpeed}s</p>`;
+            }
+            if (exifData.iso) {
+                exifHtml += `<p><strong>ISO:</strong> ${exifData.iso}</p>`;
+            }
+            if (exifData.focalLength) {
+                exifHtml += `<p><strong>焦距:</strong> ${exifData.focalLength}mm</p>`;
+            }
+            if (exifData.camera) {
+                exifHtml += `<p><strong>相机:</strong> ${exifData.camera}</p>`;
+            }
+            if (exifData.lens) {
+                exifHtml += `<p><strong>镜头:</strong> ${exifData.lens}</p>`;
+            }
+            
+            // 地理位置信息
+            if (exifData.gps) {
+                exifHtml += `<p><strong>位置:</strong> ${exifData.gps}</p>`;
+            }
+            
+            // 拍摄时间
+            if (exifData.dateTime) {
+                exifHtml += `<p><strong>拍摄时间:</strong> ${exifData.dateTime}</p>`;
+            }
+            
+            exifHtml += '</div>';
+            return exifHtml;
+        };
+        
+        // 显示加载动画
+        exifInfo.innerHTML = createLoadingSpinner();
+        
         // 先展示预览图并添加模糊效果
         console.log(`设置模态窗口预览图: ${preview}`);
         modalImg.src = preview;
         modalImg.style.filter = 'blur(10px)';
         modalImg.style.transition = 'filter 0.3s ease';
-
+        
+        // 记录图片尺寸变化
+        let lastWidth = 0;
+        let lastHeight = 0;
+        let loadingStartTime = Date.now();
+        let spinnerActive = false;
+        
         // 加载高清图
         const highResImage = new Image();
+        
+        // 监听图片加载进度
+        highResImage.onloadstart = () => {
+            console.log('开始加载高清图:', original);
+            spinnerActive = true;
+        };
+        
+        highResImage.onprogress = () => {
+            // 检查图片尺寸是否在变化
+            if (highResImage.width !== lastWidth || highResImage.height !== lastHeight) {
+                lastWidth = highResImage.width;
+                lastHeight = highResImage.height;
+                
+                // 如果尺寸在变化，保持转圈动画
+                if (!spinnerActive) {
+                    exifInfo.innerHTML = createLoadingSpinner();
+                    spinnerActive = true;
+                }
+            } else if (spinnerActive && Date.now() - loadingStartTime > 2000) {
+                // 如果尺寸无变化且加载时间超过2秒，暂停转圈
+                exifInfo.innerHTML = `
+                    <div class="loading-paused">
+                        <div class="spinner-paused"></div>
+                        <p>加载中...</p>
+                    </div>
+                `;
+                spinnerActive = false;
+            }
+        };
+        
         highResImage.onload = () => {
             console.log(`高清图加载完成，设置到模态窗口: ${original}`);
             modalImg.src = original;
             modalImg.style.filter = 'blur(0px)';
-            exifInfo.innerHTML = '<p>图片加载完成</p>';
+            
+            // 获取EXIF信息
+            this.getExifInfo(original).then(exifData => {
+                exifInfo.innerHTML = createExifInfo(exifData);
+            }).catch(error => {
+                console.error('获取EXIF信息失败:', error);
+                exifInfo.innerHTML = '<p>EXIF信息获取失败</p>';
+            });
         };
         
         highResImage.onerror = () => {
@@ -735,6 +815,31 @@ class ImageLoader {
         };
         
         highResImage.src = original;
+    }
+    
+    // 获取EXIF信息
+    async getExifInfo(imageUrl) {
+        try {
+            // 尝试从gallery-index.json中获取EXIF信息
+            const images = this.getCurrentImages();
+            const imageData = images.find(img => img.original === imageUrl);
+            
+            if (imageData && imageData.exif) {
+                return imageData.exif;
+            }
+            
+            // 如果没有预存的EXIF信息，尝试从服务器获取
+            const response = await fetch(`/api/exif?url=${encodeURIComponent(imageUrl)}`);
+            if (response.ok) {
+                const exifData = await response.json();
+                return exifData;
+            }
+            
+            return null;
+        } catch (error) {
+            console.error('获取EXIF信息失败:', error);
+            return null;
+        }
     }
 
     // 设置模态窗口事件

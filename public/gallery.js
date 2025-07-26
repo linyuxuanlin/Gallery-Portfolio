@@ -53,14 +53,14 @@ class Gallery {
     }
 
     loadInitialImages() {
-        // 首次加载时选择 "All" 标签
+                // 首次加载时选择 "All" 标签
         this.imageLoader.filterImages('all');
         this.imageLoader.updateColumns();
-        
-        // 初始加载后检查是否需要更多图片
-        setTimeout(() => {
+                
+                // 初始加载后检查是否需要更多图片
+                setTimeout(() => {
             this.imageLoader.checkIfMoreImagesNeeded();
-        }, 500);
+                }, 500);
     }
 }
 
