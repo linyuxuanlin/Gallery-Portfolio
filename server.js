@@ -8,8 +8,22 @@ const exifParser = require('exif-parser');
 
 dotenv.config();
 
-const app = express();
-const port = process.env.PORT || 3000;
+// Cloudflare Workers 适配
+const isCloudflareWorker = typeof globalThis !== 'undefined' && globalThis.__CLOUDFLARE_WORKER__;
+
+let app;
+let port;
+
+if (isCloudflareWorker) {
+  // Cloudflare Workers 环境
+  const { createFetch } = require('@cloudflare/workers-types');
+  app = createFetch();
+  port = null;
+} else {
+  // 传统 Node.js 环境
+  app = express();
+  port = process.env.PORT || 3000;
+}
 
 // 存储所有的SSE客户端连接
 const clients = [];
@@ -329,7 +343,9 @@ app.get('/config', (req, res) => {
   res.json({ IMAGE_BASE_URL: process.env.R2_IMAGE_BASE_URL });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+if (port) {
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+}
 

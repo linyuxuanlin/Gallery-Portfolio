@@ -5,7 +5,10 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +21,8 @@
     "exif-parser": "^0.1.12",
     "express": "^4.19.2",
     "sharp": "^0.33.4"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
   }
 }

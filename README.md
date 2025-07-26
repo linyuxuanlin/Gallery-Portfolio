@@ -19,6 +19,8 @@ Gallery-Portfolio
 
 <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%linyuxuanlin%2FGallery-Portfolio&env=R2_ACCESS_KEY_ID,R2_SECRET_ACCESS_KEY,R2_BUCKET_NAME,R2_ENDPOINT,R2_IMAGE_BASE_URL,R2_IMAGE_DIR,IMAGE_COMPRESSION_QUALITY"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
 
+<a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages"><img src="https://img.shields.io/badge/Deploy%20to%20Cloudflare%20Workers-4285f4?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Deploy to Cloudflare Workers"/></a>
+
 ## 功能特性
 
 - 瀑布流布局展示照片
@@ -30,7 +32,7 @@ Gallery-Portfolio
 - 支持日夜间模式切换
 - 支持按文件夹标签筛选图片，轻松管理不同类别的照片
 - 自动倒计时加载功能，提升浏览体验
-- 支持 [本地运行](#本地运行) ，也支持 [部署到 Vercel](#部署到-vercel)
+- 支持 [本地运行](#本地运行) ，也支持 [部署到 Vercel](#部署到-vercel) 或 [部署到 Cloudflare Workers](#部署到-cloudflare-workers)
 
 ## 本地运行
 
@@ -92,6 +94,46 @@ node server.js
 4. 完成上述步骤后，Vercel 将自动进行部署。  
    部署完成后，即可通过 Vercel 提供的域名访问网站，也可以绑定你自己的域名。
 
+## 部署到 Cloudflare Workers
+
+1. 首先，在 GitHub 上 [fork 此仓库](https://github.com/linyuxuanlin/Gallery-Portfolio/fork) 。
+
+2. 安装 Wrangler CLI：
+
+```bash
+npm install -g wrangler
+```
+
+3. 登录 Cloudflare：
+
+```bash
+wrangler login
+```
+
+4. 配置环境变量，在 `wrangler.toml` 文件中添加：
+
+```toml
+[vars]
+R2_REGION = "auto"
+R2_ENDPOINT = "https://your-endpoint.r2.cloudflarestorage.com"
+R2_ACCESS_KEY_ID = "your-access-key-id"
+R2_SECRET_ACCESS_KEY = "your-secret-access-key"
+R2_BUCKET_NAME = "your-bucket-name"
+R2_IMAGE_BASE_URL = "https://your-image-base-url.com"
+IMAGE_DIR = "gallery"
+IMAGE_COMPRESSION_QUALITY = "100"
+```
+
+5. 部署到 Cloudflare Workers：
+
+```bash
+npm run deploy
+```
+
+6. 完成部署后，即可通过 Cloudflare Workers 提供的域名访问网站。
+
+详细的部署指南请参考 [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md) 。
+
 ## 图片组织与标签筛选
 
 本项目支持按文件夹自动生成标签，方便筛选不同类别的照片：
@@ -120,7 +162,8 @@ node server.js
 
 ```
 Gallery-Portfolio/
-├── server.js
+├── server.js          # Vercel 部署使用的服务器文件
+├── worker.js          # Cloudflare Workers 部署使用的服务器文件
 ├── public/
 │ ├── index.html
 │ ├── styles.css
@@ -130,13 +173,14 @@ Gallery-Portfolio/
 │ ├── exif.js
 │ ├── assets/
 ├── .env
-├── vercel.json
+├── vercel.json        # Vercel 部署配置
+├── wrangler.toml      # Cloudflare Workers 部署配置
 ├── package.json
 ```
 
 ### `server.js`
 
-`server.js` 是项目的后端服务器代码，负责处理图片的获取、缩略图生成以及 EXIF 信息的读取。
+`server.js` 是项目的后端服务器代码，用于 Vercel 部署，负责处理图片的获取、缩略图生成以及 EXIF 信息的读取。
 
 - 依赖库：
   - `express`：用于搭建 Web 服务器
@@ -144,6 +188,15 @@ Gallery-Portfolio/
   - `sharp`：用于生成图片缩略图
   - `exif-parser`：用于解析图片的 EXIF 信息
   - `dotenv`：用于加载环境变量
+
+### `worker.js`
+
+`worker.js` 是项目的 Cloudflare Workers 版本，用于 Cloudflare Workers 部署，提供相同的功能但使用不同的运行时环境。
+
+- 特点：
+  - 使用 Cloudflare Workers API 而不是 Express.js
+  - 支持 Cloudflare 的边缘计算能力
+  - 更好的全球性能表现
 
 ### `public/` 目录
 
@@ -158,7 +211,10 @@ Gallery-Portfolio/
 
 ### 环境变量
 
-项目使用 `.env` 文件或 Vercel 环境变量来配置 Cloudflare R2 相关信息：
+项目使用 `.env` 文件、Vercel 环境变量或 Cloudflare Workers 环境变量来配置 Cloudflare R2 相关信息：
+
+**Vercel 部署**：在 Vercel Dashboard 中配置环境变量
+**Cloudflare Workers 部署**：在 `wrangler.toml` 文件中配置环境变量
 
 - `R2_ACCESS_KEY_ID`：对象存储的访问密钥 ID
 - `R2_SECRET_ACCESS_KEY`：对象存储的访问密钥
@@ -173,6 +229,10 @@ Gallery-Portfolio/
 
 `vercel.json` 文件是供 Vercel 部署的配置文件，在其中配置了路由和具体的构建设置。
 
+### `wrangler.toml`
+
+`wrangler.toml` 文件是供 Cloudflare Workers 部署的配置文件，在其中配置了环境变量、路由和构建设置。
+
 ## 性能优化
 
 本项目采用了多种性能优化策略：
@@ -186,7 +246,7 @@ Gallery-Portfolio/
 ## 注意事项
 
 - 网站在首次加载时，会进行生成缩略图的操作（比较花时间，需要耐心等待）。缩略图的生成，使用了 `sharp`，将所有图片进行压缩，并储存至存储桶上图片路径下的 `0_preview` 文件夹中，方便下一次使用。缩略图将按照原图所在的文件夹结构进行分类存储。
-- 确保 `.env` 文件中包含所有必需的环境变量。如部署至 Vercel，请确保这些变量在 Vercel 项目的设置中也已正确配置。
+- 确保 `.env` 文件中包含所有必需的环境变量。如部署至 Vercel，请确保这些变量在 Vercel 项目的设置中也已正确配置。如部署至 Cloudflare Workers，请确保这些变量在 `wrangler.toml` 文件中已正确配置。
 - 如果遇到图片无法加载：请检查 `.env` 文件中的环境变量是否配置正确，并确保 S3 存储桶和图片路径正确。
 - EXIF 信息加载错误：请确保 S3 图片中包含 EXIF 数据。
 - 标签筛选功能依赖于存储桶中的文件夹结构，请确保图片按照合理的文件夹组织。
@@ -205,7 +265,7 @@ Gallery-Portfolio/
 
 
 
-以上，你可以轻松地在本地开发或部署到 Vercel，享受简单优质的照片展示体验。  
+以上，你可以轻松地在本地开发或部署到 Vercel/Cloudflare Workers，享受简单优质的照片展示体验。  
 如果你遇到任何问题，请随时在 GitHub 上提交 issue，我会尽快回复并解决你的问题。
 
 <p align="left">
