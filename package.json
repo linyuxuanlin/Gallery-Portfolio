@@ -1,7 +1,7 @@
 {
   "name": "gallery-portfolio-static",
   "version": "1.0.0",
-  "description": "静态图片画廊网站，支持Cloudflare Pages部署",
+  "description": "个人摄影作品展示网站，支持Cloudflare Pages部署",
   "main": "index.html",
   "scripts": {
     "build": "echo '静态网站，无需构建'",
@@ -10,7 +10,7 @@
     "generate-index": "generate-gallery-index.bat",
     "generate-previews": "generate-previews.bat"
   },
-  "keywords": ["gallery", "portfolio", "static", "cloudflare-pages"],
+  "keywords": ["gallery", "portfolio", "photography", "static", "cloudflare-pages"],
   "author": "",
   "license": "ISC",
   "devDependencies": {

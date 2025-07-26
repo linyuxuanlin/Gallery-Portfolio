@@ -53,6 +53,23 @@ if not exist "package.json" (
     set "missing_files=!missing_files! package.json"
 )
 
+:: 检查图标文件
+if not exist "public\assets\brightness_4.svg" (
+    set "missing_files=!missing_files! public\assets\brightness_4.svg"
+)
+
+if not exist "public\assets\brightness_7.svg" (
+    set "missing_files=!missing_files! public\assets\brightness_7.svg"
+)
+
+if not exist "public\assets\github.svg" (
+    set "missing_files=!missing_files! public\assets\github.svg"
+)
+
+if not exist "public\assets\favicon.svg" (
+    set "missing_files=!missing_files! public\assets\favicon.svg"
+)
+
 if defined missing_files (
     echo 错误: 缺少以下文件:
     echo !missing_files!
@@ -78,9 +95,9 @@ if errorlevel 1 (
 
 :: 检查图片数量
 echo.
-echo 正在统计图片数量...
+echo 正在统计摄影作品数量...
 
-powershell -Command "$json = Get-Content 'gallery-index.json' -Raw | ConvertFrom-Json; $total = 0; foreach($category in $json.gallery.PSObject.Properties) { $total += $category.Value.count }; Write-Host '✓ 总图片数: ' + $total"
+powershell -Command "$json = Get-Content 'gallery-index.json' -Raw | ConvertFrom-Json; $total = 0; foreach($category in $json.gallery.PSObject.Properties) { $total += $category.Value.count }; Write-Host '✓ 总作品数: ' + $total"
 
 :: 检查Node.js
 echo.
@@ -120,13 +137,23 @@ if errorlevel 1 (
     wrangler --version
 )
 
+:: 检查图标文件内容
+echo.
+echo 正在检查图标文件...
+
+powershell -Command "try { $content = Get-Content 'public\assets\brightness_4.svg' -Raw; if($content -match '<svg') { Write-Host '✓ brightness_4.svg 格式正确' } else { Write-Host '✗ brightness_4.svg 格式错误' } } catch { Write-Host '✗ 无法读取 brightness_4.svg' }"
+
+powershell -Command "try { $content = Get-Content 'public\assets\brightness_7.svg' -Raw; if($content -match '<svg') { Write-Host '✓ brightness_7.svg 格式正确' } else { Write-Host '✗ brightness_7.svg 格式错误' } } catch { Write-Host '✗ 无法读取 brightness_7.svg' }"
+
 echo.
 echo ========================================
 echo 测试完成!
 echo.
 echo 如果所有检查都通过，您可以:
 echo 1. 运行 npm run serve 进行本地测试
-echo 2. 运行 deploy.bat 部署到 Cloudflare Pages
+echo 2. 访问 test-icons.html 测试图标加载
+echo 3. 访问 debug-icons.html 进行详细调试
+echo 4. 运行 deploy.bat 部署到 Cloudflare Pages
 echo ========================================
 
 pause 

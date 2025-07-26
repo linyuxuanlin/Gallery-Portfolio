@@ -1,17 +1,17 @@
-# Gallery Portfolio - 静态图片画廊
+# Gallery Portfolio - 个人摄影作品展示站
 
-一个现代化的静态图片画廊网站，支持 Cloudflare Pages 部署，使用图床方式加载图片。
+一个现代化的个人摄影作品展示网站，支持 Cloudflare Pages 部署，使用图床方式加载图片。
 
 ## ✨ 特性
 
-- 🖼️ **响应式图片画廊** - 自适应布局，支持多种屏幕尺寸
-- 🏷️ **分类筛选** - 按图片分类进行筛选浏览
-- 🌙 **深色/浅色主题** - 支持主题切换
-- ⚡ **懒加载** - 滚动时自动加载更多图片
+- 🖼️ **响应式摄影画廊** - 自适应布局，支持多种屏幕尺寸
+- 🏷️ **作品分类** - 按摄影主题和地点进行分类展示
+- 🌙 **深色/浅色主题** - 支持主题切换，优化观片体验
+- ⚡ **懒加载** - 滚动时自动加载更多作品
 - 🎯 **自动滚动** - 一键开启自动滚动浏览
-- 📱 **移动端优化** - 完美适配移动设备
+- 📱 **移动端优化** - 完美适配移动设备观片
 - 🚀 **静态部署** - 零服务器成本，快速加载
-- 🖼️ **预览图优化** - 先加载预览图，点击查看原图
+- 🖼️ **预览图优化** - 先加载预览图，点击查看高清原图
 
 ## 🏗️ 项目结构
 
@@ -37,9 +37,9 @@ Gallery-Portfolio/
 
 ## 🚀 快速开始
 
-### 1. 准备图片目录
+### 1. 准备摄影作品目录
 
-将您的图片按以下结构组织：
+将您的摄影作品按以下结构组织：
 
 ```
 C:\Users\Power\Wiki-media\gallery\
@@ -64,7 +64,7 @@ generate-previews.bat
 
 **注意：** 需要先安装 [ImageMagick](https://imagemagick.org/script/download.php#windows)
 
-### 3. 生成图片索引
+### 3. 生成作品索引
 
 运行索引生成脚本：
 
@@ -72,7 +72,7 @@ generate-previews.bat
 generate-gallery-index.bat
 ```
 
-这将生成 `gallery-index.json` 文件，包含所有图片的信息。
+这将生成 `gallery-index.json` 文件，包含所有摄影作品的信息。
 
 ### 4. 本地测试
 
@@ -115,14 +115,14 @@ deploy.bat
 
 ## 📝 配置说明
 
-### 图片URL格式
+### 作品URL格式
 
-图片URL使用以下格式：
+摄影作品URL使用以下格式：
 
 - **原图**: `https://media.wiki-power.com/gallery/{分类}/{文件名}`
 - **预览图**: `https://media.wiki-power.com/gallery/0_preview/{分类}/{文件名}`
 
-### 修改图片源
+### 修改作品源
 
 编辑 `generate-gallery-index.bat` 文件中的以下变量：
 
@@ -154,16 +154,16 @@ set "preview_url=https://your-domain.com/gallery/0_preview/!category_name!/!file
 ### 可用脚本
 
 - `npm run serve` - 启动本地服务器
-- `npm run generate-index` - 生成图片索引
+- `npm run generate-index` - 生成作品索引
 - `npm run generate-previews` - 生成预览图
 
 ### 模块化架构
 
 项目采用模块化设计，主要模块包括：
 
-- **DataLoader** - 负责从JSON文件加载图片数据
-- **TagFilter** - 处理标签筛选功能
-- **ImageLoader** - 管理图片加载和布局
+- **DataLoader** - 负责从JSON文件加载摄影作品数据
+- **TagFilter** - 处理作品分类筛选功能
+- **ImageLoader** - 管理作品加载和布局
 - **AutoScroll** - 自动滚动功能
 - **Gallery** - 主画廊控制器
 
@@ -187,7 +187,7 @@ set "preview_url=https://your-domain.com/gallery/0_preview/!category_name!/!file
 
 ```css
 .gallery {
-  gap: 0.8em;           /* 图片间距 */
+  gap: 0.8em;           /* 作品间距 */
   width: 80%;           /* 画廊宽度 */
   max-width: 1200px;    /* 最大宽度 */
 }
@@ -207,14 +207,14 @@ set "preview_url=https://your-domain.com/gallery/0_preview/!category_name!/!file
 
 ### 常见问题
 
-1. **图片不显示**
+1. **作品不显示**
    - 检查 `gallery-index.json` 文件是否存在
-   - 确认图片URL是否正确
+   - 确认作品URL是否正确
    - 检查网络连接
 
 2. **预览图生成失败**
    - 确认已安装 ImageMagick
-   - 检查源图片路径是否正确
+   - 检查源作品路径是否正确
    - 确认有足够的磁盘空间
 
 3. **部署失败**
@@ -227,10 +227,10 @@ set "preview_url=https://your-domain.com/gallery/0_preview/!category_name!/!file
 在浏览器控制台中查看详细日志：
 
 ```javascript
-// 查看加载的图片数据
+// 查看加载的作品数据
 console.log(window.gallery.dataLoader.galleryData);
 
-// 查看当前选中的标签
+// 查看当前选中的分类
 console.log(window.gallery.tagFilter.getCurrentTag());
 ```
 
@@ -244,11 +244,8 @@ ISC License
 
 ## 📞 支持
 
-如有问题，请通过以下方式联系：
-
-- 提交 GitHub Issue
-- 发送邮件至项目维护者
+如有问题，请提交 GitHub Issue.
 
 ---
 
-**享受您的图片画廊之旅！** 🎉
+**Enjoy your own Gallery!** 🎉

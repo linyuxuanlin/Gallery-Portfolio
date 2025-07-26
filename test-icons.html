@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图标测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .icon-test {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .icon-test img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>图标加载测试</h1>
+    
+    <div class="test-container">
+        <h2>测试图标文件</h2>
+        
+        <div class="icon-test">
+            <img src="public/assets/brightness_4.svg" alt="夜间图标" id="dark-icon">
+            <span>夜间图标 (brightness_4.svg)</span>
+            <span class="status" id="dark-status">测试中...</span>
+        </div>
+        
+        <div class="icon-test">
+            <img src="public/assets/brightness_7.svg" alt="日间图标" id="light-icon">
+            <span>日间图标 (brightness_7.svg)</span>
+            <span class="status" id="light-status">测试中...</span>
+        </div>
+        
+        <div class="icon-test">
+            <img src="public/assets/github.svg" alt="GitHub图标" id="github-icon">
+            <span>GitHub图标 (github.svg)</span>
+            <span class="status" id="github-status">测试中...</span>
+        </div>
+        
+        <div class="icon-test">
+            <img src="public/assets/favicon.svg" alt="网站图标" id="favicon-icon">
+            <span>网站图标 (favicon.svg)</span>
+            <span class="status" id="favicon-status">测试中...</span>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>主题切换测试</h2>
+        <button id="theme-toggle" style="padding: 10px 20px; margin: 10px 0;">
+            <img src="public/assets/brightness_4.svg" alt="切换主题" id="theme-icon" style="width: 20px; height: 20px; margin-right: 8px;">
+            切换主题
+        </button>
+        <p>当前主题: <span id="current-theme">light</span></p>
+    </div>
+
+    <script>
+        // 测试图标加载
+        function testIcon(imgElement, statusElement, iconName) {
+            imgElement.onload = function() {
+                statusElement.textContent = '✓ 加载成功';
+                statusElement.className = 'status success';
+            };
+            imgElement.onerror = function() {
+                statusElement.textContent = '✗ 加载失败';
+                statusElement.className = 'status error';
+            };
+        }
+        
+        // 测试所有图标
+        testIcon(document.getElementById('dark-icon'), document.getElementById('dark-status'), 'dark');
+        testIcon(document.getElementById('light-icon'), document.getElementById('light-status'), 'light');
+        testIcon(document.getElementById('github-icon'), document.getElementById('github-status'), 'github');
+        testIcon(document.getElementById('favicon-icon'), document.getElementById('favicon-status'), 'favicon');
+        
+        // 主题切换测试
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const currentTheme = document.getElementById('current-theme');
+        
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.style.backgroundColor = '#333';
+                document.body.style.color = '#fff';
+                themeIcon.src = 'public/assets/brightness_7.svg';
+                currentTheme.textContent = 'dark';
+            } else {
+                document.body.style.backgroundColor = '#f5f5f5';
+                document.body.style.color = '#333';
+                themeIcon.src = 'public/assets/brightness_4.svg';
+                currentTheme.textContent = 'light';
+            }
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.style.backgroundColor === 'rgb(51, 51, 51)';
+            setTheme(isDark ? 'light' : 'dark');
+        });
+        
+        // 初始化主题
+        setTheme('light');
+    </script>
+</body>
+</html> 
