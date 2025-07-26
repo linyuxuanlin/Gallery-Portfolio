@@ -733,6 +733,8 @@ class ImageLoader {
 
     // 打开模态窗口
     openModal(original, preview) {
+        console.log(`打开模态窗口: original=${original}, preview=${preview}`);
+        
         const modal = document.getElementById('myModal');
         const modalImg = document.getElementById('img01');
         const exifInfo = document.getElementById('exif-info');
@@ -744,11 +746,18 @@ class ImageLoader {
         
         // 获取点击的图片元素位置信息
         const clickedImg = document.querySelector(`img[data-original="${original}"]`);
-        if (!clickedImg) return;
+        if (!clickedImg) {
+            console.error(`找不到图片元素: ${original}`);
+            return;
+        }
+        
+        console.log(`找到图片元素:`, clickedImg);
         
         // 检查是否已加载高清图
         const isHighResLoaded = clickedImg.getAttribute('data-highres-loaded') === 'true';
         const imageToUse = isHighResLoaded ? original : preview;
+        
+        console.log(`使用图片: ${imageToUse}, 高清图已加载: ${isHighResLoaded}`);
         
         const imgRect = clickedImg.getBoundingClientRect();
         const modalRect = modal.getBoundingClientRect();
@@ -1058,6 +1067,17 @@ class ImageLoader {
                 // 加载完成后替换预览图为原图
                 currentImgElement.src = originalUrl;
                 currentImgElement.setAttribute('data-highres-loaded', 'true');
+                
+                // 确保点击事件仍然有效
+                if (!currentImgElement.imgClickHandler) {
+                    const imgClickHandler = () => {
+                        // 直接打开模态窗口，因为已经加载完成
+                        this.openModal(originalUrl, originalUrl);
+                    };
+                    currentImgElement.addEventListener('click', imgClickHandler);
+                    currentImgElement.imgClickHandler = imgClickHandler;
+                }
+                
                 // 不自动隐藏遮罩，等待用户点击大图
                 break;
             case 'error':
@@ -1083,17 +1103,22 @@ class ImageLoader {
     
     // 添加到高清图加载队列
     addToHighResQueue(originalUrl, previewUrl) {
+        console.log(`尝试添加到高清图队列: ${originalUrl}`);
+        
         if (this.loadedHighRes.has(originalUrl)) {
+            console.log(`图片已加载完成，直接打开: ${originalUrl}`);
             // 已经加载完成，直接打开
-            this.openModal(originalUrl, previewUrl);
+            this.openModal(originalUrl, originalUrl);
             return;
         }
         
         if (this.loadingHighRes.has(originalUrl)) {
+            console.log(`图片正在加载中，跳过: ${originalUrl}`);
             // 正在加载中，不重复添加
             return;
         }
         
+        console.log(`添加到加载队列: ${originalUrl}`);
         // 添加到队列
         this.highResQueue.push({ originalUrl, previewUrl });
         this.processHighResQueue();

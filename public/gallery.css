@@ -123,6 +123,7 @@ body.dark .exif-info strong {
     z-index: 10;
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none; /* 允许点击穿透到下层元素 */
 }
 
 .loading-overlay .loading-spinner {
@@ -131,6 +132,7 @@ body.dark .exif-info strong {
     align-items: center;
     justify-content: center;
     color: #fff;
+    pointer-events: none; /* 确保内容也不会阻止点击 */
 }
 
 .loading-overlay .spinner {
@@ -149,6 +151,7 @@ body.dark .exif-info strong {
     align-items: center;
     justify-content: center;
     color: #4CAF50;
+    pointer-events: none; /* 确保内容也不会阻止点击 */
 }
 
 .loading-overlay .success-icon {
@@ -163,6 +166,7 @@ body.dark .exif-info strong {
     align-items: center;
     justify-content: center;
     color: #f44336;
+    pointer-events: none; /* 确保内容也不会阻止点击 */
 }
 
 .loading-overlay .error-icon {
