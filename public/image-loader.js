@@ -24,6 +24,31 @@ class ImageLoader {
         this.createColumns();
         this.setupScrollListener();
         this.setupResizeListener();
+        
+        // 迁移现有图片到容器结构（如果有的话）
+        this.migrateExistingImages();
+    }
+    
+    // 迁移现有图片到容器结构
+    migrateExistingImages() {
+        const existingImages = document.querySelectorAll('.gallery .column > img');
+        existingImages.forEach(img => {
+            // 检查图片是否已经在容器中
+            if (!img.closest('.image-container')) {
+                // 创建容器
+                const container = document.createElement('div');
+                container.className = 'image-container';
+                container.style.cssText = `
+                    position: relative;
+                    display: block;
+                    margin-bottom: 0.8em;
+                `;
+                
+                // 将图片移动到容器中
+                img.parentNode.insertBefore(container, img);
+                container.appendChild(img);
+            }
+        });
     }
 
     // 创建列元素
@@ -137,9 +162,13 @@ class ImageLoader {
     distributeImagesInOriginalOrder(images) {
         if (images.length === 0) return;
         
-        // 移除所有图片
+        // 移除所有图片容器
         images.forEach(img => {
-            if (img.parentNode) {
+            const container = img.closest('.image-container');
+            if (container && container.parentNode) {
+                container.parentNode.removeChild(container);
+            } else if (img.parentNode) {
+                // 如果没有容器，直接移除图片
                 img.parentNode.removeChild(img);
             }
         });
@@ -164,9 +193,23 @@ class ImageLoader {
                 img.dataset.originalOrder = i;
             }
             
-            // 将图片添加到最短的列
+            // 确保图片在容器中
+            let container = img.closest('.image-container');
+            if (!container) {
+                // 如果图片不在容器中，创建容器
+                container = document.createElement('div');
+                container.className = 'image-container';
+                container.style.cssText = `
+                    position: relative;
+                    display: block;
+                    margin-bottom: 0.8em;
+                `;
+                container.appendChild(img);
+            }
+            
+            // 将容器添加到最短的列
             const shortestColumnIndex = this.getShortestColumn();
-            this.columnElements[shortestColumnIndex].appendChild(img);
+            this.columnElements[shortestColumnIndex].appendChild(container);
         }
     }
 
@@ -334,9 +377,21 @@ class ImageLoader {
                     // 添加到已加载集合
                     this.loadedImageUrls.add(imageUrl);
                     
+                    // 创建图片包装容器
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'image-container';
+                    imgContainer.style.cssText = `
+                        position: relative;
+                        display: block;
+                        margin-bottom: 0.8em;
+                    `;
+                    
+                    // 将图片添加到容器中
+                    imgContainer.appendChild(img);
+                    
                     // 添加到最短列
                     const shortestColumnIndex = this.getShortestColumn();
-                    this.columnElements[shortestColumnIndex].appendChild(img);
+                    this.columnElements[shortestColumnIndex].appendChild(imgContainer);
                     
                     // 设置加载动画
                     setTimeout(() => {
@@ -952,8 +1007,14 @@ class ImageLoader {
             transition: opacity 0.3s ease;
         `;
         
+        // 找到图片容器（image-container）
+        const imgContainer = imgElement.closest('.image-container');
+        if (!imgContainer) {
+            console.error('找不到图片容器:', imgElement);
+            return overlay;
+        }
+        
         // 确保图片容器是相对定位
-        const imgContainer = imgElement.parentElement;
         if (imgContainer.style.position !== 'relative') {
             imgContainer.style.position = 'relative';
         }
@@ -974,6 +1035,10 @@ class ImageLoader {
         const overlay = this.loadingOverlays.get(originalUrl);
         if (!overlay) return;
         
+        // 重新找到图片元素（以防DOM结构变化）
+        const currentImgElement = document.querySelector(`img[data-original="${originalUrl}"]`);
+        if (!currentImgElement) return;
+        
         switch (status) {
             case 'loading':
                 overlay.innerHTML = `
@@ -991,8 +1056,8 @@ class ImageLoader {
                     </div>
                 `;
                 // 加载完成后替换预览图为原图
-                imgElement.src = originalUrl;
-                imgElement.setAttribute('data-highres-loaded', 'true');
+                currentImgElement.src = originalUrl;
+                currentImgElement.setAttribute('data-highres-loaded', 'true');
                 // 不自动隐藏遮罩，等待用户点击大图
                 break;
             case 'error':

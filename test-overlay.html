@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遮罩定位测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .gallery {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8em;
+        }
+        .image-container {
+            position: relative;
+            display: block;
+            margin-bottom: 0.8em;
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: block;
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .loading-overlay.visible {
+            opacity: 1;
+        }
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 8px;
+        }
+        .loading-success {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #4CAF50;
+        }
+        .success-icon {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .loading-overlay p {
+            margin: 0;
+            font-size: 12px;
+            text-align: center;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .test-button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <h1>遮罩定位测试</h1>
+    
+    <div class="test-container">
+        <h2>测试说明</h2>
+        <p>这个测试页面模拟了画廊的结构，验证遮罩是否只覆盖单个图片而不是整列。</p>
+        <p>点击"添加测试图片"按钮添加图片，然后点击图片测试遮罩定位。</p>
+    </div>
+    
+    <div class="test-container">
+        <h2>测试画廊</h2>
+        <div class="gallery">
+            <div class="column" id="column1">
+                <!-- 图片将在这里动态添加 -->
+            </div>
+            <div class="column" id="column2">
+                <!-- 图片将在这里动态添加 -->
+            </div>
+            <div class="column" id="column3">
+                <!-- 图片将在这里动态添加 -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>控制按钮</h2>
+        <button class="test-button" onclick="addTestImages()">添加测试图片</button>
+        <button class="test-button" onclick="testOverlay()">测试遮罩</button>
+        <button class="test-button" onclick="clearImages()">清除图片</button>
+    </div>
+    
+    <div class="test-container">
+        <h2>状态信息</h2>
+        <div class="status" id="status">
+            等待测试...
+        </div>
+    </div>
+
+    <script>
+        let imageCounter = 0;
+        
+        function addTestImages() {
+            const columns = document.querySelectorAll('.column');
+            const imageUrls = [
+                'https://via.placeholder.com/200x150/007bff/ffffff?text=图片1',
+                'https://via.placeholder.com/200x150/28a745/ffffff?text=图片2',
+                'https://via.placeholder.com/200x150/dc3545/ffffff?text=图片3',
+                'https://via.placeholder.com/200x150/ffc107/000000?text=图片4',
+                'https://via.placeholder.com/200x150/6f42c1/ffffff?text=图片5',
+                'https://via.placeholder.com/200x150/fd7e14/ffffff?text=图片6'
+            ];
+            
+            imageUrls.forEach((url, index) => {
+                const column = columns[index % columns.length];
+                
+                // 创建图片容器
+                const container = document.createElement('div');
+                container.className = 'image-container';
+                
+                // 创建图片
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `测试图片 ${imageCounter + 1}`;
+                img.dataset.original = url;
+                img.dataset.preview = url;
+                
+                // 添加点击事件
+                img.addEventListener('click', function() {
+                    testOverlayForImage(this);
+                });
+                
+                // 将图片添加到容器
+                container.appendChild(img);
+                
+                // 将容器添加到列
+                column.appendChild(container);
+                
+                imageCounter++;
+            });
+            
+            updateStatus(`已添加 ${imageUrls.length} 张测试图片`);
+        }
+        
+        function testOverlayForImage(imgElement) {
+            const originalUrl = imgElement.dataset.original;
+            
+            // 创建加载遮罩
+            const overlay = document.createElement('div');
+            overlay.className = 'loading-overlay';
+            overlay.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>加载大图中...</p>
+                </div>
+            `;
+            
+            // 找到图片容器
+            const imgContainer = imgElement.closest('.image-container');
+            if (!imgContainer) {
+                updateStatus('错误：找不到图片容器');
+                return;
+            }
+            
+            // 确保容器是相对定位
+            if (imgContainer.style.position !== 'relative') {
+                imgContainer.style.position = 'relative';
+            }
+            
+            // 将遮罩添加到容器中
+            imgContainer.appendChild(overlay);
+            
+            // 显示遮罩
+            setTimeout(() => {
+                overlay.classList.add('visible');
+            }, 10);
+            
+            updateStatus(`已为图片 ${originalUrl} 添加遮罩`);
+            
+            // 3秒后模拟加载完成
+            setTimeout(() => {
+                overlay.innerHTML = `
+                    <div class="loading-success">
+                        <div class="success-icon">✓</div>
+                        <p>已加载完成</p>
+                    </div>
+                `;
+                updateStatus(`图片 ${originalUrl} 加载完成`);
+                
+                // 5秒后隐藏遮罩
+                setTimeout(() => {
+                    overlay.classList.remove('visible');
+                    setTimeout(() => {
+                        if (overlay.parentElement) {
+                            overlay.parentElement.removeChild(overlay);
+                        }
+                    }, 300);
+                }, 5000);
+            }, 3000);
+        }
+        
+        function testOverlay() {
+            const images = document.querySelectorAll('.image-container img');
+            if (images.length === 0) {
+                updateStatus('请先添加测试图片');
+                return;
+            }
+            
+            // 为第一张图片测试遮罩
+            testOverlayForImage(images[0]);
+        }
+        
+        function clearImages() {
+            const containers = document.querySelectorAll('.image-container');
+            containers.forEach(container => {
+                container.remove();
+            });
+            imageCounter = 0;
+            updateStatus('已清除所有图片');
+        }
+        
+        function updateStatus(message) {
+            const statusElement = document.getElementById('status');
+            const timestamp = new Date().toLocaleTimeString();
+            statusElement.innerHTML = `[${timestamp}] ${message}`;
+        }
+    </script>
+</body>
+</html> 

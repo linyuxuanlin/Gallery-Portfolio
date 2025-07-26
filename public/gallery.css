@@ -229,6 +229,12 @@ body.dark .exif-info strong {
     gap: 0.8em;
 }
 
+.gallery .image-container {
+    position: relative;
+    display: block;
+    margin-bottom: 0.8em;
+}
+
 .gallery img {
     position: relative;
     z-index: 1;
@@ -237,11 +243,6 @@ body.dark .exif-info strong {
     border-radius: 8px;
     cursor: pointer;
     transition: transform 0.3s ease;
-}
-
-/* 确保图片容器可以正确定位遮罩 */
-.gallery .column > div {
-    position: relative;
     display: block;
 }
 
