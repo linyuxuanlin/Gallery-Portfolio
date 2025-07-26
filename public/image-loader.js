@@ -223,14 +223,42 @@ class ImageLoader {
         
         // 计算需要加载的图片数量
         const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
         const headerHeight = document.querySelector('header').offsetHeight;
         const availableHeight = viewportHeight - headerHeight;
-        const avgImageHeight = 200; 
         const imagesPerRow = this.columns;
+        
+        // 根据屏幕大小动态调整平均图片高度
+        let avgImageHeight;
+        if (viewportWidth < 600) {
+            avgImageHeight = 180; // 手机端图片较小
+        } else if (viewportWidth < 900) {
+            avgImageHeight = 200; // 平板端
+        } else if (viewportWidth < 1200) {
+            avgImageHeight = 220; // 小桌面
+        } else if (viewportWidth < 1500) {
+            avgImageHeight = 240; // 大桌面
+        } else {
+            avgImageHeight = 260; // 超大屏幕
+        }
         
         // 计算屏幕能显示多少行
         const rowsToFillScreen = Math.ceil(availableHeight / avgImageHeight);
-        const additionalRows = 2; 
+        
+        // 根据屏幕大小动态调整额外行数
+        let additionalRows;
+        if (viewportWidth < 600) {
+            additionalRows = 3; // 手机端：更多预加载
+        } else if (viewportWidth < 900) {
+            additionalRows = 2; // 平板端：中等预加载
+        } else if (viewportWidth < 1200) {
+            additionalRows = 2; // 小桌面：中等预加载
+        } else if (viewportWidth < 1500) {
+            additionalRows = 1; // 大桌面：较少预加载
+        } else {
+            additionalRows = 1; // 超大屏幕：最少预加载
+        }
+        
         const totalRowsToLoad = rowsToFillScreen + additionalRows;
         const maxImagesToLoad = totalRowsToLoad * imagesPerRow;
         
@@ -240,7 +268,7 @@ class ImageLoader {
         // 计算还需要加载多少图片
         let remainingToLoad = Math.max(imagesPerRow, maxImagesToLoad - loadedImagesCount);
         
-        console.log(`准备加载图片: 当前已加载=${loadedImagesCount}, 目标总数=${maxImagesToLoad}, 还需加载=${remainingToLoad}`);
+        console.log(`准备加载图片: 屏幕=${viewportWidth}x${viewportHeight}, 列数=${imagesPerRow}, 平均高度=${avgImageHeight}, 当前已加载=${loadedImagesCount}, 目标总数=${maxImagesToLoad}, 还需加载=${remainingToLoad}`);
         
         // 单张图片加载计数器
         let loadedInThisBatch = 0;
@@ -414,9 +442,38 @@ class ImageLoader {
         
         if (this.currentIndex >= images.length) return;
         
-        const imagesPerRow = this.columns;
-        const rowsToPreload = 2;
-        const preloadCount = imagesPerRow * rowsToPreload;
+        // 根据屏幕大小和列数动态调整预加载数量
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        // 计算动态预加载数量
+        let preloadCount;
+        
+        if (viewportWidth < 600) {
+            // 手机端：预加载更多图片，确保滚动流畅
+            const rowsToPreload = Math.ceil(viewportHeight / 200) + 2; // 屏幕高度对应的行数 + 2行
+            preloadCount = this.columns * rowsToPreload;
+        } else if (viewportWidth < 900) {
+            // 平板端：中等预加载
+            const rowsToPreload = Math.ceil(viewportHeight / 250) + 1;
+            preloadCount = this.columns * rowsToPreload;
+        } else if (viewportWidth < 1200) {
+            // 小桌面：较少预加载
+            const rowsToPreload = Math.ceil(viewportHeight / 300) + 1;
+            preloadCount = this.columns * rowsToPreload;
+        } else if (viewportWidth < 1500) {
+            // 大桌面：更少预加载
+            const rowsToPreload = Math.ceil(viewportHeight / 350) + 1;
+            preloadCount = this.columns * rowsToPreload;
+        } else {
+            // 超大屏幕：最少预加载
+            const rowsToPreload = Math.ceil(viewportHeight / 400) + 1;
+            preloadCount = this.columns * rowsToPreload;
+        }
+        
+        // 确保预加载数量在合理范围内
+        preloadCount = Math.max(this.columns * 2, Math.min(preloadCount, this.columns * 8));
+        
         const endIndex = Math.min(this.currentIndex + preloadCount, images.length);
         
         let preloadContainer = document.getElementById('preload-container');
@@ -436,7 +493,7 @@ class ImageLoader {
             preloadContainer.appendChild(preloadImg);
         }
         
-        console.log(`预加载了${endIndex - this.currentIndex}张图片`);
+        console.log(`预加载了${endIndex - this.currentIndex}张图片 (屏幕: ${viewportWidth}x${viewportHeight}, 列数: ${this.columns}, 预加载: ${preloadCount})`);
     }
 
     // 处理所有图片加载完成
@@ -489,16 +546,35 @@ class ImageLoader {
                 
                 const documentHeight = document.documentElement.scrollHeight;
                 const scrollPosition = window.scrollY + window.innerHeight;
-                const scrollThreshold = 500;
-                
+                const viewportWidth = window.innerWidth;
                 const viewportHeight = window.innerHeight;
+                
+                // 根据屏幕大小动态调整滚动阈值
+                let scrollThreshold;
+                if (viewportWidth < 600) {
+                    // 手机端：更早触发加载，确保流畅
+                    scrollThreshold = viewportHeight * 0.8;
+                } else if (viewportWidth < 900) {
+                    // 平板端：中等阈值
+                    scrollThreshold = viewportHeight * 0.6;
+                } else if (viewportWidth < 1200) {
+                    // 小桌面：较小阈值
+                    scrollThreshold = viewportHeight * 0.5;
+                } else if (viewportWidth < 1500) {
+                    // 大桌面：更小阈值
+                    scrollThreshold = viewportHeight * 0.4;
+                } else {
+                    // 超大屏幕：最小阈值
+                    scrollThreshold = viewportHeight * 0.3;
+                }
+                
                 const contentHeight = Math.max(...this.columnElements.map(col => col.offsetHeight || 0));
                 const needsMoreContent = contentHeight < (viewportHeight + (2 * 200));
                 
                 if ((scrollPosition > documentHeight - scrollThreshold) || needsMoreContent) {
                     const images = this.getCurrentImages();
                     if (this.currentIndex < images.length && !this.isScrollLoading) {
-                        console.log(`触发滚动加载: 滚动位置=${scrollPosition}, 文档高度=${documentHeight}, 内容高度=${contentHeight}`);
+                        console.log(`触发滚动加载: 滚动位置=${scrollPosition}, 文档高度=${documentHeight}, 阈值=${scrollThreshold}, 内容高度=${contentHeight}`);
                         this.isScrollLoading = true;
                         this.loadNextImages(this.currentTag);
                     }

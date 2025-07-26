@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>性能测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .metric strong {
+            color: #007bff;
+        }
+        .metric .value {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .performance-chart {
+            width: 100%;
+            height: 200px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            background: linear-gradient(to top, #007bff, #0056b3);
+            border-radius: 2px 2px 0 0;
+            transition: height 0.3s ease;
+        }
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 12px;
+            text-align: center;
+            width: 100%;
+        }
+        .log-container {
+            background: #000;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 4px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin: 2px 0;
+        }
+        .log-time {
+            color: #888;
+        }
+        .log-info {
+            color: #00ff00;
+        }
+        .log-warn {
+            color: #ffaa00;
+        }
+        .log-error {
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <h1>性能测试工具</h1>
+    
+    <div class="test-container">
+        <h2>设备信息</h2>
+        <div class="metric">
+            <strong>屏幕尺寸:</strong>
+            <span class="value" id="screen-size">检测中...</span>
+        </div>
+        <div class="metric">
+            <strong>视口尺寸:</strong>
+            <span class="value" id="viewport-size">检测中...</span>
+        </div>
+        <div class="metric">
+            <strong>设备像素比:</strong>
+            <span class="value" id="pixel-ratio">检测中...</span>
+        </div>
+        <div class="metric">
+            <strong>用户代理:</strong>
+            <span class="value" id="user-agent">检测中...</span>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>预加载性能</h2>
+        <div class="metric">
+            <strong>当前列数:</strong>
+            <span class="value" id="current-columns">-</span>
+        </div>
+        <div class="metric">
+            <strong>预加载数量:</strong>
+            <span class="value" id="preload-count">-</span>
+        </div>
+        <div class="metric">
+            <strong>滚动阈值:</strong>
+            <span class="value" id="scroll-threshold">-</span>
+        </div>
+        <div class="metric">
+            <strong>平均图片高度:</strong>
+            <span class="value" id="avg-image-height">-</span>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>加载统计</h2>
+        <div class="performance-chart" id="performance-chart">
+            <div class="chart-bar" style="left: 10%; width: 15%; height: 60%;">
+                <div class="chart-label">手机</div>
+            </div>
+            <div class="chart-bar" style="left: 30%; width: 15%; height: 80%;">
+                <div class="chart-label">平板</div>
+            </div>
+            <div class="chart-bar" style="left: 50%; width: 15%; height: 70%;">
+                <div class="chart-label">小桌面</div>
+            </div>
+            <div class="chart-bar" style="left: 70%; width: 15%; height: 50%;">
+                <div class="chart-label">大桌面</div>
+            </div>
+            <div class="chart-bar" style="left: 90%; width: 15%; height: 40%;">
+                <div class="chart-label">超大屏</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>实时日志</h2>
+        <div class="log-container" id="log-container">
+            <div class="log-entry">
+                <span class="log-time">[00:00:00]</span>
+                <span class="log-info">性能测试工具已启动</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 设备信息检测
+        function updateDeviceInfo() {
+            document.getElementById('screen-size').textContent = `${screen.width}x${screen.height}`;
+            document.getElementById('viewport-size').textContent = `${window.innerWidth}x${window.innerHeight}`;
+            document.getElementById('pixel-ratio').textContent = window.devicePixelRatio;
+            document.getElementById('user-agent').textContent = navigator.userAgent.substring(0, 50) + '...';
+        }
+        
+        // 计算预加载参数
+        function calculatePreloadParams() {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            let columns, preloadCount, scrollThreshold, avgImageHeight;
+            
+            if (viewportWidth < 600) {
+                columns = 2;
+                const rowsToPreload = Math.ceil(viewportHeight / 200) + 2;
+                preloadCount = columns * rowsToPreload;
+                scrollThreshold = viewportHeight * 0.8;
+                avgImageHeight = 180;
+            } else if (viewportWidth < 900) {
+                columns = 3;
+                const rowsToPreload = Math.ceil(viewportHeight / 250) + 1;
+                preloadCount = columns * rowsToPreload;
+                scrollThreshold = viewportHeight * 0.6;
+                avgImageHeight = 200;
+            } else if (viewportWidth < 1200) {
+                columns = 4;
+                const rowsToPreload = Math.ceil(viewportHeight / 300) + 1;
+                preloadCount = columns * rowsToPreload;
+                scrollThreshold = viewportHeight * 0.5;
+                avgImageHeight = 220;
+            } else if (viewportWidth < 1500) {
+                columns = 5;
+                const rowsToPreload = Math.ceil(viewportHeight / 350) + 1;
+                preloadCount = columns * rowsToPreload;
+                scrollThreshold = viewportHeight * 0.4;
+                avgImageHeight = 240;
+            } else {
+                columns = 6;
+                const rowsToPreload = Math.ceil(viewportHeight / 400) + 1;
+                preloadCount = columns * rowsToPreload;
+                scrollThreshold = viewportHeight * 0.3;
+                avgImageHeight = 260;
+            }
+            
+            // 确保预加载数量在合理范围内
+            preloadCount = Math.max(columns * 2, Math.min(preloadCount, columns * 8));
+            
+            return { columns, preloadCount, scrollThreshold, avgImageHeight };
+        }
+        
+        // 更新性能参数显示
+        function updatePerformanceParams() {
+            const params = calculatePreloadParams();
+            document.getElementById('current-columns').textContent = params.columns;
+            document.getElementById('preload-count').textContent = params.preloadCount;
+            document.getElementById('scroll-threshold').textContent = Math.round(params.scrollThreshold) + 'px';
+            document.getElementById('avg-image-height').textContent = params.avgImageHeight + 'px';
+        }
+        
+        // 添加日志
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('log-container');
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            
+            const time = new Date().toLocaleTimeString();
+            const className = `log-${type}`;
+            
+            logEntry.innerHTML = `
+                <span class="log-time">[${time}]</span>
+                <span class="${className}">${message}</span>
+            `;
+            
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            
+            // 限制日志条目数量
+            if (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.firstChild);
+            }
+        }
+        
+        // 模拟滚动事件
+        function simulateScroll() {
+            const params = calculatePreloadParams();
+            addLog(`模拟滚动触发: 阈值=${Math.round(params.scrollThreshold)}px, 预加载=${params.preloadCount}张图片`);
+        }
+        
+        // 模拟窗口大小变化
+        function simulateResize() {
+            const oldParams = calculatePreloadParams();
+            setTimeout(() => {
+                const newParams = calculatePreloadParams();
+                if (oldParams.columns !== newParams.columns) {
+                    addLog(`列数变化: ${oldParams.columns} -> ${newParams.columns}`, 'warn');
+                }
+                if (oldParams.preloadCount !== newParams.preloadCount) {
+                    addLog(`预加载数量变化: ${oldParams.preloadCount} -> ${newParams.preloadCount}`, 'info');
+                }
+            }, 100);
+        }
+        
+        // 初始化
+        updateDeviceInfo();
+        updatePerformanceParams();
+        addLog('设备信息已更新');
+        
+        // 监听窗口大小变化
+        window.addEventListener('resize', () => {
+            updateDeviceInfo();
+            updatePerformanceParams();
+            simulateResize();
+        });
+        
+        // 监听滚动事件
+        window.addEventListener('scroll', () => {
+            const params = calculatePreloadParams();
+            const scrollPosition = window.scrollY + window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            
+            if (scrollPosition > documentHeight - params.scrollThreshold) {
+                simulateScroll();
+            }
+        });
+        
+        // 定期更新性能统计
+        setInterval(() => {
+            const params = calculatePreloadParams();
+            addLog(`当前状态: 列数=${params.columns}, 预加载=${params.preloadCount}, 阈值=${Math.round(params.scrollThreshold)}px`);
+        }, 10000);
+        
+        // 添加测试按钮
+        const testButton = document.createElement('button');
+        testButton.textContent = '测试预加载性能';
+        testButton.style.cssText = 'padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;';
+        testButton.onclick = () => {
+            addLog('手动触发性能测试', 'info');
+            const params = calculatePreloadParams();
+            addLog(`测试结果: 列数=${params.columns}, 预加载=${params.preloadCount}`, 'info');
+        };
+        document.body.insertBefore(testButton, document.body.firstChild);
+    </script>
+</body>
+</html> 

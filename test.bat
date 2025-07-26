@@ -145,6 +145,28 @@ powershell -Command "try { $content = Get-Content 'public\assets\brightness_4.sv
 
 powershell -Command "try { $content = Get-Content 'public\assets\brightness_7.svg' -Raw; if($content -match '<svg') { Write-Host '✓ brightness_7.svg 格式正确' } else { Write-Host '✗ brightness_7.svg 格式错误' } } catch { Write-Host '✗ 无法读取 brightness_7.svg' }"
 
+:: 检查测试页面
+echo.
+echo 正在检查测试页面...
+
+if exist "test-icons.html" (
+    echo ✓ test-icons.html 存在
+) else (
+    echo ✗ test-icons.html 不存在
+)
+
+if exist "debug-icons.html" (
+    echo ✓ debug-icons.html 存在
+) else (
+    echo ✗ debug-icons.html 不存在
+)
+
+if exist "test-performance.html" (
+    echo ✓ test-performance.html 存在
+) else (
+    echo ✗ test-performance.html 不存在
+)
+
 echo.
 echo ========================================
 echo 测试完成!
@@ -153,7 +175,13 @@ echo 如果所有检查都通过，您可以:
 echo 1. 运行 npm run serve 进行本地测试
 echo 2. 访问 test-icons.html 测试图标加载
 echo 3. 访问 debug-icons.html 进行详细调试
-echo 4. 运行 deploy.bat 部署到 Cloudflare Pages
+echo 4. 访问 test-performance.html 测试预加载性能
+echo 5. 运行 deploy.bat 部署到 Cloudflare Pages
+echo.
+echo 新增功能:
+echo - 智能图标加载系统，支持多种路径格式
+echo - 动态预加载优化，根据屏幕大小调整
+echo - 增强的错误处理和调试工具
 echo ========================================
 
 pause 

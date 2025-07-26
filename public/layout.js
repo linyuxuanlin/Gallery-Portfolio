@@ -48,6 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 确保图标在页面完全加载后仍能正常工作
+    function ensureIconLoaded() {
+        const currentTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
+        if (!themeIcon.src || themeIcon.src.includes('undefined') || themeIcon.src.includes('null')) {
+            console.log('重新加载图标:', currentTheme);
+            loadIcon(currentTheme, themeIcon);
+        }
+    }
+
     themeToggle.addEventListener('click', () => {
         const isDark = document.body.classList.toggle('dark');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
@@ -74,5 +83,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         document.querySelector('footer').style.opacity = '1'; // 显示底栏
+        
+        // 确保图标在页面完全加载后仍能正常工作
+        setTimeout(ensureIconLoaded, 100);
+    });
+
+    // 监听DOM变化，确保图标不被其他脚本覆盖
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                const target = mutation.target;
+                if (target === themeIcon && (!target.src || target.src.includes('undefined'))) {
+                    console.log('检测到图标被重置，重新加载');
+                    ensureIconLoaded();
+                }
+            }
+        });
+    });
+
+    observer.observe(themeIcon, {
+        attributes: true,
+        attributeFilter: ['src']
     });
 });
