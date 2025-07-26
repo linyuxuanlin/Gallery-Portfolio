@@ -158,30 +158,73 @@ for /d %%i in ("%SOURCE_DIR%\*") do (
                     :: 写入EXIF信息
                     echo         "exif": { >> "%OUTPUT_FILE%"
                     
+                    :: 使用临时变量跟踪是否已写入属性
+                    set "first_exif_property=true"
+                    
                     if defined aperture (
-                        echo           "aperture": "!aperture!", >> "%OUTPUT_FILE%"
+                        if "!first_exif_property!"=="true" (
+                            set "first_exif_property=false"
+                        ) else (
+                            echo , >> "%OUTPUT_FILE%"
+                        )
+                        echo           "aperture": "!aperture!" >> "%OUTPUT_FILE%"
                     )
                     if defined shutter_speed (
-                        echo           "shutterSpeed": "!shutter_speed!", >> "%OUTPUT_FILE%"
+                        if "!first_exif_property!"=="true" (
+                            set "first_exif_property=false"
+                        ) else (
+                            echo , >> "%OUTPUT_FILE%"
+                        )
+                        echo           "shutterSpeed": "!shutter_speed!" >> "%OUTPUT_FILE%"
                     )
                     if defined iso (
-                        echo           "iso": "!iso!", >> "%OUTPUT_FILE%"
+                        if "!first_exif_property!"=="true" (
+                            set "first_exif_property=false"
+                        ) else (
+                            echo , >> "%OUTPUT_FILE%"
+                        )
+                        echo           "iso": "!iso!" >> "%OUTPUT_FILE%"
                     )
                     if defined focal_length (
-                        echo           "focalLength": "!focal_length!", >> "%OUTPUT_FILE%"
+                        if "!first_exif_property!"=="true" (
+                            set "first_exif_property=false"
+                        ) else (
+                            echo , >> "%OUTPUT_FILE%"
+                        )
+                        echo           "focalLength": "!focal_length!" >> "%OUTPUT_FILE%"
                     )
                     if defined camera (
-                        echo           "camera": "!camera!", >> "%OUTPUT_FILE%"
+                        if "!first_exif_property!"=="true" (
+                            set "first_exif_property=false"
+                        ) else (
+                            echo , >> "%OUTPUT_FILE%"
+                        )
+                        echo           "camera": "!camera!" >> "%OUTPUT_FILE%"
                     )
                     if defined lens (
-                        echo           "lens": "!lens!", >> "%OUTPUT_FILE%"
+                        if "!first_exif_property!"=="true" (
+                            set "first_exif_property=false"
+                        ) else (
+                            echo , >> "%OUTPUT_FILE%"
+                        )
+                        echo           "lens": "!lens!" >> "%OUTPUT_FILE%"
                     )
                     if defined gps_lat (
                         if defined gps_lon (
-                            echo           "gps": "!gps_lat!, !gps_lon!", >> "%OUTPUT_FILE%"
+                            if "!first_exif_property!"=="true" (
+                                set "first_exif_property=false"
+                            ) else (
+                                echo , >> "%OUTPUT_FILE%"
+                            )
+                            echo           "gps": "!gps_lat!, !gps_lon!" >> "%OUTPUT_FILE%"
                         )
                     )
                     if defined date_time (
+                        if "!first_exif_property!"=="true" (
+                            set "first_exif_property=false"
+                        ) else (
+                            echo , >> "%OUTPUT_FILE%"
+                        )
                         echo           "dateTime": "!date_time!" >> "%OUTPUT_FILE%"
                     )
                     

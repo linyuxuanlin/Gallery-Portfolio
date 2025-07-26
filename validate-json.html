@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON验证工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .error {
+            color: red;
+            background: #ffe6e6;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            color: green;
+            background: #e6ffe6;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>JSON验证工具</h1>
+    
+    <div class="container">
+        <h2>验证gallery-index.json</h2>
+        <button onclick="validateFile()">验证文件</button>
+        <button onclick="loadFile()">加载文件</button>
+        <div id="result"></div>
+    </div>
+    
+    <div class="container">
+        <h2>手动验证JSON</h2>
+        <textarea id="jsonInput" placeholder="粘贴JSON内容到这里..."></textarea>
+        <br>
+        <button onclick="validateInput()">验证输入</button>
+        <div id="inputResult"></div>
+    </div>
+
+    <script>
+        function validateFile() {
+            fetch('gallery-index.json')
+                .then(response => response.text())
+                .then(text => {
+                    try {
+                        const json = JSON.parse(text);
+                        document.getElementById('result').innerHTML = `
+                            <div class="success">
+                                ✓ JSON格式正确！<br>
+                                总分类数: ${Object.keys(json.gallery).length}<br>
+                                总图片数: ${json.total}<br>
+                                分类列表: ${Object.keys(json.gallery).join(', ')}
+                            </div>
+                        `;
+                    } catch (error) {
+                        document.getElementById('result').innerHTML = `
+                            <div class="error">
+                                ✗ JSON格式错误: ${error.message}<br>
+                                位置: ${error.message.includes('position') ? error.message.split('position')[1] : '未知'}
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `
+                        <div class="error">
+                            ✗ 无法加载文件: ${error.message}
+                        </div>
+                    `;
+                });
+        }
+        
+        function loadFile() {
+            fetch('gallery-index.json')
+                .then(response => response.text())
+                .then(text => {
+                    document.getElementById('jsonInput').value = text;
+                    document.getElementById('inputResult').innerHTML = `
+                        <div class="success">✓ 文件已加载到输入框</div>
+                    `;
+                })
+                .catch(error => {
+                    document.getElementById('inputResult').innerHTML = `
+                        <div class="error">✗ 无法加载文件: ${error.message}</div>
+                    `;
+                });
+        }
+        
+        function validateInput() {
+            const input = document.getElementById('jsonInput').value;
+            try {
+                const json = JSON.parse(input);
+                document.getElementById('inputResult').innerHTML = `
+                    <div class="success">
+                        ✓ JSON格式正确！<br>
+                        总分类数: ${Object.keys(json.gallery).length}<br>
+                        总图片数: ${json.total}<br>
+                        分类列表: ${Object.keys(json.gallery).join(', ')}
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('inputResult').innerHTML = `
+                    <div class="error">
+                        ✗ JSON格式错误: ${error.message}<br>
+                        位置: ${error.message.includes('position') ? error.message.split('position')[1] : '未知'}
+                    </div>
+                `;
+            }
+        }
+        
+        // 页面加载时自动验证
+        window.addEventListener('load', validateFile);
+    </script>
+</body>
+</html> 

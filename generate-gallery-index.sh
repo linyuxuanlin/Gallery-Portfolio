@@ -142,28 +142,71 @@ for category_dir in "$SOURCE_DIR"/*/; do
                                 # 写入EXIF信息
                                 echo "        \"exif\": {" >> "$OUTPUT_FILE"
                                 
+                                # 使用临时变量跟踪是否已写入属性
+                                first_exif_property=true
+                                
                                 if [ -n "$aperture" ]; then
-                                    echo "          \"aperture\": \"$aperture\"," >> "$OUTPUT_FILE"
+                                    if [ "$first_exif_property" = true ]; then
+                                        first_exif_property=false
+                                    else
+                                        echo "," >> "$OUTPUT_FILE"
+                                    fi
+                                    echo "          \"aperture\": \"$aperture\"" >> "$OUTPUT_FILE"
                                 fi
                                 if [ -n "$shutter_speed" ]; then
-                                    echo "          \"shutterSpeed\": \"$shutter_speed\"," >> "$OUTPUT_FILE"
+                                    if [ "$first_exif_property" = true ]; then
+                                        first_exif_property=false
+                                    else
+                                        echo "," >> "$OUTPUT_FILE"
+                                    fi
+                                    echo "          \"shutterSpeed\": \"$shutter_speed\"" >> "$OUTPUT_FILE"
                                 fi
                                 if [ -n "$iso" ]; then
-                                    echo "          \"iso\": \"$iso\"," >> "$OUTPUT_FILE"
+                                    if [ "$first_exif_property" = true ]; then
+                                        first_exif_property=false
+                                    else
+                                        echo "," >> "$OUTPUT_FILE"
+                                    fi
+                                    echo "          \"iso\": \"$iso\"" >> "$OUTPUT_FILE"
                                 fi
                                 if [ -n "$focal_length" ]; then
-                                    echo "          \"focalLength\": \"$focal_length\"," >> "$OUTPUT_FILE"
+                                    if [ "$first_exif_property" = true ]; then
+                                        first_exif_property=false
+                                    else
+                                        echo "," >> "$OUTPUT_FILE"
+                                    fi
+                                    echo "          \"focalLength\": \"$focal_length\"" >> "$OUTPUT_FILE"
                                 fi
                                 if [ -n "$camera" ]; then
-                                    echo "          \"camera\": \"$camera\"," >> "$OUTPUT_FILE"
+                                    if [ "$first_exif_property" = true ]; then
+                                        first_exif_property=false
+                                    else
+                                        echo "," >> "$OUTPUT_FILE"
+                                    fi
+                                    echo "          \"camera\": \"$camera\"" >> "$OUTPUT_FILE"
                                 fi
                                 if [ -n "$lens" ]; then
-                                    echo "          \"lens\": \"$lens\"," >> "$OUTPUT_FILE"
+                                    if [ "$first_exif_property" = true ]; then
+                                        first_exif_property=false
+                                    else
+                                        echo "," >> "$OUTPUT_FILE"
+                                    fi
+                                    echo "          \"lens\": \"$lens\"" >> "$OUTPUT_FILE"
                                 fi
                                 if [ -n "$gps_lat" ] && [ -n "$gps_lon" ]; then
-                                    echo "          \"gps\": \"$gps_lat, $gps_lon\"," >> "$OUTPUT_FILE"
+                                    if [ "$first_exif_property" = true ]; then
+                                        first_exif_property=false
+                                    else
+                                        echo "," >> "$OUTPUT_FILE"
+                                    fi
+                                    echo "          \"gps\": \"$gps_lat, $gps_lon\"" >> "$OUTPUT_FILE"
                                 fi
                                 if [ -n "$date_time" ]; then
+                                    if [ "$first_exif_property" = true ]; then
+                                        first_exif_property=false
+                                    else
+                                        echo "," >> "$OUTPUT_FILE"
+                                    fi
                                     echo "          \"dateTime\": \"$date_time\"" >> "$OUTPUT_FILE"
                                 fi
                                 
