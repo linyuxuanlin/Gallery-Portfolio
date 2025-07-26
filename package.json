@@ -1,28 +1,19 @@
 {
-  "name": "gallery-portfolio",
+  "name": "gallery-portfolio-static",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "静态图片画廊网站，支持Cloudflare Pages部署",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "deploy:staging": "wrangler deploy --env staging"
+    "build": "echo '静态网站，无需构建'",
+    "dev": "echo '请使用本地服务器运行，如: npx serve .'",
+    "serve": "npx serve .",
+    "generate-index": "generate-gallery-index.bat",
+    "generate-previews": "generate-previews.bat"
   },
-  "keywords": [],
+  "keywords": ["gallery", "portfolio", "static", "cloudflare-pages"],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@aws-sdk/client-s3": "^3.583.0",
-    "@aws-sdk/lib-storage": "^3.758.0",
-    "aws-sdk": "^2.1626.0",
-    "dotenv": "^16.4.5",
-    "exif-parser": "^0.1.12",
-    "express": "^4.19.2",
-    "sharp": "^0.33.4"
-  },
   "devDependencies": {
-    "wrangler": "^4.26.0"
+    "serve": "^14.2.1"
   }
 }

@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gallery-Portfolio</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="gallery.css" />
-    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="public/styles.css" />
+    <link rel="stylesheet" href="public/gallery.css" />
+    <link rel="icon" href="public/assets/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
     <header>
@@ -20,14 +20,14 @@
           target="_blank"
         >
           <img 
-            src="/assets/github.svg" 
+            src="public/assets/github.svg" 
             alt="GitHub 仓库链接" 
             aria-label="访问 GitHub 仓库"
           />
         </a>
         <button id="theme-toggle" aria-label="切换深色/浅色主题">
           <img
-            src="/assets/brightness_4.svg"
+            src="public/assets/brightness_4.svg"
             alt="Toggle Theme"
             id="theme-icon"
           />
@@ -44,9 +44,12 @@
       <div id="exif-info"></div>
     </div>
 
-    <script src="layout.js"></script>
-    <script src="gallery.js"></script>
-    <script src="exif.js"></script>
-    <script src="notification.js"></script>
+    <!-- 加载JavaScript模块 -->
+    <script src="public/data-loader.js"></script>
+    <script src="public/tag-filter.js"></script>
+    <script src="public/image-loader.js"></script>
+    <script src="public/auto-scroll.js"></script>
+    <script src="public/layout.js"></script>
+    <script src="public/gallery.js"></script>
   </body>
-</html>
+</html> 
