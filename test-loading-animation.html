@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加载动画测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .image-item {
+            position: relative;
+            width: 200px;
+            height: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .loading-overlay.visible {
+            opacity: 1;
+        }
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 8px;
+        }
+        .loading-success {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #4CAF50;
+        }
+        .success-icon {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .loading-error {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #f44336;
+        }
+        .error-icon {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .loading-overlay p {
+            margin: 0;
+            font-size: 12px;
+            text-align: center;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .test-button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <h1>加载动画测试</h1>
+    
+    <div class="test-container">
+        <h2>功能说明</h2>
+        <p>点击图片开始加载大图，加载过程中显示遮罩和动画，加载完成后显示绿色勾号。</p>
+        <p>可以同时点击多张图片，系统会按顺序加载。</p>
+    </div>
+    
+    <div class="test-container">
+        <h2>测试图片</h2>
+        <div class="gallery">
+            <div class="image-item" onclick="startLoading(this, 'image1')">
+                <img src="https://via.placeholder.com/200x150/007bff/ffffff?text=图片1" alt="测试图片1">
+            </div>
+            <div class="image-item" onclick="startLoading(this, 'image2')">
+                <img src="https://via.placeholder.com/200x150/28a745/ffffff?text=图片2" alt="测试图片2">
+            </div>
+            <div class="image-item" onclick="startLoading(this, 'image3')">
+                <img src="https://via.placeholder.com/200x150/dc3545/ffffff?text=图片3" alt="测试图片3">
+            </div>
+            <div class="image-item" onclick="startLoading(this, 'image4')">
+                <img src="https://via.placeholder.com/200x150/ffc107/000000?text=图片4" alt="测试图片4">
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>控制按钮</h2>
+        <button class="test-button" onclick="testSuccess()">测试成功状态</button>
+        <button class="test-button" onclick="testError()">测试失败状态</button>
+        <button class="test-button" onclick="clearAll()">清除所有状态</button>
+    </div>
+    
+    <div class="test-container">
+        <h2>状态信息</h2>
+        <div class="status" id="status">
+            等待测试...
+        </div>
+    </div>
+
+    <script>
+        const loadingStates = new Map();
+        const loadingQueue = [];
+        let processingQueue = false;
+        
+        function startLoading(imageItem, imageId) {
+            if (loadingStates.has(imageId)) {
+                updateStatus(`图片 ${imageId} 已在加载中或已完成`);
+                return;
+            }
+            
+            // 创建加载遮罩
+            const overlay = document.createElement('div');
+            overlay.className = 'loading-overlay';
+            overlay.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>加载大图中...</p>
+                </div>
+            `;
+            
+            imageItem.appendChild(overlay);
+            
+            // 显示遮罩
+            setTimeout(() => {
+                overlay.classList.add('visible');
+            }, 10);
+            
+            // 添加到队列
+            loadingQueue.push({ imageItem, imageId, overlay });
+            loadingStates.set(imageId, 'queued');
+            
+            updateStatus(`图片 ${imageId} 已添加到加载队列`);
+            
+            // 处理队列
+            processQueue();
+        }
+        
+        function processQueue() {
+            if (processingQueue || loadingQueue.length === 0) return;
+            
+            processingQueue = true;
+            const item = loadingQueue.shift();
+            
+            updateStatus(`开始加载图片 ${item.imageId}`);
+            loadingStates.set(item.imageId, 'loading');
+            
+            // 模拟加载过程
+            const loadTime = Math.random() * 3000 + 1000; // 1-4秒
+            
+            setTimeout(() => {
+                const success = Math.random() > 0.2; // 80%成功率
+                
+                if (success) {
+                    updateLoadingState(item.overlay, 'success');
+                    loadingStates.set(item.imageId, 'success');
+                    updateStatus(`图片 ${item.imageId} 加载成功`);
+                } else {
+                    updateLoadingState(item.overlay, 'error');
+                    loadingStates.set(item.imageId, 'error');
+                    updateStatus(`图片 ${item.imageId} 加载失败`);
+                }
+                
+                // 3秒后隐藏遮罩
+                setTimeout(() => {
+                    item.overlay.classList.remove('visible');
+                    setTimeout(() => {
+                        if (item.overlay.parentElement) {
+                            item.overlay.parentElement.removeChild(item.overlay);
+                        }
+                        loadingStates.delete(item.imageId);
+                    }, 300);
+                }, 3000);
+                
+                processingQueue = false;
+                processQueue(); // 处理下一个
+            }, loadTime);
+        }
+        
+        function updateLoadingState(overlay, status) {
+            switch (status) {
+                case 'loading':
+                    overlay.innerHTML = `
+                        <div class="loading-spinner">
+                            <div class="spinner"></div>
+                            <p>加载大图中...</p>
+                        </div>
+                    `;
+                    break;
+                case 'success':
+                    overlay.innerHTML = `
+                        <div class="loading-success">
+                            <div class="success-icon">✓</div>
+                            <p>已加载完成</p>
+                        </div>
+                    `;
+                    break;
+                case 'error':
+                    overlay.innerHTML = `
+                        <div class="loading-error">
+                            <div class="error-icon">✗</div>
+                            <p>加载失败</p>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+        
+        function testSuccess() {
+            const overlays = document.querySelectorAll('.loading-overlay');
+            overlays.forEach(overlay => {
+                updateLoadingState(overlay, 'success');
+            });
+            updateStatus('所有加载状态设置为成功');
+        }
+        
+        function testError() {
+            const overlays = document.querySelectorAll('.loading-overlay');
+            overlays.forEach(overlay => {
+                updateLoadingState(overlay, 'error');
+            });
+            updateStatus('所有加载状态设置为失败');
+        }
+        
+        function clearAll() {
+            const overlays = document.querySelectorAll('.loading-overlay');
+            overlays.forEach(overlay => {
+                overlay.classList.remove('visible');
+                setTimeout(() => {
+                    if (overlay.parentElement) {
+                        overlay.parentElement.removeChild(overlay);
+                    }
+                }, 300);
+            });
+            loadingStates.clear();
+            loadingQueue.length = 0;
+            processingQueue = false;
+            updateStatus('已清除所有状态');
+        }
+        
+        function updateStatus(message) {
+            const statusElement = document.getElementById('status');
+            const timestamp = new Date().toLocaleTimeString();
+            statusElement.innerHTML = `[${timestamp}] ${message}`;
+        }
+    </script>
+</body>
+</html> 

@@ -108,65 +108,159 @@ body.dark .exif-info strong {
   color: #81C784;
 }
 
-.gallery .column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8em;
-  position: relative; /* 确保子元素的z-index正常工作 */
+/* Loading overlay styles */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-/* Modal styles */
+.loading-overlay .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.loading-overlay .spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 8px;
+}
+
+.loading-overlay .loading-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #4CAF50;
+}
+
+.loading-overlay .success-icon {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.loading-overlay .loading-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #f44336;
+}
+
+.loading-overlay .error-icon {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.loading-overlay p {
+    margin: 0;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Modal animation improvements */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.9);
-  opacity: 1;
-  transition: opacity 0.3s ease; /* 添加平滑过渡 */
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .modal-content {
-  margin: auto;
-  margin-top: 100px; /* Top margin */
-  display: block;
-  max-width: 90%;
-  max-height: 80%; /* Adjust to accommodate caption and exif-info */
-  width: auto;
-  height: auto;
+    margin: auto;
+    margin-top: 100px;
+    display: block;
+    max-width: 90%;
+    max-height: 80%;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
+/* Enhanced modal animation */
+.modal.animate-in .modal-content {
+    animation: modalZoomIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes modalZoomIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Gallery image container positioning */
+.gallery .column {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+}
+
+.gallery img {
+    position: relative;
+    z-index: 1;
+}
+
+/* Modal styles */
 .close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
-  color: #fff;
-  font-size: 40px;
-  font-weight: bold;
-  transition: 0.3s;
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
 .close:hover,
 .close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 #caption,
 #exif-info {
-  margin: auto;
-  display: block;
-  width: 90%;
-  max-width: 700px;
-  text-align: center;
-  color: #ccc;
-  padding: 10px 0;
+    margin: auto;
+    display: block;
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
 }
 
 /* Disable scrolling */
