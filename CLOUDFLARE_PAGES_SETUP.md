@@ -40,10 +40,11 @@
 
 项目已配置 `wrangler.toml` 文件，Cloudflare Pages会自动：
 
-1. 安装Node.js 18
-2. 运行 `npm install` 安装依赖
-3. 运行 `npm run generate-index` 生成索引文件
-4. 部署所有文件到CDN
+1. 运行 `npm install` 安装依赖
+2. 运行 `npm run generate-index` 生成索引文件
+3. 部署所有文件到CDN
+
+**注意**: 如果构建失败，请在Cloudflare Pages控制台中设置Node.js版本为18或更高版本。
 
 ## 故障排除
 

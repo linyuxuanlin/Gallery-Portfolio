@@ -1,23 +1,2 @@
 [build]
-command = "npm run generate-index"
-
-[build.environment]
-NODE_VERSION = "18"
-
-[pages_build_output_dir]
-path = "."
-
-[[pages_build_output_dir.include]]
-pattern = "**/*"
-
-[[pages_build_output_dir.exclude]]
-pattern = "node_modules/**/*"
-
-[[pages_build_output_dir.exclude]]
-pattern = ".git/**/*"
-
-[[pages_build_output_dir.exclude]]
-pattern = "*.log"
-
-[[pages_build_output_dir.exclude]]
-pattern = ".env*" 
+command = "npm run generate-index" 

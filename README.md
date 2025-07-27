@@ -131,7 +131,9 @@ deploy.bat
 3. 进入 "Settings" → "Environment variables"
 4. 添加所有必需的环境变量（详见 `CLOUDFLARE_PAGES_SETUP.md`）
 
-**重要**: 如果环境变量未设置，构建会失败且不会生成 `gallery-index.json` 文件。
+**重要**: 
+- 如果环境变量未设置，构建会失败且不会生成 `gallery-index.json` 文件
+- 如果构建失败，请检查Node.js版本设置（建议使用18或更高版本）
 
 ## 📝 配置说明
 
