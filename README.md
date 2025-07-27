@@ -100,10 +100,12 @@ const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片�
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {
     const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-    const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.${fileExt}`;
+    const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
     return { originalUrl, previewUrl };
 }
 ```
+
+**注意：** 预览图统一使用 `.webp` 格式，无论原图是什么格式。
 
 **支持的图床服务示例：**
 - Cloudflare R2: `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/`
@@ -240,10 +242,12 @@ const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片�
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {
     const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-    const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.${fileExt}`;
+    const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
     return { originalUrl, previewUrl };
 }
 ```
+
+**注意：** 预览图统一使用 `.webp` 格式，无论原图是什么格式。
 
 ## 🛠️ 开发
 

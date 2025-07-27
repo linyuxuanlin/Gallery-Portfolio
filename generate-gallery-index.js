@@ -97,7 +97,7 @@ function extractExifInfo(imagePath) {
 // 构建图片URL
 function buildImageUrls(categoryName, fileName, fileExt) {
     const originalUrl = `https://media.wiki-power.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-    const previewUrl = `https://media.wiki-power.com/gallery/0_preview/${categoryName}/${fileName}.${fileExt}`;
+    const previewUrl = `https://media.wiki-power.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
     return { originalUrl, previewUrl };
 }
 
