@@ -190,7 +190,7 @@ body.dark #exif-info {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   z-index: 1002;
-  display: flex;
+  display: none;
   align-items: center;
   gap: 8px;
 }
@@ -206,9 +206,19 @@ body.dark #exif-info {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.load-original-btn::before {
-  content: "📷";
-  font-size: 16px;
+/* 按钮加载状态 */
+.load-original-btn.loading {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.load-original-btn .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 /* 深色主题下的按钮样式 */

@@ -759,6 +759,10 @@ class ImageLoader {
         this.currentOriginalUrl = original;
         this.isModalOpen = true;
         
+        // 显示加载原图按钮
+        const loadOriginalBtn = document.getElementById('load-original-btn');
+        loadOriginalBtn.style.display = 'flex';
+        
         // 获取EXIF信息
         this.getExifInfo(original).then(exifData => {
             // 检查模态窗口是否仍然打开
@@ -832,19 +836,9 @@ class ImageLoader {
         const exifInfo = document.getElementById('exif-info');
         const loadOriginalBtn = document.getElementById('load-original-btn');
 
-        // 创建加载动画
-        const createLoadingSpinner = () => {
-            return `
-                <div class="loading-spinner">
-                    <div class="spinner"></div>
-                    <p>加载原图中...</p>
-                </div>
-            `;
-        };
-
-        // 显示加载动画
-        exifInfo.innerHTML = createLoadingSpinner();
-        loadOriginalBtn.style.display = 'none';
+        // 在按钮上显示加载动画
+        loadOriginalBtn.innerHTML = '<div class="spinner"></div><span>加载中...</span>';
+        loadOriginalBtn.classList.add('loading');
 
         // 记录图片尺寸变化
         let lastWidth = 0;
@@ -898,6 +892,10 @@ class ImageLoader {
             modalImg.src = this.currentOriginalUrl;
             modalImg.style.filter = 'none';
 
+            // 恢复按钮状态
+            loadOriginalBtn.innerHTML = '加载原图';
+            loadOriginalBtn.classList.remove('loading');
+
             // 获取EXIF信息
             this.getExifInfo(this.currentOriginalUrl).then(exifData => {
                 // 再次检查模态窗口是否仍然打开
@@ -919,7 +917,9 @@ class ImageLoader {
             if (this.isModalOpen) {
                 modalImg.style.filter = 'none';
                 exifInfo.innerHTML = '<p style="color:red;">原图加载失败</p>';
-                loadOriginalBtn.style.display = 'block';
+                // 恢复按钮状态
+                loadOriginalBtn.innerHTML = '加载原图';
+                loadOriginalBtn.classList.remove('loading');
             }
         };
 
@@ -969,10 +969,17 @@ class ImageLoader {
     // 关闭模态窗口
     closeModal() {
         const modal = document.getElementById('myModal');
+        const loadOriginalBtn = document.getElementById('load-original-btn');
+        
         modal.style.opacity = '0';
         
         // 标记模态窗口已关闭
         this.isModalOpen = false;
+        
+        // 重置按钮状态
+        loadOriginalBtn.innerHTML = '加载原图';
+        loadOriginalBtn.classList.remove('loading');
+        loadOriginalBtn.style.display = 'none';
         
         // 取消正在加载的高清图
         if (this.currentHighResImage) {
