@@ -759,9 +759,16 @@ class ImageLoader {
         this.currentOriginalUrl = original;
         this.isModalOpen = true;
         
-        // 显示加载原图按钮
+        // 判断是否已经是原图
+        const isAlreadyOriginal = original === preview;
+        
+        // 显示加载原图按钮（只有在不是原图时才显示）
         const loadOriginalBtn = document.getElementById('load-original-btn');
-        loadOriginalBtn.style.display = 'flex';
+        if (!isAlreadyOriginal) {
+            loadOriginalBtn.style.display = 'flex';
+        } else {
+            loadOriginalBtn.style.display = 'none';
+        }
         
         // 获取EXIF信息
         this.getExifInfo(original).then(exifData => {

@@ -219,6 +219,14 @@ body.dark #exif-info {
   border-top: 2px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.load-original-btn span {
+  vertical-align: middle;
+  line-height: 1;
 }
 
 /* 深色主题下的按钮样式 */
