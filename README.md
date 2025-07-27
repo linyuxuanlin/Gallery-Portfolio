@@ -35,6 +35,7 @@ Gallery-Portfolio
 - 🔄 **智能加载** - 预览图缺失时自动加载原图
 - 📸 **EXIF信息** - 显示光圈、快门、ISO等摄影参数
 - 🌍 **跨平台支持** - 提供Windows、Linux和MacOS脚本
+- 🔗 **图床兼容** - 支持任意图床服务（Cloudflare R2、阿里云OSS、腾讯云COS等）
 
 ## 🏗️ 项目结构
 
@@ -64,24 +65,64 @@ Gallery-Portfolio/
 
 ## 🚀 快速开始
 
-### 1. 准备摄影作品目录
+### 1. 配置本地摄影作品目录
 
-将您的摄影作品按以下结构组织：
+**重要说明：** 本项目的工作原理是读取本地目录生成远程图床的文件列表。你需要 **手动配置本地目录与远程图床的同步**。
+
+#### 1.1 创建本地摄影作品目录
+
+将你的图片按以下结构组织到本地目录：
 
 ```
-C:\Users\Power\Wiki-media\gallery\
-├── Hongkong\
+本地目录路径/
+├── Hongkong\              # 分类文件夹
 │   ├── DSC01475.JPG
 │   └── DSC01476.JPG
 ├── Kyoto\
 │   ├── DSC02580.JPG
 │   └── DSC02581.JPG
-└── 0_preview\              # 预览图目录（自动生成）
+└── 0_preview\            # 预览图目录（自动生成）
     ├── Hongkong\
     └── Kyoto\
 ```
 
-### 2. 生成预览图
+#### 1.2 配置本地目录路径
+
+**Windows 用户** - 编辑 `generate-gallery-index.bat` 文件：
+```batch
+set "SOURCE_DIR=C:\Users\YourName\Pictures\gallery"
+```
+
+**Linux/macOS 用户** - 编辑 `generate-gallery-index.sh` 文件：
+```bash
+SOURCE_DIR="/home/username/Pictures/gallery"
+```
+
+#### 1.3 配置图床域名
+
+**Windows 用户** - 编辑 `generate-gallery-index.bat` 文件：
+```batch
+set "original_url=https://your-domain.com/gallery/!category_name!/!file_name!!file_ext!"
+set "preview_url=https://your-domain.com/gallery/0_preview/!category_name!/!file_name!!file_ext!"
+```
+
+**Linux/macOS 用户** - 编辑 `generate-gallery-index.sh` 文件：
+```bash
+original_url="https://your-domain.com/gallery/$category_name/$file_name.$file_ext"
+preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name.$file_ext"
+```
+
+**支持的图床服务示例：**
+- Cloudflare R2: `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/`
+- 阿里云OSS: `https://your-bucket.oss-cn-region.aliyuncs.com/gallery/`
+- 腾讯云COS: `https://your-bucket.cos.region.myqcloud.com/gallery/`
+- 七牛云: `https://your-domain.com/gallery/`
+
+### 2. 同步本地目录到远程图床
+
+**重要：** 你需要手动将本地目录中的图片文件同步到你的图床服务。
+
+### 3. 生成预览图
 
 #### Windows 用户
 ```bash
@@ -96,7 +137,7 @@ chmod +x generate-previews.sh
 
 **注意：** 需要先安装 [ImageMagick](https://imagemagick.org/script/download.php#windows)
 
-### 3. 生成作品索引
+### 4. 生成作品索引
 
 #### Windows 用户
 ```bash
@@ -111,7 +152,7 @@ chmod +x generate-gallery-index.sh
 
 这将生成 `gallery-index.json` 文件，包含所有摄影作品的信息。
 
-### 4. 本地测试
+### 5. 本地测试
 
 使用本地服务器运行：
 
@@ -125,7 +166,7 @@ npm run serve
 npx serve .
 ```
 
-### 5. 部署到 Cloudflare Pages
+### 6. 部署到 Cloudflare Pages
 
 #### Windows 用户
 ```bash
@@ -161,8 +202,8 @@ chmod +x deploy.sh
 
 摄影作品URL使用以下格式：
 
-- **原图**: `https://media.wiki-power.com/gallery/{分类}/{文件名}`
-- **预览图**: `https://media.wiki-power.com/gallery/0_preview/{分类}/{文件名}`
+- **原图**: `https://your-domain.com/gallery/{分类}/{文件名}`
+- **预览图**: `https://your-domain.com/gallery/0_preview/{分类}/{文件名}`
 
 ### 预览图缺失检测
 
@@ -177,14 +218,14 @@ chmod +x deploy.sh
 编辑 `generate-gallery-index.bat` 文件中的以下变量：
 
 ```batch
-set "SOURCE_DIR=C:\Users\Power\Wiki-media\gallery"
+set "SOURCE_DIR=C:\Users\YourName\Pictures\gallery"
 ```
 
 #### Linux/macOS 用户
 编辑 `generate-gallery-index.sh` 文件中的以下变量：
 
 ```bash
-SOURCE_DIR="/home/user/Wiki-media/gallery"
+SOURCE_DIR="/home/username/Pictures/gallery"
 ```
 
 ### 自定义图床域名
@@ -275,6 +316,7 @@ preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name
    - 检查 `gallery-index.json` 文件是否存在
    - 确认作品URL是否正确
    - 检查网络连接
+   - 确认本地目录与远程图床已同步
 
 2. **预览图生成失败**
    - 确认已安装 ImageMagick
@@ -285,6 +327,11 @@ preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name
    - 确认已安装并登录 Wrangler
    - 检查项目名称是否可用
    - 确认文件权限正确
+
+4. **图片无法加载**
+   - 检查图床域名配置是否正确
+   - 确认图片文件已上传到图床
+   - 检查图床服务的访问权限设置
 
 ### 调试模式
 
