@@ -749,11 +749,16 @@ class ImageLoader {
             return exifHtml;
         };
         
-        // 显示预览图
-        console.log(`设置模态窗口预览图: ${preview}`);
-        modalImg.src = preview;
-        modalImg.style.filter = 'none';
-        modalImg.style.transition = 'filter 0.3s ease';
+        // 检查当前模态窗口是否已经显示的是原图
+        const isCurrentlyShowingOriginal = modalImg.src && modalImg.src.includes(original);
+        
+        // 显示预览图（如果当前不是原图）
+        if (!isCurrentlyShowingOriginal) {
+            console.log(`设置模态窗口预览图: ${preview}`);
+            modalImg.src = preview;
+            modalImg.style.filter = 'none';
+            modalImg.style.transition = 'filter 0.3s ease';
+        }
         
         // 保存原图URL，用于后续加载
         this.currentOriginalUrl = original;
@@ -761,8 +766,8 @@ class ImageLoader {
         
         // 判断是否显示加载原图按钮
         const loadOriginalBtn = document.getElementById('load-original-btn');
-        // 如果预览图URL与原图URL相同，说明已经是原图，不显示按钮
-        if (preview === original) {
+        // 如果当前显示的是原图，或者预览图URL与原图URL相同，不显示按钮
+        if (isCurrentlyShowingOriginal || preview === original) {
             loadOriginalBtn.style.display = 'none';
         } else {
             loadOriginalBtn.style.display = 'flex';
@@ -897,9 +902,8 @@ class ImageLoader {
             modalImg.src = this.currentOriginalUrl;
             modalImg.style.filter = 'none';
 
-            // 恢复按钮状态
-            loadOriginalBtn.innerHTML = '加载原图';
-            loadOriginalBtn.classList.remove('loading');
+            // 隐藏按钮，因为此时已经是原图了
+            loadOriginalBtn.style.display = 'none';
 
             // 获取EXIF信息
             this.getExifInfo(this.currentOriginalUrl).then(exifData => {
