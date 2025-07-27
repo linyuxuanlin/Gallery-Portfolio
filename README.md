@@ -33,10 +33,10 @@ Gallery-Portfolio
 - 🚀 **静态部署** - 零服务器成本，快速加载
 - 🖼️ **预览图优化** - 先加载预览图，点击查看高清原图
 - 🔄 **智能加载** - 预览图缺失时自动加载原图
-- 📸 **EXIF信息** - 显示光圈、快门、ISO等摄影参数
-- 🌍 **跨平台支持** - 提供Windows、Linux和MacOS脚本
+- 📸 **EXIF信息** - 自动从R2提取并显示光圈、快门、ISO等摄影参数
 - ☁️ **R2自动部署** - 从Cloudflare R2自动获取文件列表并生成索引
 - 🔧 **环境变量配置** - 支持灵活的环境变量配置
+- 🌍 **跨平台支持** - 提供Windows、Linux和MacOS部署脚本
 
 ## 🏗️ 项目结构
 
@@ -60,8 +60,7 @@ Gallery-Portfolio/
 ├── deploy.sh                 # Linux/macOS部署脚本
 ├── _headers                  # Cloudflare Pages 配置
 ├── package.json              # 项目配置
-├── env.example               # 环境变量示例文件
-└── README-R2-DEPLOYMENT.md   # R2部署详细说明
+└── env.example               # 环境变量示例文件
 ```
 
 ## 🚀 快速开始
@@ -81,7 +80,7 @@ R2_SECRET_ACCESS_KEY=your_secret_access_key_here
 # R2 存储桶配置
 R2_BUCKET_NAME=your_bucket_name_here
 R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
-R2_REGION=auto
+R2_REGION=APAC
 
 # 图片URL配置
 R2_IMAGE_BASE_URL=https://your-domain.com
@@ -118,71 +117,25 @@ deploy.bat
 ./deploy.sh
 ```
 
-#### Windows 用户
-```bash
-generate-gallery-index.bat
-```
-
-#### Linux/macOS 用户
-```bash
-chmod +x generate-gallery-index.sh
-./generate-gallery-index.sh
-```
-
-这将生成 `gallery-index.json` 文件，包含所有摄影作品的信息。
-
-### 4. 本地测试
-
-使用本地服务器运行：
-
-```bash
-npm run serve
-```
-
-或使用其他静态服务器：
-
-```bash
-npx serve .
-```
-
-### 5. 部署到 Cloudflare Pages
-
-#### Windows 用户
-```bash
-deploy.bat
-```
-
-#### Linux/macOS 用户
-```bash
-chmod +x deploy.sh
-./deploy.sh
-```
-
-#### 手动部署
-
-1. 安装 Wrangler CLI：
-   ```bash
-   npm install -g wrangler
-   ```
-
-2. 登录 Cloudflare：
-   ```bash
-   wrangler login
-   ```
-
-3. 部署项目：
-   ```bash
-   wrangler pages deploy . --project-name your-project-name
-   ```
-
 ## 📝 配置说明
+
+### 环境变量配置
+
+所有配置都通过环境变量进行，主要配置项包括：
+
+- **CLOUDFLARE_ACCOUNT_ID**: Cloudflare账户ID
+- **R2_ACCESS_KEY_ID**: R2访问密钥ID  
+- **R2_SECRET_ACCESS_KEY**: R2访问密钥
+- **R2_BUCKET_NAME**: R2存储桶名称
+- **R2_IMAGE_BASE_URL**: 图片基础URL
+- **R2_IMAGE_DIR**: 图片目录名（默认为gallery）
 
 ### 作品URL格式
 
 摄影作品URL使用以下格式：
 
-- **原图**: `https://media.wiki-power.com/gallery/{分类}/{文件名}`
-- **预览图**: `https://media.wiki-power.com/gallery/0_preview/{分类}/{文件名}`
+- **原图**: `{R2_IMAGE_BASE_URL}/{R2_IMAGE_DIR}/{分类}/{文件名}`
+- **预览图**: `{R2_IMAGE_BASE_URL}/{R2_IMAGE_DIR}/0_preview/{分类}/{文件名}`
 
 ### 预览图缺失检测
 
@@ -191,37 +144,12 @@ chmod +x deploy.sh
 - 确保即使预览图缺失，用户仍能正常浏览作品
 - 提供友好的错误提示和降级处理
 
-### 修改作品源
+### EXIF信息提取
 
-#### Windows 用户
-编辑 `generate-gallery-index.bat` 文件中的以下变量：
-
-```batch
-set "SOURCE_DIR=C:\Users\Power\Wiki-media\gallery"
-```
-
-#### Linux/macOS 用户
-编辑 `generate-gallery-index.sh` 文件中的以下变量：
-
-```bash
-SOURCE_DIR="/home/user/Wiki-media/gallery"
-```
-
-### 自定义图床域名
-
-修改脚本中的域名部分：
-
-#### Windows 用户
-```batch
-set "original_url=https://your-domain.com/gallery/!category_name!/!file_name!!file_ext!"
-set "preview_url=https://your-domain.com/gallery/0_preview/!category_name!/!file_name!!file_ext!"
-```
-
-#### Linux/macOS 用户
-```bash
-original_url="https://your-domain.com/gallery/$category_name/$file_name.$file_ext"
-preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name.$file_ext"
-```
+系统会自动从R2下载图片并提取EXIF信息，包括：
+- 光圈、快门速度、ISO
+- 焦距、相机型号、镜头信息
+- GPS坐标、拍摄时间
 
 ## 🛠️ 开发
 
@@ -229,17 +157,20 @@ preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name
 
 ```json
 {
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.0.0",
+    "node-exiftool": "^2.3.0"
+  },
   "devDependencies": {
-    "serve": "^14.2.1"
+    "wrangler": "^3.0.0"
   }
 }
 ```
 
 ### 可用脚本
 
-- `npm run serve` - 启动本地服务器
-- `npm run generate-index` - 生成作品索引
-- `npm run generate-previews` - 生成预览图
+- `npm run generate-index` - 从R2生成作品索引
+- `npm run deploy` - 自动生成索引并部署
 
 ### 模块化架构
 
@@ -291,20 +222,35 @@ preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name
 
 ### 常见问题
 
-1. **作品不显示**
-   - 检查 `gallery-index.json` 文件是否存在
-   - 确认作品URL是否正确
-   - 检查网络连接
+1. **环境变量未设置**
+   ```
+   错误: 缺少必要的环境变量
+   ```
+   解决：确保设置了所有必需的环境变量
 
-2. **预览图生成失败**
-   - 确认已安装 ImageMagick
-   - 检查源作品路径是否正确
-   - 确认有足够的磁盘空间
+2. **R2 连接失败**
+   ```
+   获取R2文件列表失败
+   ```
+   解决：检查 R2 访问密钥和端点配置
 
-3. **部署失败**
-   - 确认已安装并登录 Wrangler
-   - 检查项目名称是否可用
-   - 确认文件权限正确
+3. **Wrangler 未安装**
+   ```
+   错误: 未找到 Wrangler
+   ```
+   解决：运行 `npm install -g wrangler`
+
+4. **未登录 Cloudflare**
+   ```
+   需要登录Cloudflare
+   ```
+   解决：运行 `wrangler login`
+
+5. **EXIF信息获取失败**
+   ```
+   EXIF获取失败
+   ```
+   解决：检查图片文件是否包含EXIF信息，或检查网络连接
 
 ### 调试模式
 
