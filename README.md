@@ -117,7 +117,21 @@ deploy.bat
 ./deploy.sh
 ```
 
-**注意**: 部署时生成的 `gallery-index.json` 文件不会推送回仓库，这是正常行为。每次部署都会从R2重新生成最新的索引文件。
+**注意**: 
+- 部署时生成的 `gallery-index.json` 文件不会推送回仓库，这是正常行为
+- 每次部署都会从R2重新生成最新的索引文件
+- Cloudflare Pages会自动运行构建命令生成索引文件
+
+### 4. Cloudflare Pages 环境变量设置
+
+如果您使用Cloudflare Pages控制台部署，需要在Pages项目中设置环境变量：
+
+1. 进入Cloudflare Pages控制台
+2. 选择您的项目 "gallery-portfolio-static"
+3. 进入 "Settings" → "Environment variables"
+4. 添加所有必需的环境变量（详见 `CLOUDFLARE_PAGES_SETUP.md`）
+
+**重要**: 如果环境变量未设置，构建会失败且不会生成 `gallery-index.json` 文件。
 
 ## 📝 配置说明
 
