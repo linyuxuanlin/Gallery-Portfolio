@@ -752,10 +752,10 @@ class ImageLoader {
         // 显示加载动画
         exifInfo.innerHTML = createLoadingSpinner();
         
-        // 先展示预览图并添加模糊效果
+        // 先展示预览图，保持清晰显示
         console.log(`设置模态窗口预览图: ${preview}`);
         modalImg.src = preview;
-        modalImg.style.filter = 'blur(10px)';
+        modalImg.style.filter = 'none';
         modalImg.style.transition = 'filter 0.3s ease';
         
         // 记录图片尺寸变化
@@ -809,7 +809,7 @@ class ImageLoader {
             
             console.log(`高清图加载完成，设置到模态窗口: ${original}`);
             modalImg.src = original;
-            modalImg.style.filter = 'blur(0px)';
+            modalImg.style.filter = 'none';
             
             // 获取EXIF信息
             this.getExifInfo(original).then(exifData => {
@@ -830,7 +830,7 @@ class ImageLoader {
         highResImage.onerror = () => {
             console.error('加载高清图失败:', original);
             if (this.isModalOpen) {
-                modalImg.style.filter = 'blur(0px)';
+                modalImg.style.filter = 'none';
                 exifInfo.innerHTML = '<p style="color:red;">原图加载失败</p>';
             }
         };

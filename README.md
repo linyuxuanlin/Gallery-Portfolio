@@ -55,8 +55,7 @@ Gallery-Portfolio/
 │   └── assets/               # 图标资源
 ├── generate-gallery-index.bat # Windows图片索引生成脚本
 ├── generate-gallery-index.sh  # Linux/macOS图片索引生成脚本
-├── generate-previews.bat      # Windows预览图生成脚本
-├── generate-previews.sh       # Linux/macOS预览图生成脚本
+├── batch-convert-webp.js      # 预览图生成脚本
 ├── deploy.bat                # Windows部署脚本
 ├── deploy.sh                 # Linux/macOS部署脚本
 ├── _headers                  # Cloudflare Pages 配置
@@ -124,18 +123,10 @@ preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name
 
 ### 3. 生成预览图
 
-#### Windows 用户
 ```bash
-generate-previews.bat
+npm install sharp
+node batch-convert-webp.js
 ```
-
-#### Linux/macOS 用户
-```bash
-chmod +x generate-previews.sh
-./generate-previews.sh
-```
-
-**注意：** 需要先安装 [ImageMagick](https://imagemagick.org/script/download.php#windows)
 
 ### 4. 生成作品索引
 

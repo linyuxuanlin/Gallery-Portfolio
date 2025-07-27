@@ -10,10 +10,19 @@
     "generate-index": "generate-gallery-index.bat",
     "generate-previews": "generate-previews.bat"
   },
-  "keywords": ["gallery", "portfolio", "photography", "static", "cloudflare-pages"],
+  "keywords": [
+    "gallery",
+    "portfolio",
+    "photography",
+    "static",
+    "cloudflare-pages"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "serve": "^14.2.1"
+  },
+  "dependencies": {
+    "sharp": "^0.34.3"
   }
 }
