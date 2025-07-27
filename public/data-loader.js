@@ -44,7 +44,9 @@ class DataLoader {
     // 获取指定分类的图片
     getImagesByCategory(category) {
         if (!this.galleryData || !this.galleryData.gallery) return [];
-        return this.galleryData.gallery[category]?.images || [];
+        const images = this.galleryData.gallery[category]?.images || [];
+        // 随机打乱分类内图片的顺序
+        return images.sort(() => Math.random() - 0.5);
     }
 
     // 获取所有图片（用于"全部"标签）
@@ -70,7 +72,8 @@ class DataLoader {
             });
         });
         
-        return allImages;
+        // 随机打乱所有图片的顺序
+        return allImages.sort(() => Math.random() - 0.5);
     }
 
     // 获取总图片数
