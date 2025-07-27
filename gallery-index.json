@@ -1,2326 +1,2010 @@
-{ 
-  "gallery": { 
-  "Australia": { 
-    "name": "Australia", 
-    "images": [ 
-      { 
-        "name": "DSC06336", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC06336.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06336.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC06372", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC06372.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06372.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC06568", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC06568.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06568.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC06647", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC06647.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06647.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC06831", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC06831.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06831.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC06847", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC06847.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06847.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC06869", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC06869.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06869.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC07083", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC07083.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07083.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC07182", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC07182.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07182.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC07201", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC07201.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07201.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC07262", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC07262.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07262.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC07327", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC07327.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07327.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC07520", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC07520.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07520.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC07749", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC07749.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07749.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC07756", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC07756.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07756.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC08392", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC08392.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08392.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC08609", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC08609.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08609.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC08899", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC08899.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08899.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC08908", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC08908.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08908.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC08913", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC08913.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08913.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC08975", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC08975.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08975.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC09009", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC09009.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC09009.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC09184", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC09184.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC09184.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC09243", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC09243.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC09243.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "DSC09311", 
-        "original": "https://media.wiki-power.com/gallery/Australia/DSC09311.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC09311.JPG", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240427_224653", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240427_224653.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240427_224653.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240427_235227", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240427_235227.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240427_235227.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240427_235345", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240427_235345.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240427_235345.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240428_155048", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240428_155048.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240428_155048.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240429_103255", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240429_103255.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240429_103255.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240429_195936", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240429_195936.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240429_195936.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240430_085311", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240430_085311.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240430_085311.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240430_112605", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240430_112605.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240430_112605.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240430_172300", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240430_172300.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240430_172300.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240501_215710", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240501_215710.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240501_215710.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240501_215738", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240501_215738.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240501_215738.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240501_220223", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240501_220223.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240501_220223.jpg", 
-        "category": "Australia" 
-      } 
-, 
-      { 
-        "name": "IMG_20240503_170444", 
-        "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240503_170444.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240503_170444.jpg", 
-        "category": "Australia" 
-      } 
-    ], 
-    "count": 38 
-  } 
-, 
-  "Bankok": { 
-    "name": "Bankok", 
-    "images": [ 
-      { 
-        "name": "DSC03271_1", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC03271_1.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03271_1.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC03333", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC03333.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03333.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC03388", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC03388.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03388.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC03569", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC03569.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03569.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC03658", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC03658.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03658.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC03681", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC03681.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03681.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC03756", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC03756.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03756.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC03769", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC03769.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03769.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC03993", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC03993.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03993.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC04200", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC04200.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC04200.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC04214", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC04214.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC04214.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC04302", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC04302.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC04302.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC04332", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC04332.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC04332.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "DSC06753", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/DSC06753.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC06753.JPG", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "IMG_20240823_235926", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20240823_235926.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20240823_235926.jpg", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "IMG_20240824_000235", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20240824_000235.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20240824_000235.jpg", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "IMG_20240824_000438", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20240824_000438.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20240824_000438.jpg", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "IMG_20240824_000618", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20240824_000618.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20240824_000618.jpg", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "IMG_20250124_215613", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20250124_215613.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20250124_215613.jpg", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "IMG_20250126_165804", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20250126_165804.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20250126_165804.jpg", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "IMG_20250130_172738", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20250130_172738.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20250130_172738.jpg", 
-        "category": "Bankok" 
-      } 
-, 
-      { 
-        "name": "IMG_20250130_205757", 
-        "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20250130_205757.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20250130_205757.jpg", 
-        "category": "Bankok" 
-      } 
-    ], 
-    "count": 22 
-  } 
-, 
-  "Chaozhou": { 
-    "name": "Chaozhou", 
-    "images": [ 
-      { 
-        "name": "DSC05424", 
-        "original": "https://media.wiki-power.com/gallery/Chaozhou/DSC05424.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Chaozhou/DSC05424.JPG", 
-        "category": "Chaozhou" 
-      } 
-, 
-      { 
-        "name": "DSC05568", 
-        "original": "https://media.wiki-power.com/gallery/Chaozhou/DSC05568.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Chaozhou/DSC05568.JPG", 
-        "category": "Chaozhou" 
-      } 
-, 
-      { 
-        "name": "DSC05639", 
-        "original": "https://media.wiki-power.com/gallery/Chaozhou/DSC05639.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Chaozhou/DSC05639.JPG", 
-        "category": "Chaozhou" 
-      } 
-, 
-      { 
-        "name": "IMG_20250206_171747", 
-        "original": "https://media.wiki-power.com/gallery/Chaozhou/IMG_20250206_171747.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Chaozhou/IMG_20250206_171747.jpg", 
-        "category": "Chaozhou" 
-      } 
-    ], 
-    "count": 4 
-  } 
-, 
-  "exhibition": { 
-    "name": "exhibition", 
-    "images": [ 
-      { 
-        "name": "DSC01515", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/DSC01515.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC01515.JPG", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "DSC01567", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/DSC01567.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC01567.JPG", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "DSC09328", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/DSC09328.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC09328.JPG", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "DSC09475", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/DSC09475.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC09475.JPG", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250620_224504", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224504.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224504.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250620_224548", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224548.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224548.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250620_224709", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224709.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224709.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250620_224756", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224756.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224756.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250620_224824", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224824.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224824.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250620_224904", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224904.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224904.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250726_142729", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142729.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142729.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250726_142801", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142801.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142801.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250726_142834", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142834.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142834.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250726_142900", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142900.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142900.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250726_142955", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142955.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142955.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250726_143043", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_143043.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_143043.jpg", 
-        "category": "exhibition" 
-      } 
-, 
-      { 
-        "name": "IMG_20250726_143354", 
-        "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_143354.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_143354.jpg", 
-        "category": "exhibition" 
-      } 
-    ], 
-    "count": 17 
-  } 
-, 
-  "Hongkong": { 
-    "name": "Hongkong", 
-    "images": [ 
-      { 
-        "name": "DSC09599", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09599.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09599.JPG", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "DSC09617", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09617.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09617.JPG", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "DSC09628", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09628.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09628.JPG", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "DSC09664", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09664.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09664.JPG", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "DSC09680", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09680.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09680.JPG", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "DSC09702", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09702.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09702.JPG", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "DSC09884_1", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09884_1.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09884_1.JPG", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "DSC09899", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09899.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09899.JPG", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20240211_212227", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20240211_212227.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20240211_212227.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20240212_001202", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20240212_001202.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20240212_001202.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20240212_001230", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20240212_001230.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20240212_001230.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20240212_001314", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20240212_001314.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20240212_001314.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20241003_214852", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20241003_214852.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20241003_214852.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_104601", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104601.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104601.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_104715", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104715.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104715.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_104743", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104743.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104743.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_104810", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104810.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104810.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_104854", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104854.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104854.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_134740", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_134740.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_134740.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_161845", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_161845.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_161845.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_161919", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_161919.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_161919.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_162040", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_162040.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_162040.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250629_162111", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_162111.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_162111.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250630_221842", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_221842.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_221842.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250630_221904", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_221904.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_221904.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250630_221928", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_221928.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_221928.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250630_222005", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_222005.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_222005.jpg", 
-        "category": "Hongkong" 
-      } 
-, 
-      { 
-        "name": "IMG_20250630_222256", 
-        "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_222256.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_222256.jpg", 
-        "category": "Hongkong" 
-      } 
-    ], 
-    "count": 28 
-  } 
-, 
-  "Jeju": { 
-    "name": "Jeju", 
-    "images": [ 
-      { 
-        "name": "DSC01387", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01387.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01387.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01398", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01398.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01398.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01436", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01436.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01436.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01484", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01484.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01484.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01490", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01490.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01490.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01613", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01613.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01613.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01660", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01660.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01660.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01673", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01673.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01673.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01730", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01730.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01730.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01762", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01762.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01762.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "DSC01813", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/DSC01813.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01813.JPG", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "IMG_20241130_131159", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/IMG_20241130_131159.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/IMG_20241130_131159.jpg", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "IMG_20241130_131218", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/IMG_20241130_131218.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/IMG_20241130_131218.jpg", 
-        "category": "Jeju" 
-      } 
-, 
-      { 
-        "name": "IMG_20241130_171007", 
-        "original": "https://media.wiki-power.com/gallery/Jeju/IMG_20241130_171007.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/IMG_20241130_171007.jpg", 
-        "category": "Jeju" 
-      } 
-    ], 
-    "count": 14 
-  } 
-, 
-  "Kyoto": { 
-    "name": "Kyoto", 
-    "images": [ 
-      { 
-        "name": "DSC02415", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02415.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02415.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02432", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02432.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02432.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02443", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02443.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02443.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02557", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02557.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02557.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02686", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02686.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02686.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02687", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02687.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02687.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02711", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02711.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02711.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02734", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02734.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02734.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02777", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02777.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02777.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02819", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02819.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02819.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02834", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02834.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02834.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02849", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02849.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02849.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02859", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02859.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02859.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02866", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02866.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02866.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02878", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02878.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02878.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02924", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02924.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02924.JPG", 
-        "category": "Kyoto" 
-      } 
-, 
-      { 
-        "name": "DSC02932", 
-        "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02932.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02932.JPG", 
-        "category": "Kyoto" 
-      } 
-    ], 
-    "count": 17 
-  } 
-, 
-  "Macau": { 
-    "name": "Macau", 
-    "images": [ 
-      { 
-        "name": "IMG_20240212_162931", 
-        "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240212_162931.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240212_162931.jpg", 
-        "category": "Macau" 
-      } 
-, 
-      { 
-        "name": "IMG_20240213_205009", 
-        "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_205009.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_205009.jpg", 
-        "category": "Macau" 
-      } 
-, 
-      { 
-        "name": "IMG_20240213_205228", 
-        "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_205228.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_205228.jpg", 
-        "category": "Macau" 
-      } 
-, 
-      { 
-        "name": "IMG_20240213_205424", 
-        "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_205424.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_205424.jpg", 
-        "category": "Macau" 
-      } 
-, 
-      { 
-        "name": "IMG_20240213_205549", 
-        "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_205549.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_205549.jpg", 
-        "category": "Macau" 
-      } 
-, 
-      { 
-        "name": "IMG_20240213_210738", 
-        "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_210738.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_210738.jpg", 
-        "category": "Macau" 
-      } 
-, 
-      { 
-        "name": "IMG_20240213_210927", 
-        "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_210927.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_210927.jpg", 
-        "category": "Macau" 
-      } 
-, 
-      { 
-        "name": "IMG_20240213_211627", 
-        "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_211627.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_211627.jpg", 
-        "category": "Macau" 
-      } 
-    ], 
-    "count": 8 
-  } 
-, 
-  "Nanjing": { 
-    "name": "Nanjing", 
-    "images": [ 
-      { 
-        "name": "DSC00675", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00675.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00675.JPG", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "DSC00751", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00751.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00751.JPG", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "DSC00861", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00861.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00861.JPG", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "DSC00886", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00886.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00886.JPG", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "DSC00955", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00955.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00955.JPG", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "DSC01154", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/DSC01154.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC01154.JPG", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "DSC01254", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/DSC01254.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC01254.JPG", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "IMG_20240315_112511", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20240315_112511.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20240315_112511.jpg", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "IMG_20240316_210659", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20240316_210659.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20240316_210659.jpg", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "IMG_20240318_232025", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20240318_232025.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20240318_232025.jpg", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "IMG_20241123_113214", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20241123_113214.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20241123_113214.jpg", 
-        "category": "Nanjing" 
-      } 
-, 
-      { 
-        "name": "IMG_20241124_210551", 
-        "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20241124_210551.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20241124_210551.jpg", 
-        "category": "Nanjing" 
-      } 
-    ], 
-    "count": 12 
-  } 
-, 
-  "Osaka": { 
-    "name": "Osaka", 
-    "images": [ 
-      { 
-        "name": "DSC01947", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC01947.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC01947.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC01997", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC01997.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC01997.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC02070", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC02070.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC02070.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC02196", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC02196.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC02196.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC08945", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC08945.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC08945.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC08972", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC08972.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC08972.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC09079", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC09079.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09079.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC09088", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC09088.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09088.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC09102", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC09102.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09102.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC09103", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC09103.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09103.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "DSC09115", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/DSC09115.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09115.JPG", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "IMG_20241208_163924", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/IMG_20241208_163924.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/IMG_20241208_163924.jpg", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "IMG_20241208_164035", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/IMG_20241208_164035.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/IMG_20241208_164035.jpg", 
-        "category": "Osaka" 
-      } 
-, 
-      { 
-        "name": "IMG_20250602_174359", 
-        "original": "https://media.wiki-power.com/gallery/Osaka/IMG_20250602_174359.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/IMG_20250602_174359.jpg", 
-        "category": "Osaka" 
-      } 
-    ], 
-    "count": 14 
-  } 
-, 
-  "Other": { 
-    "name": "Other", 
-    "images": [ 
-      { 
-        "name": "DSC04090", 
-        "original": "https://media.wiki-power.com/gallery/Other/DSC04090.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Other/DSC04090.JPG", 
-        "category": "Other" 
-      } 
-, 
-      { 
-        "name": "DSC06137", 
-        "original": "https://media.wiki-power.com/gallery/Other/DSC06137.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Other/DSC06137.JPG", 
-        "category": "Other" 
-      } 
-, 
-      { 
-        "name": "IMG_20240216_225952", 
-        "original": "https://media.wiki-power.com/gallery/Other/IMG_20240216_225952.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Other/IMG_20240216_225952.jpg", 
-        "category": "Other" 
-      } 
-, 
-      { 
-        "name": "IMG_20240811_114738", 
-        "original": "https://media.wiki-power.com/gallery/Other/IMG_20240811_114738.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Other/IMG_20240811_114738.jpg", 
-        "category": "Other" 
-      } 
-, 
-      { 
-        "name": "IMG_20241108_213303", 
-        "original": "https://media.wiki-power.com/gallery/Other/IMG_20241108_213303.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Other/IMG_20241108_213303.jpg", 
-        "category": "Other" 
-      } 
-    ], 
-    "count": 5 
-  } 
-, 
-  "Shanghai": { 
-    "name": "Shanghai", 
-    "images": [ 
-      { 
-        "name": "2024-02-25_180529", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/2024-02-25_180529.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/2024-02-25_180529.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "2024-10-12_184831", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/2024-10-12_184831.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/2024-10-12_184831.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC00678", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00678.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00678.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC00733", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00733.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00733.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC00807_1", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00807_1.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00807_1.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC00823", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00823.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00823.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC00913", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00913.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00913.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC04610", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04610.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04610.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC04612", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04612.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04612.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC04639", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04639.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04639.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC04659", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04659.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04659.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC04766", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04766.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04766.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC05660", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC05660.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC05660.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC05677", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC05677.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC05677.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC05726", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC05726.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC05726.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC05878", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC05878.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC05878.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08068", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08068.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08068.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08157", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08157.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08157.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08281", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08281.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08281.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08307", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08307.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08307.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08380", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08380.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08380.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08500", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08500.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08500.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08613", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08613.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08613.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08657", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08657.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08657.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08660", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08660.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08660.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC08859_1", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08859_1.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08859_1.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC09501", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC09501.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC09501.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC09509", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC09509.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC09509.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC09530", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC09530.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC09530.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "DSC09992_1", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/DSC09992_1.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC09992_1.JPG", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240225_211301", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240225_211301.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240225_211301.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240310_160031", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240310_160031.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240310_160031.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240310_171420", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240310_171420.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240310_171420.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240329_070031", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240329_070031.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240329_070031.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240405_221316", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240405_221316.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240405_221316.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240405_221435", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240405_221435.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240405_221435.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240405_221505", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240405_221505.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240405_221505.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240420_132412", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240420_132412.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240420_132412.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240420_163717", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240420_163717.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240420_163717.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240420_202631", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240420_202631.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240420_202631.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240420_202917", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240420_202917.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240420_202917.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240518_223126", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240518_223126.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240518_223126.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20240609_182826", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240609_182826.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240609_182826.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20241022_185129", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20241022_185129.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20241022_185129.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20241102_212058", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20241102_212058.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20241102_212058.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20241118_153450", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20241118_153450.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20241118_153450.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250323_004700", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_004700.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_004700.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250323_004727", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_004727.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_004727.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250323_004753", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_004753.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_004753.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250323_004844", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_004844.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_004844.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250323_005037", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_005037.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_005037.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250323_005207", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_005207.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_005207.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250329_200116", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250329_200116.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250329_200116.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250329_200308", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250329_200308.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250329_200308.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250426_225158", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250426_225158.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250426_225158.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250501_195146", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250501_195146.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250501_195146.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250501_195234", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250501_195234.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250501_195234.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250509_182913", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250509_182913.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250509_182913.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250510_153806", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250510_153806.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250510_153806.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250513_203154", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250513_203154.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250513_203154.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250513_203322", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250513_203322.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250513_203322.jpg", 
-        "category": "Shanghai" 
-      } 
-, 
-      { 
-        "name": "IMG_20250513_203427", 
-        "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250513_203427.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250513_203427.jpg", 
-        "category": "Shanghai" 
-      } 
-    ], 
-    "count": 62 
-  } 
-, 
-  "Singapore": { 
-    "name": "Singapore", 
-    "images": [ 
-      { 
-        "name": "DSC00994", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC00994.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC00994.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC00996", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC00996.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC00996.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC01025", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC01025.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01025.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC01093", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC01093.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01093.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC01153", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC01153.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01153.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC01194", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC01194.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01194.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC01756_1", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC01756_1.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01756_1.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC02493", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC02493.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02493.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC02582", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC02582.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02582.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC02668", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC02668.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02668.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC02856", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC02856.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02856.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC02919", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC02919.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02919.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC02989", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC02989.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02989.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC03117", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC03117.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC03117.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC03177", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC03177.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC03177.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "DSC03349", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/DSC03349.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC03349.JPG", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "IMG_20240614_205224", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/IMG_20240614_205224.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/IMG_20240614_205224.jpg", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "IMG_20240614_205422", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/IMG_20240614_205422.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/IMG_20240614_205422.jpg", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "IMG_20240615_234155", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/IMG_20240615_234155.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/IMG_20240615_234155.jpg", 
-        "category": "Singapore" 
-      } 
-, 
-      { 
-        "name": "IMG_20240615_234417", 
-        "original": "https://media.wiki-power.com/gallery/Singapore/IMG_20240615_234417.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/IMG_20240615_234417.jpg", 
-        "category": "Singapore" 
-      } 
-    ], 
-    "count": 20 
-  } 
-, 
-  "Tokyo": { 
-    "name": "Tokyo", 
-    "images": [ 
-      { 
-        "name": "DSC05776", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05776.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05776.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC05817", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05817.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05817.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC05838", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05838.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05838.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC05948", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05948.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05948.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC05985", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05985.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05985.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06011", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06011.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06011.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06019", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06019.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06019.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06051", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06051.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06051.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06246", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06246.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06246.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06305", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06305.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06305.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06384", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06384.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06384.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06393", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06393.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06393.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06399", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06399.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06399.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06621", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06621.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06621.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06963", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06963.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06963.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC06970", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06970.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06970.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "DSC07231", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/DSC07231.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC07231.JPG", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250306_101456", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250306_101456.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250306_101456.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250306_222721", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250306_222721.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250306_222721.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250306_223103", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250306_223103.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250306_223103.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250307_154139", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250307_154139.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250307_154139.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250307_154220", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250307_154220.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250307_154220.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250307_161751", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250307_161751.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250307_161751.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250307_161931", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250307_161931.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250307_161931.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250308_194146", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250308_194146.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250308_194146.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250308_215559", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250308_215559.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250308_215559.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250308_232401", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250308_232401.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250308_232401.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250308_232434", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250308_232434.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250308_232434.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250309_152614", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250309_152614.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250309_152614.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250309_165747", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250309_165747.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250309_165747.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250309_170005", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250309_170005.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250309_170005.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "IMG_20250309_175841", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250309_175841.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250309_175841.jpg", 
-        "category": "Tokyo" 
-      } 
-, 
-      { 
-        "name": "mmexport1741521226122", 
-        "original": "https://media.wiki-power.com/gallery/Tokyo/mmexport1741521226122.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/mmexport1741521226122.jpg", 
-        "category": "Tokyo" 
-      } 
-    ], 
-    "count": 33 
-  } 
-, 
-  "Vietnam": { 
-    "name": "Vietnam", 
-    "images": [ 
-      { 
-        "name": "DSC00272_1", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00272_1.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00272_1.JPG", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "DSC00502", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00502.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00502.JPG", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "DSC00546", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00546.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00546.JPG", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "DSC00612_1", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00612_1.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00612_1.JPG", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "DSC00904_1", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00904_1.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00904_1.JPG", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250702_204619", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250702_204619.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250702_204619.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250703_210719", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250703_210719.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250703_210719.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250703_210944", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250703_210944.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250703_210944.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250706_170336", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_170336.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_170336.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250706_170517", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_170517.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_170517.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250706_170625", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_170625.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_170625.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250706_171308", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_171308.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_171308.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250706_203547", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_203547.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_203547.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250706_223502", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_223502.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_223502.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250707_152207", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250707_152207.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250707_152207.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250707_155538", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250707_155538.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250707_155538.jpg", 
-        "category": "Vietnam" 
-      } 
-, 
-      { 
-        "name": "IMG_20250707_155803", 
-        "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250707_155803.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250707_155803.jpg", 
-        "category": "Vietnam" 
-      } 
-    ], 
-    "count": 17 
-  } 
-, 
-  "Xiamen": { 
-    "name": "Xiamen", 
-    "images": [ 
-      { 
-        "name": "DSC04907", 
-        "original": "https://media.wiki-power.com/gallery/Xiamen/DSC04907.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/DSC04907.JPG", 
-        "category": "Xiamen" 
-      } 
-, 
-      { 
-        "name": "DSC05000", 
-        "original": "https://media.wiki-power.com/gallery/Xiamen/DSC05000.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/DSC05000.JPG", 
-        "category": "Xiamen" 
-      } 
-, 
-      { 
-        "name": "DSC05060", 
-        "original": "https://media.wiki-power.com/gallery/Xiamen/DSC05060.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/DSC05060.JPG", 
-        "category": "Xiamen" 
-      } 
-, 
-      { 
-        "name": "DSC05172", 
-        "original": "https://media.wiki-power.com/gallery/Xiamen/DSC05172.JPG", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/DSC05172.JPG", 
-        "category": "Xiamen" 
-      } 
-, 
-      { 
-        "name": "IMG_20250202_154252", 
-        "original": "https://media.wiki-power.com/gallery/Xiamen/IMG_20250202_154252.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/IMG_20250202_154252.jpg", 
-        "category": "Xiamen" 
-      } 
-, 
-      { 
-        "name": "IMG_20250202_162147", 
-        "original": "https://media.wiki-power.com/gallery/Xiamen/IMG_20250202_162147.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/IMG_20250202_162147.jpg", 
-        "category": "Xiamen" 
-      } 
-, 
-      { 
-        "name": "IMG_20250203_161907", 
-        "original": "https://media.wiki-power.com/gallery/Xiamen/IMG_20250203_161907.jpg", 
-        "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/IMG_20250203_161907.jpg", 
-        "category": "Xiamen" 
-      } 
-    ], 
-    "count": 7 
-  } 
-  }, 
-  "total": 318 
-} 
+{
+  "gallery": {
+    "Australia": {
+      "name": "Australia",
+      "images": [
+        {
+          "name": "DSC06336.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC06336.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06336.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC06372.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC06372.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06372.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC06568.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC06568.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06568.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC06647.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC06647.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06647.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC06831.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC06831.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06831.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC06847.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC06847.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06847.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC06869.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC06869.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC06869.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC07083.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC07083.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07083.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC07182.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC07182.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07182.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC07201.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC07201.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07201.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC07262.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC07262.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07262.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC07327.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC07327.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07327.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC07520.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC07520.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07520.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC07749.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC07749.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07749.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC07756.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC07756.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC07756.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC08392.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC08392.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08392.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC08609.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC08609.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08609.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC08899.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC08899.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08899.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC08908.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC08908.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08908.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC08913.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC08913.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08913.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC08975.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC08975.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC08975.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC09009.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC09009.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC09009.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC09184.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC09184.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC09184.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC09243.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC09243.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC09243.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "DSC09311.JPG",
+          "original": "https://media.wiki-power.com/gallery/Australia/DSC09311.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/DSC09311.JPG.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240427_224653",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240427_224653.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240427_224653.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240427_235227",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240427_235227.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240427_235227.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240427_235345",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240427_235345.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240427_235345.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240428_155048",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240428_155048.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240428_155048.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240429_103255",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240429_103255.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240429_103255.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240429_195936",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240429_195936.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240429_195936.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240430_085311",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240430_085311.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240430_085311.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240430_112605",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240430_112605.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240430_112605.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240430_172300",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240430_172300.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240430_172300.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240501_215710",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240501_215710.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240501_215710.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240501_215738",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240501_215738.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240501_215738.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240501_220223",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240501_220223.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240501_220223.jpg",
+          "category": "Australia"
+        },
+        {
+          "name": "IMG_20240503_170444",
+          "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240503_170444.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240503_170444.jpg",
+          "category": "Australia"
+        }
+      ],
+      "count": 38
+    },
+    "Bankok": {
+      "name": "Bankok",
+      "images": [
+        {
+          "name": "DSC03271_1.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC03271_1.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03271_1.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC03333.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC03333.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03333.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC03388.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC03388.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03388.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC03569.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC03569.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03569.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC03658.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC03658.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03658.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC03681.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC03681.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03681.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC03756.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC03756.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03756.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC03769.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC03769.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03769.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC03993.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC03993.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC03993.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC04200.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC04200.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC04200.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC04214.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC04214.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC04214.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC04302.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC04302.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC04302.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC04332.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC04332.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC04332.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "DSC06753.JPG",
+          "original": "https://media.wiki-power.com/gallery/Bankok/DSC06753.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC06753.JPG.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "IMG_20240823_235926",
+          "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20240823_235926.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20240823_235926.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "IMG_20240824_000235",
+          "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20240824_000235.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20240824_000235.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "IMG_20240824_000438",
+          "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20240824_000438.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20240824_000438.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "IMG_20240824_000618",
+          "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20240824_000618.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20240824_000618.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "IMG_20250124_215613",
+          "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20250124_215613.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20250124_215613.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "IMG_20250126_165804",
+          "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20250126_165804.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20250126_165804.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "IMG_20250130_172738",
+          "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20250130_172738.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20250130_172738.jpg",
+          "category": "Bankok"
+        },
+        {
+          "name": "IMG_20250130_205757",
+          "original": "https://media.wiki-power.com/gallery/Bankok/IMG_20250130_205757.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Bankok/IMG_20250130_205757.jpg",
+          "category": "Bankok"
+        }
+      ],
+      "count": 22
+    },
+    "Chaozhou": {
+      "name": "Chaozhou",
+      "images": [
+        {
+          "name": "DSC05424.JPG",
+          "original": "https://media.wiki-power.com/gallery/Chaozhou/DSC05424.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Chaozhou/DSC05424.JPG.jpg",
+          "category": "Chaozhou"
+        },
+        {
+          "name": "DSC05568.JPG",
+          "original": "https://media.wiki-power.com/gallery/Chaozhou/DSC05568.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Chaozhou/DSC05568.JPG.jpg",
+          "category": "Chaozhou"
+        },
+        {
+          "name": "DSC05639.JPG",
+          "original": "https://media.wiki-power.com/gallery/Chaozhou/DSC05639.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Chaozhou/DSC05639.JPG.jpg",
+          "category": "Chaozhou"
+        },
+        {
+          "name": "IMG_20250206_171747",
+          "original": "https://media.wiki-power.com/gallery/Chaozhou/IMG_20250206_171747.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Chaozhou/IMG_20250206_171747.jpg",
+          "category": "Chaozhou"
+        }
+      ],
+      "count": 4
+    },
+    "exhibition": {
+      "name": "exhibition",
+      "images": [
+        {
+          "name": "DSC01515.JPG",
+          "original": "https://media.wiki-power.com/gallery/exhibition/DSC01515.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC01515.JPG.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "DSC01567.JPG",
+          "original": "https://media.wiki-power.com/gallery/exhibition/DSC01567.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC01567.JPG.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "DSC09328.JPG",
+          "original": "https://media.wiki-power.com/gallery/exhibition/DSC09328.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC09328.JPG.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "DSC09475.JPG",
+          "original": "https://media.wiki-power.com/gallery/exhibition/DSC09475.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC09475.JPG.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224504",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224504.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224504.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224548",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224548.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224548.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224709",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224709.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224709.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224756",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224756.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224756.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224824",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224824.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224824.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224904",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224904.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224904.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142729",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142729.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142729.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142801",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142801.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142801.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142834",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142834.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142834.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142900",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142900.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142900.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142955",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142955.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142955.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_143043",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_143043.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_143043.jpg",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_143354",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_143354.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_143354.jpg",
+          "category": "exhibition"
+        }
+      ],
+      "count": 17
+    },
+    "Hongkong": {
+      "name": "Hongkong",
+      "images": [
+        {
+          "name": "DSC09599.JPG",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09599.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09599.JPG.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "DSC09617.JPG",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09617.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09617.JPG.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "DSC09628.JPG",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09628.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09628.JPG.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "DSC09664.JPG",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09664.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09664.JPG.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "DSC09680.JPG",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09680.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09680.JPG.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "DSC09702.JPG",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09702.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09702.JPG.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "DSC09884_1.JPG",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09884_1.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09884_1.JPG.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "DSC09899.JPG",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09899.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09899.JPG.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20240211_212227",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20240211_212227.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20240211_212227.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20240212_001202",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20240212_001202.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20240212_001202.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20240212_001230",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20240212_001230.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20240212_001230.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20240212_001314",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20240212_001314.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20240212_001314.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20241003_214852",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20241003_214852.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20241003_214852.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_104601",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104601.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104601.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_104715",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104715.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104715.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_104743",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104743.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104743.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_104810",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104810.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104810.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_104854",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104854.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104854.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_134740",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_134740.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_134740.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_161845",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_161845.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_161845.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_161919",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_161919.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_161919.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_162040",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_162040.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_162040.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250629_162111",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_162111.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_162111.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250630_221842",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_221842.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_221842.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250630_221904",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_221904.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_221904.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250630_221928",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_221928.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_221928.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250630_222005",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_222005.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_222005.jpg",
+          "category": "Hongkong"
+        },
+        {
+          "name": "IMG_20250630_222256",
+          "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250630_222256.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250630_222256.jpg",
+          "category": "Hongkong"
+        }
+      ],
+      "count": 28
+    },
+    "Jeju": {
+      "name": "Jeju",
+      "images": [
+        {
+          "name": "DSC01387.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01387.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01387.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01398.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01398.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01398.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01436.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01436.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01436.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01484.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01484.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01484.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01490.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01490.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01490.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01613.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01613.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01613.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01660.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01660.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01660.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01673.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01673.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01673.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01730.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01730.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01730.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01762.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01762.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01762.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "DSC01813.JPG",
+          "original": "https://media.wiki-power.com/gallery/Jeju/DSC01813.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/DSC01813.JPG.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "IMG_20241130_131159",
+          "original": "https://media.wiki-power.com/gallery/Jeju/IMG_20241130_131159.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/IMG_20241130_131159.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "IMG_20241130_131218",
+          "original": "https://media.wiki-power.com/gallery/Jeju/IMG_20241130_131218.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/IMG_20241130_131218.jpg",
+          "category": "Jeju"
+        },
+        {
+          "name": "IMG_20241130_171007",
+          "original": "https://media.wiki-power.com/gallery/Jeju/IMG_20241130_171007.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Jeju/IMG_20241130_171007.jpg",
+          "category": "Jeju"
+        }
+      ],
+      "count": 14
+    },
+    "Kyoto": {
+      "name": "Kyoto",
+      "images": [
+        {
+          "name": "DSC02415.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02415.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02415.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02432.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02432.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02432.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02443.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02443.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02443.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02557.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02557.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02557.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02686.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02686.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02686.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02687.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02687.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02687.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02711.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02711.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02711.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02734.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02734.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02734.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02777.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02777.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02777.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02819.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02819.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02819.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02834.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02834.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02834.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02849.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02849.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02849.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02859.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02859.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02859.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02866.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02866.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02866.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02878.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02878.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02878.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02924.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02924.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02924.JPG.jpg",
+          "category": "Kyoto"
+        },
+        {
+          "name": "DSC02932.JPG",
+          "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02932.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02932.JPG.jpg",
+          "category": "Kyoto"
+        }
+      ],
+      "count": 17
+    },
+    "Macau": {
+      "name": "Macau",
+      "images": [
+        {
+          "name": "IMG_20240212_162931",
+          "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240212_162931.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240212_162931.jpg",
+          "category": "Macau"
+        },
+        {
+          "name": "IMG_20240213_205009",
+          "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_205009.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_205009.jpg",
+          "category": "Macau"
+        },
+        {
+          "name": "IMG_20240213_205228",
+          "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_205228.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_205228.jpg",
+          "category": "Macau"
+        },
+        {
+          "name": "IMG_20240213_205424",
+          "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_205424.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_205424.jpg",
+          "category": "Macau"
+        },
+        {
+          "name": "IMG_20240213_205549",
+          "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_205549.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_205549.jpg",
+          "category": "Macau"
+        },
+        {
+          "name": "IMG_20240213_210738",
+          "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_210738.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_210738.jpg",
+          "category": "Macau"
+        },
+        {
+          "name": "IMG_20240213_210927",
+          "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_210927.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_210927.jpg",
+          "category": "Macau"
+        },
+        {
+          "name": "IMG_20240213_211627",
+          "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_211627.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_211627.jpg",
+          "category": "Macau"
+        }
+      ],
+      "count": 8
+    },
+    "Nanjing": {
+      "name": "Nanjing",
+      "images": [
+        {
+          "name": "DSC00675.JPG",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00675.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00675.JPG.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "DSC00751.JPG",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00751.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00751.JPG.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "DSC00861.JPG",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00861.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00861.JPG.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "DSC00886.JPG",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00886.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00886.JPG.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "DSC00955.JPG",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/DSC00955.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC00955.JPG.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "DSC01154.JPG",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/DSC01154.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC01154.JPG.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "DSC01254.JPG",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/DSC01254.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/DSC01254.JPG.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "IMG_20240315_112511",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20240315_112511.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20240315_112511.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "IMG_20240316_210659",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20240316_210659.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20240316_210659.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "IMG_20240318_232025",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20240318_232025.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20240318_232025.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "IMG_20241123_113214",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20241123_113214.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20241123_113214.jpg",
+          "category": "Nanjing"
+        },
+        {
+          "name": "IMG_20241124_210551",
+          "original": "https://media.wiki-power.com/gallery/Nanjing/IMG_20241124_210551.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Nanjing/IMG_20241124_210551.jpg",
+          "category": "Nanjing"
+        }
+      ],
+      "count": 12
+    },
+    "Osaka": {
+      "name": "Osaka",
+      "images": [
+        {
+          "name": "DSC01947.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC01947.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC01947.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC01997.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC01997.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC01997.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC02070.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC02070.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC02070.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC02196.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC02196.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC02196.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC08945.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC08945.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC08945.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC08972.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC08972.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC08972.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC09079.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC09079.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09079.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC09088.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC09088.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09088.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC09102.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC09102.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09102.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC09103.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC09103.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09103.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "DSC09115.JPG",
+          "original": "https://media.wiki-power.com/gallery/Osaka/DSC09115.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/DSC09115.JPG.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "IMG_20241208_163924",
+          "original": "https://media.wiki-power.com/gallery/Osaka/IMG_20241208_163924.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/IMG_20241208_163924.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "IMG_20241208_164035",
+          "original": "https://media.wiki-power.com/gallery/Osaka/IMG_20241208_164035.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/IMG_20241208_164035.jpg",
+          "category": "Osaka"
+        },
+        {
+          "name": "IMG_20250602_174359",
+          "original": "https://media.wiki-power.com/gallery/Osaka/IMG_20250602_174359.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Osaka/IMG_20250602_174359.jpg",
+          "category": "Osaka"
+        }
+      ],
+      "count": 14
+    },
+    "Other": {
+      "name": "Other",
+      "images": [
+        {
+          "name": "DSC04090.JPG",
+          "original": "https://media.wiki-power.com/gallery/Other/DSC04090.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Other/DSC04090.JPG.jpg",
+          "category": "Other"
+        },
+        {
+          "name": "DSC06137.JPG",
+          "original": "https://media.wiki-power.com/gallery/Other/DSC06137.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Other/DSC06137.JPG.jpg",
+          "category": "Other"
+        },
+        {
+          "name": "IMG_20240216_225952",
+          "original": "https://media.wiki-power.com/gallery/Other/IMG_20240216_225952.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Other/IMG_20240216_225952.jpg",
+          "category": "Other"
+        },
+        {
+          "name": "IMG_20240811_114738",
+          "original": "https://media.wiki-power.com/gallery/Other/IMG_20240811_114738.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Other/IMG_20240811_114738.jpg",
+          "category": "Other"
+        },
+        {
+          "name": "IMG_20241108_213303",
+          "original": "https://media.wiki-power.com/gallery/Other/IMG_20241108_213303.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Other/IMG_20241108_213303.jpg",
+          "category": "Other"
+        }
+      ],
+      "count": 5
+    },
+    "Shanghai": {
+      "name": "Shanghai",
+      "images": [
+        {
+          "name": "2024-02-25_180529.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/2024-02-25_180529.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/2024-02-25_180529.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "2024-10-12_184831.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/2024-10-12_184831.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/2024-10-12_184831.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC00678.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00678.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00678.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC00733.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00733.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00733.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC00807_1.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00807_1.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00807_1.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC00823.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00823.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00823.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC00913.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC00913.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC00913.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC04610.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04610.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04610.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC04612.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04612.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04612.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC04639.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04639.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04639.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC04659.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04659.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04659.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC04766.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC04766.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC04766.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC05660.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC05660.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC05660.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC05677.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC05677.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC05677.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC05726.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC05726.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC05726.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC05878.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC05878.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC05878.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08068.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08068.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08068.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08157.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08157.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08157.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08281.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08281.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08281.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08307.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08307.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08307.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08380.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08380.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08380.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08500.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08500.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08500.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08613.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08613.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08613.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08657.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08657.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08657.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08660.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08660.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08660.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC08859_1.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC08859_1.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC08859_1.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC09501.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC09501.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC09501.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC09509.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC09509.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC09509.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC09530.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC09530.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC09530.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "DSC09992_1.JPG",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/DSC09992_1.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/DSC09992_1.JPG.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240225_211301",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240225_211301.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240225_211301.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240310_160031",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240310_160031.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240310_160031.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240310_171420",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240310_171420.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240310_171420.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240329_070031",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240329_070031.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240329_070031.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240405_221316",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240405_221316.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240405_221316.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240405_221435",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240405_221435.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240405_221435.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240405_221505",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240405_221505.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240405_221505.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240420_132412",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240420_132412.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240420_132412.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240420_163717",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240420_163717.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240420_163717.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240420_202631",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240420_202631.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240420_202631.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240420_202917",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240420_202917.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240420_202917.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240518_223126",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240518_223126.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240518_223126.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20240609_182826",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20240609_182826.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20240609_182826.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20241022_185129",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20241022_185129.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20241022_185129.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20241102_212058",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20241102_212058.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20241102_212058.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20241118_153450",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20241118_153450.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20241118_153450.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250323_004700",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_004700.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_004700.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250323_004727",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_004727.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_004727.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250323_004753",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_004753.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_004753.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250323_004844",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_004844.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_004844.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250323_005037",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_005037.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_005037.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250323_005207",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250323_005207.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250323_005207.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250329_200116",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250329_200116.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250329_200116.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250329_200308",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250329_200308.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250329_200308.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250426_225158",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250426_225158.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250426_225158.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250501_195146",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250501_195146.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250501_195146.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250501_195234",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250501_195234.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250501_195234.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250509_182913",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250509_182913.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250509_182913.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250510_153806",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250510_153806.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250510_153806.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250513_203154",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250513_203154.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250513_203154.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250513_203322",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250513_203322.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250513_203322.jpg",
+          "category": "Shanghai"
+        },
+        {
+          "name": "IMG_20250513_203427",
+          "original": "https://media.wiki-power.com/gallery/Shanghai/IMG_20250513_203427.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Shanghai/IMG_20250513_203427.jpg",
+          "category": "Shanghai"
+        }
+      ],
+      "count": 62
+    },
+    "Singapore": {
+      "name": "Singapore",
+      "images": [
+        {
+          "name": "DSC00994.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC00994.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC00994.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC00996.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC00996.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC00996.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC01025.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC01025.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01025.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC01093.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC01093.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01093.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC01153.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC01153.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01153.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC01194.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC01194.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01194.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC01756_1.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC01756_1.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC01756_1.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC02493.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC02493.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02493.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC02582.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC02582.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02582.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC02668.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC02668.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02668.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC02856.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC02856.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02856.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC02919.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC02919.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02919.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC02989.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC02989.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC02989.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC03117.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC03117.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC03117.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC03177.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC03177.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC03177.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "DSC03349.JPG",
+          "original": "https://media.wiki-power.com/gallery/Singapore/DSC03349.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/DSC03349.JPG.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "IMG_20240614_205224",
+          "original": "https://media.wiki-power.com/gallery/Singapore/IMG_20240614_205224.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/IMG_20240614_205224.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "IMG_20240614_205422",
+          "original": "https://media.wiki-power.com/gallery/Singapore/IMG_20240614_205422.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/IMG_20240614_205422.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "IMG_20240615_234155",
+          "original": "https://media.wiki-power.com/gallery/Singapore/IMG_20240615_234155.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/IMG_20240615_234155.jpg",
+          "category": "Singapore"
+        },
+        {
+          "name": "IMG_20240615_234417",
+          "original": "https://media.wiki-power.com/gallery/Singapore/IMG_20240615_234417.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Singapore/IMG_20240615_234417.jpg",
+          "category": "Singapore"
+        }
+      ],
+      "count": 20
+    },
+    "Tokyo": {
+      "name": "Tokyo",
+      "images": [
+        {
+          "name": "DSC05776.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05776.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05776.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC05817.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05817.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05817.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC05838.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05838.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05838.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC05948.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05948.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05948.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC05985.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC05985.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC05985.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06011.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06011.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06011.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06019.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06019.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06019.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06051.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06051.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06051.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06246.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06246.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06246.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06305.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06305.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06305.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06384.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06384.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06384.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06393.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06393.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06393.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06399.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06399.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06399.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06621.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06621.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06621.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06963.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06963.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06963.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC06970.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC06970.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC06970.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "DSC07231.JPG",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/DSC07231.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/DSC07231.JPG.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250306_101456",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250306_101456.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250306_101456.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250306_222721",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250306_222721.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250306_222721.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250306_223103",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250306_223103.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250306_223103.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250307_154139",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250307_154139.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250307_154139.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250307_154220",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250307_154220.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250307_154220.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250307_161751",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250307_161751.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250307_161751.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250307_161931",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250307_161931.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250307_161931.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250308_194146",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250308_194146.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250308_194146.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250308_215559",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250308_215559.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250308_215559.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250308_232401",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250308_232401.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250308_232401.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250308_232434",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250308_232434.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250308_232434.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250309_152614",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250309_152614.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250309_152614.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250309_165747",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250309_165747.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250309_165747.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250309_170005",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250309_170005.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250309_170005.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "IMG_20250309_175841",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/IMG_20250309_175841.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/IMG_20250309_175841.jpg",
+          "category": "Tokyo"
+        },
+        {
+          "name": "mmexport1741521226122",
+          "original": "https://media.wiki-power.com/gallery/Tokyo/mmexport1741521226122.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Tokyo/mmexport1741521226122.jpg",
+          "category": "Tokyo"
+        }
+      ],
+      "count": 33
+    },
+    "Vietnam": {
+      "name": "Vietnam",
+      "images": [
+        {
+          "name": "DSC00272_1.JPG",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00272_1.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00272_1.JPG.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "DSC00502.JPG",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00502.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00502.JPG.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "DSC00546.JPG",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00546.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00546.JPG.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "DSC00612_1.JPG",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00612_1.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00612_1.JPG.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "DSC00904_1.JPG",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/DSC00904_1.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/DSC00904_1.JPG.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250702_204619",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250702_204619.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250702_204619.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250703_210719",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250703_210719.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250703_210719.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250703_210944",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250703_210944.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250703_210944.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250706_170336",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_170336.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_170336.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250706_170517",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_170517.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_170517.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250706_170625",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_170625.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_170625.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250706_171308",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_171308.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_171308.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250706_203547",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_203547.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_203547.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250706_223502",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250706_223502.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250706_223502.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250707_152207",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250707_152207.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250707_152207.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250707_155538",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250707_155538.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250707_155538.jpg",
+          "category": "Vietnam"
+        },
+        {
+          "name": "IMG_20250707_155803",
+          "original": "https://media.wiki-power.com/gallery/Vietnam/IMG_20250707_155803.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Vietnam/IMG_20250707_155803.jpg",
+          "category": "Vietnam"
+        }
+      ],
+      "count": 17
+    },
+    "Xiamen": {
+      "name": "Xiamen",
+      "images": [
+        {
+          "name": "DSC04907.JPG",
+          "original": "https://media.wiki-power.com/gallery/Xiamen/DSC04907.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/DSC04907.JPG.jpg",
+          "category": "Xiamen"
+        },
+        {
+          "name": "DSC05000.JPG",
+          "original": "https://media.wiki-power.com/gallery/Xiamen/DSC05000.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/DSC05000.JPG.jpg",
+          "category": "Xiamen"
+        },
+        {
+          "name": "DSC05060.JPG",
+          "original": "https://media.wiki-power.com/gallery/Xiamen/DSC05060.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/DSC05060.JPG.jpg",
+          "category": "Xiamen"
+        },
+        {
+          "name": "DSC05172.JPG",
+          "original": "https://media.wiki-power.com/gallery/Xiamen/DSC05172.JPG.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/DSC05172.JPG.jpg",
+          "category": "Xiamen"
+        },
+        {
+          "name": "IMG_20250202_154252",
+          "original": "https://media.wiki-power.com/gallery/Xiamen/IMG_20250202_154252.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/IMG_20250202_154252.jpg",
+          "category": "Xiamen"
+        },
+        {
+          "name": "IMG_20250202_162147",
+          "original": "https://media.wiki-power.com/gallery/Xiamen/IMG_20250202_162147.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/IMG_20250202_162147.jpg",
+          "category": "Xiamen"
+        },
+        {
+          "name": "IMG_20250203_161907",
+          "original": "https://media.wiki-power.com/gallery/Xiamen/IMG_20250203_161907.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/Xiamen/IMG_20250203_161907.jpg",
+          "category": "Xiamen"
+        }
+      ],
+      "count": 7
+    }
+  },
+  "total_images": 318,
+  "generated_at": "2025-07-27T08:47:24.517Z"
+}

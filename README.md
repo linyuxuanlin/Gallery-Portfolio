@@ -34,8 +34,9 @@ Gallery-Portfolio
 - 🖼️ **预览图优化** - 先加载预览图，点击查看高清原图
 - 🔄 **智能加载** - 预览图缺失时自动加载原图
 - 📸 **EXIF信息** - 显示光圈、快门、ISO等摄影参数
-- 🌍 **跨平台支持** - 提供Windows、Linux和MacOS脚本
+- 🌍 **跨平台支持** - 提供Node.js、Windows、Linux和MacOS脚本
 - 🔗 **图床兼容** - 支持任意图床服务（Cloudflare R2、阿里云OSS、腾讯云COS等）
+- 🎲 **随机展示** - 图片以随机顺序展示，每次刷新都有不同的排列
 
 ## 🏗️ 项目结构
 
@@ -53,6 +54,7 @@ Gallery-Portfolio/
 │   ├── image-loader.js       # 图片加载模块
 │   ├── auto-scroll.js        # 自动滚动模块
 │   └── assets/               # 图标资源
+├── generate-gallery-index.js   # Node.js图片索引生成脚本（推荐）
 ├── generate-gallery-index.bat # Windows图片索引生成脚本
 ├── generate-gallery-index.sh  # Linux/macOS图片索引生成脚本
 ├── batch-convert-webp.js      # 预览图生成脚本
@@ -128,7 +130,40 @@ npm install sharp
 node batch-convert-webp.js
 ```
 
+### 3.1 安装 EXIF 工具（可选）
+
+为了提取图片的 EXIF 信息（光圈、快门、ISO等），建议安装 ExifTool：
+
+#### Windows
+1. 下载 ExifTool: https://exiftool.org/
+2. 解压到任意目录
+3. 将 exiftool.exe 添加到系统 PATH
+
+#### macOS
+```bash
+brew install exiftool
+```
+
+#### Ubuntu/Debian
+```bash
+sudo apt-get install exiftool
+```
+
+#### CentOS/RHEL
+```bash
+sudo yum install exiftool
+```
+
 ### 4. 生成作品索引
+
+#### 推荐方式（Node.js）
+```bash
+# 使用 npm 脚本
+npm run generate-index
+
+# 或直接运行
+node generate-gallery-index.js
+```
 
 #### Windows 用户
 ```bash
@@ -205,6 +240,13 @@ chmod +x deploy.sh
 
 ### 修改作品源
 
+#### 推荐方式（Node.js）
+编辑 `generate-gallery-index.js` 文件中的以下变量：
+
+```javascript
+const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片目录路径
+```
+
 #### Windows 用户
 编辑 `generate-gallery-index.bat` 文件中的以下变量：
 
@@ -222,6 +264,17 @@ SOURCE_DIR="/home/username/Pictures/gallery"
 ### 自定义图床域名
 
 修改脚本中的域名部分：
+
+#### 推荐方式（Node.js）
+编辑 `generate-gallery-index.js` 文件中的 `buildImageUrls` 函数：
+
+```javascript
+function buildImageUrls(categoryName, fileName, fileExt) {
+    const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
+    const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.${fileExt}`;
+    return { originalUrl, previewUrl };
+}
+```
 
 #### Windows 用户
 ```batch
@@ -250,7 +303,7 @@ preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name
 ### 可用脚本
 
 - `npm run serve` - 启动本地服务器
-- `npm run generate-index` - 生成作品索引
+- `npm run generate-index` - 生成作品索引（Node.js版本）
 - `npm run generate-previews` - 生成预览图
 
 ### 模块化架构
@@ -262,6 +315,20 @@ preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name
 - **ImageLoader** - 管理作品加载和布局
 - **AutoScroll** - 自动滚动功能
 - **Gallery** - 主画廊控制器
+
+## 🎲 随机展示功能
+
+项目支持图片随机展示，提供更好的浏览体验：
+
+### 功能特点
+- **完全随机** - 每次刷新页面或切换分类时，图片都会重新随机排列
+- **分类内随机** - 单个分类内的图片也会随机展示
+- **全局随机** - "全部"标签下的图片会从所有分类中随机混合展示
+
+### 技术实现
+- 使用 JavaScript 的 `sort()` 方法配合 `Math.random()` 实现随机排序
+- 每次调用数据加载方法时都会重新随机排序
+- 保持原有的去重逻辑，避免重复图片出现
 
 ## 🎨 自定义样式
 
