@@ -129,8 +129,11 @@ function generateGalleryIndex() {
                 const ext = path.extname(file).toLowerCase();
                 
                 if (IMAGE_EXTENSIONS.includes(ext)) {
-                    const fileName = path.basename(file, ext);
-                    const { originalUrl, previewUrl } = buildImageUrls(categoryName, fileName, ext.substring(1));
+                    // 获取原始文件扩展名（保持原始大小写）
+                    const originalExt = path.extname(file);
+                    // 使用原始扩展名提取文件名
+                    const fileName = path.basename(file, originalExt);
+                    const { originalUrl, previewUrl } = buildImageUrls(categoryName, fileName, originalExt.substring(1));
                     
                     const imageInfo = {
                         name: fileName,
