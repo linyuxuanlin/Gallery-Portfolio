@@ -3,9 +3,6 @@ node_modules
 draft.md
 package-lock.json
 
-# 自动生成的索引文件
-gallery-index.json
-
 # Cloudflare Workers
 .wrangler
 dist/

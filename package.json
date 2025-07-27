@@ -1,26 +1,19 @@
 {
-  "name": "gallery-portfolio",
+  "name": "gallery-portfolio-static",
   "version": "1.0.0",
-  "description": "Gallery Portfolio - 从Cloudflare R2生成图片索引",
-  "main": "generate-gallery-index-r2.js",
+  "description": "个人摄影作品展示网站，支持Cloudflare Pages部署",
+  "main": "index.html",
   "scripts": {
-    "generate-index": "node generate-gallery-index-r2.js",
-    "deploy": "npm run generate-index && wrangler pages deploy . --project-name gallery-portfolio-static"
+    "build": "echo '静态网站，无需构建'",
+    "dev": "echo '请使用本地服务器运行，如: npx serve .'",
+    "serve": "npx serve .",
+    "generate-index": "generate-gallery-index.bat",
+    "generate-previews": "generate-previews.bat"
   },
-  "dependencies": {
-    "@aws-sdk/client-s3": "^3.0.0",
-    "node-exiftool": "^2.3.0"
-  },
+  "keywords": ["gallery", "portfolio", "photography", "static", "cloudflare-pages"],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "wrangler": "^3.0.0"
-  },
-  "keywords": [
-    "gallery",
-    "portfolio",
-    "cloudflare",
-    "r2",
-    "static-site"
-  ],
-  "author": "Power",
-  "license": "MIT"
+    "serve": "^14.2.1"
+  }
 }
