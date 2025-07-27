@@ -9,15 +9,16 @@ module.exports = {
         accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
         accessKeyId: process.env.R2_ACCESS_KEY_ID,
         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-        bucketName: 'wiki-media',
-        endpoint: process.env.R2_ENDPOINT || 'https://your-account-id.r2.cloudflarestorage.com'
+        bucketName: process.env.R2_BUCKET_NAME || 'wiki-media',
+        endpoint: process.env.R2_ENDPOINT || 'https://your-account-id.r2.cloudflarestorage.com',
+        region: process.env.R2_REGION || 'auto'
     },
     
     // 图片URL配置
     images: {
-        baseUrl: 'https://media.wiki-power.com',
-        galleryPath: 'gallery',
-        previewPath: 'gallery/0_preview'
+        baseUrl: process.env.R2_IMAGE_BASE_URL || 'https://media.wiki-power.com',
+        galleryPath: process.env.R2_IMAGE_DIR || 'gallery',
+        previewPath: `${process.env.R2_IMAGE_DIR || 'gallery'}/0_preview`
     },
     
     // 支持的图片格式
@@ -26,7 +27,7 @@ module.exports = {
     // 目录结构配置
     directories: {
         // 要扫描的目录前缀
-        scanPrefix: 'gallery/',
+        scanPrefix: `${process.env.R2_IMAGE_DIR || 'gallery'}/`,
         // 要跳过的目录
         skipDirectories: ['0_preview']
     }

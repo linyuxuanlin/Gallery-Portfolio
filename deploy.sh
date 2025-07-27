@@ -38,7 +38,7 @@ fi
 
 # 检查环境变量
 echo "检查环境变量..."
-required_vars=("CLOUDFLARE_ACCOUNT_ID" "R2_ACCESS_KEY_ID" "R2_SECRET_ACCESS_KEY")
+required_vars=("CLOUDFLARE_ACCOUNT_ID" "R2_ACCESS_KEY_ID" "R2_SECRET_ACCESS_KEY" "R2_BUCKET_NAME")
 missing_vars=()
 
 for var in "${required_vars[@]}"; do
@@ -57,7 +57,11 @@ if [ ${#missing_vars[@]} -ne 0 ]; then
     echo "CLOUDFLARE_ACCOUNT_ID: Cloudflare账户ID"
     echo "R2_ACCESS_KEY_ID: R2访问密钥ID"
     echo "R2_SECRET_ACCESS_KEY: R2访问密钥"
+    echo "R2_BUCKET_NAME: R2存储桶名称"
     echo "R2_ENDPOINT: R2端点URL (可选)"
+    echo "R2_REGION: R2区域 (可选，默认auto)"
+    echo "R2_IMAGE_BASE_URL: 图片基础URL (可选)"
+    echo "R2_IMAGE_DIR: 图片目录 (可选，默认gallery)"
     exit 1
 fi
 

@@ -56,12 +56,8 @@ Gallery-Portfolio/
 │   └── assets/               # 图标资源
 ├── generate-gallery-index-r2.js # R2图片索引生成脚本
 ├── r2-config.js              # R2配置文件
-├── generate-gallery-index.bat # Windows本地图片索引生成脚本
-├── generate-gallery-index.sh  # Linux/macOS本地图片索引生成脚本
-├── generate-previews.bat      # Windows预览图生成脚本
-├── generate-previews.sh       # Linux/macOS预览图生成脚本
-├── deploy.bat                # Windows部署脚本（支持R2）
-├── deploy.sh                 # Linux/macOS部署脚本（支持R2）
+├── deploy.bat                # Windows部署脚本
+├── deploy.sh                 # Linux/macOS部署脚本
 ├── _headers                  # Cloudflare Pages 配置
 ├── package.json              # 项目配置
 ├── env.example               # 环境变量示例文件
@@ -70,9 +66,7 @@ Gallery-Portfolio/
 
 ## 🚀 快速开始
 
-### 方式一：R2 自动部署 (推荐)
-
-#### 1. 配置环境变量
+### 1. 配置环境变量
 
 复制 `env.example` 为 `.env` 并填入您的配置：
 
@@ -83,14 +77,23 @@ CLOUDFLARE_ACCOUNT_ID=your_account_id_here
 # R2 访问密钥
 R2_ACCESS_KEY_ID=your_access_key_id_here
 R2_SECRET_ACCESS_KEY=your_secret_access_key_here
+
+# R2 存储桶配置
+R2_BUCKET_NAME=your_bucket_name_here
+R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
+R2_REGION=auto
+
+# 图片URL配置
+R2_IMAGE_BASE_URL=https://your-domain.com
+R2_IMAGE_DIR=gallery
 ```
 
-#### 2. 准备 R2 存储桶
+### 2. 准备 R2 存储桶
 
-将您的摄影作品上传到 R2 存储桶 `wiki-media`，按以下结构组织：
+将您的摄影作品上传到 R2 存储桶，按以下结构组织：
 
 ```
-wiki-media/
+your-bucket-name/
 └── gallery/
     ├── Hongkong/
     │   ├── DSC01475.JPG
@@ -103,53 +106,17 @@ wiki-media/
         └── Kyoto/
 ```
 
-#### 3. 自动部署
+### 3. 自动部署
 
-##### Windows 用户
+#### Windows 用户
 ```cmd
 deploy.bat
 ```
 
-##### Linux/macOS 用户
+#### Linux/macOS 用户
 ```bash
 ./deploy.sh
 ```
-
-### 方式二：本地文件系统部署
-
-#### 1. 准备摄影作品目录
-
-将您的摄影作品按以下结构组织：
-
-```
-C:\Users\Power\Wiki-media\gallery\
-├── Hongkong\
-│   ├── DSC01475.JPG
-│   └── DSC01476.JPG
-├── Kyoto\
-│   ├── DSC02580.JPG
-│   └── DSC02581.JPG
-└── 0_preview\              # 预览图目录（自动生成）
-    ├── Hongkong\
-    └── Kyoto\
-```
-
-#### 2. 生成预览图
-
-##### Windows 用户
-```bash
-generate-previews.bat
-```
-
-##### Linux/macOS 用户
-```bash
-chmod +x generate-previews.sh
-./generate-previews.sh
-```
-
-**注意：** 需要先安装 [ImageMagick](https://imagemagick.org/script/download.php#windows)
-
-#### 3. 生成作品索引
 
 #### Windows 用户
 ```bash

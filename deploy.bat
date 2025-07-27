@@ -60,6 +60,11 @@ if "%R2_SECRET_ACCESS_KEY%"=="" (
     set missing_vars=1
 )
 
+if "%R2_BUCKET_NAME%"=="" (
+    echo   - R2_BUCKET_NAME
+    set missing_vars=1
+)
+
 if %missing_vars%==1 (
     echo 错误: 缺少必要的环境变量
     echo.
@@ -67,7 +72,11 @@ if %missing_vars%==1 (
     echo CLOUDFLARE_ACCOUNT_ID: Cloudflare账户ID
     echo R2_ACCESS_KEY_ID: R2访问密钥ID
     echo R2_SECRET_ACCESS_KEY: R2访问密钥
+    echo R2_BUCKET_NAME: R2存储桶名称
     echo R2_ENDPOINT: R2端点URL (可选)
+    echo R2_REGION: R2区域 (可选，默认auto)
+    echo R2_IMAGE_BASE_URL: 图片基础URL (可选)
+    echo R2_IMAGE_DIR: 图片目录 (可选，默认gallery)
     pause
     exit /b 1
 )

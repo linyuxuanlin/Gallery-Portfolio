@@ -8,7 +8,8 @@
     "deploy": "npm run generate-index && wrangler pages deploy . --project-name gallery-portfolio-static"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.0.0"
+    "@aws-sdk/client-s3": "^3.0.0",
+    "node-exiftool": "^2.3.0"
   },
   "devDependencies": {
     "wrangler": "^3.0.0"

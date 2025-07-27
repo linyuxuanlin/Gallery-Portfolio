@@ -49,8 +49,14 @@ CLOUDFLARE_ACCOUNT_ID=your_account_id
 R2_ACCESS_KEY_ID=your_access_key_id
 R2_SECRET_ACCESS_KEY=your_secret_access_key
 
-# R2 端点 (可选，如果不设置会使用默认值)
+# R2 存储桶配置
+R2_BUCKET_NAME=your_bucket_name
 R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
+R2_REGION=auto
+
+# 图片URL配置
+R2_IMAGE_BASE_URL=https://your-domain.com
+R2_IMAGE_DIR=gallery
 ```
 
 ### 2. 获取 Cloudflare 账户 ID
@@ -66,12 +72,20 @@ R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
 3. 获取 Access Key ID 和 Secret Access Key
 4. 设置为环境变量
 
-### 4. 配置 R2 存储桶
+### 4. 配置存储桶和URL
 
-确保您的 R2 存储桶 `wiki-media` 中有以下目录结构：
+1. **R2_BUCKET_NAME**: 设置您的R2存储桶名称
+2. **R2_IMAGE_BASE_URL**: 设置您的图片访问域名
+3. **R2_IMAGE_DIR**: 设置图片在存储桶中的目录名（默认为gallery）
+4. **R2_ENDPOINT**: 设置R2端点URL（可选）
+5. **R2_REGION**: 设置R2区域（可选，默认为auto）
+
+### 5. 配置 R2 存储桶
+
+确保您的 R2 存储桶中有以下目录结构：
 
 ```
-wiki-media/
+your-bucket-name/
 └── gallery/
     ├── category1/
     │   ├── image1.jpg
@@ -130,15 +144,16 @@ module.exports = {
         accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
         accessKeyId: process.env.R2_ACCESS_KEY_ID,
         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-        bucketName: 'wiki-media',
-        endpoint: process.env.R2_ENDPOINT || 'https://your-account-id.r2.cloudflarestorage.com'
+        bucketName: process.env.R2_BUCKET_NAME || 'wiki-media',
+        endpoint: process.env.R2_ENDPOINT || 'https://your-account-id.r2.cloudflarestorage.com',
+        region: process.env.R2_REGION || 'auto'
     },
     
     // 图片URL配置
     images: {
-        baseUrl: 'https://media.wiki-power.com',
-        galleryPath: 'gallery',
-        previewPath: 'gallery/0_preview'
+        baseUrl: process.env.R2_IMAGE_BASE_URL || 'https://media.wiki-power.com',
+        galleryPath: process.env.R2_IMAGE_DIR || 'gallery',
+        previewPath: `${process.env.R2_IMAGE_DIR || 'gallery'}/0_preview`
     },
     
     // 支持的图片格式
@@ -146,7 +161,7 @@ module.exports = {
     
     // 目录结构配置
     directories: {
-        scanPrefix: 'gallery/',
+        scanPrefix: `${process.env.R2_IMAGE_DIR || 'gallery'}/`,
         skipDirectories: ['0_preview']
     }
 };
@@ -161,7 +176,8 @@ module.exports = {
     "deploy": "npm run generate-index && wrangler pages deploy . --project-name gallery-portfolio-static"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.0.0"
+    "@aws-sdk/client-s3": "^3.0.0",
+    "node-exiftool": "^2.3.0"
   }
 }
 ```
