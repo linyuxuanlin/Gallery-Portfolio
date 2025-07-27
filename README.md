@@ -34,7 +34,7 @@ Gallery-Portfolio
 - 🖼️ **预览图优化** - 先加载预览图，点击查看高清原图
 - 🔄 **智能加载** - 预览图缺失时自动加载原图
 - 📸 **EXIF信息** - 显示光圈、快门、ISO等摄影参数
-- 🌍 **跨平台支持** - 提供Node.js、Windows、Linux和MacOS脚本
+- 🌍 **跨平台支持** - 提供Node.js脚本，支持所有操作系统
 - 🔗 **图床兼容** - 支持任意图床服务（Cloudflare R2、阿里云OSS、腾讯云COS等）
 - 🎲 **随机展示** - 图片以随机顺序展示，每次刷新都有不同的排列
 
@@ -54,9 +54,7 @@ Gallery-Portfolio/
 │   ├── image-loader.js       # 图片加载模块
 │   ├── auto-scroll.js        # 自动滚动模块
 │   └── assets/               # 图标资源
-├── generate-gallery-index.js   # Node.js图片索引生成脚本（推荐）
-├── generate-gallery-index.bat # Windows图片索引生成脚本
-├── generate-gallery-index.sh  # Linux/macOS图片索引生成脚本
+├── generate-gallery-index.js   # Node.js图片索引生成脚本
 ├── batch-convert-webp.js      # 预览图生成脚本
 ├── deploy.bat                # Windows部署脚本
 ├── deploy.sh                 # Linux/macOS部署脚本
@@ -89,28 +87,22 @@ Gallery-Portfolio/
 
 #### 1.2 配置本地目录路径
 
-**Windows 用户** - 编辑 `generate-gallery-index.bat` 文件：
-```batch
-set "SOURCE_DIR=C:\Users\YourName\Pictures\gallery"
-```
+编辑 `generate-gallery-index.js` 文件中的 `SOURCE_DIR` 变量：
 
-**Linux/macOS 用户** - 编辑 `generate-gallery-index.sh` 文件：
-```bash
-SOURCE_DIR="/home/username/Pictures/gallery"
+```javascript
+const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片目录路径
 ```
 
 #### 1.3 配置图床域名
 
-**Windows 用户** - 编辑 `generate-gallery-index.bat` 文件：
-```batch
-set "original_url=https://your-domain.com/gallery/!category_name!/!file_name!!file_ext!"
-set "preview_url=https://your-domain.com/gallery/0_preview/!category_name!/!file_name!!file_ext!"
-```
+编辑 `generate-gallery-index.js` 文件中的 `buildImageUrls` 函数：
 
-**Linux/macOS 用户** - 编辑 `generate-gallery-index.sh` 文件：
-```bash
-original_url="https://your-domain.com/gallery/$category_name/$file_name.$file_ext"
-preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name.$file_ext"
+```javascript
+function buildImageUrls(categoryName, fileName, fileExt) {
+    const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
+    const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.${fileExt}`;
+    return { originalUrl, previewUrl };
+}
 ```
 
 **支持的图床服务示例：**
@@ -156,24 +148,12 @@ sudo yum install exiftool
 
 ### 4. 生成作品索引
 
-#### 推荐方式（Node.js）
 ```bash
 # 使用 npm 脚本
-npm run generate-index
+npm run local:generate-index
 
 # 或直接运行
 node generate-gallery-index.js
-```
-
-#### Windows 用户
-```bash
-generate-gallery-index.bat
-```
-
-#### Linux/macOS 用户
-```bash
-chmod +x generate-gallery-index.sh
-./generate-gallery-index.sh
 ```
 
 这将生成 `gallery-index.json` 文件，包含所有摄影作品的信息。
@@ -193,6 +173,13 @@ npx serve .
 ```
 
 ### 6. 部署到 Cloudflare Pages
+
+**重要说明：** 以下脚本仅在本地执行，Cloudflare Pages 部署时不会执行这些脚本：
+
+- `npm run local:generate-index` - 生成图片索引
+- `npm run local:generate-previews` - 生成预览图
+
+这些脚本需要在本地执行后，将生成的文件（如 `gallery-index.json`）提交到仓库中。
 
 #### Windows 用户
 ```bash
@@ -240,32 +227,14 @@ chmod +x deploy.sh
 
 ### 修改作品源
 
-#### 推荐方式（Node.js）
 编辑 `generate-gallery-index.js` 文件中的以下变量：
 
 ```javascript
 const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片目录路径
 ```
 
-#### Windows 用户
-编辑 `generate-gallery-index.bat` 文件中的以下变量：
-
-```batch
-set "SOURCE_DIR=C:\Users\YourName\Pictures\gallery"
-```
-
-#### Linux/macOS 用户
-编辑 `generate-gallery-index.sh` 文件中的以下变量：
-
-```bash
-SOURCE_DIR="/home/username/Pictures/gallery"
-```
-
 ### 自定义图床域名
 
-修改脚本中的域名部分：
-
-#### 推荐方式（Node.js）
 编辑 `generate-gallery-index.js` 文件中的 `buildImageUrls` 函数：
 
 ```javascript
@@ -274,18 +243,6 @@ function buildImageUrls(categoryName, fileName, fileExt) {
     const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.${fileExt}`;
     return { originalUrl, previewUrl };
 }
-```
-
-#### Windows 用户
-```batch
-set "original_url=https://your-domain.com/gallery/!category_name!/!file_name!!file_ext!"
-set "preview_url=https://your-domain.com/gallery/0_preview/!category_name!/!file_name!!file_ext!"
-```
-
-#### Linux/macOS 用户
-```bash
-original_url="https://your-domain.com/gallery/$category_name/$file_name.$file_ext"
-preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name.$file_ext"
 ```
 
 ## 🛠️ 开发
@@ -302,9 +259,13 @@ preview_url="https://your-domain.com/gallery/0_preview/$category_name/$file_name
 
 ### 可用脚本
 
+#### 部署脚本（Cloudflare Pages 会自动执行）
+- `npm run build` - 构建脚本（静态网站无需构建）
+
+#### 本地开发脚本（仅在本地执行）
 - `npm run serve` - 启动本地服务器
-- `npm run generate-index` - 生成作品索引（Node.js版本）
-- `npm run generate-previews` - 生成预览图
+- `npm run local:generate-index` - 生成作品索引
+- `npm run local:generate-previews` - 生成预览图
 
 ### 模块化架构
 
