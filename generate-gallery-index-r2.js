@@ -201,7 +201,7 @@ async function organizeFilesByCategory(files) {
 function generateGalleryIndex(categories) {
     const galleryData = {
         gallery: {},
-        total: 0
+        total_images: 0
     };
     
     let totalImages = 0;
@@ -217,7 +217,7 @@ function generateGalleryIndex(categories) {
         };
     });
     
-    galleryData.total = totalImages;
+    galleryData.total_images = totalImages;
     
     return galleryData;
 }
@@ -235,18 +235,35 @@ async function main() {
     const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
     
     if (missingVars.length > 0) {
-        console.error('错误: 缺少必要的环境变量:');
-        missingVars.forEach(varName => console.error(`  - ${varName}`));
-        console.error('\n请设置以下环境变量:');
-        console.error('CLOUDFLARE_ACCOUNT_ID: Cloudflare账户ID');
-        console.error('R2_ACCESS_KEY_ID: R2访问密钥ID');
-        console.error('R2_SECRET_ACCESS_KEY: R2访问密钥');
-        console.error('R2_BUCKET_NAME: R2存储桶名称');
-        console.error('R2_ENDPOINT: R2端点URL (可选)');
-        console.error('R2_REGION: R2区域 (可选，默认auto)');
-        console.error('R2_IMAGE_BASE_URL: 图片基础URL (可选)');
-        console.error('R2_IMAGE_DIR: 图片目录 (可选，默认gallery)');
-        process.exit(1);
+        console.warn('警告: 缺少必要的环境变量，将生成空的索引文件:');
+        missingVars.forEach(varName => console.warn(`  - ${varName}`));
+        console.warn('\n请设置以下环境变量:');
+        console.warn('CLOUDFLARE_ACCOUNT_ID: Cloudflare账户ID');
+        console.warn('R2_ACCESS_KEY_ID: R2访问密钥ID');
+        console.warn('R2_SECRET_ACCESS_KEY: R2访问密钥');
+        console.warn('R2_BUCKET_NAME: R2存储桶名称');
+        console.warn('R2_ENDPOINT: R2端点URL (可选)');
+        console.warn('R2_REGION: R2区域 (可选，默认auto)');
+        console.warn('R2_IMAGE_BASE_URL: 图片基础URL (可选)');
+        console.warn('R2_IMAGE_DIR: 图片目录 (可选，默认gallery)');
+        
+        // 生成空的索引文件而不是退出
+        const emptyGalleryData = {
+            gallery: {},
+            total_images: 0,
+            lastUpdated: new Date().toISOString()
+        };
+        
+        const outputFile = 'gallery-index.json';
+        fs.writeFileSync(outputFile, JSON.stringify(emptyGalleryData, null, 2));
+        
+        console.log('========================================');
+        console.log('生成了空的索引文件！');
+        console.log(`输出文件: ${outputFile}`);
+        console.log(`生成时间: ${new Date().toLocaleString()}`);
+        console.log('请设置环境变量后重新部署以获取实际图片数据');
+        console.log('========================================');
+        return;
     }
     
     try {
@@ -289,7 +306,7 @@ async function main() {
         
         console.log('========================================');
         console.log('索引生成完成！');
-        console.log(`总图片数: ${galleryData.total}`);
+        console.log(`总图片数: ${galleryData.total_images}`);
         console.log(`输出文件: ${outputFile}`);
         console.log(`文件大小: ${fileSizeInKB} KB`);
         console.log(`生成时间: ${new Date().toLocaleString()}`);
@@ -307,6 +324,22 @@ async function main() {
         if (error.stack) {
             console.error('错误堆栈:', error.stack);
         }
+        
+        // 即使出错也生成一个基本的索引文件，避免前端加载失败
+        console.log('正在生成基本的索引文件...');
+        const fallbackGalleryData = {
+            gallery: {},
+            total_images: 0,
+            lastUpdated: new Date().toISOString(),
+            error: '索引生成失败，请检查R2配置和环境变量'
+        };
+        
+        const outputFile = 'gallery-index.json';
+        fs.writeFileSync(outputFile, JSON.stringify(fallbackGalleryData, null, 2));
+        
+        console.log(`已生成基本的索引文件: ${outputFile}`);
+        console.log('请检查R2配置和环境变量后重新部署');
+        
         process.exit(1);
     }
 }
