@@ -926,9 +926,9 @@ class ImageLoader {
             if (this.isModalOpen) {
                 modalImg.style.filter = 'none';
                 exifInfo.innerHTML = '<p style="color:red;">原图加载失败</p>';
-                // 恢复按钮状态
-                loadOriginalBtn.innerHTML = '加载原图';
-                loadOriginalBtn.classList.remove('loading');
+                        // 恢复按钮状态
+        loadOriginalBtn.innerHTML = '<span>加载原图</span>';
+        loadOriginalBtn.classList.remove('loading');
             }
         };
 
@@ -986,7 +986,7 @@ class ImageLoader {
         this.isModalOpen = false;
         
         // 重置按钮状态
-        loadOriginalBtn.innerHTML = '加载原图';
+        loadOriginalBtn.innerHTML = '<span>加载原图</span>';
         loadOriginalBtn.classList.remove('loading');
         loadOriginalBtn.style.display = 'none';
         

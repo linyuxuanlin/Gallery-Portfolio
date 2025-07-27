@@ -194,6 +194,7 @@ body.dark #exif-info {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  min-height: 44px;
 }
 
 .load-original-btn:hover {
@@ -221,16 +222,13 @@ body.dark #exif-info {
   border-radius: 50%;
   animation: spin 1s linear infinite;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
 }
 
 .load-original-btn span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   line-height: 1;
+  white-space: nowrap;
 }
 
 /* 深色主题下的按钮样式 */
