@@ -16,6 +16,7 @@ class ImageLoader {
         this.scrollDelta = 0;
         this.loadingImages = [];
         this.loadedImageUrls = new Set();
+        this.currentHighResImage = null;
         
         this.init();
     }
@@ -765,6 +766,9 @@ class ImageLoader {
         // 加载高清图
         const highResImage = new Image();
         
+        // 将高清图对象保存到实例中，以便在关闭时取消加载
+        this.currentHighResImage = highResImage;
+        
         // 监听图片加载进度
         highResImage.onloadstart = () => {
             console.log('开始加载高清图:', original);
@@ -795,23 +799,38 @@ class ImageLoader {
         };
         
         highResImage.onload = () => {
+            // 检查模态窗口是否仍然打开
+            if (modal.style.display === 'none') {
+                console.log('模态窗口已关闭，取消高清图加载');
+                return;
+            }
+            
             console.log(`高清图加载完成，设置到模态窗口: ${original}`);
             modalImg.src = original;
             modalImg.style.filter = 'blur(0px)';
             
             // 获取EXIF信息
             this.getExifInfo(original).then(exifData => {
+                // 再次检查模态窗口是否仍然打开
+                if (modal.style.display === 'none') {
+                    console.log('模态窗口已关闭，取消EXIF信息获取');
+                    return;
+                }
                 exifInfo.innerHTML = createExifInfo(exifData);
             }).catch(error => {
                 console.error('获取EXIF信息失败:', error);
-                exifInfo.innerHTML = '<p>EXIF信息获取失败</p>';
+                if (modal.style.display !== 'none') {
+                    exifInfo.innerHTML = '<p>EXIF信息获取失败</p>';
+                }
             });
         };
         
         highResImage.onerror = () => {
             console.error('加载高清图失败:', original);
-            modalImg.style.filter = 'blur(0px)';
-            exifInfo.innerHTML = '<p style="color:red;">原图加载失败</p>';
+            if (modal.style.display !== 'none') {
+                modalImg.style.filter = 'blur(0px)';
+                exifInfo.innerHTML = '<p style="color:red;">原图加载失败</p>';
+            }
         };
         
         highResImage.src = original;
@@ -863,6 +882,17 @@ class ImageLoader {
     closeModal() {
         const modal = document.getElementById('myModal');
         modal.style.opacity = '0';
+        
+        // 取消正在加载的高清图
+        if (this.currentHighResImage) {
+            console.log('取消高清图加载');
+            this.currentHighResImage.src = '';
+            this.currentHighResImage.onload = null;
+            this.currentHighResImage.onerror = null;
+            this.currentHighResImage.onloadstart = null;
+            this.currentHighResImage.onprogress = null;
+            this.currentHighResImage = null;
+        }
         
         setTimeout(() => {
             modal.style.display = 'none';
