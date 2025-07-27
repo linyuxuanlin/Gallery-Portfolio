@@ -108,80 +108,15 @@ body.dark .exif-info strong {
   color: #81C784;
 }
 
-/* Loading overlay styles */
-.loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none; /* 允许点击穿透到下层元素 */
+.gallery .column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+  position: relative; /* 确保子元素的z-index正常工作 */
 }
 
-.loading-overlay .loading-spinner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    pointer-events: none; /* 确保内容也不会阻止点击 */
-}
-
-.loading-overlay .spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top: 3px solid #fff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 8px;
-}
-
-.loading-overlay .loading-success {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #4CAF50;
-    pointer-events: none; /* 确保内容也不会阻止点击 */
-}
-
-.loading-overlay .success-icon {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.loading-overlay .loading-error {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #f44336;
-    pointer-events: none; /* 确保内容也不会阻止点击 */
-}
-
-.loading-overlay .error-icon {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.loading-overlay p {
-    margin: 0;
-    font-size: 12px;
-    text-align: center;
-}
-
-/* Modal animation improvements */
+/* Modal styles */
 .modal {
   display: none;
   position: fixed;
@@ -192,75 +127,20 @@ body.dark .exif-info strong {
   height: 100%;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.9);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  opacity: 1;
+  transition: opacity 0.3s ease; /* 添加平滑过渡 */
 }
 
 .modal-content {
   margin: auto;
-    margin-top: 100px;
+  margin-top: 100px; /* Top margin */
   display: block;
   max-width: 90%;
-    max-height: 80%;
+  max-height: 80%; /* Adjust to accommodate caption and exif-info */
   width: auto;
   height: auto;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    object-fit: contain;
 }
 
-/* Enhanced modal animation */
-.modal.animate-in .modal-content {
-    animation: modalZoomIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-@keyframes modalZoomIn {
-    0% {
-        transform: scale(0.3);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* 确保模态窗口图片正确显示 */
-.modal img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-}
-
-/* Gallery image container positioning */
-.gallery .column {
-    position: relative;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8em;
-}
-
-.gallery .image-container {
-    position: relative;
-    display: block;
-    margin-bottom: 0.8em;
-}
-
-.gallery img {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    display: block;
-}
-
-/* Modal styles */
 .close {
   position: absolute;
   top: 15px;

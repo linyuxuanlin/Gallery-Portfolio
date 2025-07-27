@@ -1,6 +1,6 @@
 <h1 align="center">
 <img width="27" src="./public/assets/favicon.svg">
-Gallery-Portfolio
+Gallery-Portfolio 
 </h1>
 
 <p align="center">
