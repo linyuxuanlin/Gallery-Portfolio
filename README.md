@@ -35,6 +35,8 @@ Gallery-Portfolio
 - 🔄 **智能加载** - 预览图缺失时自动加载原图
 - 📸 **EXIF信息** - 显示光圈、快门、ISO等摄影参数
 - 🌍 **跨平台支持** - 提供Windows、Linux和MacOS脚本
+- ☁️ **R2自动部署** - 从Cloudflare R2自动获取文件列表并生成索引
+- 🔧 **环境变量配置** - 支持灵活的环境变量配置
 
 ## 🏗️ 项目结构
 
@@ -52,19 +54,70 @@ Gallery-Portfolio/
 │   ├── image-loader.js       # 图片加载模块
 │   ├── auto-scroll.js        # 自动滚动模块
 │   └── assets/               # 图标资源
-├── generate-gallery-index.bat # Windows图片索引生成脚本
-├── generate-gallery-index.sh  # Linux/macOS图片索引生成脚本
+├── generate-gallery-index-r2.js # R2图片索引生成脚本
+├── r2-config.js              # R2配置文件
+├── generate-gallery-index.bat # Windows本地图片索引生成脚本
+├── generate-gallery-index.sh  # Linux/macOS本地图片索引生成脚本
 ├── generate-previews.bat      # Windows预览图生成脚本
 ├── generate-previews.sh       # Linux/macOS预览图生成脚本
-├── deploy.bat                # Windows部署脚本
-├── deploy.sh                 # Linux/macOS部署脚本
+├── deploy.bat                # Windows部署脚本（支持R2）
+├── deploy.sh                 # Linux/macOS部署脚本（支持R2）
 ├── _headers                  # Cloudflare Pages 配置
-└── package.json              # 项目配置
+├── package.json              # 项目配置
+├── env.example               # 环境变量示例文件
+└── README-R2-DEPLOYMENT.md   # R2部署详细说明
 ```
 
 ## 🚀 快速开始
 
-### 1. 准备摄影作品目录
+### 方式一：R2 自动部署 (推荐)
+
+#### 1. 配置环境变量
+
+复制 `env.example` 为 `.env` 并填入您的配置：
+
+```bash
+# Cloudflare 账户 ID
+CLOUDFLARE_ACCOUNT_ID=your_account_id_here
+
+# R2 访问密钥
+R2_ACCESS_KEY_ID=your_access_key_id_here
+R2_SECRET_ACCESS_KEY=your_secret_access_key_here
+```
+
+#### 2. 准备 R2 存储桶
+
+将您的摄影作品上传到 R2 存储桶 `wiki-media`，按以下结构组织：
+
+```
+wiki-media/
+└── gallery/
+    ├── Hongkong/
+    │   ├── DSC01475.JPG
+    │   └── DSC01476.JPG
+    ├── Kyoto/
+    │   ├── DSC02580.JPG
+    │   └── DSC02581.JPG
+    └── 0_preview/          # 预览图目录
+        ├── Hongkong/
+        └── Kyoto/
+```
+
+#### 3. 自动部署
+
+##### Windows 用户
+```cmd
+deploy.bat
+```
+
+##### Linux/macOS 用户
+```bash
+./deploy.sh
+```
+
+### 方式二：本地文件系统部署
+
+#### 1. 准备摄影作品目录
 
 将您的摄影作品按以下结构组织：
 
@@ -81,14 +134,14 @@ C:\Users\Power\Wiki-media\gallery\
     └── Kyoto\
 ```
 
-### 2. 生成预览图
+#### 2. 生成预览图
 
-#### Windows 用户
+##### Windows 用户
 ```bash
 generate-previews.bat
 ```
 
-#### Linux/macOS 用户
+##### Linux/macOS 用户
 ```bash
 chmod +x generate-previews.sh
 ./generate-previews.sh
@@ -96,7 +149,7 @@ chmod +x generate-previews.sh
 
 **注意：** 需要先安装 [ImageMagick](https://imagemagick.org/script/download.php#windows)
 
-### 3. 生成作品索引
+#### 3. 生成作品索引
 
 #### Windows 用户
 ```bash
