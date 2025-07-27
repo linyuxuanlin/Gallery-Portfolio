@@ -251,6 +251,12 @@ async function main() {
     
     try {
         console.log('正在从R2获取文件列表...');
+        console.log(`R2配置信息:`);
+        console.log(`  - 存储桶: ${R2_CONFIG.bucketName}`);
+        console.log(`  - 端点: ${R2_CONFIG.endpoint}`);
+        console.log(`  - 区域: ${R2_CONFIG.region}`);
+        console.log(`  - 扫描前缀: ${DIRECTORY_CONFIG.scanPrefix}`);
+        
         const files = await listR2Files();
         
         if (files.length === 0) {
@@ -259,6 +265,13 @@ async function main() {
         }
         
         console.log(`找到 ${files.length} 个文件`);
+        console.log('文件列表预览:');
+        files.slice(0, 5).forEach(file => {
+            console.log(`  - ${file.Key}`);
+        });
+        if (files.length > 5) {
+            console.log(`  ... 还有 ${files.length - 5} 个文件`);
+        }
         
         console.log('正在按分类组织文件...');
         const categories = await organizeFilesByCategory(files);
@@ -270,18 +283,30 @@ async function main() {
         const outputFile = 'gallery-index.json';
         fs.writeFileSync(outputFile, JSON.stringify(galleryData, null, 2));
         
+        // 获取文件统计信息
+        const stats = fs.statSync(outputFile);
+        const fileSizeInKB = (stats.size / 1024).toFixed(2);
+        
         console.log('========================================');
         console.log('索引生成完成！');
         console.log(`总图片数: ${galleryData.total}`);
         console.log(`输出文件: ${outputFile}`);
+        console.log(`文件大小: ${fileSizeInKB} KB`);
+        console.log(`生成时间: ${new Date().toLocaleString()}`);
         console.log('分类列表:');
         Object.keys(categories).forEach(category => {
-            console.log(`  - ${category}: ${categories[category].length} 张图片`);
+            const categoryData = categories[category];
+            const exifCount = categoryData.filter(img => img.exif).length;
+            console.log(`  - ${category}: ${categoryData.length} 张图片 (${exifCount} 张包含EXIF信息)`);
         });
         console.log('========================================');
         
     } catch (error) {
         console.error('生成索引失败:', error);
+        console.error('错误详情:', error.message);
+        if (error.stack) {
+            console.error('错误堆栈:', error.stack);
+        }
         process.exit(1);
     }
 }

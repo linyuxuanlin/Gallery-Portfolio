@@ -36,9 +36,10 @@ echo ✓ npm 已安装
 REM 安装依赖
 echo 安装依赖...
 if not exist "node_modules" (
+    echo 正在安装依赖包...
     npm install
 ) else (
-    npm install --silent
+    echo 依赖包已存在，跳过安装
 )
 
 REM 检查环境变量
@@ -48,21 +49,29 @@ set missing_vars=0
 if "%CLOUDFLARE_ACCOUNT_ID%"=="" (
     echo   - CLOUDFLARE_ACCOUNT_ID
     set missing_vars=1
+) else (
+    echo ✓ CLOUDFLARE_ACCOUNT_ID: %CLOUDFLARE_ACCOUNT_ID%
 )
 
 if "%R2_ACCESS_KEY_ID%"=="" (
     echo   - R2_ACCESS_KEY_ID
     set missing_vars=1
+) else (
+    echo ✓ R2_ACCESS_KEY_ID: %R2_ACCESS_KEY_ID%
 )
 
 if "%R2_SECRET_ACCESS_KEY%"=="" (
     echo   - R2_SECRET_ACCESS_KEY
     set missing_vars=1
+) else (
+    echo ✓ R2_SECRET_ACCESS_KEY: 已设置
 )
 
 if "%R2_BUCKET_NAME%"=="" (
     echo   - R2_BUCKET_NAME
     set missing_vars=1
+) else (
+    echo ✓ R2_BUCKET_NAME: %R2_BUCKET_NAME%
 )
 
 if %missing_vars%==1 (
@@ -83,8 +92,33 @@ if %missing_vars%==1 (
 
 echo ✓ 环境变量检查通过
 
+REM 显示配置信息
+echo 当前配置信息:
+echo   - R2存储桶: %R2_BUCKET_NAME%
+if "%R2_ENDPOINT%"=="" (
+    echo   - R2端点: 未设置
+) else (
+    echo   - R2端点: %R2_ENDPOINT%
+)
+if "%R2_REGION%"=="" (
+    echo   - R2区域: auto
+) else (
+    echo   - R2区域: %R2_REGION%
+)
+if "%R2_IMAGE_BASE_URL%"=="" (
+    echo   - 图片基础URL: 未设置
+) else (
+    echo   - 图片基础URL: %R2_IMAGE_BASE_URL%
+)
+if "%R2_IMAGE_DIR%"=="" (
+    echo   - 图片目录: gallery
+) else (
+    echo   - 图片目录: %R2_IMAGE_DIR%
+)
+
 REM 生成图片索引
 echo 正在从R2生成图片索引...
+echo 开始时间: %date% %time%
 npm run generate-index
 if errorlevel 1 (
     echo 错误: 图片索引生成失败
@@ -93,6 +127,7 @@ if errorlevel 1 (
 )
 
 echo ✓ 图片索引生成成功
+echo 结束时间: %date% %time%
 
 REM 检查生成的文件
 if not exist "gallery-index.json" (
@@ -102,6 +137,11 @@ if not exist "gallery-index.json" (
 )
 
 echo ✓ 必要文件检查通过
+
+REM 显示生成的索引文件信息
+echo 生成的索引文件信息:
+for %%A in (gallery-index.json) do echo   - 文件大小: %%~zA 字节
+echo   - 最后修改: %date% %time%
 
 REM 检查Wrangler
 echo 检查Wrangler...
@@ -129,6 +169,12 @@ if errorlevel 1 (
 
 echo ✓ 已登录Cloudflare
 
+REM 显示部署信息
+echo 部署信息:
+echo   - 项目名称: gallery-portfolio-static
+echo   - 部署时间: %date% %time%
+echo   - 当前目录: %cd%
+
 REM 开始部署
 echo.
 echo 开始部署到Cloudflare Pages...
@@ -139,6 +185,7 @@ if errorlevel 1 (
     echo.
     echo ========================================
     echo 部署失败！
+    echo 失败时间: %date% %time%
     echo 请检查错误信息并重试
     echo ========================================
     pause
@@ -148,6 +195,8 @@ if errorlevel 1 (
 echo.
 echo ========================================
 echo 部署成功！
+echo 部署时间: %date% %time%
 echo 您的网站应该已经可以访问了
+echo 注意: gallery-index.json 不会推送回仓库
 echo ========================================
 pause 
