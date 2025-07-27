@@ -192,6 +192,7 @@ body.dark #exif-info {
   z-index: 1002;
   display: none;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
@@ -220,12 +221,15 @@ body.dark #exif-info {
   border-radius: 50%;
   animation: spin 1s linear infinite;
   flex-shrink: 0;
-  display: inline-block;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .load-original-btn span {
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
 }
 
