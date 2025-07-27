@@ -18,12 +18,6 @@ class ImageLoader {
         this.loadingHighRes = new Map(); // 存储正在加载的高清图
         this.loadedHighRes = new Set(); // 存储已加载的高清图
         this.loadingOverlays = new Map(); // 存储加载遮罩元素
-        
-        // 滚动相关状态初始化
-        this.scrollThrottleTimer = null;
-        this.lastScrollY = window.scrollY;
-        this.scrollDelta = 0;
-        this.lastWidth = window.innerWidth;
     }
 
     init() {
@@ -233,7 +227,7 @@ class ImageLoader {
         
         if (contentHeight < requiredHeight) {
             const images = this.getCurrentImages();
-            if (this.currentIndex < images.length) {
+            if (this.currentIndex < images.length && !this.isScrollLoading) {
                 setTimeout(() => {
                     this.loadNextImages(this.currentTag);
                 }, 100);
@@ -269,6 +263,9 @@ class ImageLoader {
             document.querySelector('footer').style.opacity = '1';
             document.getElementById('loading').classList.add('hidden');
         }
+        
+        // 设置滚动加载状态
+        this.isScrollLoading = true;
         
         // 计算需要加载的图片数量
         const viewportHeight = window.innerHeight;
@@ -341,7 +338,6 @@ class ImageLoader {
                 // 重置滚动加载状态
                 setTimeout(() => {
                     this.isScrollLoading = false;
-                    console.log('滚动加载状态已重置');
                 }, 200);
                 
                 return;
@@ -368,6 +364,10 @@ class ImageLoader {
             img.onload = () => {
                 if (tag !== this.currentTag) {
                     console.log(`tag已经切换：当前选中tag:${this.currentTag}，本请求tag:${tag}，跳过加载`);
+                    // 重置滚动加载状态
+                    setTimeout(() => {
+                        this.isScrollLoading = false;
+                    }, 200);
                     return;
                 }
                 this.loadingImages.splice(this.loadingImages.indexOf(img), 1);
@@ -462,7 +462,6 @@ class ImageLoader {
         };
         
         // 开始加载第一张图片
-        this.isScrollLoading = true;
         loadSingleImage(this.currentIndex);
     }
 
@@ -583,13 +582,11 @@ class ImageLoader {
     // 设置滚动监听
     setupScrollListener() {
         window.addEventListener('scroll', () => {
-            // 如果正在加载中，直接返回
             if (this.isScrollLoading) {
-                console.log('滚动加载被阻止：正在加载中');
+                console.log('滚动加载被阻止，isScrollLoading = true');
                 return;
             }
             
-            // 节流处理
             if (this.scrollThrottleTimer) return;
             
             this.scrollThrottleTimer = setTimeout(() => {
@@ -843,9 +840,6 @@ class ImageLoader {
             // 隐藏加载遮罩
             this.hideLoadingOverlay(original);
         }, 400);
-        
-        // 确保滚动加载状态不受影响
-        console.log('模态窗口打开，滚动加载状态:', this.isScrollLoading);
     }
     
     // 为模态窗口加载高清图
@@ -995,11 +989,6 @@ class ImageLoader {
             modal.style.display = 'none';
             document.body.classList.remove('no-scroll');
             modal.style.opacity = '1';
-            
-            // 确保滚动加载状态正常
-            if (this.isScrollLoading) {
-                console.log('模态窗口关闭，滚动加载状态:', this.isScrollLoading);
-            }
             
             setTimeout(() => {
                 document.body.classList.remove('modal-open');
@@ -1215,15 +1204,11 @@ class ImageLoader {
             this.loadingOverlays.delete(originalUrl);
         }, 300);
     }
-
-    // 强制重置滚动加载状态
+    
+    // 手动重置滚动加载状态（用于调试）
     resetScrollLoadingState() {
+        console.log('手动重置滚动加载状态');
         this.isScrollLoading = false;
-        if (this.scrollThrottleTimer) {
-            clearTimeout(this.scrollThrottleTimer);
-            this.scrollThrottleTimer = null;
-        }
-        console.log('强制重置滚动加载状态');
     }
 }
 
