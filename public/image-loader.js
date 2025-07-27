@@ -17,6 +17,7 @@ class ImageLoader {
         this.loadingImages = [];
         this.loadedImageUrls = new Set();
         this.currentHighResImage = null;
+        this.isModalOpen = false;
         
         this.init();
     }
@@ -768,6 +769,7 @@ class ImageLoader {
         
         // 将高清图对象保存到实例中，以便在关闭时取消加载
         this.currentHighResImage = highResImage;
+        this.isModalOpen = true;
         
         // 监听图片加载进度
         highResImage.onloadstart = () => {
@@ -799,9 +801,9 @@ class ImageLoader {
         };
         
         highResImage.onload = () => {
-            // 检查当前加载的图片是否仍然有效
-            if (this.currentHighResImage !== highResImage) {
-                console.log('高清图加载已取消');
+            // 检查模态窗口是否仍然打开
+            if (!this.isModalOpen) {
+                console.log('模态窗口已关闭，取消高清图加载');
                 return;
             }
             
@@ -811,15 +813,15 @@ class ImageLoader {
             
             // 获取EXIF信息
             this.getExifInfo(original).then(exifData => {
-                // 再次检查当前加载的图片是否仍然有效
-                if (this.currentHighResImage !== highResImage) {
-                    console.log('EXIF信息获取已取消');
+                // 再次检查模态窗口是否仍然打开
+                if (!this.isModalOpen) {
+                    console.log('模态窗口已关闭，取消EXIF信息获取');
                     return;
                 }
                 exifInfo.innerHTML = createExifInfo(exifData);
             }).catch(error => {
                 console.error('获取EXIF信息失败:', error);
-                if (this.currentHighResImage === highResImage) {
+                if (this.isModalOpen) {
                     exifInfo.innerHTML = '<p>EXIF信息获取失败</p>';
                 }
             });
@@ -827,7 +829,7 @@ class ImageLoader {
         
         highResImage.onerror = () => {
             console.error('加载高清图失败:', original);
-            if (this.currentHighResImage === highResImage) {
+            if (this.isModalOpen) {
                 modalImg.style.filter = 'blur(0px)';
                 exifInfo.innerHTML = '<p style="color:red;">原图加载失败</p>';
             }
@@ -882,6 +884,9 @@ class ImageLoader {
     closeModal() {
         const modal = document.getElementById('myModal');
         modal.style.opacity = '0';
+        
+        // 标记模态窗口已关闭
+        this.isModalOpen = false;
         
         // 取消正在加载的高清图
         if (this.currentHighResImage) {
