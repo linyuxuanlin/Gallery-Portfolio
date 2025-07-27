@@ -799,9 +799,9 @@ class ImageLoader {
         };
         
         highResImage.onload = () => {
-            // 检查模态窗口是否仍然打开
-            if (modal.style.display === 'none') {
-                console.log('模态窗口已关闭，取消高清图加载');
+            // 检查当前加载的图片是否仍然有效
+            if (this.currentHighResImage !== highResImage) {
+                console.log('高清图加载已取消');
                 return;
             }
             
@@ -811,15 +811,15 @@ class ImageLoader {
             
             // 获取EXIF信息
             this.getExifInfo(original).then(exifData => {
-                // 再次检查模态窗口是否仍然打开
-                if (modal.style.display === 'none') {
-                    console.log('模态窗口已关闭，取消EXIF信息获取');
+                // 再次检查当前加载的图片是否仍然有效
+                if (this.currentHighResImage !== highResImage) {
+                    console.log('EXIF信息获取已取消');
                     return;
                 }
                 exifInfo.innerHTML = createExifInfo(exifData);
             }).catch(error => {
                 console.error('获取EXIF信息失败:', error);
-                if (modal.style.display !== 'none') {
+                if (this.currentHighResImage === highResImage) {
                     exifInfo.innerHTML = '<p>EXIF信息获取失败</p>';
                 }
             });
@@ -827,7 +827,7 @@ class ImageLoader {
         
         highResImage.onerror = () => {
             console.error('加载高清图失败:', original);
-            if (modal.style.display !== 'none') {
+            if (this.currentHighResImage === highResImage) {
                 modalImg.style.filter = 'blur(0px)';
                 exifInfo.innerHTML = '<p style="color:red;">原图加载失败</p>';
             }
