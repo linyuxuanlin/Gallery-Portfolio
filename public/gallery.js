@@ -31,9 +31,6 @@ class Gallery {
         // 设置自动滚动按钮显示逻辑
         this.autoScroll.setupScrollButtonVisibility();
         
-        // 检查URL参数并设置初始标签
-        this.handleUrlParams();
-        
         // 初始加载
         this.loadInitialImages();
     }
@@ -60,10 +57,19 @@ class Gallery {
         
         // 设置gallery的margin-top
         this.imageLoader.setGalleryMarginTop();
+        
+        // 在标签筛选器创建完成后处理URL参数
+        this.handleUrlParams();
     }
 
     // 处理URL参数
     handleUrlParams() {
+        // 确保组件已经初始化
+        if (!this.tagFilter || !this.imageLoader) {
+            console.log('组件未完全初始化，跳过URL参数处理');
+            return;
+        }
+
         const path = window.location.pathname;
         const tagFromUrl = path.substring(1); // 移除开头的斜杠
         
@@ -82,7 +88,7 @@ class Gallery {
             } else {
                 console.log('标签不存在:', tagFromUrl);
                 // 如果标签不存在，选择"All"标签
-                if (this.tagFilter && this.tagFilter.getCurrentTag() !== 'all') {
+                if (this.tagFilter.getCurrentTag() !== 'all') {
                     this.tagFilter.selectTagByValue('all');
                     this.imageLoader.filterImages('all');
                 }
@@ -90,7 +96,7 @@ class Gallery {
         } else {
             // URL中没有标签参数，选择"All"标签
             console.log('URL中没有标签参数，选择All标签');
-            if (this.tagFilter && this.tagFilter.getCurrentTag() !== 'all') {
+            if (this.tagFilter.getCurrentTag() !== 'all') {
                 this.tagFilter.selectTagByValue('all');
                 this.imageLoader.filterImages('all');
             }
