@@ -58,8 +58,10 @@ class Gallery {
         // 设置gallery的margin-top
         this.imageLoader.setGalleryMarginTop();
         
-        // 在标签筛选器创建完成后处理URL参数
-        this.handleUrlParams();
+        // 在标签筛选器创建完成后延迟处理URL参数，确保DOM完全渲染
+        setTimeout(() => {
+            this.handleUrlParams();
+        }, 100);
     }
 
     // 处理URL参数

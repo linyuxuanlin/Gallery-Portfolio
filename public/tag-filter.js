@@ -106,6 +106,11 @@ class TagFilter {
 
     // 根据标签值选择标签
     selectTagByValue(tagValue) {
+        if (!this.tagContainer) {
+            console.error('tagContainer未初始化');
+            return;
+        }
+        
         const tagButtons = this.tagContainer.querySelectorAll('.tag');
         for (const button of tagButtons) {
             if (button.textContent.toLowerCase() === tagValue.toLowerCase()) {
