@@ -104,6 +104,23 @@ class TagFilter {
         return this.currentTag;
     }
 
+    // 根据标签值选择标签
+    selectTagByValue(tagValue) {
+        const tagButtons = this.tagContainer.querySelectorAll('.tag');
+        for (const button of tagButtons) {
+            if (button.textContent.toLowerCase() === tagValue.toLowerCase()) {
+                this.selectTag(button, tagValue);
+                // 将选中的标签滚动到中间
+                const containerHeight = this.tagContainer.clientHeight;
+                const btnOffsetTop = button.offsetTop;
+                const btnHeight = button.clientHeight;
+                const scrollTarget = btnOffsetTop - (containerHeight / 2) + (btnHeight / 2);
+                this.tagContainer.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+                break;
+            }
+        }
+    }
+
     // 销毁标签筛选器
     destroy() {
         if (this.tagContainer && this.tagContainer.parentNode) {
