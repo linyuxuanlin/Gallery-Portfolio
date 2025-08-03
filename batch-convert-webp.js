@@ -75,7 +75,7 @@ async function convertImages() {
       await sharp(input)
         .rotate() // ✅ 根据 EXIF 正确旋转
         .withMetadata({ orientation: undefined }) // ✅ 保留其他 EXIF，去除 Orientation
-        .webp({ quality: 10 }) // ✅ 转为 WebP，质量降为10%
+        .webp({ quality: 1 }) // ✅ 转为 WebP，压缩比为1%
         .toFile(output);
 
       const percent = ((i + 1) / total * 100).toFixed(1);
