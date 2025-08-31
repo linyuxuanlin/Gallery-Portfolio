@@ -120,8 +120,16 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 
 ### 3. 生成预览图
 
+直接从 Cloudflare R2 获取图片，并上传回 R2 `0_preview` 文件夹下： 
+
 ```bash
 npm install sharp
+node generate-webp-thumbnail-r2.js
+```
+
+（备用）从本地生成：
+
+```bash
 node generate-webp-thumbnail-local.js
 ```
 
