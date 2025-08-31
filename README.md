@@ -33,9 +33,9 @@ Gallery-Portfolio
 - 🚀 **静态部署** - 零服务器成本，快速加载
 - 🖼️ **预览图优化** - 先加载预览图，点击查看高清原图
 - 🔄 **智能加载** - 预览图缺失时自动加载原图
-- 📸 **EXIF信息** - 显示光圈、快门、ISO等摄影参数
-- 🌍 **跨平台支持** - 提供Node.js脚本，支持所有操作系统
-- 🔗 **图床兼容** - 支持任意图床服务（Cloudflare R2、阿里云OSS、腾讯云COS等）
+- 📸 **EXIF 信息** - 显示光圈、快门、ISO 等摄影参数
+- 🌍 **跨平台支持** - 提供 Node.js 脚本，支持所有操作系统
+- 🔗 **图床兼容** - 支持任意图床服务（Cloudflare R2、阿里云 OSS、腾讯云 COS 等）
 - 🎲 **随机展示** - 图片以随机顺序展示，每次刷新都有不同的排列
 
 ## 🏗️ 项目结构
@@ -99,18 +99,19 @@ const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片�
 
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {
-    const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-    const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
-    return { originalUrl, previewUrl };
+  const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
+  const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
+  return { originalUrl, previewUrl };
 }
 ```
 
 **注意：** 预览图统一使用 `.webp` 格式，无论原图是什么格式。
 
 **支持的图床服务示例：**
+
 - Cloudflare R2: `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/`
-- 阿里云OSS: `https://your-bucket.oss-cn-region.aliyuncs.com/gallery/`
-- 腾讯云COS: `https://your-bucket.cos.region.myqcloud.com/gallery/`
+- 阿里云 OSS: `https://your-bucket.oss-cn-region.aliyuncs.com/gallery/`
+- 腾讯云 COS: `https://your-bucket.cos.region.myqcloud.com/gallery/`
 - 七牛云: `https://your-domain.com/gallery/`
 
 ### 2. 同步本地目录到远程图床
@@ -126,29 +127,41 @@ node batch-convert-webp.js
 
 ### 3.1 安装 EXIF 工具（可选）
 
-为了提取图片的 EXIF 信息（光圈、快门、ISO等），建议安装 ExifTool：
+为了提取图片的 EXIF 信息（光圈、快门、ISO 等），建议安装 ExifTool：
 
 #### Windows
+
 1. 下载 ExifTool: https://exiftool.org/
 2. 解压到任意目录
 3. 将 exiftool.exe 添加到系统 PATH
 
 #### macOS
+
 ```bash
 brew install exiftool
 ```
 
 #### Ubuntu/Debian
+
 ```bash
 sudo apt-get install exiftool
 ```
 
 #### CentOS/RHEL
+
 ```bash
 sudo yum install exiftool
 ```
 
 ### 4. 生成作品索引
+
+直接从 Cloudflare R2 获取列表，生成索引：
+
+```bash
+node generate-gallery-index-r2.js
+```
+
+（备用）本地生成索引：
 
 ```bash
 # 使用 npm 脚本
@@ -184,11 +197,13 @@ npx serve .
 这些脚本需要在本地执行后，将生成的文件（如 `gallery-index.json`）提交到仓库中。
 
 #### Windows 用户
+
 ```bash
 deploy.bat
 ```
 
 #### Linux/macOS 用户
+
 ```bash
 chmod +x deploy.sh
 ./deploy.sh
@@ -197,11 +212,13 @@ chmod +x deploy.sh
 #### 手动部署
 
 1. 安装 Wrangler CLI：
+
    ```bash
    npm install -g wrangler
    ```
 
 2. 登录 Cloudflare：
+
    ```bash
    wrangler login
    ```
@@ -213,9 +230,9 @@ chmod +x deploy.sh
 
 ## 📝 配置说明
 
-### 作品URL格式
+### 作品 URL 格式
 
-摄影作品URL使用以下格式：
+摄影作品 URL 使用以下格式：
 
 - **原图**: `https://your-domain.com/gallery/{分类}/{文件名}`
 - **预览图**: `https://your-domain.com/gallery/0_preview/{分类}/{文件名}`
@@ -223,6 +240,7 @@ chmod +x deploy.sh
 ### 预览图缺失检测
 
 系统具备智能预览图检测功能：
+
 - 如果预览图加载失败，会自动尝试加载原图
 - 确保即使预览图缺失，用户仍能正常浏览作品
 - 提供友好的错误提示和降级处理
@@ -241,9 +259,9 @@ const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片�
 
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {
-    const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-    const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
-    return { originalUrl, previewUrl };
+  const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
+  const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
+  return { originalUrl, previewUrl };
 }
 ```
 
@@ -264,9 +282,11 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 ### 可用脚本
 
 #### 部署脚本（Cloudflare Pages 会自动执行）
+
 - `npm run build` - 构建脚本（静态网站无需构建）
 
 #### 本地开发脚本（仅在本地执行）
+
 - `npm run serve` - 启动本地服务器
 - `npm run local:generate-index` - 生成作品索引
 - `npm run local:generate-previews` - 生成预览图
@@ -275,7 +295,7 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 
 项目采用模块化设计，主要模块包括：
 
-- **DataLoader** - 负责从JSON文件加载摄影作品数据
+- **DataLoader** - 负责从 JSON 文件加载摄影作品数据
 - **TagFilter** - 处理作品分类筛选功能
 - **ImageLoader** - 管理作品加载和布局
 - **AutoScroll** - 自动滚动功能
@@ -286,11 +306,13 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 项目支持图片随机展示，提供更好的浏览体验：
 
 ### 功能特点
+
 - **完全随机** - 每次刷新页面或切换分类时，图片都会重新随机排列
 - **分类内随机** - 单个分类内的图片也会随机展示
 - **全局随机** - "全部"标签下的图片会从所有分类中随机混合展示
 
 ### 技术实现
+
 - 使用 JavaScript 的 `sort()` 方法配合 `Math.random()` 实现随机排序
 - 每次调用数据加载方法时都会重新随机排序
 - 保持原有的去重逻辑，避免重复图片出现
@@ -299,13 +321,13 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 
 ### 主题颜色
 
-在 `public/styles.css` 中修改CSS变量：
+在 `public/styles.css` 中修改 CSS 变量：
 
 ```css
 :root {
-  --primary-color: #4CAF50;    /* 主色调 */
-  --background-color: #ffffff;  /* 背景色 */
-  --text-color: #333333;       /* 文字颜色 */
+  --primary-color: #4caf50; /* 主色调 */
+  --background-color: #ffffff; /* 背景色 */
+  --text-color: #333333; /* 文字颜色 */
 }
 ```
 
@@ -315,9 +337,9 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 
 ```css
 .gallery {
-  gap: 0.8em;           /* 作品间距 */
-  width: 80%;           /* 画廊宽度 */
-  max-width: 1200px;    /* 最大宽度 */
+  gap: 0.8em; /* 作品间距 */
+  width: 80%; /* 画廊宽度 */
+  max-width: 1200px; /* 最大宽度 */
 }
 ```
 
@@ -325,28 +347,31 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 
 网站支持以下断点：
 
-- **移动端** (< 600px): 2列布局
-- **平板** (600px - 900px): 3列布局
-- **桌面** (900px - 1200px): 4列布局
-- **大屏** (1200px - 1500px): 5列布局
-- **超大屏** (> 1500px): 6列布局
+- **移动端** (< 600px): 2 列布局
+- **平板** (600px - 900px): 3 列布局
+- **桌面** (900px - 1200px): 4 列布局
+- **大屏** (1200px - 1500px): 5 列布局
+- **超大屏** (> 1500px): 6 列布局
 
 ## 🔧 故障排除
 
 ### 常见问题
 
 1. **作品不显示**
+
    - 检查 `gallery-index.json` 文件是否存在
-   - 确认作品URL是否正确
+   - 确认作品 URL 是否正确
    - 检查网络连接
    - 确认本地目录与远程图床已同步
 
 2. **预览图生成失败**
+
    - 确认已安装 ImageMagick
    - 检查源作品路径是否正确
    - 确认有足够的磁盘空间
 
 3. **部署失败**
+
    - 确认已安装并登录 Wrangler
    - 检查项目名称是否可用
    - 确认文件权限正确

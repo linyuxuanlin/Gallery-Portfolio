@@ -402,114 +402,6 @@
       ],
       "count": 4
     },
-    "exhibition": {
-      "name": "exhibition",
-      "images": [
-        {
-          "name": "DSC01515",
-          "original": "https://media.wiki-power.com/gallery/exhibition/DSC01515.JPG",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC01515.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "DSC01567",
-          "original": "https://media.wiki-power.com/gallery/exhibition/DSC01567.JPG",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC01567.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "DSC09328",
-          "original": "https://media.wiki-power.com/gallery/exhibition/DSC09328.JPG",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC09328.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "DSC09475",
-          "original": "https://media.wiki-power.com/gallery/exhibition/DSC09475.JPG",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC09475.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250620_224504",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224504.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224504.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250620_224548",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224548.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224548.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250620_224709",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224709.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224709.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250620_224756",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224756.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224756.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250620_224824",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224824.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224824.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250620_224904",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224904.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224904.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250726_142729",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142729.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142729.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250726_142801",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142801.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142801.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250726_142834",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142834.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142834.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250726_142900",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142900.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142900.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250726_142955",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142955.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142955.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250726_143043",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_143043.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_143043.webp",
-          "category": "exhibition"
-        },
-        {
-          "name": "IMG_20250726_143354",
-          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_143354.jpg",
-          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_143354.webp",
-          "category": "exhibition"
-        }
-      ],
-      "count": 17
-    },
     "Hongkong": {
       "name": "Hongkong",
       "images": [
@@ -2003,8 +1895,116 @@
         }
       ],
       "count": 7
+    },
+    "exhibition": {
+      "name": "exhibition",
+      "images": [
+        {
+          "name": "DSC01515",
+          "original": "https://media.wiki-power.com/gallery/exhibition/DSC01515.JPG",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC01515.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "DSC01567",
+          "original": "https://media.wiki-power.com/gallery/exhibition/DSC01567.JPG",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC01567.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "DSC09328",
+          "original": "https://media.wiki-power.com/gallery/exhibition/DSC09328.JPG",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC09328.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "DSC09475",
+          "original": "https://media.wiki-power.com/gallery/exhibition/DSC09475.JPG",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/DSC09475.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224504",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224504.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224504.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224548",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224548.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224548.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224709",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224709.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224709.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224756",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224756.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224756.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224824",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224824.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224824.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250620_224904",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250620_224904.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250620_224904.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142729",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142729.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142729.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142801",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142801.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142801.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142834",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142834.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142834.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142900",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142900.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142900.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_142955",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_142955.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_142955.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_143043",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_143043.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_143043.webp",
+          "category": "exhibition"
+        },
+        {
+          "name": "IMG_20250726_143354",
+          "original": "https://media.wiki-power.com/gallery/exhibition/IMG_20250726_143354.jpg",
+          "preview": "https://media.wiki-power.com/gallery/0_preview/exhibition/IMG_20250726_143354.webp",
+          "category": "exhibition"
+        }
+      ],
+      "count": 17
     }
   },
   "total_images": 318,
-  "generated_at": "2025-07-27T08:57:53.504Z"
+  "generated_at": "2025-08-31T07:21:49.878Z"
 }
