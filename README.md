@@ -54,8 +54,8 @@ Gallery-Portfolio/
 │   ├── image-loader.js       # 图片加载模块
 │   ├── auto-scroll.js        # 自动滚动模块
 │   └── assets/               # 图标资源
-├── generate-gallery-index.js   # Node.js图片索引生成脚本
-├── batch-convert-webp.js      # 预览图生成脚本
+├── generate-gallery-index-local.js   # Node.js图片索引生成脚本
+├── generate-webp-thumbnail-local.js      # 预览图生成脚本
 ├── deploy.bat                # Windows部署脚本
 ├── deploy.sh                 # Linux/macOS部署脚本
 ├── _headers                  # Cloudflare Pages 配置
@@ -87,7 +87,7 @@ Gallery-Portfolio/
 
 #### 1.2 配置本地目录路径
 
-编辑 `generate-gallery-index.js` 文件中的 `SOURCE_DIR` 变量：
+编辑 `generate-gallery-index-local.js` 文件中的 `SOURCE_DIR` 变量：
 
 ```javascript
 const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片目录路径
@@ -95,7 +95,7 @@ const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片�
 
 #### 1.3 配置图床域名
 
-编辑 `generate-gallery-index.js` 文件中的 `buildImageUrls` 函数：
+编辑 `generate-gallery-index-local.js` 文件中的 `buildImageUrls` 函数：
 
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {
@@ -122,7 +122,7 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 
 ```bash
 npm install sharp
-node batch-convert-webp.js
+node generate-webp-thumbnail-local.js
 ```
 
 ### 3.1 安装 EXIF 工具（可选）
@@ -168,7 +168,7 @@ node generate-gallery-index-r2.js
 npm run local:generate-index
 
 # 或直接运行
-node generate-gallery-index.js
+node generate-gallery-index-local.js
 ```
 
 这将生成 `gallery-index.json` 文件，包含所有摄影作品的信息。
@@ -247,7 +247,7 @@ chmod +x deploy.sh
 
 ### 修改作品源
 
-编辑 `generate-gallery-index.js` 文件中的以下变量：
+编辑 `generate-gallery-index-local.js` 文件中的以下变量：
 
 ```javascript
 const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片目录路径
@@ -255,7 +255,7 @@ const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片�
 
 ### 自定义图床域名
 
-编辑 `generate-gallery-index.js` 文件中的 `buildImageUrls` 函数：
+编辑 `generate-gallery-index-local.js` 文件中的 `buildImageUrls` 函数：
 
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {

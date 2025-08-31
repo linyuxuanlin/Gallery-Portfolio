@@ -7,7 +7,7 @@
     "build": "echo '静态网站，无需构建'",
     "dev": "echo '请使用本地服务器运行，如: npx serve .'",
     "serve": "npx serve .",
-    "local:generate-index": "node generate-gallery-index.js",
+    "local:generate-index": "node generate-gallery-index-local.js",
     "local:generate-previews": "generate-previews.bat"
   },
   "keywords": [
