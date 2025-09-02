@@ -1,9 +1,5 @@
-<h1 align="center">
-<img width="27" src="./public/assets/favicon.svg">
-Gallery-Portfolio 
-</h1>
-
 <p align="center">
+  <img width="27" src="./public/assets/favicon.svg">
   <a href="https://gallery-portfolio.wiki-power.com/"><img src="https://img.shields.io/badge/Demo-site-t?&style=flat-square" alt="Demo"></a>
   <a href="https://github.com/linyuxuanlin/Gallery-Portfolio/blob/main/LICENSE"><img src="https://img.shields.io/github/license/linyuxuanlin/Gallery-Portfolio?style=flat-square" alt="许可证"></a>
   <img src="https://img.shields.io/github/repo-size/linyuxuanlin/Gallery-Portfolio?style=flat-square&color=328657" alt="存储库大小">
