@@ -15,25 +15,25 @@ Gallery-Portfolio
     </a>
 </p>
 
-**Gallery-Portfolio** 是一个简单的 **摄影作品展示站**，你只需要将图片存放在免费的 **Cloudflare R2** 上（或其他任意图床），即可在这里展现你的大作。在这里你可以通过 **瀑布流** 的形式浏览图片，也可以 **点开大图** ，查看光圈 / 快门 / ISO 等 **EXIF** 信息。网站基于 Node.js，使用 **Material Design** 风格的 **响应式设计**，支持 **日夜间模式** 切换，在不同的设备上都有不错的视觉效果。
+**Gallery-Portfolio** 是一个风格简洁的 **摄影作品展示站**，你只需要将图片存放在免费的 **Cloudflare R2** 上（或其他任意图床），即可在这里展现你的大作。在这里你可以通过 **瀑布流** 的形式浏览图片，也可以 **点开大图** ，查看光圈 / 快门 / ISO 等 **EXIF** 信息。此静态网站基于 Node.js，使用 **Material Design** 风格的 **响应式设计**，支持 **日夜间模式** 切换，在不同的设备上都有不错的视觉效果。
 
 <p align="center">
   <a href="https://dash.cloudflare.com/?to=https://dash.cloudflare.com/pages"><img src="https://img.shields.io/badge/Deploy%20to%20Cloudflare%20Pages-4285F4?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Deploy to Cloudflare Pages"/></a>
   <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flinyuxuanlin%2FGallery-Portfolio"><img src="https://img.shields.io/badge/Deploy%20to%20Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Deploy to Vercel"/></a>
 </p>
 
-## ✨ 特性
+## ✨ 一些特性
 
-- 🖼️ **响应式摄影画廊** - 自适应布局，支持多种屏幕尺寸
+- 🚀 **静态部署** - 零服务器成本，快速加载
 - 🏷️ **作品分类** - 按摄影主题和地点进行分类展示
+- 📱 **移动端优化** - 完美适配移动设备观片
+- 🖼️ **响应式设计** - 自适应布局，支持多种屏幕尺寸
 - 🌙 **深色/浅色主题** - 支持主题切换，优化观片体验
 - ⚡ **懒加载** - 滚动时自动加载更多作品
 - 🎯 **自动滚动** - 一键开启自动滚动浏览
-- 📱 **移动端优化** - 完美适配移动设备观片
-- 🚀 **静态部署** - 零服务器成本，快速加载
 - 🖼️ **预览图优化** - 先加载预览图，点击查看高清原图
 - 🔄 **智能加载** - 预览图缺失时自动加载原图
-- 📸 **EXIF 信息** - 显示光圈、快门、ISO 等摄影参数
+- 📸 **EXIF 信息** - 显示光圈、快门、ISO 等摄影参数（未完成）
 - 🌍 **跨平台支持** - 提供 Node.js 脚本，支持所有操作系统
 - 🔗 **图床兼容** - 支持任意图床服务（Cloudflare R2、阿里云 OSS、腾讯云 COS 等）
 - 🎲 **随机展示** - 图片以随机顺序展示，每次刷新都有不同的排列
@@ -54,8 +54,8 @@ Gallery-Portfolio/
 │   ├── image-loader.js       # 图片加载模块
 │   ├── auto-scroll.js        # 自动滚动模块
 │   └── assets/               # 图标资源
-├── generate-gallery-index-local.js   # Node.js图片索引生成脚本
-├── generate-webp-thumbnail-local.js      # 预览图生成脚本
+├── generate-gallery-index-r2.js   # Node.js图片索引生成脚本
+├── generate-webp-thumbnail-r2.js      # 预览图生成脚本
 ├── deploy.bat                # Windows部署脚本
 ├── deploy.sh                 # Linux/macOS部署脚本
 ├── _headers                  # Cloudflare Pages 配置
@@ -63,6 +63,10 @@ Gallery-Portfolio/
 ```
 
 ## 🚀 快速开始
+
+
+
+
 
 ### 1. 配置本地摄影作品目录
 
@@ -87,7 +91,7 @@ Gallery-Portfolio/
 
 #### 1.2 配置本地目录路径
 
-编辑 `generate-gallery-index-local.js` 文件中的 `SOURCE_DIR` 变量：
+编辑 `generate-gallery-index-r2.js` 文件中的 `SOURCE_DIR` 变量：
 
 ```javascript
 const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片目录路径
@@ -95,7 +99,7 @@ const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片�
 
 #### 1.3 配置图床域名
 
-编辑 `generate-gallery-index-local.js` 文件中的 `buildImageUrls` 函数：
+编辑 `generate-gallery-index-r2.js` 文件中的 `buildImageUrls` 函数：
 
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {
@@ -130,7 +134,7 @@ node generate-webp-thumbnail-r2.js
 （备用）从本地生成：
 
 ```bash
-node generate-webp-thumbnail-local.js
+node generate-webp-thumbnail-r2.js
 ```
 
 ### 3.1 安装 EXIF 工具（可选）
@@ -176,7 +180,7 @@ node generate-gallery-index-r2.js
 npm run local:generate-index
 
 # 或直接运行
-node generate-gallery-index-local.js
+node generate-gallery-index-r2.js
 ```
 
 这将生成 `gallery-index.json` 文件，包含所有摄影作品的信息。
@@ -255,7 +259,7 @@ chmod +x deploy.sh
 
 ### 修改作品源
 
-编辑 `generate-gallery-index-local.js` 文件中的以下变量：
+编辑 `generate-gallery-index-r2.js` 文件中的以下变量：
 
 ```javascript
 const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片目录路径
@@ -263,7 +267,7 @@ const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片�
 
 ### 自定义图床域名
 
-编辑 `generate-gallery-index-local.js` 文件中的 `buildImageUrls` 函数：
+编辑 `generate-gallery-index-r2.js` 文件中的 `buildImageUrls` 函数：
 
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {
