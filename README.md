@@ -122,12 +122,22 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 
 在项目根目录创建 `.env` 文件（注意：不要提交到 Git）：
 
+**方法一：从模板文件复制（推荐）**
+```bash
+cp .env_template .env
+```
+
+**方法二：手动创建**
 ```bash
 R2_ACCOUNT_ID=your_account_id
 R2_ACCESS_KEY_ID=your_access_key_id
 R2_SECRET_ACCESS_KEY=your_secret_access_key
 R2_BUCKET_NAME=my-gallery
-```
+R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
+R2_REGION=auto
+R2_IMAGE_BASE_URL=https://your-domain.com
+R2_IMAGE_DIR=gallery
+IMAGE_COMPRESSION_QUALITY=100
 
 ### 3. 生成预览图
 
@@ -150,7 +160,7 @@ node generate-gallery-index-r2.js
 
 这将生成 `gallery-index.json` 文件，包含所有摄影作品的信息。
 
-### 5. 本地测试
+### （可选）5. 本地测试
 
 启动本地服务器预览效果：
 
@@ -172,7 +182,7 @@ npx serve .
 
 [![Deploy to Cloudflare Pages](https://img.shields.io/badge/Deploy%20to%20Cloudflare%20Pages-4285F4?style=for-the-badge&logo=cloudflare&logoColor=white)](https://dash.cloudflare.com/?to=https://dash.cloudflare.com/pages)
 
-#### 手动部署
+#### （可选）手动部署
 
 1. 安装 Wrangler CLI：
 
@@ -204,7 +214,7 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 
-### 7. 更新作品
+### 7. 更新图片
 
 当你有新的摄影作品时：
 
@@ -233,7 +243,7 @@ chmod +x deploy.sh
 
 ### 修改作品源
 
-编辑 `generate-gallery-index-r2.js` 文件中的 R2 配置：
+编辑 `generate-gallery-index-r2.js` 文件中的 R2 配置，或直接修改 `.env` 文件：
 
 ```javascript
 // 配置 R2 存储桶信息
@@ -241,6 +251,11 @@ const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'my-gallery';
 const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID;
 const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
 const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
+const R2_ENDPOINT = process.env.R2_ENDPOINT;
+const R2_REGION = process.env.R2_REGION || 'auto';
+const R2_IMAGE_BASE_URL = process.env.R2_IMAGE_BASE_URL;
+const R2_IMAGE_DIR = process.env.R2_IMAGE_DIR || 'gallery';
+const IMAGE_COMPRESSION_QUALITY = process.env.IMAGE_COMPRESSION_QUALITY || 100;
 ```
 
 ### 自定义图床域名
