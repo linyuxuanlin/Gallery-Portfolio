@@ -64,122 +64,87 @@ Gallery-Portfolio/
 
 ## 🚀 快速开始
 
+### 1. 准备 Cloudflare R2 图床
 
+#### 1.1 创建 Cloudflare R2 存储桶
 
+1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)
+2. 进入 **R2 Object Storage** 页面
+3. 点击 **Create bucket** 创建新的存储桶
+4. 记录存储桶名称，例如：`my-gallery`
 
+#### 1.2 配置自定义域名（可选）
 
-### 1. 配置本地摄影作品目录
+为了获得更好的访问体验，建议配置自定义域名：
 
-**重要说明：** 本项目的工作原理是读取本地目录生成远程图床的文件列表。你需要 **手动配置本地目录与远程图床的同步**。
+1. 在 R2 存储桶设置中找到 **Custom Domains**
+2. 添加你的域名，例如：`cdn.yourdomain.com`
+3. 配置 DNS 记录指向 R2 存储桶
 
-#### 1.1 创建本地摄影作品目录
+#### 1.3 上传图片文件
 
-将你的图片按以下结构组织到本地目录：
+将你的摄影作品按分类上传到 R2 存储桶：
 
 ```
-本地目录路径/
-├── Hongkong\              # 分类文件夹
+my-gallery/
+├── Hongkong/              # 分类文件夹
 │   ├── DSC01475.JPG
 │   └── DSC01476.JPG
-├── Kyoto\
+├── Kyoto/
 │   ├── DSC02580.JPG
 │   └── DSC02581.JPG
-└── 0_preview\            # 预览图目录（自动生成）
-    ├── Hongkong\
-    └── Kyoto\
+└── 0_preview/            # 预览图目录（稍后生成）
+    ├── Hongkong/
+    └── Kyoto/
 ```
 
-#### 1.2 配置本地目录路径
+### 2. 配置项目
 
-编辑 `generate-gallery-index-r2.js` 文件中的 `SOURCE_DIR` 变量：
-
-```javascript
-const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片目录路径
-```
-
-#### 1.3 配置图床域名
+#### 2.1 配置图床域名
 
 编辑 `generate-gallery-index-r2.js` 文件中的 `buildImageUrls` 函数：
 
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {
-  const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-  const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
+  // 如果配置了自定义域名
+  const originalUrl = `https://cdn.yourdomain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
+  const previewUrl = `https://cdn.yourdomain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
+  
+  // 或者使用 R2 默认域名
+  // const originalUrl = `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/${categoryName}/${fileName}.${fileExt}`;
+  // const previewUrl = `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
+  
   return { originalUrl, previewUrl };
 }
 ```
 
-**注意：** 预览图统一使用 `.webp` 格式，无论原图是什么格式。
+#### 2.2 配置 R2 访问凭证
 
-**支持的图床服务示例：**
+在项目根目录创建 `.env` 文件（注意：不要提交到 Git）：
 
-- Cloudflare R2: `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/`
-- 阿里云 OSS: `https://your-bucket.oss-cn-region.aliyuncs.com/gallery/`
-- 腾讯云 COS: `https://your-bucket.cos.region.myqcloud.com/gallery/`
-- 七牛云: `https://your-domain.com/gallery/`
-
-### 2. 同步本地目录到远程图床
-
-**重要：** 你需要手动将本地目录中的图片文件同步到你的图床服务。
+```bash
+R2_ACCOUNT_ID=your_account_id
+R2_ACCESS_KEY_ID=your_access_key_id
+R2_SECRET_ACCESS_KEY=your_secret_access_key
+R2_BUCKET_NAME=my-gallery
+```
 
 ### 3. 生成预览图
 
-直接从 Cloudflare R2 获取图片，并上传回 R2 `0_preview` 文件夹下： 
+安装依赖并生成 WebP 格式的预览图：
 
 ```bash
 npm install sharp
 node generate-webp-thumbnail-r2.js
 ```
 
-（备用）从本地生成：
-
-```bash
-node generate-webp-thumbnail-r2.js
-```
-
-### 3.1 安装 EXIF 工具（可选）
-
-为了提取图片的 EXIF 信息（光圈、快门、ISO 等），建议安装 ExifTool：
-
-#### Windows
-
-1. 下载 ExifTool: https://exiftool.org/
-2. 解压到任意目录
-3. 将 exiftool.exe 添加到系统 PATH
-
-#### macOS
-
-```bash
-brew install exiftool
-```
-
-#### Ubuntu/Debian
-
-```bash
-sudo apt-get install exiftool
-```
-
-#### CentOS/RHEL
-
-```bash
-sudo yum install exiftool
-```
+这将从 R2 下载原图，生成缩略图后上传回 R2 的 `0_preview` 目录。
 
 ### 4. 生成作品索引
 
-直接从 Cloudflare R2 获取列表，生成索引：
+从 R2 获取文件列表并生成索引：
 
 ```bash
-node generate-gallery-index-r2.js
-```
-
-（备用）本地生成索引：
-
-```bash
-# 使用 npm 脚本
-npm run local:generate-index
-
-# 或直接运行
 node generate-gallery-index-r2.js
 ```
 
@@ -187,7 +152,7 @@ node generate-gallery-index-r2.js
 
 ### 5. 本地测试
 
-使用本地服务器运行：
+启动本地服务器预览效果：
 
 ```bash
 npm run serve
@@ -201,25 +166,11 @@ npx serve .
 
 ### 6. 部署到 Cloudflare Pages
 
-**重要说明：** 以下脚本仅在本地执行，Cloudflare Pages 部署时不会执行这些脚本：
+#### 自动部署（推荐）
 
-- `npm run local:generate-index` - 生成图片索引
-- `npm run local:generate-previews` - 生成预览图
+点击下方按钮一键部署：
 
-这些脚本需要在本地执行后，将生成的文件（如 `gallery-index.json`）提交到仓库中。
-
-#### Windows 用户
-
-```bash
-deploy.bat
-```
-
-#### Linux/macOS 用户
-
-```bash
-chmod +x deploy.sh
-./deploy.sh
-```
+[![Deploy to Cloudflare Pages](https://img.shields.io/badge/Deploy%20to%20Cloudflare%20Pages-4285F4?style=for-the-badge&logo=cloudflare&logoColor=white)](https://dash.cloudflare.com/?to=https://dash.cloudflare.com/pages)
 
 #### 手动部署
 
@@ -240,6 +191,29 @@ chmod +x deploy.sh
    wrangler pages deploy . --project-name your-project-name
    ```
 
+#### 使用部署脚本
+
+**Windows 用户：**
+```bash
+deploy.bat
+```
+
+**Linux/macOS 用户：**
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+### 7. 更新作品
+
+当你有新的摄影作品时：
+
+1. 将新图片上传到 R2 存储桶的对应分类目录
+2. 运行预览图生成脚本：`node generate-webp-thumbnail-r2.js`
+3. 运行索引生成脚本：`node generate-gallery-index-r2.js`
+4. 提交更新的 `gallery-index.json` 文件到 Git
+5. 重新部署网站
+
 ## 📝 配置说明
 
 ### 作品 URL 格式
@@ -259,10 +233,14 @@ chmod +x deploy.sh
 
 ### 修改作品源
 
-编辑 `generate-gallery-index-r2.js` 文件中的以下变量：
+编辑 `generate-gallery-index-r2.js` 文件中的 R2 配置：
 
 ```javascript
-const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片目录路径
+// 配置 R2 存储桶信息
+const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'my-gallery';
+const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID;
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
 ```
 
 ### 自定义图床域名
@@ -271,13 +249,16 @@ const SOURCE_DIR = "/home/user/Wiki-media/gallery"; // 请修改为您的图片�
 
 ```javascript
 function buildImageUrls(categoryName, fileName, fileExt) {
-  const originalUrl = `https://your-domain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-  const previewUrl = `https://your-domain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
+  // 使用自定义域名
+  const originalUrl = `https://cdn.yourdomain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
+  const previewUrl = `https://cdn.yourdomain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
+  
+  // 或使用 R2 默认域名
+  // const originalUrl = `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/${categoryName}/${fileName}.${fileExt}`;
+  // const previewUrl = `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
+  
   return { originalUrl, previewUrl };
 }
-```
-
-**注意：** 预览图统一使用 `.webp` 格式，无论原图是什么格式。
 
 ## 🛠️ 开发
 
