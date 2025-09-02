@@ -1,11 +1,11 @@
 <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- 相机主体 - 简化设计 -->
-  <rect x="25" y="35" width="50" height="30" rx="8" ry="8" fill="#2E7D32" stroke="#1B5E20" stroke-width="3"/>
+  <!-- 相机主体 - 填充整个画面 -->
+  <rect x="10" y="25" width="80" height="50" rx="10" ry="10" fill="#2E7D32" stroke="#1B5E20" stroke-width="4"/>
   
-  <!-- 相机顶部 - 简化设计 -->
-  <rect x="30" y="25" width="40" height="15" rx="6" ry="6" fill="#2E7D32" stroke="#1B5E20" stroke-width="3"/>
+  <!-- 相机顶部 - 填充整个画面 -->
+  <rect x="15" y="15" width="70" height="20" rx="8" ry="8" fill="#2E7D32" stroke="#1B5E20" stroke-width="4"/>
   
-  <!-- 主镜头 - 简化设计 -->
-  <circle cx="50" cy="50" r="12" fill="#E8F5E8" stroke="#1B5E20" stroke-width="2"/>
-  <circle cx="50" cy="50" r="8" fill="#4CAF50"/>
+  <!-- 主镜头 - 填充整个画面 -->
+  <circle cx="50" cy="50" r="20" fill="#E8F5E8" stroke="#1B5E20" stroke-width="3"/>
+  <circle cx="50" cy="50" r="15" fill="#4CAF50"/>
 </svg>
