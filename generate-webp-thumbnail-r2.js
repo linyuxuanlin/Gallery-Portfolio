@@ -1,56 +1,94 @@
-import { S3Client, HeadObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  HeadObjectCommand,
+  PutObjectCommand,
+  GetObjectCommand,
+  ListObjectsV2Command,
+} from "@aws-sdk/client-s3";
 import sharp from "sharp";
-import fs from "fs/promises";
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config();
+
+const REGION = process.env.R2_REGION || "auto";
+const ENDPOINT = process.env.R2_ENDPOINT;
+const ACCESS_KEY = process.env.R2_ACCESS_KEY_ID;
+const SECRET_KEY = process.env.R2_SECRET_ACCESS_KEY;
+const BUCKET = process.env.R2_BUCKET_NAME;
+const IMAGE_DIR = (process.env.R2_IMAGE_DIR || "").replace(/^\/+|\/+$/g, "");
+const QUALITY = Number(process.env.IMAGE_COMPRESSION_QUALITY || 80);
 
 const s3 = new S3Client({
-  region: "auto",
-  endpoint: "https://<your-account-id>.r2.cloudflarestorage.com",
+  region: REGION,
+  endpoint: ENDPOINT,
   credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID,
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY
-  }
+    accessKeyId: ACCESS_KEY,
+    secretAccessKey: SECRET_KEY,
+  },
 });
 
-const bucket = "<your-bucket>";
+const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"]; // 输入可能包含 webp
 
-async function ensurePreviewExists(key) {
-  // 缩略图路径：0_preview/xxx.jpg
-  const previewKey = `0_preview/${key}`;
+function toPreviewKey(srcKey) {
+  // srcKey: gallery/Category/Filename.EXT
+  const rel = IMAGE_DIR ? srcKey.replace(new RegExp(`^${IMAGE_DIR}/`), "") : srcKey;
+  const parts = rel.split("/");
+  if (parts.length < 2) return null;
+  const category = parts[0];
+  if (category === "0_preview") return null;
+  const filename = parts[parts.length - 1];
+  const baseName = filename.replace(/\.[^.]+$/, "");
+  const prefix = IMAGE_DIR ? `${IMAGE_DIR}/` : "";
+  return `${prefix}0_preview/${category}/${baseName}.webp`;
+}
+
+async function ensurePreviewExists(srcKey) {
+  const previewKey = toPreviewKey(srcKey);
+  if (!previewKey) return;
 
   try {
-    // 检查是否已经存在
-    await s3.send(new HeadObjectCommand({ Bucket: bucket, Key: previewKey }));
-    console.log(`✅ 缩略图已存在，跳过生成: ${previewKey}`);
+    await s3.send(new HeadObjectCommand({ Bucket: BUCKET, Key: previewKey }));
+    console.log(`预览已存在，跳过: ${previewKey}`);
     return;
   } catch (err) {
-    if (err.name !== "NotFound") {
-      throw err; // 其他错误需要抛出
+    if (err?.$metadata?.httpStatusCode && err.$metadata.httpStatusCode !== 404) {
+      throw err;
     }
   }
 
-  // 下载原图（这里只是示例，避免下载全量大图你可以用 range 请求）
-  const tmpFile = `/tmp/${Date.now()}-${key.split("/").pop()}`;
-  const obj = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
-  const stream = obj.Body;
-  const fileBuffer = await streamToBuffer(stream);
-  await fs.writeFile(tmpFile, fileBuffer);
+  // 下载原图 -> 生成 webp -> 上传
+  const obj = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: srcKey }));
+  const fileBuffer = await streamToBuffer(obj.Body);
 
-  // 用 sharp 生成缩略图
-  const previewBuffer = await sharp(tmpFile)
-    .resize({ width: 400 }) // 宽度 400px
+  const previewBuffer = await sharp(fileBuffer)
+    .rotate()
+    .webp({ quality: QUALITY })
     .toBuffer();
 
-  // 上传缩略图到 R2
   await s3.send(
     new PutObjectCommand({
-      Bucket: bucket,
+      Bucket: BUCKET,
       Key: previewKey,
       Body: previewBuffer,
-      ContentType: "image/jpeg"
+      ContentType: "image/webp",
     })
   );
 
-  console.log(`✨ 缩略图生成完成: ${previewKey}`);
+  console.log(`预览生成完成: ${previewKey}`);
+}
+
+async function listAllObjects(prefix) {
+  let token = undefined;
+  const out = [];
+  do {
+    const res = await s3.send(
+      new ListObjectsV2Command({ Bucket: BUCKET, Prefix: prefix, ContinuationToken: token })
+    );
+    if (res.Contents) out.push(...res.Contents);
+    token = res.NextContinuationToken;
+  } while (token);
+  return out;
 }
 
 async function streamToBuffer(stream) {
@@ -61,3 +99,42 @@ async function streamToBuffer(stream) {
     stream.on("error", reject);
   });
 }
+
+async function main() {
+  console.log("========================================");
+  console.log("生成 R2 预览图 (WebP)");
+  console.log("========================================");
+  console.log(`Bucket: ${BUCKET}`);
+  console.log(`Endpoint: ${ENDPOINT}`);
+  console.log(`目录前缀: ${IMAGE_DIR || '(root)'}`);
+
+  const objects = await listAllObjects(IMAGE_DIR);
+  const keys = objects
+    .map((o) => o.Key)
+    .filter(Boolean)
+    .filter((k) => {
+      if (IMAGE_DIR && !k.startsWith(`${IMAGE_DIR}/`)) return false;
+      if (k.endsWith("/")) return false; // 目录占位
+      if (k.includes("/0_preview/")) return false; // 跳过预览目录
+      const ext = path.extname(k).toLowerCase();
+      return IMAGE_EXTENSIONS.includes(ext);
+    });
+
+  console.log(`发现原图数量: ${keys.length}`);
+
+  for (const key of keys) {
+    try {
+      await ensurePreviewExists(key);
+    } catch (e) {
+      console.error(`处理失败: ${key}`, e?.message || e);
+    }
+  }
+
+  console.log("全部预览处理完成");
+}
+
+main().catch((e) => {
+  console.error("发生错误:", e?.message || e);
+  process.exit(1);
+});
+

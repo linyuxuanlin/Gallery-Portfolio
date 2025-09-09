@@ -313,6 +313,9 @@ class ImageLoader {
             
             // 图片加载
             const img = new Image();
+            // 启用原生懒加载与异步解码
+            try { img.loading = 'lazy'; } catch (e) {}
+            try { img.decoding = 'async'; } catch (e) {}
             
             // 预览图缺失检测
             let previewFailed = false;
@@ -791,6 +794,8 @@ class ImageLoader {
     
     // 获取EXIF信息
     async getExifInfo(imageUrl) {
+        // EXIF 功能已禁用
+        return null;
         try {
             // 尝试从gallery-index.json中获取EXIF信息
             const images = this.getCurrentImages();

@@ -1,0 +1,22 @@
+﻿feat: 统一 ESM 与 .env 配置，修复 R2 预览/索引流水线，移除 EXIF，新增 SPA 路由回退，并启用原生懒加载
+
+- build(package): 设置 "type":"module"，统一为 ESM；清理无效 npm 脚本，新增
+  - r2:generate-previews → 生成/补全 WebP 预览
+  - r2:generate-index → 生成 gallery-index.json
+- fix(r2-index): 去除硬编码域名，改为从 .env 读取 R2_IMAGE_BASE_URL / R2_IMAGE_DIR 构建 URL
+- refactor(r2-previews): 重写 generate-webp-thumbnail-r2.js
+  - 使用 ListObjectsV2 列举原图，跳过 0_preview
+  - 直接内存生成 WebP（sharp.rotate + webp），读取质量 IMAGE_COMPRESSION_QUALITY
+  - 以 image/webp 上传，Key 规范化为 {IMAGE_DIR}/0_preview/{category}/{name}.webp
+  - 读取 .env：R2_ENDPOINT/REGION/BUCKET/ACCESS_KEY/SECRET_KEY/IMAGE_DIR
+- perf(frontend): 为运行时创建的图片启用原生懒加载与异步解码（loading='lazy'，decoding='async'）
+- feat(frontend): 全面禁用 EXIF 获取（getExifInfo 恒返回 null，不再请求 /api/exif）
+- build(pages): 新增 `_redirects`（/* /index.html 200）支持前端路由直达与刷新
+- docs(README): 
+  - 使用 .env 配置 R2_IMAGE_BASE_URL / R2_IMAGE_DIR（不再要求修改脚本）
+  - 统一生成命令为 npm run r2:generate-previews / r2:generate-index
+  - 移除 EXIF 相关说明与接口引用
+
+BREAKING CHANGE:
+- 项目切换为 ESM（package.json: "type":"module"）。archive/ 下的本地 CJS 脚本若需运行，建议改为 .cjs 或使用兼容方式执行。
+- 生成索引与预览现在依赖 .env（R2_* 配置），需先正确配置后再执行脚本。

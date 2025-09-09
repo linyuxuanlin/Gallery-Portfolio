@@ -37,10 +37,14 @@ const s3 = new S3Client({
   },
 });
 
-// 构建图片URL（可根据你的CDN/自定义域名调整）
+// 构建图片URL（从 .env 读取自定义域名/路径）
 function buildImageUrls(categoryName, fileName, fileExt) {
-  const originalUrl = `https://media.wiki-power.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-  const previewUrl = `https://media.wiki-power.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
+  const baseUrl = (process.env.R2_IMAGE_BASE_URL || "").replace(/\/+$/, ""); // 去除末尾斜杠
+  const dir = (process.env.R2_IMAGE_DIR || "").replace(/^\/+|\/+$/g, ""); // 去除首尾斜杠
+
+  const pathBase = dir ? `${baseUrl}/${dir}` : baseUrl;
+  const originalUrl = `${pathBase}/${categoryName}/${fileName}.${fileExt}`;
+  const previewUrl = `${pathBase}/0_preview/${categoryName}/${fileName}.webp`;
   return { originalUrl, previewUrl };
 }
 

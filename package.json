@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "个人摄影作品展示网站，支持Cloudflare Pages部署",
   "main": "index.html",
+  "type": "module",
   "scripts": {
     "build": "echo '静态网站，无需构建'",
     "dev": "echo '请使用本地服务器运行，如: npx serve .'",
     "serve": "npx serve .",
-    "local:generate-index": "node generate-gallery-index-local.js",
-    "local:generate-previews": "generate-previews.bat"
+    "r2:generate-index": "node generate-gallery-index-r2.js",
+    "r2:generate-previews": "node generate-webp-thumbnail-r2.js"
   },
   "keywords": [
     "gallery",

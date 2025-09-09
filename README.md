@@ -102,20 +102,11 @@ my-gallery/
 
 #### 2.1 配置图床域名
 
-编辑 `generate-gallery-index-r2.js` 文件中的 `buildImageUrls` 函数：
+在项目根目录的 `.env` 中配置以下变量：
 
-```javascript
-function buildImageUrls(categoryName, fileName, fileExt) {
-  // 如果配置了自定义域名
-  const originalUrl = `https://cdn.yourdomain.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-  const previewUrl = `https://cdn.yourdomain.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
-  
-  // 或者使用 R2 默认域名
-  // const originalUrl = `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/${categoryName}/${fileName}.${fileExt}`;
-  // const previewUrl = `https://your-bucket.your-subdomain.r2.cloudflarestorage.com/gallery/0_preview/${categoryName}/${fileName}.webp`;
-  
-  return { originalUrl, previewUrl };
-}
+```
+R2_IMAGE_BASE_URL=https://your-domain.com
+R2_IMAGE_DIR=gallery
 ```
 
 #### 2.2 配置 R2 访问凭证
@@ -144,8 +135,7 @@ IMAGE_COMPRESSION_QUALITY=100
 安装依赖并生成 WebP 格式的预览图：
 
 ```bash
-npm install sharp
-node generate-webp-thumbnail-r2.js
+npm run r2:generate-previews
 ```
 
 这将从 R2 下载原图，生成缩略图后上传回 R2 的 `0_preview` 目录。
@@ -155,7 +145,7 @@ node generate-webp-thumbnail-r2.js
 从 R2 获取文件列表并生成索引：
 
 ```bash
-node generate-gallery-index-r2.js
+npm run r2:generate-index
 ```
 
 这将生成 `gallery-index.json` 文件，包含所有摄影作品的信息。
