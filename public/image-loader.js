@@ -314,8 +314,8 @@ class ImageLoader {
             // 图片加载
             const img = new Image();
             // 启用原生懒加载与异步解码
-            try { img.loading = 'lazy'; } catch (e) {}
-            try { img.decoding = 'async'; } catch (e) {}
+            //try { img.loading = 'lazy'; } catch (e) {}
+            //try { img.decoding = 'async'; } catch (e) {}
             
             // 预览图缺失检测
             let previewFailed = false;
