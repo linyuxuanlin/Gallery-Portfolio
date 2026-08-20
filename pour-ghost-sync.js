@@ -82,3 +82,64 @@ export function summarizePauses(pauses) {
   const totalPauseMs = safe.reduce((sum, p) => sum + p.duration, 0);
   return { count: safe.length, totalPauseMs, longestPauseMs: safe.reduce((m, p) => Math.max(m, p.duration), 0) };
 }
+
+// One-to-one, monotonic matching of pause sequences by cumulative water.
+// This avoids a long actual pause accidentally satisfying two nearby reference pauses.
+export function matchPauseSequences(referencePauses, actualPauses, options = {}) {
+  const refs = Array.isArray(referencePauses) ? referencePauses : [];
+  const acts = Array.isArray(actualPauses) ? actualPauses : [];
+  const waterTolerance = options.waterTolerance ?? 3;
+  const matches = [];
+  const missed = [];
+  let actualIndex = 0;
+
+  for (let refIndex = 0; refIndex < refs.length; refIndex++) {
+    const ref = refs[refIndex];
+    let bestIndex = -1, bestDelta = Infinity;
+    for (let i = actualIndex; i < acts.length; i++) {
+      const delta = Math.abs((acts[i].water ?? 0) - (ref.water ?? 0));
+      if (delta <= waterTolerance && delta < bestDelta) {
+        bestIndex = i;
+        bestDelta = delta;
+      }
+      // Pauses are water-ordered; once we are clearly past the reference window, stop scanning.
+      if ((acts[i].water ?? 0) > (ref.water ?? 0) + waterTolerance) break;
+    }
+
+    if (bestIndex < 0) {
+      missed.push({ refIndex, reference: ref });
+      continue;
+    }
+
+    const actual = acts[bestIndex];
+    matches.push({
+      refIndex,
+      actualIndex: bestIndex,
+      reference: ref,
+      actual,
+      waterDelta: Math.abs((actual.water ?? 0) - (ref.water ?? 0)),
+      timingScore: pauseTimingScore(ref.duration, actual.duration)
+    });
+    actualIndex = bestIndex + 1;
+  }
+
+  const used = new Set(matches.map(m => m.actualIndex));
+  const extra = acts.map((actual, index) => ({ actualIndex: index, actual })).filter(x => !used.has(x.actualIndex));
+  return { matches, missed, extra };
+}
+
+// Returns a normalized 0..1 score for the complete pause pattern.
+// 70% rewards timing accuracy of matched pauses; 30% rewards reproducing the right pause count.
+export function pauseSequenceScore(referencePauses, actualPauses, options = {}) {
+  const refs = Array.isArray(referencePauses) ? referencePauses : [];
+  const acts = Array.isArray(actualPauses) ? actualPauses : [];
+  if (!refs.length) return acts.length ? 0.7 : 1;
+
+  const result = matchPauseSequences(refs, acts, options);
+  const timing = result.matches.length
+    ? result.matches.reduce((sum, m) => sum + m.timingScore, 0) / result.matches.length
+    : 0;
+  const countPenalty = (result.missed.length + result.extra.length) / Math.max(refs.length, acts.length, 1);
+  const structure = Math.max(0, 1 - countPenalty);
+  return Math.max(0, Math.min(1, timing * 0.7 + structure * 0.3));
+}
