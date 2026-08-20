@@ -14,7 +14,7 @@
 .hud{position:absolute;left:50%;top:74px;transform:translateX(-50%);display:flex;gap:8px;z-index:4;pointer-events:none}.metric{min-width:88px;padding:9px 11px;border:1px solid var(--line);background:rgba(10,10,9,.55);backdrop-filter:blur(10px);border-radius:14px;text-align:center}.metric b{display:block;font-size:18px;font-variant-numeric:tabular-nums}.metric span{font-size:10px;color:var(--muted);letter-spacing:.08em}
 .panel{position:absolute;z-index:5;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(680px,calc(100% - 24px));padding:12px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(18px);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.28)}
 .row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.status{font-size:12px;color:var(--muted);line-height:1.45}.status strong{color:var(--text)}button{appearance:none;border:0;border-radius:14px;padding:12px 16px;font-weight:700;cursor:pointer;background:var(--text);color:#171714}button.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}.buttons{display:flex;gap:8px}
-.progress{height:5px;margin-top:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#f1e2bb);transition:width .08s linear}.tip{margin-top:9px;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:10px}.score{color:var(--good)}
+.progress{height:5px;margin-top:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#f1e2bb);transition:width .08s linear}.tip{margin-top:9px;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:10px}.score{color:var(--good)}.flowctl{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}.flowctl label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:7px}.flowctl b{color:var(--text);font-variant-numeric:tabular-nums}.flowctl input{width:100%;accent-color:var(--accent)}
 .crosshair{position:absolute;left:50%;top:50%;width:24px;height:24px;transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.18);border-radius:50%;pointer-events:none;z-index:2}.crosshair:before,.crosshair:after{content:"";position:absolute;background:rgba(255,255,255,.22)}.crosshair:before{width:1px;height:34px;left:11px;top:-6px}.crosshair:after{height:1px;width:34px;top:11px;left:-6px}
 #hint{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);font-size:12px;color:rgba(255,255,255,.65);pointer-events:none;z-index:3;transition:opacity .4s}.hide{opacity:0}
 @media(max-width:560px){.hud{top:68px;gap:5px}.metric{min-width:73px;padding:8px 7px}.metric b{font-size:16px}.metric span{font-size:9px}.panel{padding:10px}.buttons button{padding:11px 13px}.tip{font-size:10px}.sub{display:none}}
@@ -32,34 +32,160 @@
 <div class="panel">
   <div class="row"><div class="status"><strong id="phase">准备开始</strong><br><span id="coach">目标：250g · 尽量保持 4–6 g/s</span></div><div class="buttons"><button class="secondary" id="reset">重置</button><button id="start">开始训练</button></div></div>
   <div class="progress"><i id="bar"></i></div>
-  <div class="tip"><span>按住鼠标 / 手指 = 注水；左右移动 = 落点；上下移动 = 流速</span><span id="score" class="score">评分 --</span></div>
+  <div class="tip"><span>移动指针选择真实粉床落点；按住 = 注水</span><span id="score" class="score">评分 --</span></div>
+  <div class="flowctl"><label for="flowControl">壶身倾角 / 目标流速 <b id="flowSet">5.0 g/s</b></label><input id="flowControl" type="range" min="2" max="8" value="5" step="0.1" /></div>
 </div>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+
 const mount=document.getElementById('app');
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x0d0d0c);scene.fog=new THREE.Fog(0x0d0d0c,7,14);
-const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,50);camera.position.set(0,3,6.8);camera.lookAt(0,.8,0);
-const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;mount.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0xfff4dd,0x1a1a20,2.1));const key=new THREE.DirectionalLight(0xffe6c0,3.2);key.position.set(3,5,4);key.castShadow=true;scene.add(key);const rim=new THREE.PointLight(0x8aa7ff,2,8);rim.position.set(-4,3,-3);scene.add(rim);
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x0d0d0c); scene.fog=new THREE.Fog(0x0d0d0c,7,14);
+const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,50); camera.position.set(0,3.0,6.8); camera.lookAt(0,.8,0);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; renderer.outputColorSpace=THREE.SRGBColorSpace; mount.appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xfff4dd,0x1a1a20,2.1)); const key=new THREE.DirectionalLight(0xffe6c0,3.2);key.position.set(3,5,4);key.castShadow=true;scene.add(key); const rim=new THREE.PointLight(0x8aa7ff,2.0,8);rim.position.set(-4,3,-3);scene.add(rim);
+
 const table=new THREE.Mesh(new THREE.CylinderGeometry(4.6,4.6,.26,64),new THREE.MeshStandardMaterial({color:0x23221e,roughness:.86,metalness:.03}));table.position.y=-.82;table.receiveShadow=true;scene.add(table);
-const server=new THREE.Mesh(new THREE.CylinderGeometry(.76,.86,1.3,48,1,true),new THREE.MeshPhysicalMaterial({color:0x6b4430,transparent:true,opacity:.4,roughness:.12,transmission:.18}));server.position.y=-.1;server.castShadow=true;scene.add(server);
+const server=new THREE.Mesh(new THREE.CylinderGeometry(.76,.86,1.3,48,1,true),new THREE.MeshPhysicalMaterial({color:0x6b4430,transparent:true,opacity:.40,roughness:.12,transmission:.18}));server.position.y=-.1;server.castShadow=true;scene.add(server);
 const coffee=new THREE.Mesh(new THREE.CylinderGeometry(.67,.70,.18,48),new THREE.MeshStandardMaterial({color:0x3a1f12,roughness:.82}));coffee.position.y=.50;scene.add(coffee);
 const cone=new THREE.Mesh(new THREE.CylinderGeometry(1.08,.40,1.62,64,1,true),new THREE.MeshPhysicalMaterial({color:0xf0f0e8,transparent:true,opacity:.52,roughness:.18,transmission:.18,side:THREE.DoubleSide}));cone.position.y=1.18;cone.castShadow=true;scene.add(cone);
 const rimRing=new THREE.Mesh(new THREE.TorusGeometry(1.08,.055,16,64),new THREE.MeshStandardMaterial({color:0xf5f2e8,roughness:.35}));rimRing.rotation.x=Math.PI/2;rimRing.position.y=1.99;scene.add(rimRing);
 const bed=new THREE.Mesh(new THREE.CircleGeometry(.73,64),new THREE.MeshStandardMaterial({color:0x4b2918,roughness:1}));bed.rotation.x=-Math.PI/2;bed.position.y=1.16;scene.add(bed);
 for(let i=0;i<18;i++){const a=i/18*Math.PI*2;const g=new THREE.Mesh(new THREE.BoxGeometry(.025,1.32,.018),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.20}));g.position.set(Math.cos(a)*.72,1.38,Math.sin(a)*.72);g.rotation.y=-a;g.rotation.z=Math.atan2(.55,1.2);scene.add(g)}
-const kettle=new THREE.Group();const body=new THREE.Mesh(new THREE.SphereGeometry(.42,32,20),new THREE.MeshStandardMaterial({color:0x343432,metalness:.75,roughness:.25}));body.scale.set(1.15,.9,1);body.castShadow=true;kettle.add(body);const spout=new THREE.Mesh(new THREE.CylinderGeometry(.055,.10,1.35,16),new THREE.MeshStandardMaterial({color:0x444441,metalness:.75,roughness:.22}));spout.rotation.z=-Math.PI/3.05;spout.position.set(.58,-.05,0);kettle.add(spout);const handle=new THREE.Mesh(new THREE.TorusGeometry(.52,.055,12,32,Math.PI*1.25),new THREE.MeshStandardMaterial({color:0x1e1e1d,roughness:.65}));handle.rotation.z=-.3;handle.position.set(-.36,.08,0);kettle.add(handle);kettle.position.set(1.6,3.25,.1);scene.add(kettle);const nozzle=new THREE.Object3D();nozzle.position.set(.55,-.58,0);kettle.add(nozzle);
-let stream=null;function updateStream(){if(stream){scene.remove(stream);stream.geometry.dispose();stream.material.dispose();stream=null}if(!pouring)return;const start=new THREE.Vector3();nozzle.getWorldPosition(start);const end=new THREE.Vector3(pointer.x*1.05,1.18,pointer.z*.72);const dir=end.clone().sub(start);const len=dir.length();stream=new THREE.Mesh(new THREE.CylinderGeometry(.022+.012*flowNorm,.016+.009*flowNorm,len,10),new THREE.MeshPhysicalMaterial({color:0x9ad8ff,transparent:true,opacity:.72,roughness:.1,transmission:.35}));stream.position.copy(start).add(end).multiplyScalar(.5);stream.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir.clone().normalize());scene.add(stream)}
-const drops=[];function splash(x,z){for(let i=0;i<2;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(.025,6,5),new THREE.MeshBasicMaterial({color:0x9ad8ff,transparent:true,opacity:.5}));m.position.set(x,1.2,z);m.userData.v=new THREE.Vector3((Math.random()-.5)*.02,.018+Math.random()*.02,(Math.random()-.5)*.02);m.userData.life=1;scene.add(m);drops.push(m)}}
-const pointer={x:0,z:0};let active=false,pouring=false,startAt=0,lastT=0,water=0,flow=0,flowNorm=.5,qualitySum=0,qualityN=0,orbitT=0;const target=250;const $=id=>document.getElementById(id);function fmt(t){t=Math.max(0,t);return `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`}
-function setCoach(){if(!active){$('phase').textContent='准备开始';$('coach').textContent='目标：250g · 尽量保持 4–6 g/s';return}if(water<40){$('phase').textContent='闷蒸';$('coach').textContent='先均匀浸润粉床，建议 35–45g'}else if(water<180){$('phase').textContent='主体注水';$('coach').textContent=flow<4?'流速偏低，稍微提高':'保持稳定，避免长时间冲击边缘'}else if(water<target){$('phase').textContent='收尾';$('coach').textContent='逐渐回到中心，接近 250g'}else{$('phase').textContent='完成';$('coach').textContent='这一杯已经到目标水量'}}
-function finish(){active=false;pouring=false;updateStream();const score=qualityN?Math.round(100*qualitySum/qualityN):0;$('score').textContent=`评分 ${score}`;$('start').textContent='再来一杯';setCoach()}
-function reset(){active=false;pouring=false;water=0;flow=0;qualitySum=0;qualityN=0;startAt=0;$('time').textContent='0:00';$('water').textContent='0g';$('flow').textContent='0.0';$('bar').style.width='0%';$('score').textContent='评分 --';$('start').textContent='开始训练';$('hint').classList.remove('hide');pointer.x=0;pointer.z=0;updateStream();setCoach()}
-function begin(){reset();active=true;startAt=performance.now();lastT=startAt;$('hint').classList.add('hide');$('start').textContent='训练中';setCoach()}
-$('start').onclick=()=>begin();$('reset').onclick=reset;function posFromEvent(e){const r=renderer.domElement.getBoundingClientRect();const cx=(e.clientX-r.left)/r.width,cy=(e.clientY-r.top)/r.height;pointer.x=THREE.MathUtils.clamp((cx-.5)*2,-.92,.92);pointer.z=THREE.MathUtils.clamp((cy-.50)*1.7,-.9,.9);flowNorm=THREE.MathUtils.clamp(1.05-cy,.12,1);flow=2.2+flowNorm*5.4}
-renderer.domElement.addEventListener('pointerdown',e=>{if(!active)begin();renderer.domElement.setPointerCapture(e.pointerId);posFromEvent(e);pouring=true;updateStream()});renderer.domElement.addEventListener('pointermove',e=>{posFromEvent(e);if(pouring)updateStream()});const up=()=>{pouring=false;flow=0;updateStream()};renderer.domElement.addEventListener('pointerup',up);renderer.domElement.addEventListener('pointercancel',up);
-function animate(now){requestAnimationFrame(animate);const dt=Math.min(.05,(now-(lastT||now))/1000);lastT=now;orbitT+=dt;kettle.position.x=1.55+Math.sin(orbitT*.25)*.08;kettle.rotation.z=pouring?-.15:0;kettle.rotation.y=Math.sin(orbitT*.45)*.06;if(active){$('time').textContent=fmt((now-startAt)/1000);if(pouring){water+=flow*dt;const center=Math.hypot(pointer.x,pointer.z);const flowScore=Math.max(0,1-Math.abs(flow-5)/4);const centerScore=Math.max(0,1-Math.max(0,center-.63)*2.8);qualitySum+=flowScore*.72+centerScore*.28;qualityN++;if(Math.random()<.35)splash(pointer.x*1.05,pointer.z*.72)}$('water').textContent=`${Math.round(water)}g`;$('flow').textContent=(pouring?flow:0).toFixed(1);$('bar').style.width=`${Math.min(100,water/target*100)}%`;setCoach();if(water>=target)finish()}for(let i=drops.length-1;i>=0;i--){const d=drops[i];d.position.add(d.userData.v);d.userData.v.y-=.0014;d.userData.life-=dt*2.4;d.material.opacity=Math.max(0,d.userData.life*.45);if(d.userData.life<=0){scene.remove(d);drops.splice(i,1)}}bed.material.color.setHSL(.055,.48,.15+Math.min(.08,water/target*.08));renderer.render(scene,camera)}
-requestAnimationFrame(animate);addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});reset();
+
+const kettle=new THREE.Group();
+const body=new THREE.Mesh(new THREE.SphereGeometry(.42,32,20),new THREE.MeshStandardMaterial({color:0x343432,metalness:.75,roughness:.25}));
+body.scale.set(1.15,.9,1);body.castShadow=true;kettle.add(body);
+const spoutCurve=new THREE.CatmullRomCurve3([
+  new THREE.Vector3(-.25,-.04,0),new THREE.Vector3(-.58,.03,0),
+  new THREE.Vector3(-.92,.18,0),new THREE.Vector3(-1.18,.26,0),new THREE.Vector3(-1.30,.20,0)
+]);
+const spout=new THREE.Mesh(new THREE.TubeGeometry(spoutCurve,28,.055,12,false),new THREE.MeshStandardMaterial({color:0x444441,metalness:.75,roughness:.22}));
+kettle.add(spout);
+const handle=new THREE.Mesh(new THREE.TorusGeometry(.52,.055,12,32,Math.PI*1.25),new THREE.MeshStandardMaterial({color:0x1e1e1d,roughness:.65}));
+handle.rotation.z=-.3;handle.position.set(.36,.08,0);kettle.add(handle);
+const nozzle=new THREE.Object3D();nozzle.position.set(-1.30,.20,0);kettle.add(nozzle);
+kettle.position.set(1.7,3.15,.1);scene.add(kettle);
+
+const targetMarker=new THREE.Mesh(new THREE.RingGeometry(.06,.085,32),new THREE.MeshBasicMaterial({color:0xe8c07b,transparent:true,opacity:.8,side:THREE.DoubleSide}));
+targetMarker.rotation.x=-Math.PI/2;targetMarker.position.y=1.185;scene.add(targetMarker);
+
+const raycaster=new THREE.Raycaster();
+const bedPlane=new THREE.Plane(new THREE.Vector3(0,1,0),-1.18);
+const ndc=new THREE.Vector2();
+const pointer={x:0,z:0};
+const targetPoint=new THREE.Vector3(0,1.18,0);
+const kettleGoal=new THREE.Vector3(1.75,3.15,.10);
+const BED_RADIUS=.70;
+function targetFromEvent(e){
+  const r=renderer.domElement.getBoundingClientRect();
+  ndc.x=((e.clientX-r.left)/r.width)*2-1;
+  ndc.y=-((e.clientY-r.top)/r.height)*2+1;
+  raycaster.setFromCamera(ndc,camera);
+  const hit=new THREE.Vector3();
+  if(!raycaster.ray.intersectPlane(bedPlane,hit)) return;
+  const radius=Math.hypot(hit.x,hit.z);
+  if(radius>BED_RADIUS){hit.x*=BED_RADIUS/radius;hit.z*=BED_RADIUS/radius}
+  targetPoint.set(hit.x,1.18,hit.z);pointer.x=hit.x;pointer.z=hit.z;
+  targetMarker.position.set(hit.x,1.185,hit.z);
+  kettleGoal.set(hit.x+1.72,3.15,hit.z+.08);kettle.position.copy(kettleGoal);
+}
+
+let stream=null;
+const G=5.5;
+function ballisticPoints(start,end){
+  const dy=start.y-end.y;
+  const vy=-.18;
+  const T=(vy+Math.sqrt(vy*vy+2*G*dy))/G;
+  const vx=(end.x-start.x)/T, vz=(end.z-start.z)/T;
+  const pts=[];
+  for(let i=0;i<=20;i++){
+    const t=T*i/20;
+    pts.push(new THREE.Vector3(start.x+vx*t,start.y+vy*t-.5*G*t*t,start.z+vz*t));
+  }
+  return pts;
+}
+function updateStream(){
+  if(stream){scene.remove(stream);stream.geometry.dispose();stream.material.dispose();stream=null}
+  if(!pouring)return;
+  const start=new THREE.Vector3();nozzle.getWorldPosition(start);
+  const pts=ballisticPoints(start,targetPoint);
+  stream=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),32,.013+flow*.0022,8,false),new THREE.MeshPhysicalMaterial({color:0x9ad8ff,transparent:true,opacity:.72,roughness:.08,transmission:.32}));
+  scene.add(stream);
+}
+
+const drops=[];
+function splash(x,z){
+  for(let i=0;i<2;i++){
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.018,6,5),new THREE.MeshBasicMaterial({color:0x9ad8ff,transparent:true,opacity:.5}));
+    m.position.set(x,1.20,z);
+    m.userData.v=new THREE.Vector3((Math.random()-.5)*.35,.20+Math.random()*.14,(Math.random()-.5)*.35);
+    m.userData.life=.45;scene.add(m);drops.push(m)
+  }
+}
+
+let active=false,pouring=false,completed=false,startAt=0,lastT=0,water=0,flow=5,qualityIntegral=0,qualityTime=0;const target=250;
+const $=id=>document.getElementById(id);
+function fmt(t){t=Math.max(0,t);return `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`}
+function setCoach(){
+  if(completed){$('phase').textContent='完成';$('coach').textContent='目标水量已达到';return}
+  if(!active){$('phase').textContent='准备开始';$('coach').textContent='目标：250g · 建议 4–6 g/s';return}
+  if(water<40){$('phase').textContent='闷蒸';$('coach').textContent='均匀浸润粉床，建议 35–45g';}
+  else if(water<180){$('phase').textContent='主体注水';$('coach').textContent=flow<4?'流速偏低，适当增加倾角':flow>6?'流速偏高，减小倾角':'保持稳定，让落点沿粉床移动';}
+  else if(water<target){$('phase').textContent='收尾';$('coach').textContent='接近目标水量，逐渐回到中心';}
+  else {$('phase').textContent='完成';$('coach').textContent='目标水量已达到';}
+}
+function finish(){
+  active=false;pouring=false;completed=true;flow=Number($('flowControl').value);kettle.rotation.z=0;updateStream();
+  const score=qualityTime?Math.round(100*qualityIntegral/qualityTime):0;
+  $('score').textContent=`评分 ${score}`;$('start').textContent='再来一杯';setCoach();
+}
+function reset(){
+  active=false;pouring=false;completed=false;water=0;qualityIntegral=0;qualityTime=0;startAt=0;
+  $('time').textContent='0:00';$('water').textContent='0g';$('flow').textContent='0.0';$('bar').style.width='0%';$('score').textContent='评分 --';$('start').textContent='开始训练';$('hint').classList.remove('hide');
+  targetPoint.set(0,1.18,0);targetMarker.position.set(0,1.185,0);kettleGoal.set(1.72,3.15,.08);updateStream();setCoach();
+}
+function begin(){
+  reset();active=true;startAt=performance.now();lastT=startAt;$('hint').classList.add('hide');$('start').textContent='训练中';setCoach();
+}
+$('start').onclick=()=>begin();$('reset').onclick=reset;
+$('flowControl').addEventListener('input',e=>{flow=Number(e.target.value);$('flowSet').textContent=`${flow.toFixed(1)} g/s`;if(pouring){kettle.rotation.z=THREE.MathUtils.mapLinear(flow,2,8,.03,.22);updateStream()}});
+renderer.domElement.addEventListener('pointerdown',e=>{
+  if(!active)begin();renderer.domElement.setPointerCapture(e.pointerId);targetFromEvent(e);pouring=true;flow=Number($('flowControl').value);kettle.rotation.z=THREE.MathUtils.mapLinear(flow,2,8,.03,.22);updateStream();
+});
+renderer.domElement.addEventListener('pointermove',e=>{targetFromEvent(e);if(pouring)updateStream()});
+const up=()=>{pouring=false;kettle.rotation.z=0;updateStream()};renderer.domElement.addEventListener('pointerup',up);renderer.domElement.addEventListener('pointercancel',up);
+
+function animate(now){
+  requestAnimationFrame(animate);
+  const dt=Math.min(.05,(now-(lastT||now))/1000);lastT=now;
+  if(active){
+    $('time').textContent=fmt((now-startAt)/1000);
+    if(pouring){
+      const requested=Number($('flowControl').value);
+      const remaining=target-water;
+      const added=Math.min(remaining,requested*dt);
+      water+=added;
+      const radial=Math.hypot(targetPoint.x,targetPoint.z)/BED_RADIUS;
+      const flowScore=Math.max(0,1-Math.abs(requested-5)/3.2);
+      const edgePenalty=radial>.86?(radial-.86)/.14:0;
+      const spatialScore=Math.max(0,1-edgePenalty);
+      const q=flowScore*.72+spatialScore*.28;
+      qualityIntegral+=q*dt;qualityTime+=dt;
+      if(Math.random()<Math.min(.35,requested*dt*.07))splash(targetPoint.x,targetPoint.z);
+    }
+    $('water').textContent=`${Math.round(water)}g`;$('flow').textContent=(pouring?Number($('flowControl').value):0).toFixed(1);$('bar').style.width=`${Math.min(100,water/target*100)}%`;setCoach();
+    if(water>=target-.0001){water=target;$('water').textContent='250g';finish()}
+  }
+  for(let i=drops.length-1;i>=0;i--){
+    const d=drops[i];d.position.addScaledVector(d.userData.v,dt);d.userData.v.y-=G*dt;d.userData.life-=dt;d.material.opacity=Math.max(0,d.userData.life/.45*.45);
+    if(d.userData.life<=0){scene.remove(d);d.geometry.dispose();d.material.dispose();drops.splice(i,1)}
+  }
+  bed.material.color.setHSL(.055,.48,.15+Math.min(.08,water/target*.08));renderer.render(scene,camera)
+}
+requestAnimationFrame(animate);
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+reset();
 </script>
 </body>
 </html>
