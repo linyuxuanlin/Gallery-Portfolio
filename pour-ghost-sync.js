@@ -51,7 +51,34 @@ export function pauseTimingScore(referenceMs, actualMs) {
   return Math.max(0, 1 - relativeError / 0.65);
 }
 
+// Converts a reference pause and the trainee's live state into a UI-safe cue.
+// `actualPauseMs` should count only time spent not pouring while inside the pause water window.
+export function evaluatePauseCue(pause, actualPauseMs, isPouring) {
+  if (!pause) return { state: 'none', progress: 0, remainingMs: 0, score: null };
+  const elapsed = Math.max(0, Number(actualPauseMs) || 0);
+  const remainingMs = Math.max(0, pause.duration - elapsed);
+  const progress = pauseProgress(pause, elapsed);
+
+  if (isPouring && elapsed === 0) {
+    return { state: 'pause-now', progress: 0, remainingMs: pause.duration, score: null };
+  }
+  if (!isPouring && remainingMs > 0) {
+    return { state: 'holding', progress, remainingMs, score: null };
+  }
+  if (!isPouring && remainingMs === 0) {
+    return { state: 'ready', progress: 1, remainingMs: 0, score: pauseTimingScore(pause.duration, elapsed) };
+  }
+  const score = pauseTimingScore(pause.duration, elapsed);
+  return {
+    state: elapsed < pause.duration * 0.78 ? 'resumed-early' : elapsed > pause.duration * 1.35 ? 'resumed-late' : 'matched',
+    progress,
+    remainingMs,
+    score
+  };
+}
+
 export function summarizePauses(pauses) {
-  const totalPauseMs = pauses.reduce((sum, p) => sum + p.duration, 0);
-  return { count: pauses.length, totalPauseMs, longestPauseMs: pauses.reduce((m, p) => Math.max(m, p.duration), 0) };
+  const safe = Array.isArray(pauses) ? pauses : [];
+  const totalPauseMs = safe.reduce((sum, p) => sum + p.duration, 0);
+  return { count: safe.length, totalPauseMs, longestPauseMs: safe.reduce((m, p) => Math.max(m, p.duration), 0) };
 }
