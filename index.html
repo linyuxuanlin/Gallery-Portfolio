@@ -1,56 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gallery-Portfolio</title>
-    <link rel="stylesheet" href="public/styles.css" />
-    <link rel="stylesheet" href="public/gallery.css" />
-    <link rel="icon" href="public/assets/favicon.svg" type="image/svg+xml" />
-  </head>
-  <body>
-    <header>
-      <h1>
-        <a href="/" style="text-decoration: none; color: inherit;">Gallery-Portfolio</a>
-      </h1>
-      <div class="header-buttons">
-        <a
-          id="github-link"
-          href="https://github.com/linyuxuanlin/Gallery-Portfolio"
-          target="_blank"
-        >
-          <img 
-            src="public/assets/github.svg" 
-            alt="GitHub 仓库链接" 
-            aria-label="访问 GitHub 仓库"
-          />
-        </a>
-        <button id="theme-toggle" aria-label="切换深色/浅色主题">
-          <img
-            src="public/assets/brightness_4.svg"
-            alt="Toggle Theme"
-            id="theme-icon"
-          />
-        </button>
-      </div>
-    </header>
-    <div id="loading"></div>
-    <div class="gallery" id="gallery"></div>
-
-    <!-- Modal for image display -->
-    <div id="myModal" class="modal">
-      <span class="close">&times;</span>
-      <img class="modal-content" id="img01" />
-      <div id="exif-info"></div>
-      <button id="load-original-btn" class="load-original-btn">加载原图</button>
-    </div>
-
-    <!-- 加载JavaScript模块 -->
-    <script src="public/data-loader.js"></script>
-    <script src="public/tag-filter.js"></script>
-    <script src="public/image-loader.js"></script>
-    <script src="public/auto-scroll.js"></script>
-    <script src="public/layout.js"></script>
-    <script src="public/gallery.js"></script>
-  </body>
-</html> 
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<title>POUR. — 3D 手冲练习场</title>
+<meta name="theme-color" content="#0d0d0c" />
+<style>
+:root{--bg:#0d0d0c;--panel:rgba(24,24,21,.78);--text:#f2efe8;--muted:#aaa79f;--line:rgba(255,255,255,.12);--accent:#e8c07b;--good:#a7dfb0;--warn:#f0c778}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}
+#app{position:fixed;inset:0}canvas{display:block;width:100%;height:100%}
+.topbar{position:absolute;left:0;right:0;top:0;padding:max(18px,env(safe-area-inset-top)) 18px 0;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;z-index:5}
+.brand{font-size:20px;letter-spacing:.22em;font-weight:800}.sub{font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.08em}.mode{pointer-events:auto;border:1px solid var(--line);background:rgba(0,0,0,.32);backdrop-filter:blur(12px);border-radius:999px;padding:8px 11px;font-size:11px;color:var(--muted)}
+.hud{position:absolute;left:50%;top:74px;transform:translateX(-50%);display:flex;gap:8px;z-index:4;pointer-events:none}.metric{min-width:88px;padding:9px 11px;border:1px solid var(--line);background:rgba(10,10,9,.55);backdrop-filter:blur(10px);border-radius:14px;text-align:center}.metric b{display:block;font-size:18px;font-variant-numeric:tabular-nums}.metric span{font-size:10px;color:var(--muted);letter-spacing:.08em}
+.panel{position:absolute;z-index:5;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(680px,calc(100% - 24px));padding:12px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(18px);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.status{font-size:12px;color:var(--muted);line-height:1.45}.status strong{color:var(--text)}button{appearance:none;border:0;border-radius:14px;padding:12px 16px;font-weight:700;cursor:pointer;background:var(--text);color:#171714}button.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}.buttons{display:flex;gap:8px}
+.progress{height:5px;margin-top:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#f1e2bb);transition:width .08s linear}.tip{margin-top:9px;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:10px}.score{color:var(--good)}
+.crosshair{position:absolute;left:50%;top:50%;width:24px;height:24px;transform:translate(-50%,-50%);border:1px solid rgba(255,255,255,.18);border-radius:50%;pointer-events:none;z-index:2}.crosshair:before,.crosshair:after{content:"";position:absolute;background:rgba(255,255,255,.22)}.crosshair:before{width:1px;height:34px;left:11px;top:-6px}.crosshair:after{height:1px;width:34px;top:11px;left:-6px}
+#hint{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);font-size:12px;color:rgba(255,255,255,.65);pointer-events:none;z-index:3;transition:opacity .4s}.hide{opacity:0}
+@media(max-width:560px){.hud{top:68px;gap:5px}.metric{min-width:73px;padding:8px 7px}.metric b{font-size:16px}.metric span{font-size:9px}.panel{padding:10px}.buttons button{padding:11px 13px}.tip{font-size:10px}.sub{display:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="topbar"><div><div class="brand">POUR.</div><div class="sub">PRACTICE · BREW · REPLAY</div></div><div class="mode">V60 · TRAINING</div></div>
+<div class="hud">
+  <div class="metric"><b id="time">0:00</b><span>TIME</span></div>
+  <div class="metric"><b id="water">0g</b><span>WATER</span></div>
+  <div class="metric"><b id="flow">0.0</b><span>FLOW g/s</span></div>
+</div>
+<div class="crosshair"></div><div id="hint">按住并移动开始注水 · 拖动控制落点</div>
+<div class="panel">
+  <div class="row"><div class="status"><strong id="phase">准备开始</strong><br><span id="coach">目标：250g · 尽量保持 4–6 g/s</span></div><div class="buttons"><button class="secondary" id="reset">重置</button><button id="start">开始训练</button></div></div>
+  <div class="progress"><i id="bar"></i></div>
+  <div class="tip"><span>按住鼠标 / 手指 = 注水；左右移动 = 落点；上下移动 = 流速</span><span id="score" class="score">评分 --</span></div>
+</div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+const mount=document.getElementById('app');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0d0d0c);scene.fog=new THREE.Fog(0x0d0d0c,7,14);
+const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,50);camera.position.set(0,3,6.8);camera.lookAt(0,.8,0);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;mount.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xfff4dd,0x1a1a20,2.1));const key=new THREE.DirectionalLight(0xffe6c0,3.2);key.position.set(3,5,4);key.castShadow=true;scene.add(key);const rim=new THREE.PointLight(0x8aa7ff,2,8);rim.position.set(-4,3,-3);scene.add(rim);
+const table=new THREE.Mesh(new THREE.CylinderGeometry(4.6,4.6,.26,64),new THREE.MeshStandardMaterial({color:0x23221e,roughness:.86,metalness:.03}));table.position.y=-.82;table.receiveShadow=true;scene.add(table);
+const server=new THREE.Mesh(new THREE.CylinderGeometry(.76,.86,1.3,48,1,true),new THREE.MeshPhysicalMaterial({color:0x6b4430,transparent:true,opacity:.4,roughness:.12,transmission:.18}));server.position.y=-.1;server.castShadow=true;scene.add(server);
+const coffee=new THREE.Mesh(new THREE.CylinderGeometry(.67,.70,.18,48),new THREE.MeshStandardMaterial({color:0x3a1f12,roughness:.82}));coffee.position.y=.50;scene.add(coffee);
+const cone=new THREE.Mesh(new THREE.CylinderGeometry(1.08,.40,1.62,64,1,true),new THREE.MeshPhysicalMaterial({color:0xf0f0e8,transparent:true,opacity:.52,roughness:.18,transmission:.18,side:THREE.DoubleSide}));cone.position.y=1.18;cone.castShadow=true;scene.add(cone);
+const rimRing=new THREE.Mesh(new THREE.TorusGeometry(1.08,.055,16,64),new THREE.MeshStandardMaterial({color:0xf5f2e8,roughness:.35}));rimRing.rotation.x=Math.PI/2;rimRing.position.y=1.99;scene.add(rimRing);
+const bed=new THREE.Mesh(new THREE.CircleGeometry(.73,64),new THREE.MeshStandardMaterial({color:0x4b2918,roughness:1}));bed.rotation.x=-Math.PI/2;bed.position.y=1.16;scene.add(bed);
+for(let i=0;i<18;i++){const a=i/18*Math.PI*2;const g=new THREE.Mesh(new THREE.BoxGeometry(.025,1.32,.018),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.20}));g.position.set(Math.cos(a)*.72,1.38,Math.sin(a)*.72);g.rotation.y=-a;g.rotation.z=Math.atan2(.55,1.2);scene.add(g)}
+const kettle=new THREE.Group();const body=new THREE.Mesh(new THREE.SphereGeometry(.42,32,20),new THREE.MeshStandardMaterial({color:0x343432,metalness:.75,roughness:.25}));body.scale.set(1.15,.9,1);body.castShadow=true;kettle.add(body);const spout=new THREE.Mesh(new THREE.CylinderGeometry(.055,.10,1.35,16),new THREE.MeshStandardMaterial({color:0x444441,metalness:.75,roughness:.22}));spout.rotation.z=-Math.PI/3.05;spout.position.set(.58,-.05,0);kettle.add(spout);const handle=new THREE.Mesh(new THREE.TorusGeometry(.52,.055,12,32,Math.PI*1.25),new THREE.MeshStandardMaterial({color:0x1e1e1d,roughness:.65}));handle.rotation.z=-.3;handle.position.set(-.36,.08,0);kettle.add(handle);kettle.position.set(1.6,3.25,.1);scene.add(kettle);const nozzle=new THREE.Object3D();nozzle.position.set(.55,-.58,0);kettle.add(nozzle);
+let stream=null;function updateStream(){if(stream){scene.remove(stream);stream.geometry.dispose();stream.material.dispose();stream=null}if(!pouring)return;const start=new THREE.Vector3();nozzle.getWorldPosition(start);const end=new THREE.Vector3(pointer.x*1.05,1.18,pointer.z*.72);const dir=end.clone().sub(start);const len=dir.length();stream=new THREE.Mesh(new THREE.CylinderGeometry(.022+.012*flowNorm,.016+.009*flowNorm,len,10),new THREE.MeshPhysicalMaterial({color:0x9ad8ff,transparent:true,opacity:.72,roughness:.1,transmission:.35}));stream.position.copy(start).add(end).multiplyScalar(.5);stream.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir.clone().normalize());scene.add(stream)}
+const drops=[];function splash(x,z){for(let i=0;i<2;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(.025,6,5),new THREE.MeshBasicMaterial({color:0x9ad8ff,transparent:true,opacity:.5}));m.position.set(x,1.2,z);m.userData.v=new THREE.Vector3((Math.random()-.5)*.02,.018+Math.random()*.02,(Math.random()-.5)*.02);m.userData.life=1;scene.add(m);drops.push(m)}}
+const pointer={x:0,z:0};let active=false,pouring=false,startAt=0,lastT=0,water=0,flow=0,flowNorm=.5,qualitySum=0,qualityN=0,orbitT=0;const target=250;const $=id=>document.getElementById(id);function fmt(t){t=Math.max(0,t);return `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`}
+function setCoach(){if(!active){$('phase').textContent='准备开始';$('coach').textContent='目标：250g · 尽量保持 4–6 g/s';return}if(water<40){$('phase').textContent='闷蒸';$('coach').textContent='先均匀浸润粉床，建议 35–45g'}else if(water<180){$('phase').textContent='主体注水';$('coach').textContent=flow<4?'流速偏低，稍微提高':'保持稳定，避免长时间冲击边缘'}else if(water<target){$('phase').textContent='收尾';$('coach').textContent='逐渐回到中心，接近 250g'}else{$('phase').textContent='完成';$('coach').textContent='这一杯已经到目标水量'}}
+function finish(){active=false;pouring=false;updateStream();const score=qualityN?Math.round(100*qualitySum/qualityN):0;$('score').textContent=`评分 ${score}`;$('start').textContent='再来一杯';setCoach()}
+function reset(){active=false;pouring=false;water=0;flow=0;qualitySum=0;qualityN=0;startAt=0;$('time').textContent='0:00';$('water').textContent='0g';$('flow').textContent='0.0';$('bar').style.width='0%';$('score').textContent='评分 --';$('start').textContent='开始训练';$('hint').classList.remove('hide');pointer.x=0;pointer.z=0;updateStream();setCoach()}
+function begin(){reset();active=true;startAt=performance.now();lastT=startAt;$('hint').classList.add('hide');$('start').textContent='训练中';setCoach()}
+$('start').onclick=()=>begin();$('reset').onclick=reset;function posFromEvent(e){const r=renderer.domElement.getBoundingClientRect();const cx=(e.clientX-r.left)/r.width,cy=(e.clientY-r.top)/r.height;pointer.x=THREE.MathUtils.clamp((cx-.5)*2,-.92,.92);pointer.z=THREE.MathUtils.clamp((cy-.50)*1.7,-.9,.9);flowNorm=THREE.MathUtils.clamp(1.05-cy,.12,1);flow=2.2+flowNorm*5.4}
+renderer.domElement.addEventListener('pointerdown',e=>{if(!active)begin();renderer.domElement.setPointerCapture(e.pointerId);posFromEvent(e);pouring=true;updateStream()});renderer.domElement.addEventListener('pointermove',e=>{posFromEvent(e);if(pouring)updateStream()});const up=()=>{pouring=false;flow=0;updateStream()};renderer.domElement.addEventListener('pointerup',up);renderer.domElement.addEventListener('pointercancel',up);
+function animate(now){requestAnimationFrame(animate);const dt=Math.min(.05,(now-(lastT||now))/1000);lastT=now;orbitT+=dt;kettle.position.x=1.55+Math.sin(orbitT*.25)*.08;kettle.rotation.z=pouring?-.15:0;kettle.rotation.y=Math.sin(orbitT*.45)*.06;if(active){$('time').textContent=fmt((now-startAt)/1000);if(pouring){water+=flow*dt;const center=Math.hypot(pointer.x,pointer.z);const flowScore=Math.max(0,1-Math.abs(flow-5)/4);const centerScore=Math.max(0,1-Math.max(0,center-.63)*2.8);qualitySum+=flowScore*.72+centerScore*.28;qualityN++;if(Math.random()<.35)splash(pointer.x*1.05,pointer.z*.72)}$('water').textContent=`${Math.round(water)}g`;$('flow').textContent=(pouring?flow:0).toFixed(1);$('bar').style.width=`${Math.min(100,water/target*100)}%`;setCoach();if(water>=target)finish()}for(let i=drops.length-1;i>=0;i--){const d=drops[i];d.position.add(d.userData.v);d.userData.v.y-=.0014;d.userData.life-=dt*2.4;d.material.opacity=Math.max(0,d.userData.life*.45);if(d.userData.life<=0){scene.remove(d);drops.splice(i,1)}}bed.material.color.setHSL(.055,.48,.15+Math.min(.08,water/target*.08));renderer.render(scene,camera)}
+requestAnimationFrame(animate);addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});reset();
+</script>
+</body>
+</html>
