@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { detectPauseSegments, activePauseAtWater, pauseProgress, pauseTimingScore, summarizePauses } from '../pour-ghost-sync.js';
+import { detectPauseSegments, activePauseAtWater, pauseProgress, pauseTimingScore, evaluatePauseCue, summarizePauses } from '../pour-ghost-sync.js';
 
 const samples = [
   {t:0,water:0,x:0,z:0,pouring:true},
@@ -24,6 +24,13 @@ assert.equal(pauseProgress(pauses[0], 1000), .5);
 assert.equal(pauseProgress(pauses[0], 3000), 1);
 assert.equal(pauseTimingScore(2000, 2000), 1);
 assert.ok(pauseTimingScore(2000, 2600) > pauseTimingScore(2000, 4000));
+assert.deepEqual(evaluatePauseCue(pauses[0], 0, true), {state:'pause-now',progress:0,remainingMs:2000,score:null});
+assert.equal(evaluatePauseCue(pauses[0], 1000, false).state, 'holding');
+assert.equal(evaluatePauseCue(pauses[0], 2000, false).state, 'ready');
+assert.equal(evaluatePauseCue(pauses[0], 900, true).state, 'resumed-early');
+assert.equal(evaluatePauseCue(pauses[0], 1900, true).state, 'matched');
+assert.equal(evaluatePauseCue(pauses[0], 3000, true).state, 'resumed-late');
+assert.deepEqual(summarizePauses(null), {count:0,totalPauseMs:0,longestPauseMs:0});
 assert.deepEqual(summarizePauses(pauses), {count:1,totalPauseMs:2000,longestPauseMs:2000});
 
 console.log('ghost-sync tests: PASS');
