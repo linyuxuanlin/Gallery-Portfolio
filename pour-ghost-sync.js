@@ -40,6 +40,16 @@ export function activePauseAtWater(pauses, water, tolerance = 1.2) {
   return best;
 }
 
+// Hysteretic pause selection for live UI. Enter with a tight window, but keep the
+// current pause active until a wider exit window is crossed. This prevents PAUSE
+// HUD flicker when cumulative water jitters around a boundary.
+export function stablePauseAtWater(pauses, water, currentPause = null, options = {}) {
+  const enterTolerance = options.enterTolerance ?? 1.2;
+  const exitTolerance = Math.max(enterTolerance, options.exitTolerance ?? 2.0);
+  if (currentPause && Math.abs((currentPause.water ?? 0) - water) <= exitTolerance) return currentPause;
+  return activePauseAtWater(pauses, water, enterTolerance);
+}
+
 export function pauseProgress(pause, currentPauseMs) {
   if (!pause || pause.duration <= 0) return 1;
   return Math.max(0, Math.min(1, currentPauseMs / pause.duration));
@@ -129,7 +139,7 @@ export function matchPauseSequences(referencePauses, actualPauses, options = {})
 }
 
 // Returns a normalized 0..1 score for the complete pause pattern.
-// 70% rewards timing accuracy of matched pauses; 30% rewards reproducing the right pause count.
+// Kept for callers that explicitly want a numeric score even when the reference has no pauses.
 export function pauseSequenceScore(referencePauses, actualPauses, options = {}) {
   const refs = Array.isArray(referencePauses) ? referencePauses : [];
   const acts = Array.isArray(actualPauses) ? actualPauses : [];
@@ -142,4 +152,48 @@ export function pauseSequenceScore(referencePauses, actualPauses, options = {}) 
   const countPenalty = (result.missed.length + result.extra.length) / Math.max(refs.length, acts.length, 1);
   const structure = Math.max(0, 1 - countPenalty);
   return Math.max(0, Math.min(1, timing * 0.7 + structure * 0.3));
+}
+
+// Product-facing rhythm result. A reference cup with no meaningful pauses is
+// "not applicable", not a perfect 100. This prevents misleading result cards and
+// lets the overall Ghost score renormalize around path/flow instead.
+export function rhythmAssessment(referencePauses, actualPauses, options = {}) {
+  const refs = Array.isArray(referencePauses) ? referencePauses : [];
+  const acts = Array.isArray(actualPauses) ? actualPauses : [];
+  if (!refs.length) {
+    return {
+      applicable: false,
+      score: null,
+      reason: 'no-reference-pauses',
+      referenceCount: 0,
+      actualCount: acts.length,
+      matches: [],
+      missed: [],
+      extra: acts.map((actual, actualIndex) => ({ actualIndex, actual }))
+    };
+  }
+  const detail = matchPauseSequences(refs, acts, options);
+  return {
+    applicable: true,
+    score: pauseSequenceScore(refs, acts, options),
+    reason: null,
+    referenceCount: refs.length,
+    actualCount: acts.length,
+    ...detail
+  };
+}
+
+// Weighted average that ignores unavailable metrics instead of silently treating
+// them as perfect. Useful for Ghost result scoring where rhythm may be N/A.
+export function weightedAvailableScore(metrics) {
+  const items = Array.isArray(metrics) ? metrics : [];
+  let weighted = 0, totalWeight = 0;
+  for (const item of items) {
+    const value = item?.value;
+    const weight = Number(item?.weight) || 0;
+    if (!Number.isFinite(value) || weight <= 0) continue;
+    weighted += Math.max(0, Math.min(1, value)) * weight;
+    totalWeight += weight;
+  }
+  return totalWeight ? weighted / totalWeight : null;
 }
