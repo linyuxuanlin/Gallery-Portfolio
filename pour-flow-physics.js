@@ -41,8 +41,6 @@ export function stepFlow(currentFlow, controlFlow, pouring, dt, options = {}) {
 export function flowToTilt(flow, minFlow = 2, maxFlow = 8) {
   const f = Math.min(maxFlow, Math.max(0, Number(flow) || 0));
   if (f <= 0) return 0;
-  // Keep the low-flow region continuous: a tiny residual stream must not
-  // instantly snap the kettle to the minimum pouring angle.
   if (f < minFlow) return -0.085 * (f / Math.max(0.001, minFlow));
   const u = Math.min(1, Math.max(0, (f - minFlow) / Math.max(0.001, maxFlow - minFlow)));
   return -(0.085 + u * 0.185);
@@ -54,4 +52,13 @@ export function integrateWater(water, flow, dt, target = Infinity) {
   const safeDt = Math.max(0, Number(dt) || 0);
   const added = Math.min(safeFlow * safeDt, Math.max(0, target - safeWater));
   return { water: safeWater + added, added };
+}
+
+// Integrate a frame whose flow changes from startFlow to endFlow.
+// Using the trapezoidal average prevents startup/release water from depending
+// materially on display refresh rate while retaining the same flow response.
+export function integrateFlowSegment(water, startFlow, endFlow, dt, target = Infinity) {
+  const a = Math.max(0, Number(startFlow) || 0);
+  const b = Math.max(0, Number(endFlow) || 0);
+  return integrateWater(water, (a + b) * 0.5, dt, target);
 }
