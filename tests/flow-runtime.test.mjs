@@ -12,6 +12,9 @@ function run({ fps = 60, seconds = 1, pouring = true, controlFlow = 5 }) {
 const start = createFlowRuntime({ controlFlow: 6 }).snapshot(false);
 assert.equal(start.actualFlow, 0);
 assert.equal(start.water, 0);
+assert.equal(start.targetReached, false);
+assert.equal(start.tailActive, false);
+assert.equal(start.settled, false);
 
 const a = run({ fps: 60, seconds: .1, pouring: true, controlFlow: 8 });
 assert.ok(a.actualFlow < 2, `actual flow must ramp instead of jump, got ${a.actualFlow}`);
@@ -51,5 +54,26 @@ let end;
 for (let i = 0; i < 300; i++) end = capped.step(1 / 60, true);
 assert.equal(end.water, 1);
 assert.equal(end.complete, true);
+assert.equal(end.targetReached, true);
+assert.equal(end.pouring, false, 'runtime must latch pouring off after target even if input remains held');
+assert.equal(end.inputPouring, true, 'raw user input should remain observable separately from physical pouring');
+assert.equal(end.settled, true, 'tail should eventually settle to zero');
+assert.equal(end.tailActive, false);
+
+const tailLock = createFlowRuntime({ controlFlow: 8, targetWater: 1 });
+let hit;
+for (let i = 0; i < 300; i++) {
+  hit = tailLock.step(1 / 120, true);
+  if (hit.targetReached) break;
+}
+assert.equal(hit.water, 1);
+assert.ok(hit.actualFlow > 0, 'target should be reachable while a physical stream still exists');
+assert.equal(hit.tailActive, true);
+const flowAtTarget = hit.actualFlow;
+let afterTarget = hit;
+for (let i = 0; i < 12; i++) afterTarget = tailLock.step(1 / 120, true);
+assert.equal(afterTarget.water, 1, 'scale mass must stay capped during physical tail');
+assert.ok(afterTarget.actualFlow < flowAtTarget, 'held input must not sustain or accelerate flow after target lock');
+assert.equal(afterTarget.pouring, false);
 
 console.log('flow-runtime tests: PASS');
