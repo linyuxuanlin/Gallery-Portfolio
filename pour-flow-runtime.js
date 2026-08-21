@@ -1,4 +1,4 @@
-import { stepFlow, flowToTilt, integrateFlowSegment } from './pour-flow-physics.js';
+import { stepFlow, flowToTilt, streamRadiusForFlow, integrateFlowSegment } from './pour-flow-physics.js';
 
 export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
   let actualFlow = 0;
@@ -12,6 +12,7 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       controlFlow: targetFlow,
       actualFlow,
       visibleFlow: actualFlow,
+      streamRadius: streamRadiusForFlow(actualFlow),
       tilt: flowToTilt(actualFlow),
       water,
       addedWater,
