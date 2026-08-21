@@ -9,6 +9,10 @@ export const DEFAULT_STREAM_PHYSICS=Object.freeze({
   maxFlowForCalibration:8,
   targetResponseHz:8,
   kettleResponseHz:6,
+  streamRefreshMs:33,
+  streamPointEpsilon:.012,
+  streamFlowEpsilon:.08,
+  streamRadiusEpsilon:.0012,
 });
 
 export function streamDownVelocityForFlow(flow,options={}){
@@ -82,4 +86,51 @@ export function pointDistance(a,b){
   const dy=(Number(a?.y)||0)-(Number(b?.y)||0);
   const dz=(Number(a?.z)||0)-(Number(b?.z)||0);
   return Math.hypot(dx,dy,dz);
+}
+
+export function createStreamMotionRuntime({
+  point={x:0,y:1.18,z:0},
+  kettle={x:1.72,y:3.15,z:.08},
+  kettleOffset={x:1.72,y:1.97,z:.08},
+  targetResponseHz=DEFAULT_STREAM_PHYSICS.targetResponseHz,
+  kettleResponseHz=DEFAULT_STREAM_PHYSICS.kettleResponseHz,
+}={}){
+  let desired={...point};
+  let actual={...point};
+  let kettlePos={...kettle};
+  const offset={...kettleOffset};
+  return{
+    setDesired(next){desired={x:Number(next?.x)||0,y:Number(next?.y)||0,z:Number(next?.z)||0};return this.snapshot()},
+    reset(next=point){desired={...next};actual={...next};kettlePos={x:actual.x+offset.x,y:actual.y+offset.y,z:actual.z+offset.z};return this.snapshot()},
+    step(dt){
+      actual=smoothPoint(actual,desired,dt,targetResponseHz);
+      const kettleTarget={x:actual.x+offset.x,y:actual.y+offset.y,z:actual.z+offset.z};
+      kettlePos=smoothPoint(kettlePos,kettleTarget,dt,kettleResponseHz);
+      return this.snapshot();
+    },
+    snapshot(){return{desired:{...desired},actual:{...actual},kettle:{...kettlePos}}},
+  };
+}
+
+// Geometry rebuilds are expensive in Three.js. Only refresh the stream when a
+// visible property changed enough and the minimum refresh interval has elapsed.
+export function shouldRefreshStream({
+  nowMs=0,lastUpdateMs=-Infinity,
+  previousPoint,currentPoint,
+  previousFlow=0,currentFlow=0,
+  previousRadius=0,currentRadius=0,
+  minIntervalMs=DEFAULT_STREAM_PHYSICS.streamRefreshMs,
+  pointEpsilon=DEFAULT_STREAM_PHYSICS.streamPointEpsilon,
+  flowEpsilon=DEFAULT_STREAM_PHYSICS.streamFlowEpsilon,
+  radiusEpsilon=DEFAULT_STREAM_PHYSICS.streamRadiusEpsilon,
+  force=false,
+}={}){
+  if(force)return true;
+  if(Number(nowMs)-Number(lastUpdateMs)<Math.max(0,Number(minIntervalMs)||0))return false;
+  const visibilityChanged=(previousFlow>=DEFAULT_STREAM_PHYSICS.minFlow)!==(currentFlow>=DEFAULT_STREAM_PHYSICS.minFlow);
+  if(visibilityChanged)return true;
+  if(currentFlow<DEFAULT_STREAM_PHYSICS.minFlow)return false;
+  return pointDistance(previousPoint,currentPoint)>=pointEpsilon||
+    Math.abs((Number(currentFlow)||0)-(Number(previousFlow)||0))>=flowEpsilon||
+    Math.abs((Number(currentRadius)||0)-(Number(previousRadius)||0))>=radiusEpsilon;
 }
