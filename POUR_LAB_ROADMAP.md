@@ -27,15 +27,16 @@
 - [x] Reusable stream adapter 接入主页面，动态水柱不再 new/dispose TubeGeometry
 - [x] DynamicDrawUsage + 固定安全包围球，避免每次水柱更新重扫 bounds
 - [x] 生命周期安全训练时钟与 hidden/blur 幂等暂停控制器，后台时间不计入训练 elapsed
+- [x] 生命周期控制器接入主页面：hidden/blur 自动停止注水并冻结 Training / Replay，恢复时重置 lastT
 
 ## 下一阶段优先级
 
 ### P0 物理与稳定性
-- 将生命周期控制器接入主页面：hidden/blur 自动停止注水、冻结训练/Replay 时钟，visible/focus 恢复并重置 lastT
 - 浏览器真实交互回归
-- 移动端触控优化
+- 移动端触控优化：pointer capture 丢失、双指/滚动边界、长按误触
 - CDN / 静态依赖可用性优化
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
+- 页面恢复后的尾流视觉与采样一致性回归
 
 ### P1 核心训练体验
 - Replay 结果轨迹热力图
