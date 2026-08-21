@@ -41,6 +41,9 @@ export function stepFlow(currentFlow, controlFlow, pouring, dt, options = {}) {
 export function flowToTilt(flow, minFlow = 2, maxFlow = 8) {
   const f = Math.min(maxFlow, Math.max(0, Number(flow) || 0));
   if (f <= 0) return 0;
+  // Keep the low-flow region continuous: a tiny residual stream must not
+  // instantly snap the kettle to the minimum pouring angle.
+  if (f < minFlow) return -0.085 * (f / Math.max(0.001, minFlow));
   const u = Math.min(1, Math.max(0, (f - minFlow) / Math.max(0.001, maxFlow - minFlow)));
   return -(0.085 + u * 0.185);
 }
