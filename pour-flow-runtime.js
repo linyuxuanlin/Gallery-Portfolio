@@ -4,6 +4,25 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
   let actualFlow = 0;
   let targetFlow = Number(controlFlow) || 0;
   let water = 0;
+  let targetReached = false;
+
+  function makeState(inputPouring = false, addedWater = 0) {
+    const settled = targetReached && actualFlow <= 0;
+    return {
+      controlFlow: targetFlow,
+      actualFlow,
+      visibleFlow: actualFlow,
+      tilt: flowToTilt(actualFlow),
+      water,
+      addedWater,
+      inputPouring: Boolean(inputPouring),
+      pouring: Boolean(inputPouring) && !targetReached,
+      complete: targetReached,
+      targetReached,
+      tailActive: targetReached && actualFlow > 0,
+      settled,
+    };
+  }
 
   return {
     setControlFlow(value) {
@@ -11,38 +30,26 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       return targetFlow;
     },
     reset({ water: nextWater = 0, actualFlow: nextFlow = 0, controlFlow: nextControl = targetFlow } = {}) {
-      water = Math.max(0, Number(nextWater) || 0);
+      water = Math.max(0, Math.min(targetWater, Number(nextWater) || 0));
       actualFlow = Math.max(0, Number(nextFlow) || 0);
       targetFlow = Math.max(0, Number(nextControl) || 0);
-      return this.snapshot(false);
+      targetReached = water >= targetWater - 1e-9;
+      return makeState(false, 0);
     },
-    step(dt, pouring) {
+    step(dt, inputPouring) {
       const previousFlow = actualFlow;
-      actualFlow = stepFlow(actualFlow, targetFlow, pouring, dt);
+      // Once the scale target has been reached the kettle input is latched off.
+      // The existing stream still decays naturally, so the scene can show a
+      // short physical tail without adding mass beyond the target reading.
+      const effectivePouring = Boolean(inputPouring) && !targetReached;
+      actualFlow = stepFlow(actualFlow, targetFlow, effectivePouring, dt);
       const integrated = integrateFlowSegment(water, previousFlow, actualFlow, dt, targetWater);
       water = integrated.water;
-      return {
-        controlFlow: targetFlow,
-        actualFlow,
-        visibleFlow: actualFlow,
-        tilt: flowToTilt(actualFlow),
-        water,
-        addedWater: integrated.added,
-        pouring: Boolean(pouring),
-        complete: water >= targetWater - 1e-9,
-      };
+      if (water >= targetWater - 1e-9) targetReached = true;
+      return makeState(inputPouring, integrated.added);
     },
-    snapshot(pouring = false) {
-      return {
-        controlFlow: targetFlow,
-        actualFlow,
-        visibleFlow: actualFlow,
-        tilt: flowToTilt(actualFlow),
-        water,
-        addedWater: 0,
-        pouring: Boolean(pouring),
-        complete: water >= targetWater - 1e-9,
-      };
+    snapshot(inputPouring = false) {
+      return makeState(inputPouring, 0);
     },
   };
 }
