@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {streamDownVelocityForFlow,ballisticFlight,sampleBallisticArc,arcSagFromChord,smoothingAlpha,smoothPoint,pointDistance} from '../pour-stream-physics.js';
+import {streamDownVelocityForFlow,ballisticFlight,sampleBallisticArc,arcSagFromChord,smoothingAlpha,smoothPoint,pointDistance,createStreamMotionRuntime,shouldRefreshStream} from '../pour-stream-physics.js';
 
 assert.equal(streamDownVelocityForFlow(0),0);
 assert.equal(streamDownVelocityForFlow(.04),0);
@@ -33,5 +33,27 @@ assert.ok(pointDistance(p60,p144)<1e-10,`60/144 Hz smoothing drifted: ${pointDis
 assert.ok(pointDistance(p60,target)<.001,'target follower should converge within one second');
 const first=smoothPoint({x:0,y:1.18,z:0},target,1/60,8);
 assert.ok(first.x>0&&first.x<target.x,'target should move immediately without teleporting');
+
+function runMotion(fps){
+  const motion=createStreamMotionRuntime();
+  motion.setDesired(target);
+  let snap;
+  for(let i=0;i<fps;i++)snap=motion.step(1/fps);
+  return snap;
+}
+const m30=runMotion(30),m60=runMotion(60),m144=runMotion(144);
+assert.ok(pointDistance(m30.actual,m60.actual)<1e-10,'actual stream point must be frame-rate independent');
+assert.ok(pointDistance(m60.actual,m144.actual)<1e-10,'actual stream point must match on high refresh displays');
+assert.ok(pointDistance(m30.kettle,m60.kettle)<1e-10,'kettle follower must be frame-rate independent');
+assert.ok(pointDistance(m60.kettle,m144.kettle)<1e-10,'kettle follower must match on high refresh displays');
+assert.ok(m60.kettle.x>m60.actual.x,'kettle should stay offset from the actual landing point');
+
+const p0={x:0,y:1.18,z:0},pTiny={x:.004,y:1.18,z:.003},pMove={x:.03,y:1.18,z:0};
+assert.equal(shouldRefreshStream({nowMs:10,lastUpdateMs:0,previousPoint:p0,currentPoint:pMove,previousFlow:5,currentFlow:5,previousRadius:.02,currentRadius:.02}),false,'refresh must respect the minimum interval');
+assert.equal(shouldRefreshStream({nowMs:40,lastUpdateMs:0,previousPoint:p0,currentPoint:pTiny,previousFlow:5,currentFlow:5.02,previousRadius:.02,currentRadius:.0203}),false,'sub-threshold visual changes should not rebuild geometry');
+assert.equal(shouldRefreshStream({nowMs:40,lastUpdateMs:0,previousPoint:p0,currentPoint:pMove,previousFlow:5,currentFlow:5,previousRadius:.02,currentRadius:.02}),true,'meaningful landing-point movement should rebuild geometry');
+assert.equal(shouldRefreshStream({nowMs:40,lastUpdateMs:0,previousPoint:p0,currentPoint:p0,previousFlow:0,currentFlow:.2,previousRadius:0,currentRadius:.01}),true,'stream visibility changes must refresh immediately after throttle window');
+assert.equal(shouldRefreshStream({nowMs:100,lastUpdateMs:0,previousPoint:p0,currentPoint:pMove,previousFlow:0,currentFlow:0,previousRadius:0,currentRadius:0}),false,'invisible stream should not rebuild for pointer movement alone');
+assert.equal(shouldRefreshStream({force:true}),true,'forced refresh must bypass thresholds');
 
 console.log('stream-physics tests: PASS');
