@@ -15,26 +15,24 @@
 - [x] 独立流量惯性与壶身倾角物理模块
 - [x] 流量运行时控制器与 FPS 回归测试
 - [x] 粉床扩散 / 排水 / 容量上限物理模块与 FPS 回归测试
-- [x] 将 actualFlow runtime 接入 3D 主页面
-- [x] 将动态粉床 runtime 接入 3D 主页面
-- [x] 250g 目标水量锁存：输入与物理尾流解耦，目标后禁止持续维持出水
-- [x] 完成态 UI 与尾流状态同步：尾流归零后才进入 settled/complete
-- [x] 2 / 4 / 6 / 8 g/s 启动、收水和水柱半径校准
-- [x] 主页面水柱半径统一使用 runtime.streamRadius
-- [x] Flow-aware 水柱弹道模型：高流量更快、更挺直，低流量下垂更明显
-- [x] Flow-aware 弹道模型接入 Three.js 主页面
-- [x] 帧率无关的目标点 / 壶位平滑算法与 30 / 60 / 144 Hz 回归测试
+- [x] actualFlow runtime / 动态粉床 runtime 接入 3D 主页面
+- [x] 250g 目标水量锁存，输入与物理尾流解耦
+- [x] 完成态 UI 与尾流状态同步
+- [x] 2 / 4 / 6 / 8 g/s 启动、收水、水柱半径与 flow-aware 弹道校准
+- [x] Flow-aware 弹道与 runtime.streamRadius 接入 Three.js 主页面
+- [x] 帧率无关的目标点 / 壶位平滑接入主页面
+- [x] 水柱 Material / Mesh 复用 + 自适应几何刷新节流
+- [x] 可复用 Tube Mesh TypedArray 拓扑模块，连续更新不重新分配 positions / normals / indices
 
 ## 下一阶段优先级
 
 ### P0 物理与稳定性
-- 将目标点 / 壶位平滑算法接入 Three.js 主页面，避免快速拖动时瞬移
-- 复用水柱材质，减少 updateStream 中重复创建 / 销毁 GPU 资源
-- 继续减少 pointermove / 水柱几何重建开销，优先可复用 BufferGeometry / spline 更新
+- 将可复用 Tube Mesh buffer 接入 Three.js BufferGeometry，彻底移除运行时反复 new/dispose TubeGeometry
 - 浏览器真实交互回归
 - 移动端触控优化
 - CDN / 静态依赖可用性优化
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
+- 检查页面可见性切换/后台恢复后的 dt、计时与流量状态，防止恢复瞬间积分异常
 
 ### P1 核心训练体验
 - Replay 结果轨迹热力图
