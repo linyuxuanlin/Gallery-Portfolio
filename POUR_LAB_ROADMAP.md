@@ -23,11 +23,12 @@
 - [x] 帧率无关的目标点 / 壶位平滑接入主页面
 - [x] 水柱 Material / Mesh 复用 + 自适应几何刷新节流
 - [x] 可复用 Tube Mesh TypedArray 拓扑模块，连续更新不重新分配 positions / normals / indices
+- [x] Three.js BufferGeometry 适配层：共享 positions / normals / uv / index，仅标记 attribute.needsUpdate
 
 ## 下一阶段优先级
 
 ### P0 物理与稳定性
-- 将可复用 Tube Mesh buffer 接入 Three.js BufferGeometry，彻底移除运行时反复 new/dispose TubeGeometry
+- 将 Three.js reusable stream adapter 接入主页面，彻底移除运行时反复 new/dispose TubeGeometry
 - 浏览器真实交互回归
 - 移动端触控优化
 - CDN / 静态依赖可用性优化
