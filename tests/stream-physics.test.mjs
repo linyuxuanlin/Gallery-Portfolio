@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {streamDownVelocityForFlow,ballisticFlight,sampleBallisticArc,arcSagFromChord} from '../pour-stream-physics.js';
+import {streamDownVelocityForFlow,ballisticFlight,sampleBallisticArc,arcSagFromChord,smoothingAlpha,smoothPoint,pointDistance} from '../pour-stream-physics.js';
 
 assert.equal(streamDownVelocityForFlow(0),0);
 assert.equal(streamDownVelocityForFlow(.04),0);
@@ -23,5 +23,15 @@ const flights=[2,4,6,8].map(flow=>ballisticFlight({startY:start.y,endY:end.y,flo
 for(let i=1;i<flights.length;i++) assert.ok(flights[i].time<flights[i-1].time,'higher flow should reach the bed sooner');
 assert.ok(flights[0].time<1&&flights[0].time>.75,`2 g/s flight time implausible: ${flights[0].time}`);
 assert.ok(flights[3].time<.9&&flights[3].time>.65,`8 g/s flight time implausible: ${flights[3].time}`);
+
+assert.ok(smoothingAlpha(1/60,8)>0&&smoothingAlpha(1/60,8)<1);
+const target={x:.7,y:1.18,z:-.5};
+function run(fps){let p={x:0,y:1.18,z:0};for(let i=0;i<fps;i++)p=smoothPoint(p,target,1/fps,8);return p}
+const p30=run(30),p60=run(60),p144=run(144);
+assert.ok(pointDistance(p30,p60)<1e-10,`30/60 Hz smoothing drifted: ${pointDistance(p30,p60)}`);
+assert.ok(pointDistance(p60,p144)<1e-10,`60/144 Hz smoothing drifted: ${pointDistance(p60,p144)}`);
+assert.ok(pointDistance(p60,target)<.001,'target follower should converge within one second');
+const first=smoothPoint({x:0,y:1.18,z:0},target,1/60,8);
+assert.ok(first.x>0&&first.x<target.x,'target should move immediately without teleporting');
 
 console.log('stream-physics tests: PASS');
