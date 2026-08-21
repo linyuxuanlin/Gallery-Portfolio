@@ -15,6 +15,7 @@ assert.equal(start.water, 0);
 assert.equal(start.targetReached, false);
 assert.equal(start.tailActive, false);
 assert.equal(start.settled, false);
+assert.equal(start.complete, false);
 
 const a = run({ fps: 60, seconds: .1, pouring: true, controlFlow: 8 });
 assert.ok(a.actualFlow < 2, `actual flow must ramp instead of jump, got ${a.actualFlow}`);
@@ -69,11 +70,21 @@ for (let i = 0; i < 300; i++) {
 assert.equal(hit.water, 1);
 assert.ok(hit.actualFlow > 0, 'target should be reachable while a physical stream still exists');
 assert.equal(hit.tailActive, true);
+assert.equal(hit.complete, false, 'reaching target must not freeze UI/recording while tail is still visible');
 const flowAtTarget = hit.actualFlow;
 let afterTarget = hit;
 for (let i = 0; i < 12; i++) afterTarget = tailLock.step(1 / 120, true);
 assert.equal(afterTarget.water, 1, 'scale mass must stay capped during physical tail');
 assert.ok(afterTarget.actualFlow < flowAtTarget, 'held input must not sustain or accelerate flow after target lock');
 assert.equal(afterTarget.pouring, false);
+assert.equal(afterTarget.complete, false, 'completion waits for physical tail settlement');
+
+let settled = afterTarget;
+for (let i = 0; i < 240 && !settled.complete; i++) settled = tailLock.step(1 / 120, true);
+assert.equal(settled.actualFlow, 0, 'tail should fully decay');
+assert.equal(settled.tailActive, false);
+assert.equal(settled.settled, true);
+assert.equal(settled.complete, true, 'completion should fire exactly when target is locked and tail has settled');
+assert.equal(settled.water, 1, 'completion must not add water beyond the scale target');
 
 console.log('flow-runtime tests: PASS');
