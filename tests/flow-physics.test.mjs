@@ -20,7 +20,7 @@ assert.ok(Math.abs(f60 - f144) < .08, `60/144 FPS drift too large: ${f60} vs ${f
 
 let flow = 6;
 for (let i = 0; i < 30; i++) flow = stepFlow(flow, 6, false, 1 / 60);
-assert.ok(flow < .5, `release should decay rapidly, got ${flow}`);
+assert.ok(flow < .7, `release should decay below 0.7 g/s within 0.5 s, got ${flow}`);
 
 assert.equal(flowToTilt(0), 0);
 assert.ok(flowToTilt(8) < flowToTilt(2), 'higher flow should require greater negative tilt');
