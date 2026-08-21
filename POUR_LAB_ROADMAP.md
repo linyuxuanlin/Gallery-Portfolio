@@ -26,11 +26,12 @@
 - [x] Three.js BufferGeometry 适配层：共享 positions / normals / uv / index，仅标记 attribute.needsUpdate
 - [x] Reusable stream adapter 接入主页面，动态水柱不再 new/dispose TubeGeometry
 - [x] DynamicDrawUsage + 固定安全包围球，避免每次水柱更新重扫 bounds
+- [x] 生命周期安全训练时钟与 hidden/blur 幂等暂停控制器，后台时间不计入训练 elapsed
 
 ## 下一阶段优先级
 
 ### P0 物理与稳定性
-- 页面可见性切换/后台恢复：停止注水并冻结训练时钟，防止恢复瞬间状态异常
+- 将生命周期控制器接入主页面：hidden/blur 自动停止注水、冻结训练/Replay 时钟，visible/focus 恢复并重置 lastT
 - 浏览器真实交互回归
 - 移动端触控优化
 - CDN / 静态依赖可用性优化
