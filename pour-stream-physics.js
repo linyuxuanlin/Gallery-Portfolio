@@ -122,6 +122,8 @@ export function streamRefreshInterval({
 }={}){
   const movement=pointDistance(previousPoint,currentPoint);
   const pf=Math.max(0,Number(previousFlow)||0),cf=Math.max(0,Number(currentFlow)||0),maxFlow=Math.max(pf,cf);
+  const visibilityChanged=(pf>=DEFAULT_STREAM_PHYSICS.minFlow)!==(cf>=DEFAULT_STREAM_PHYSICS.minFlow);
+  if(visibilityChanged)return Math.max(0,baseIntervalMs);
   if(maxFlow<1&&maxFlow>=DEFAULT_STREAM_PHYSICS.minFlow)return Math.max(baseIntervalMs,tailIntervalMs);
   if(force||movement>=pointEpsilon)return Math.max(0,baseIntervalMs);
   return Math.max(baseIntervalMs,idleIntervalMs);
