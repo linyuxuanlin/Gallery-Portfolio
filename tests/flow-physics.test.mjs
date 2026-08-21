@@ -23,6 +23,8 @@ for (let i = 0; i < 30; i++) flow = stepFlow(flow, 6, false, 1 / 60);
 assert.ok(flow < .7, `release should decay below 0.7 g/s within 0.5 s, got ${flow}`);
 
 assert.equal(flowToTilt(0), 0);
+assert.ok(Math.abs(flowToTilt(.1)) < Math.abs(flowToTilt(1)), 'tiny flow should produce only tiny tilt');
+assert.ok(Math.abs(flowToTilt(1)) < Math.abs(flowToTilt(2)), 'tilt should increase continuously through low-flow range');
 assert.ok(flowToTilt(8) < flowToTilt(2), 'higher flow should require greater negative tilt');
 
 let water = 0;
