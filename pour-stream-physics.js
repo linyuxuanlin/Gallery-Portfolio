@@ -9,7 +9,9 @@ export const DEFAULT_STREAM_PHYSICS=Object.freeze({
   maxFlowForCalibration:8,
   targetResponseHz:8,
   kettleResponseHz:6,
-  streamRefreshMs:33,
+  streamRefreshMs:40,
+  streamIdleRefreshMs:50,
+  streamTailRefreshMs:66,
   streamPointEpsilon:.012,
   streamFlowEpsilon:.08,
   streamRadiusEpsilon:.0012,
@@ -109,18 +111,35 @@ export function createStreamMotionRuntime({
   };
 }
 
+export function streamRefreshInterval({
+  previousPoint,currentPoint,
+  previousFlow=0,currentFlow=0,
+  baseIntervalMs=DEFAULT_STREAM_PHYSICS.streamRefreshMs,
+  idleIntervalMs=DEFAULT_STREAM_PHYSICS.streamIdleRefreshMs,
+  tailIntervalMs=DEFAULT_STREAM_PHYSICS.streamTailRefreshMs,
+  pointEpsilon=DEFAULT_STREAM_PHYSICS.streamPointEpsilon,
+  force=false,
+}={}){
+  const movement=pointDistance(previousPoint,currentPoint);
+  const pf=Math.max(0,Number(previousFlow)||0),cf=Math.max(0,Number(currentFlow)||0),maxFlow=Math.max(pf,cf);
+  if(maxFlow<1&&maxFlow>=DEFAULT_STREAM_PHYSICS.minFlow)return Math.max(baseIntervalMs,tailIntervalMs);
+  if(force||movement>=pointEpsilon)return Math.max(0,baseIntervalMs);
+  return Math.max(baseIntervalMs,idleIntervalMs);
+}
+
 export function shouldRefreshStream({
   nowMs=0,lastUpdateMs=-Infinity,
   previousPoint,currentPoint,
   previousFlow=0,currentFlow=0,
   previousRadius=0,currentRadius=0,
-  minIntervalMs=DEFAULT_STREAM_PHYSICS.streamRefreshMs,
+  minIntervalMs,
   pointEpsilon=DEFAULT_STREAM_PHYSICS.streamPointEpsilon,
   flowEpsilon=DEFAULT_STREAM_PHYSICS.streamFlowEpsilon,
   radiusEpsilon=DEFAULT_STREAM_PHYSICS.streamRadiusEpsilon,
   force=false,
 }={}){
-  if(Number(nowMs)-Number(lastUpdateMs)<Math.max(0,Number(minIntervalMs)||0))return false;
+  const interval=minIntervalMs??streamRefreshInterval({previousPoint,currentPoint,previousFlow,currentFlow,pointEpsilon,force});
+  if(Number(nowMs)-Number(lastUpdateMs)<Math.max(0,Number(interval)||0))return false;
   if(force)return true;
   const visibilityChanged=(previousFlow>=DEFAULT_STREAM_PHYSICS.minFlow)!==(currentFlow>=DEFAULT_STREAM_PHYSICS.minFlow);
   if(visibilityChanged)return true;
