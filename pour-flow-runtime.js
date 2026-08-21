@@ -17,7 +17,11 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       addedWater,
       inputPouring: Boolean(inputPouring),
       pouring: Boolean(inputPouring) && !targetReached,
-      complete: targetReached,
+      // Reaching the scale target and completing the physical pour are
+      // intentionally separate. The scale can lock at targetWater while a
+      // short residual stream is still visible. UI/recording should keep
+      // updating until that tail has fully settled.
+      complete: settled,
       targetReached,
       tailActive: targetReached && actualFlow > 0,
       settled,
