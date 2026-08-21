@@ -46,6 +46,25 @@ export function flowToTilt(flow, minFlow = 2, maxFlow = 8) {
   return -(0.085 + u * 0.185);
 }
 
+// Approximate visible stream radius from volumetric flow. At similar exit
+// velocity, flow is proportional to cross-sectional area, so radius should
+// grow roughly with sqrt(flow) instead of linearly. The clamp keeps tiny tail
+// flow visible without letting high flow become cartoonishly thick.
+export function streamRadiusForFlow(flow, {
+  minVisibleFlow = DEFAULT_FLOW_PHYSICS.minVisibleFlow,
+  referenceFlow = 5,
+  referenceRadius = 0.0205,
+  minRadius = 0.0085,
+  maxRadius = 0.0265,
+} = {}) {
+  const f = Math.max(0, Number(flow) || 0);
+  if (f < minVisibleFlow) return 0;
+  const safeRefFlow = Math.max(0.001, Number(referenceFlow) || 5);
+  const safeRefRadius = Math.max(0, Number(referenceRadius) || 0);
+  const radius = safeRefRadius * Math.sqrt(f / safeRefFlow);
+  return Math.min(maxRadius, Math.max(minRadius, radius));
+}
+
 export function integrateWater(water, flow, dt, target = Infinity) {
   const safeWater = Math.max(0, Number(water) || 0);
   const safeFlow = Math.max(0, Number(flow) || 0);
