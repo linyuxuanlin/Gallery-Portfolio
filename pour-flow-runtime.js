@@ -1,4 +1,4 @@
-import { stepFlow, flowToTilt, integrateWater } from './pour-flow-physics.js';
+import { stepFlow, flowToTilt, integrateFlowSegment } from './pour-flow-physics.js';
 
 export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
   let actualFlow = 0;
@@ -17,8 +17,9 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       return this.snapshot(false);
     },
     step(dt, pouring) {
+      const previousFlow = actualFlow;
       actualFlow = stepFlow(actualFlow, targetFlow, pouring, dt);
-      const integrated = integrateWater(water, actualFlow, dt, targetWater);
+      const integrated = integrateFlowSegment(water, previousFlow, actualFlow, dt, targetWater);
       water = integrated.water;
       return {
         controlFlow: targetFlow,
