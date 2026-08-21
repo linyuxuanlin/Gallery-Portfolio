@@ -64,9 +64,6 @@ export function arcSagFromChord(points){
   return max;
 }
 
-// Frame-rate independent exponential following. This prevents the kettle and
-// stream endpoint from teleporting when touch/mouse coordinates jump while
-// preserving responsive control on both 60 Hz and 120/144 Hz displays.
 export function smoothingAlpha(dt,responseHz){
   const seconds=Math.max(0,Number(dt)||0);
   const hz=Math.max(0,Number(responseHz)||0);
@@ -112,8 +109,6 @@ export function createStreamMotionRuntime({
   };
 }
 
-// Geometry rebuilds are expensive in Three.js. Only refresh the stream when a
-// visible property changed enough and the minimum refresh interval has elapsed.
 export function shouldRefreshStream({
   nowMs=0,lastUpdateMs=-Infinity,
   previousPoint,currentPoint,
@@ -125,8 +120,8 @@ export function shouldRefreshStream({
   radiusEpsilon=DEFAULT_STREAM_PHYSICS.streamRadiusEpsilon,
   force=false,
 }={}){
-  if(force)return true;
   if(Number(nowMs)-Number(lastUpdateMs)<Math.max(0,Number(minIntervalMs)||0))return false;
+  if(force)return true;
   const visibilityChanged=(previousFlow>=DEFAULT_STREAM_PHYSICS.minFlow)!==(currentFlow>=DEFAULT_STREAM_PHYSICS.minFlow);
   if(visibilityChanged)return true;
   if(currentFlow<DEFAULT_STREAM_PHYSICS.minFlow)return false;
