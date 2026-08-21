@@ -11,6 +11,7 @@ function run({ fps = 60, seconds = 1, pouring = true, controlFlow = 5 }) {
 
 const start = createFlowRuntime({ controlFlow: 6 }).snapshot(false);
 assert.equal(start.actualFlow, 0);
+assert.equal(start.streamRadius, 0);
 assert.equal(start.water, 0);
 assert.equal(start.targetReached, false);
 assert.equal(start.tailActive, false);
@@ -21,6 +22,12 @@ const a = run({ fps: 60, seconds: .1, pouring: true, controlFlow: 8 });
 assert.ok(a.actualFlow < 2, `actual flow must ramp instead of jump, got ${a.actualFlow}`);
 assert.ok(a.water > 0 && a.water < .2, `startup inertia should limit first 100ms water, got ${a.water}`);
 assert.ok(a.tilt < 0, 'active flow should tilt kettle');
+assert.ok(a.streamRadius > 0, 'visible flow should expose a non-zero stream radius');
+
+const low = run({ fps: 120, seconds: 2, controlFlow: 2 });
+const high = run({ fps: 120, seconds: 2, controlFlow: 8 });
+assert.ok(high.streamRadius > low.streamRadius, 'runtime stream radius must increase with actual flow');
+assert.ok(high.streamRadius / low.streamRadius < 2.2, 'runtime stream radius must remain area-scaled rather than linear');
 
 const f30 = run({ fps: 30, seconds: 2, controlFlow: 6 });
 const f60 = run({ fps: 60, seconds: 2, controlFlow: 6 });
@@ -28,6 +35,7 @@ const f144 = run({ fps: 144, seconds: 2, controlFlow: 6 });
 assert.ok(Math.abs(f30.water - f60.water) < .01, `30/60 FPS water drift too large: ${f30.water} vs ${f60.water}`);
 assert.ok(Math.abs(f60.water - f144.water) < .01, `60/144 FPS water drift too large: ${f60.water} vs ${f144.water}`);
 assert.ok(Math.abs(f30.actualFlow - f144.actualFlow) < .001, `flow response drift too large: ${f30.actualFlow} vs ${f144.actualFlow}`);
+assert.ok(Math.abs(f30.streamRadius - f144.streamRadius) < 1e-5, `stream-radius FPS drift too large: ${f30.streamRadius} vs ${f144.streamRadius}`);
 
 const rt = createFlowRuntime({ controlFlow: 6 });
 for (let i = 0; i < 120; i++) rt.step(1 / 60, true);
@@ -37,6 +45,7 @@ for (let i = 0; i < 30; i++) released = rt.step(1 / 60, false);
 assert.ok(released.actualFlow < .7, `release must decay, got ${released.actualFlow}`);
 assert.ok(released.water > beforeRelease.water, 'residual stream should still add a small amount of water after release');
 assert.ok(Math.abs(released.tilt) < .03, `low residual flow should leave only a small tilt, got ${released.tilt}`);
+assert.ok(released.streamRadius < beforeRelease.streamRadius, 'tail stream should visibly thin during release');
 
 const release30 = createFlowRuntime({ controlFlow: 6 });
 const release144 = createFlowRuntime({ controlFlow: 6 });
@@ -60,6 +69,7 @@ assert.equal(end.pouring, false, 'runtime must latch pouring off after target ev
 assert.equal(end.inputPouring, true, 'raw user input should remain observable separately from physical pouring');
 assert.equal(end.settled, true, 'tail should eventually settle to zero');
 assert.equal(end.tailActive, false);
+assert.equal(end.streamRadius, 0, 'fully settled pour should not retain a visible stream');
 
 const tailLock = createFlowRuntime({ controlFlow: 8, targetWater: 1 });
 let hit;
@@ -69,19 +79,23 @@ for (let i = 0; i < 300; i++) {
 }
 assert.equal(hit.water, 1);
 assert.ok(hit.actualFlow > 0, 'target should be reachable while a physical stream still exists');
+assert.ok(hit.streamRadius > 0, 'target lock may still have a visible physical tail');
 assert.equal(hit.tailActive, true);
 assert.equal(hit.complete, false, 'reaching target must not freeze UI/recording while tail is still visible');
 const flowAtTarget = hit.actualFlow;
+const radiusAtTarget = hit.streamRadius;
 let afterTarget = hit;
 for (let i = 0; i < 12; i++) afterTarget = tailLock.step(1 / 120, true);
 assert.equal(afterTarget.water, 1, 'scale mass must stay capped during physical tail');
 assert.ok(afterTarget.actualFlow < flowAtTarget, 'held input must not sustain or accelerate flow after target lock');
+assert.ok(afterTarget.streamRadius < radiusAtTarget, 'target-locked tail should visibly narrow');
 assert.equal(afterTarget.pouring, false);
 assert.equal(afterTarget.complete, false, 'completion waits for physical tail settlement');
 
 let settled = afterTarget;
 for (let i = 0; i < 240 && !settled.complete; i++) settled = tailLock.step(1 / 120, true);
 assert.equal(settled.actualFlow, 0, 'tail should fully decay');
+assert.equal(settled.streamRadius, 0, 'tail geometry signal should fully disappear');
 assert.equal(settled.tailActive, false);
 assert.equal(settled.settled, true);
 assert.equal(settled.complete, true, 'completion should fire exactly when target is locked and tail has settled');
