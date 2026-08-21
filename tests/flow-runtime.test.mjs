@@ -21,8 +21,9 @@ assert.ok(a.tilt < 0, 'active flow should tilt kettle');
 const f30 = run({ fps: 30, seconds: 2, controlFlow: 6 });
 const f60 = run({ fps: 60, seconds: 2, controlFlow: 6 });
 const f144 = run({ fps: 144, seconds: 2, controlFlow: 6 });
-assert.ok(Math.abs(f30.water - f60.water) < .12, `30/60 FPS water drift too large: ${f30.water} vs ${f60.water}`);
-assert.ok(Math.abs(f60.water - f144.water) < .12, `60/144 FPS water drift too large: ${f60.water} vs ${f144.water}`);
+assert.ok(Math.abs(f30.water - f60.water) < .01, `30/60 FPS water drift too large: ${f30.water} vs ${f60.water}`);
+assert.ok(Math.abs(f60.water - f144.water) < .01, `60/144 FPS water drift too large: ${f60.water} vs ${f144.water}`);
+assert.ok(Math.abs(f30.actualFlow - f144.actualFlow) < .001, `flow response drift too large: ${f30.actualFlow} vs ${f144.actualFlow}`);
 
 const rt = createFlowRuntime({ controlFlow: 6 });
 for (let i = 0; i < 120; i++) rt.step(1 / 60, true);
@@ -32,6 +33,18 @@ for (let i = 0; i < 30; i++) released = rt.step(1 / 60, false);
 assert.ok(released.actualFlow < .7, `release must decay, got ${released.actualFlow}`);
 assert.ok(released.water > beforeRelease.water, 'residual stream should still add a small amount of water after release');
 assert.ok(Math.abs(released.tilt) < .03, `low residual flow should leave only a small tilt, got ${released.tilt}`);
+
+const release30 = createFlowRuntime({ controlFlow: 6 });
+const release144 = createFlowRuntime({ controlFlow: 6 });
+for (let i = 0; i < 60; i++) release30.step(1 / 30, true);
+for (let i = 0; i < 288; i++) release144.step(1 / 144, true);
+const r30Start = release30.snapshot(true).water;
+const r144Start = release144.snapshot(true).water;
+for (let i = 0; i < 15; i++) release30.step(1 / 30, false);
+for (let i = 0; i < 72; i++) release144.step(1 / 144, false);
+const tail30 = release30.snapshot(false).water - r30Start;
+const tail144 = release144.snapshot(false).water - r144Start;
+assert.ok(Math.abs(tail30 - tail144) < .01, `release-tail water drift too large: ${tail30} vs ${tail144}`);
 
 const capped = createFlowRuntime({ controlFlow: 8, targetWater: 1 });
 let end;
