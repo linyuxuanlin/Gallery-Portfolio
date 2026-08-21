@@ -22,14 +22,17 @@
 - [x] 2 / 4 / 6 / 8 g/s 启动、收水和水柱半径校准
 - [x] 主页面水柱半径统一使用 runtime.streamRadius
 - [x] Flow-aware 水柱弹道模型：高流量更快、更挺直，低流量下垂更明显
+- [x] Flow-aware 弹道模型接入 Three.js 主页面
+- [x] 帧率无关的目标点 / 壶位平滑算法与 30 / 60 / 144 Hz 回归测试
 
 ## 下一阶段优先级
 
 ### P0 物理与稳定性
-- 将 flow-aware 弹道模型接入 Three.js 主页面，替换固定 vy=-0.18 的旧 ballisticPoints
+- 将目标点 / 壶位平滑算法接入 Three.js 主页面，避免快速拖动时瞬移
+- 复用水柱材质，减少 updateStream 中重复创建 / 销毁 GPU 资源
+- 继续减少 pointermove / 水柱几何重建开销，优先可复用 BufferGeometry / spline 更新
 - 浏览器真实交互回归
 - 移动端触控优化
-- 继续减少 pointermove / 水柱几何重建开销
 - CDN / 静态依赖可用性优化
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
 
