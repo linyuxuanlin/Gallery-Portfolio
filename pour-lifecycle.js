@@ -1,4 +1,3 @@
-import { installLegacyPointerGuard } from './pour-input-guard.js';
 import { installBrewInsights } from './pour-brew-insights.js';
 
 export function createLifecycleClock(now = () => performance.now()) {
@@ -102,11 +101,10 @@ export async function registerPourServiceWorker(navigatorLike = globalThis.navig
   }
 }
 
-// The page already imports this module. Install non-blocking resilience and
-// results enhancements after the module job finishes, when the DOM exists.
+// The main page now owns pointer input through bindPourPointerInput(). Keep
+// lifecycle side effects limited to non-blocking result enhancements and SW.
 if (typeof document !== 'undefined') {
   queueMicrotask(() => {
-    installLegacyPointerGuard(document);
     installBrewInsights(document, globalThis.localStorage);
   });
   if (document.readyState === 'complete') {
