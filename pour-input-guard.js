@@ -40,24 +40,29 @@ export function bindLegacyPointerGuard(element) {
     }
   };
 
-  const onLostCapture = (event) => {
-    if (event.pointerId !== activePointerId) return;
-    const pointerId = activePointerId;
-    activePointerId = null;
-    activePointerType = null;
+  const dispatchCancel = (pointerId, pointerType = 'touch') => {
     let cancelEvent;
     try {
       cancelEvent = new PointerEvent('pointercancel', {
         bubbles: true,
         cancelable: true,
         pointerId,
-        pointerType: event.pointerType || 'touch',
+        pointerType,
       });
     } catch {
       cancelEvent = new Event('pointercancel', { bubbles: true, cancelable: true });
       Object.defineProperty(cancelEvent, 'pointerId', { value: pointerId });
     }
     element.dispatchEvent?.(cancelEvent);
+  };
+
+  const onLostCapture = (event) => {
+    if (event.pointerId !== activePointerId) return;
+    const pointerId = activePointerId;
+    const pointerType = activePointerType || event.pointerType || 'touch';
+    activePointerId = null;
+    activePointerType = null;
+    dispatchCancel(pointerId, pointerType);
   };
 
   element.addEventListener('pointerdown', onDown, true);
@@ -69,16 +74,10 @@ export function bindLegacyPointerGuard(element) {
   function suspend() {
     if (activePointerId === null) return false;
     const pointerId = activePointerId;
+    const pointerType = activePointerType || 'touch';
     activePointerId = null;
     activePointerType = null;
-    let cancelEvent;
-    try {
-      cancelEvent = new PointerEvent('pointercancel', { bubbles: true, cancelable: true, pointerId });
-    } catch {
-      cancelEvent = new Event('pointercancel', { bubbles: true, cancelable: true });
-      Object.defineProperty(cancelEvent, 'pointerId', { value: pointerId });
-    }
-    element.dispatchEvent?.(cancelEvent);
+    dispatchCancel(pointerId, pointerType);
     return true;
   }
 
@@ -103,6 +102,18 @@ export function installLegacyPointerGuard(root = globalThis.document) {
   const canvas = root?.querySelector?.('canvas');
   if (!canvas || canvas.__pourInputGuard) return canvas?.__pourInputGuard || null;
   const guard = bindLegacyPointerGuard(canvas);
+  const view = root.defaultView || globalThis.window;
+  const onVisibility = () => { if (root.hidden) guard.suspend(); };
+  const onBlur = () => guard.suspend();
+  root.addEventListener?.('visibilitychange', onVisibility);
+  view?.addEventListener?.('blur', onBlur);
+  const destroyBase = guard.destroy;
+  guard.destroy = () => {
+    root.removeEventListener?.('visibilitychange', onVisibility);
+    view?.removeEventListener?.('blur', onBlur);
+    destroyBase();
+    try { delete canvas.__pourInputGuard; } catch {}
+  };
   Object.defineProperty(canvas, '__pourInputGuard', { value: guard, configurable: true });
   return guard;
 }
