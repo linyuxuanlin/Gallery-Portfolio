@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {normalizeHistory,addBrewToHistory,bestBrew,readBrewHistory,persistLatestBrew,selectGhostReference} from '../pour-brew-history.js';
+const brew=(n,score=n)=>({createdAt:`2026-08-${String(n).padStart(2,'0')}T00:00:00.000Z`,duration:n*1000,score,samples:[{t:0,x:0,z:0,flow:5,water:0}]});
+let h=[];for(let i=1;i<=35;i++)h=addBrewToHistory(h,brew(i));assert.equal(h.length,30);assert.equal(h[0].score,35);assert.equal(h.at(-1).score,6);
+const duplicate=addBrewToHistory(h,brew(35));assert.equal(duplicate.length,30);assert.equal(new Set(duplicate.map(x=>x.id)).size,30);
+const best=bestBrew([brew(1,70),brew(2,94),brew(3,82)]);assert.equal(best.score,94);
+const bad=normalizeHistory([null,{}, {samples:[]}]);assert.equal(bad.length,0);
+const store=new Map();const storage={getItem:k=>store.has(k)?store.get(k):null,setItem:(k,v)=>store.set(k,v)};storage.setItem('pourLabLastBrew',JSON.stringify(brew(9,88)));let saved=persistLatestBrew(storage);assert.equal(saved.length,1);saved=persistLatestBrew(storage);assert.equal(saved.length,1,'same completed brew must not duplicate');assert.equal(readBrewHistory(storage)[0].score,88);
+const ref=brew(4,91);assert.equal(selectGhostReference(storage,ref),true);assert.equal(JSON.parse(storage.getItem('pourLabLastBrew')).score,91);assert.equal(selectGhostReference(storage,null),false);
+console.log('brew history tests: PASS');
