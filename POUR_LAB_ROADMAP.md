@@ -34,12 +34,13 @@
 - [x] 移动端 off-canvas release fallback：window pointerup/cancel 仅在事件未经过 canvas 时兜底；正常 canvas pointerup 保留原语义
 - [x] suspend / synthetic cancel 主动释放 Pointer Capture，避免 capture 残留或 lostcapture 重复 cancel
 - [x] 无 capture 的 touch leave 自动 cancel；Canvas 长按菜单 / dragstart / selectstart 手势抑制
+- [x] 统一 pointer binding 已补齐 capture 释放、window 级 off-canvas pointerup/cancel fallback、幂等 suspend，可安全替代 legacy 事件层
 
 ## 下一阶段优先级
 
 ### P0 物理与稳定性
 - 浏览器真实交互回归
-- 用统一 pointer binding 完全替换主页面 legacy Pointer Events（当前 guard 已完成主要风险兜底）
+- 用统一 pointer binding 完全替换主页面 legacy Pointer Events（binding 自身已完成替代前的稳定性补强）
 - CDN / 静态依赖可用性优化
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
 - 页面恢复后的尾流视觉与采样一致性回归
