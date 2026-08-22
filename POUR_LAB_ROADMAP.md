@@ -23,6 +23,9 @@
 - [x] Brew Analysis：流速稳定、落点停留、外圈暴露、中圈利用、路径等诊断
 - [x] Brew Analysis 结果页与 NEXT BREW 可执行建议
 - [x] Brew History：最近 30 杯持久化、去重排序、BEST 标记、任意历史杯设为 Ghost 参考
+- [x] Brew History A/B 杯间对比与最近 8 杯训练趋势
+- [x] NEXT SESSION 自适应专项训练：流速稳定 / 粉床覆盖 / 均匀度 / 外圈控制
+- [x] 持久化专项挑战闭环：baseline → 新杯验收 → 未达标继续 → 达标晋级下一弱项
 
 ## 下一阶段优先级
 
@@ -38,8 +41,9 @@
 - Ghost 轨迹偏差时间线
 - 暂停节点可视化
 - 粉床热点回放
-- History 支持“最佳杯 / 指定杯”直接进入 Ghost，不必刷新页面
-- History 杯间对比：分数、流速稳定、覆盖率、轨迹差异
+- History 支持指定杯不刷新页面直接进入 Ghost
+- 专项挑战连续 2 杯达标模式与训练 streak
+- 专项结果页显示“前一杯 → 本杯”的指标变化
 
 ### P2 数据能力
 - Recipe JSON 数据结构
