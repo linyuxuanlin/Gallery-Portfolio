@@ -29,13 +29,14 @@
 - [x] 生命周期安全训练时钟与 hidden/blur 幂等暂停控制器，后台时间不计入训练 elapsed
 - [x] 生命周期控制器接入主页面：hidden/blur 自动停止注水并冻结 Training / Replay，恢复时重置 lastT
 - [x] 独立 pointer 输入状态机：主触点锁定、次触点隔离、lostpointercapture / cancel / suspend 强制收水
+- [x] Canvas 捕获阶段 pointer guard 接入现有页面：阻断第二触点/右键，lostpointercapture 转 pointercancel，hidden/blur 清空旧触点
 
 ## 下一阶段优先级
 
 ### P0 物理与稳定性
 - 浏览器真实交互回归
-- 将 pointer 输入状态机接入主页面事件层：仅 active pointer 可移动落点/结束注水，lostpointercapture 必须收水
-- 移动端触控优化：双指/系统手势/长按误触、pointer capture 丢失后的恢复
+- 用统一 pointer binding 完全替换主页面 legacy Pointer Events（当前 guard 已先完成风险兜底）
+- 移动端触控优化：系统手势/长按误触、pointer capture 丢失后的恢复
 - CDN / 静态依赖可用性优化
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
 - 页面恢复后的尾流视觉与采样一致性回归
