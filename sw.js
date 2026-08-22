@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'pour-lab-v6';
+const CACHE_VERSION = 'pour-lab-v7';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
@@ -27,6 +27,8 @@ const APP_SHELL = [
   './pour-brew-insights.js',
   './pour-brew-history.js',
   './pour-brew-compare.js',
+  './pour-brew-trend.js',
+  './pour-brew-trend-panel.js',
 ];
 
 async function fetchWithTimeout(url, options = {}, timeoutMs = DEPENDENCY_TIMEOUT_MS) {
@@ -75,11 +77,7 @@ self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keep = new Set([APP_CACHE, RUNTIME_CACHE]);
     const names = await caches.keys();
-    await Promise.all(
-      names
-        .filter(name => name.startsWith('pour-lab-') && !keep.has(name))
-        .map(name => caches.delete(name))
-    );
+    await Promise.all(names.filter(name => name.startsWith('pour-lab-') && !keep.has(name)).map(name => caches.delete(name)));
     await self.clients.claim();
   })());
 });
@@ -91,9 +89,7 @@ async function networkFirst(request, fallbackUrl) {
     if (response?.ok) await cache.put(request, response.clone());
     return response;
   } catch {
-    return (await cache.match(request))
-      || (fallbackUrl ? await cache.match(fallbackUrl) : undefined)
-      || Response.error();
+    return (await cache.match(request)) || (fallbackUrl ? await cache.match(fallbackUrl) : undefined) || Response.error();
   }
 }
 
@@ -124,17 +120,14 @@ self.addEventListener('fetch', event => {
   const { request } = event;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-
   if (request.mode === 'navigate') {
     event.respondWith(networkFirst(request, './index.html'));
     return;
   }
-
   if (url.href === THREE_URL) {
     event.respondWith(threeCacheFirst());
     return;
   }
-
   if (url.origin === self.location.origin) {
     event.respondWith(staleWhileRevalidate(request));
   }
