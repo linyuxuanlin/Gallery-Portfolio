@@ -30,24 +30,34 @@ export function bindPourPointerInput(element, {
     onStart(event, result.state);
   };
 
-  const handleMove = (event) => {
-    const result = runtime.pointerMove(event);
-    if (result.accepted) {
-      onMove(event, result.state);
-      return;
-    }
-    const state = runtime.snapshot();
-    if (!state.hasActivePointer && (event?.pointerType === 'mouse' || event?.pointerType === 'pen')) {
-      onHover(event, state);
-    }
-  };
-
   const stopWith = (method, event, reason) => {
     const result = runtime[method](event);
     if (!result.accepted && !result.stopped) return result;
     releaseCapture(result.releasedPointerId);
     onStop(event, result.state, reason || result.reason);
     return result;
+  };
+
+  const handleMove = (event) => {
+    const state = runtime.snapshot();
+    const lostPressedState = state.hasActivePointer
+      && event?.pointerId === state.activePointerId
+      && (state.pointerType === 'mouse' || state.pointerType === 'pen')
+      && Number.isFinite(event?.buttons)
+      && event.buttons === 0;
+    if (lostPressedState) {
+      stopWith('pointerCancel', event, 'buttons-released');
+      return;
+    }
+    const result = runtime.pointerMove(event);
+    if (result.accepted) {
+      onMove(event, result.state);
+      return;
+    }
+    const nextState = runtime.snapshot();
+    if (!nextState.hasActivePointer && (event?.pointerType === 'mouse' || event?.pointerType === 'pen')) {
+      onHover(event, nextState);
+    }
   };
 
   const handleUp = (event) => stopWith('pointerUp', event, 'up');
