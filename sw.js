@@ -1,11 +1,13 @@
-const CACHE_VERSION = 'pour-lab-v2';
+const CACHE_VERSION = 'pour-lab-v3';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
 const THREE_SOURCES = [
   THREE_URL,
   'https://unpkg.com/three@0.180.0/build/three.module.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.180.0/three.module.js',
 ];
+const DEPENDENCY_TIMEOUT_MS = 3500;
 
 const APP_SHELL = [
   './',
@@ -23,11 +25,21 @@ const APP_SHELL = [
   './pour-input-guard.js',
 ];
 
+async function fetchWithTimeout(url, options = {}, timeoutMs = DEPENDENCY_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function fetchFirstAvailable(urls, options = {}) {
   let lastError = null;
   for (const url of urls) {
     try {
-      const response = await fetch(url, options);
+      const response = await fetchWithTimeout(url, options);
       if (response?.ok) return response;
       lastError = new Error(`HTTP ${response?.status || 0} for ${url}`);
     } catch (error) {
