@@ -1,5 +1,5 @@
 import { installBrewInsights } from './pour-brew-insights.js';
-import { installBrewHistory } from './pour-brew-history.js';
+import { installBrewHistory, prepareGhostReferenceForBoot } from './pour-brew-history.js';
 import { installBrewTrend } from './pour-brew-trend-panel.js';
 import { installTrainingPlan } from './pour-training-plan-panel.js';
 
@@ -103,6 +103,11 @@ export async function registerPourServiceWorker(navigatorLike = globalThis.navig
     return { supported: true, registration: null, error };
   }
 }
+
+const bootGhostReference = typeof globalThis.localStorage !== 'undefined'
+  ? prepareGhostReferenceForBoot(globalThis.localStorage)
+  : { prepared: false, cleanup: () => false };
+if (bootGhostReference.prepared) queueMicrotask(() => bootGhostReference.cleanup());
 
 if (typeof document !== 'undefined') {
   queueMicrotask(() => {
