@@ -1,4 +1,5 @@
 import { installLegacyPointerGuard } from './pour-input-guard.js';
+import { installBrewInsights } from './pour-brew-insights.js';
 
 export function createLifecycleClock(now = () => performance.now()) {
   let startedAt = 0;
@@ -101,11 +102,13 @@ export async function registerPourServiceWorker(navigatorLike = globalThis.navig
   }
 }
 
-// The page already imports this module. Install the capture-phase guard after
-// the module job finishes, when the renderer canvas has been appended. Register
-// the service worker lazily so first paint is never blocked by caching setup.
+// The page already imports this module. Install non-blocking resilience and
+// results enhancements after the module job finishes, when the DOM exists.
 if (typeof document !== 'undefined') {
-  queueMicrotask(() => installLegacyPointerGuard(document));
+  queueMicrotask(() => {
+    installLegacyPointerGuard(document);
+    installBrewInsights(document, globalThis.localStorage);
+  });
   if (document.readyState === 'complete') {
     registerPourServiceWorker();
   } else {
