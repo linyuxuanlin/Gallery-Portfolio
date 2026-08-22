@@ -42,16 +42,49 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       return makeState(false, 0);
     },
     step(dt, inputPouring) {
+      const safeDt = Math.max(0, Number(dt) || 0);
       const previousFlow = actualFlow;
-      // Once the scale target has been reached the kettle input is latched off.
-      // The existing stream still decays naturally, so the scene can show a
-      // short physical tail without adding mass beyond the target reading.
+      const previousWater = water;
       const effectivePouring = Boolean(inputPouring) && !targetReached;
-      actualFlow = stepFlow(actualFlow, targetFlow, effectivePouring, dt);
-      const integrated = integrateFlowSegment(water, previousFlow, actualFlow, dt, targetWater);
-      water = integrated.water;
-      if (water >= targetWater - 1e-9) targetReached = true;
-      return makeState(inputPouring, integrated.added);
+
+      if (!effectivePouring) {
+        actualFlow = stepFlow(actualFlow, targetFlow, false, safeDt);
+        const integrated = integrateFlowSegment(water, previousFlow, actualFlow, safeDt, targetWater);
+        water = integrated.water;
+        if (water >= targetWater - 1e-9) targetReached = true;
+        return makeState(inputPouring, integrated.added);
+      }
+
+      const fullFrameFlow = stepFlow(actualFlow, targetFlow, true, safeDt);
+      const fullFrame = integrateFlowSegment(water, previousFlow, fullFrameFlow, safeDt, targetWater);
+      const remainingMass = Math.max(0, targetWater - water);
+
+      if (fullFrame.added + 1e-12 < remainingMass) {
+        actualFlow = fullFrameFlow;
+        water = fullFrame.water;
+        return makeState(inputPouring, fullFrame.added);
+      }
+
+      // The target can be crossed partway through a display frame. Solve for
+      // that instant, latch kettle input off there, then spend the remainder of
+      // the frame in release. This keeps target-tail momentum independent of
+      // display frame boundaries instead of waiting until the next frame.
+      let lo = 0;
+      let hi = safeDt;
+      for (let i = 0; i < 14; i++) {
+        const mid = (lo + hi) * 0.5;
+        const midFlow = stepFlow(previousFlow, targetFlow, true, mid);
+        const midMass = (previousFlow + midFlow) * 0.5 * mid;
+        if (midMass < remainingMass) lo = mid;
+        else hi = mid;
+      }
+      const crossingDt = hi;
+      const releaseDt = safeDt - crossingDt;
+      const flowAtCrossing = stepFlow(previousFlow, targetFlow, true, crossingDt);
+      actualFlow = stepFlow(flowAtCrossing, targetFlow, false, releaseDt);
+      water = targetWater;
+      targetReached = true;
+      return makeState(inputPouring, Math.max(0, targetWater - previousWater));
     },
     snapshot(inputPouring = false) {
       return makeState(inputPouring, 0);
