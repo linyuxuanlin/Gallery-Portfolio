@@ -3,6 +3,7 @@ import { createPointerInputRuntime } from './pour-input-runtime.js';
 export function bindPourPointerInput(element, {
   onStart = () => {},
   onMove = () => {},
+  onHover = () => {},
   onStop = () => {},
   canStart = () => true,
   windowTarget = globalThis.window,
@@ -31,8 +32,14 @@ export function bindPourPointerInput(element, {
 
   const handleMove = (event) => {
     const result = runtime.pointerMove(event);
-    if (!result.accepted) return;
-    onMove(event, result.state);
+    if (result.accepted) {
+      onMove(event, result.state);
+      return;
+    }
+    const state = runtime.snapshot();
+    if (!state.hasActivePointer && (event?.pointerType === 'mouse' || event?.pointerType === 'pen')) {
+      onHover(event, state);
+    }
   };
 
   const stopWith = (method, event, reason) => {
