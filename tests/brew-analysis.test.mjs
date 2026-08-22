@@ -13,7 +13,7 @@ function makeSamples({flow=5,points=[[0,0]],seconds=10}={}){
 
 assert.equal(analyzeBrew([]).valid,false);
 
-const stable=analyzeBrew(makeSamples({flow:5,points:[[0,0],[.18,0],[0,.18],[-.18,0],[0,-.18]],seconds:12}));
+const stable=analyzeBrew(makeSamples({flow:5,points:[[0,0],[.30,0],[0,.30],[-.30,0],[0,-.30]],seconds:12}));
 assert(stable.flowStability>.95);
 assert(stable.radial.middle>0);
 assert(stable.dwellConcentration<.30);
