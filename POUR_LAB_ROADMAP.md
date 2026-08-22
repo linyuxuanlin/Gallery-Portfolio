@@ -30,8 +30,9 @@
 - [x] 生命周期控制器接入主页面：hidden/blur 自动停止注水并冻结 Training / Replay，恢复时重置 lastT
 - [x] 独立 pointer 输入状态机：主触点锁定、次触点隔离、lostpointercapture / cancel / suspend 强制收水
 - [x] Canvas 捕获阶段 pointer guard 接入现有页面：阻断第二触点/右键，lostpointercapture 转 pointercancel，hidden/blur 清空旧触点
-- [x] 移动端 off-canvas release fallback：window pointerup/cancel 强制结束残留注水；无 capture 的 touch leave 自动 cancel
-- [x] Canvas 长按菜单 / dragstart / selectstart 手势抑制，避免系统交互打断训练
+- [x] 移动端 off-canvas release fallback：window pointerup/cancel 仅在事件未经过 canvas 时兜底；正常 canvas pointerup 保留原语义
+- [x] suspend / synthetic cancel 主动释放 Pointer Capture，避免 capture 残留或 lostcapture 重复 cancel
+- [x] 无 capture 的 touch leave 自动 cancel；Canvas 长按菜单 / dragstart / selectstart 手势抑制
 
 ## 下一阶段优先级
 
