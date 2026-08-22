@@ -23,6 +23,8 @@
 - [x] Brew Analysis：流速稳定、落点停留、外圈暴露、中圈利用、路径等诊断
 - [x] Brew Analysis 结果页与 NEXT BREW 可执行建议
 - [x] Brew History：最近 30 杯持久化、去重排序、BEST 标记、任意历史杯设为 Ghost 参考
+- [x] Brew History storage quota / 私密模式容错、轨迹压缩与自动降级
+- [x] Ghost reference 按 History ID 持久化，启动时瞬时兼容旧主页面读取，避免重复长期存储 Replay
 - [x] Brew History A/B 杯间对比与最近 8 杯训练趋势
 - [x] NEXT SESSION 自适应专项训练：流速稳定 / 粉床覆盖 / 均匀度 / 外圈控制
 - [x] 持久化专项挑战闭环：baseline → 新杯验收 → 未达标继续 → 达标晋级下一弱项
@@ -34,7 +36,6 @@
 - Three.js 首次访问仍依赖 CDN：改为仓库自托管 vendor 文件或构建产物
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
 - 页面恢复后的尾流视觉与采样一致性回归
-- Brew History 在 storage quota / 私密模式下的容错与数据压缩
 
 ### P1 核心训练体验
 - Replay 结果轨迹热力图
