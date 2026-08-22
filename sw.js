@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'pour-lab-v5';
+const CACHE_VERSION = 'pour-lab-v6';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
@@ -26,6 +26,7 @@ const APP_SHELL = [
   './pour-brew-analysis.js',
   './pour-brew-insights.js',
   './pour-brew-history.js',
+  './pour-brew-compare.js',
 ];
 
 async function fetchWithTimeout(url, options = {}, timeoutMs = DEPENDENCY_TIMEOUT_MS) {
