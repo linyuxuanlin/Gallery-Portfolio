@@ -18,10 +18,6 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       addedWater,
       inputPouring: Boolean(inputPouring),
       pouring: Boolean(inputPouring) && !targetReached,
-      // Reaching the scale target and completing the physical pour are
-      // intentionally separate. The scale can lock at targetWater while a
-      // short residual stream is still visible. UI/recording should keep
-      // updating until that tail has fully settled.
       complete: settled,
       targetReached,
       tailActive: targetReached && actualFlow > 0,
@@ -39,6 +35,14 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       actualFlow = Math.max(0, Number(nextFlow) || 0);
       targetFlow = Math.max(0, Number(nextControl) || 0);
       targetReached = water >= targetWater - 1e-9;
+      return makeState(false, 0);
+    },
+    suspend() {
+      // Page lifecycle suspension freezes the training timeline. Carrying a
+      // pre-suspend residual stream into the first visible frame would create
+      // a phantom tail after unlock/background recovery. Settle the visual
+      // stream immediately without integrating hidden-time water.
+      actualFlow = 0;
       return makeState(false, 0);
     },
     step(dt, inputPouring) {
@@ -65,10 +69,6 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
         return makeState(inputPouring, fullFrame.added);
       }
 
-      // The target can be crossed partway through a display frame. Solve for
-      // that instant, latch kettle input off there, then spend the remainder of
-      // the frame in release. This keeps target-tail momentum independent of
-      // display frame boundaries instead of waiting until the next frame.
       let lo = 0;
       let hi = safeDt;
       for (let i = 0; i < 14; i++) {
