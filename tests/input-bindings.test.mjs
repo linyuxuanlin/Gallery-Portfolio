@@ -25,8 +25,8 @@ const binding=bindPourPointerInput(element,{
   onStop:(e,s,reason)=>stops.push([e?.pointerId??null,s.pouring,reason]),
 });
 
-element.emit('pointermove',{pointerId:90,pointerType:'mouse',isPrimary:true});
-element.emit('pointermove',{pointerId:91,pointerType:'pen',isPrimary:true});
+element.emit('pointermove',{pointerId:90,pointerType:'mouse',isPrimary:true,buttons:0});
+element.emit('pointermove',{pointerId:91,pointerType:'pen',isPrimary:true,buttons:0});
 element.emit('pointermove',{pointerId:92,pointerType:'touch',isPrimary:true});
 assert.deepEqual(hovers,[[90,'mouse'],[91,'pen']], 'desktop/pen hover should work without accepting passive touch movement');
 
@@ -59,14 +59,20 @@ element.emit('pointerup',touch3);
 assert.deepEqual(stops.at(-1),[3,false,'up']);
 assert.deepEqual(element.released,[1,3]);
 
-element.emit('pointerdown',{pointerId:4,pointerType:'mouse',isPrimary:true,button:2});
+element.emit('pointerdown',{pointerId:4,pointerType:'mouse',isPrimary:true,button:2,buttons:2});
 assert.equal(starts.length,2,'right mouse button must not start pour');
 
-element.emit('pointerdown',{pointerId:5,pointerType:'mouse',isPrimary:true,button:0});
+element.emit('pointerdown',{pointerId:5,pointerType:'mouse',isPrimary:true,button:0,buttons:1});
 assert.equal(starts.length,3);
+element.emit('pointermove',{pointerId:5,pointerType:'mouse',isPrimary:true,buttons:0});
+assert.deepEqual(stops.at(-1),[5,false,'buttons-released'],'mouse move with no pressed buttons must self-heal a missed pointerup');
+assert.equal(binding.runtime.snapshot().hasActivePointer,false);
+assert.deepEqual(element.released,[1,3,5]);
+
+element.emit('pointerdown',{pointerId:6,pointerType:'mouse',isPrimary:true,button:0,buttons:1});
 binding.suspend('hidden');
 assert.deepEqual(stops.at(-1),[null,false,'hidden']);
-assert.deepEqual(element.released,[1,3,5]);
+assert.deepEqual(element.released,[1,3,5,6]);
 assert.equal(binding.runtime.snapshot().hasActivePointer,false);
 
 const stopCount=stops.length;
