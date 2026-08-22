@@ -60,12 +60,22 @@ export function bindLegacyPointerGuard(element, { view = globalThis.window } = {
     element.dispatchEvent?.(cancelEvent);
   };
 
+  const releaseCapture = (pointerId) => {
+    if (typeof element.hasPointerCapture !== 'function' || typeof element.releasePointerCapture !== 'function') return;
+    try {
+      if (element.hasPointerCapture(pointerId)) element.releasePointerCapture(pointerId);
+    } catch {}
+  };
+
   const cancelActive = () => {
     if (activePointerId === null) return false;
     const pointerId = activePointerId;
     const pointerType = activePointerType || 'touch';
+    // Clear first so a synchronous lostpointercapture caused by release does not
+    // recursively dispatch a second synthetic cancel.
     activePointerId = null;
     activePointerType = null;
+    releaseCapture(pointerId);
     dispatchCancel(pointerId, pointerType);
     return true;
   };
@@ -75,10 +85,18 @@ export function bindLegacyPointerGuard(element, { view = globalThis.window } = {
     cancelActive();
   };
 
+  const eventReachedCanvas = (event) => {
+    if (event.target === element) return true;
+    const path = typeof event.composedPath === 'function' ? event.composedPath() : null;
+    return Array.isArray(path) && path.includes(element);
+  };
+
   // Some mobile browsers can deliver the final pointerup/cancel to window
   // when capture is interrupted by browser chrome or a system gesture.
+  // Window capture runs before canvas capture, so ignore releases whose event
+  // path already includes the canvas; those are normal releases, not fallbacks.
   const onWindowRelease = (event) => {
-    if (event.pointerId !== activePointerId) return;
+    if (event.pointerId !== activePointerId || eventReachedCanvas(event)) return;
     cancelActive();
   };
 
@@ -130,6 +148,7 @@ export function bindLegacyPointerGuard(element, { view = globalThis.window } = {
     element.removeEventListener('selectstart', preventGesture, true);
     view?.removeEventListener?.('pointerup', onWindowRelease, true);
     view?.removeEventListener?.('pointercancel', onWindowRelease, true);
+    if (activePointerId !== null) releaseCapture(activePointerId);
     activePointerId = null;
     activePointerType = null;
   }
