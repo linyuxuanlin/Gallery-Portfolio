@@ -35,6 +35,8 @@
 - [x] suspend / synthetic cancel 主动释放 Pointer Capture，避免 capture 残留或 lostcapture 重复 cancel
 - [x] 无 capture 的 touch leave 自动 cancel；Canvas 长按菜单 / dragstart / selectstart 手势抑制
 - [x] 统一 pointer binding 已补齐 capture 释放、window 级 off-canvas pointerup/cancel fallback、幂等 suspend，可安全替代 legacy 事件层
+- [x] 统一 pointer binding 保留 mouse / pen 悬停选落点，同时禁止被动 touch move 改写目标
+- [x] pointermove 检测 mouse / pen `buttons=0` 自愈遗漏 pointerup，主动收水并释放 capture
 
 ## 下一阶段优先级
 
