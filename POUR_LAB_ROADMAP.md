@@ -38,6 +38,7 @@
 - [x] 统一 pointer binding 保留 mouse / pen 悬停选落点，同时禁止被动 touch move 改写目标
 - [x] pointermove 检测 mouse / pen `buttons=0` 自愈遗漏 pointerup，主动收水并释放 capture
 - [x] Service Worker 离线/弱网缓存：缓存应用壳、本地物理模块与 Three.js CDN 响应；导航 network-first，本地模块 stale-while-revalidate
+- [x] Brew Analysis 核心：从 Replay 样本计算实际流速稳定性、落点停留集中度、外圈暴露、中圈利用、径向分布和路径数据，并输出可解释诊断；含 FPS 回归测试
 
 ## 下一阶段优先级
 
@@ -49,6 +50,7 @@
 - 页面恢复后的尾流视觉与采样一致性回归
 
 ### P1 核心训练体验
+- 将 Brew Analysis 接入结果页，避免只给总分：优先显示“局部停留过久 / 贴边过多 / 流速波动 / 中圈利用不足”等可执行反馈
 - Replay 结果轨迹热力图
 - Ghost 轨迹偏差时间线
 - 暂停节点可视化
