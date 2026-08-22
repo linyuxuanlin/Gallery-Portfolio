@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import { bindLegacyPointerGuard } from '../pour-input-guard.js';
+import { bindLegacyPointerGuard, installLegacyPointerGuard } from '../pour-input-guard.js';
 
-class MockElement {
+class MockEventTarget {
   constructor(){ this.listeners = new Map(); }
   addEventListener(type, fn, capture=false){
     const list=this.listeners.get(type)||[]; list.push({fn,capture:!!capture}); this.listeners.set(type,list);
@@ -11,19 +11,24 @@ class MockElement {
   }
   dispatchEvent(event){ return this.emit(event.type,event); }
   emit(type,event={}){
-    event.type=type; event.defaultPrevented=false; event.__stopped=false;
-    event.preventDefault ??= ()=>{event.defaultPrevented=true};
-    event.stopImmediatePropagation ??= ()=>{event.__stopped=true};
+    try { event.type=type; } catch {}
+    event.__stopped=false;
+    if (!event.preventDefault) event.preventDefault=()=>{};
+    if (!event.stopImmediatePropagation) event.stopImmediatePropagation=()=>{event.__stopped=true};
     const list=this.listeners.get(type)||[];
     for(const phase of [true,false]) for(const {fn,capture} of list){
       if(capture!==phase||event.__stopped) continue;
       fn(event);
     }
-    return !event.defaultPrevented;
+    return true;
   }
 }
+class MockRoot extends MockEventTarget {
+  constructor(canvas,view){ super(); this.canvas=canvas; this.defaultView=view; this.hidden=false; }
+  querySelector(selector){ return selector==='canvas'?this.canvas:null; }
+}
 
-const el=new MockElement();
+const el=new MockEventTarget();
 let legacyDown=0,legacyMove=0,legacyCancel=0;
 el.addEventListener('pointerdown',()=>legacyDown++);
 el.addEventListener('pointermove',()=>legacyMove++);
@@ -54,6 +59,22 @@ assert.equal(legacyDown,2);
 assert.equal(guard.suspend(),true,'suspend should cancel active pointer');
 assert.equal(legacyCancel,2,'suspend must reach legacy pointercancel handler');
 assert.equal(guard.suspend(),false,'repeated suspend should be idempotent');
-
 guard.destroy();
+
+const canvas=new MockEventTarget(),view=new MockEventTarget(),root=new MockRoot(canvas,view);
+let installCancels=0;
+canvas.addEventListener('pointercancel',()=>installCancels++);
+const installed=installLegacyPointerGuard(root);
+canvas.emit('pointerdown',{pointerId:10,pointerType:'touch',button:0});
+assert.equal(installed.snapshot().active,true);
+view.emit('blur',{});
+assert.equal(installed.snapshot().active,false,'window blur must clear active pointer');
+assert.equal(installCancels,1,'blur should synthesize cancel');
+canvas.emit('pointerdown',{pointerId:11,pointerType:'touch',button:0});
+root.hidden=true; root.emit('visibilitychange',{});
+assert.equal(installed.snapshot().active,false,'hidden document must clear active pointer');
+assert.equal(installCancels,2,'hidden should synthesize cancel');
+assert.equal(installLegacyPointerGuard(root),installed,'installer must be idempotent');
+installed.destroy();
+
 console.log('input guard tests: PASS');
