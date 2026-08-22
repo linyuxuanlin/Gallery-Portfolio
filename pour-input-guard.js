@@ -1,23 +1,26 @@
 // Capture-phase safety net for the current canvas event layer.
-// It prevents secondary pointers from reaching legacy handlers and converts
-// lost pointer capture into a pointercancel that the page already understands.
-export function bindLegacyPointerGuard(element) {
+// It prevents secondary pointers from reaching legacy handlers, converts
+// capture loss into pointercancel, and catches releases that land off-canvas.
+export function bindLegacyPointerGuard(element, { view = globalThis.window } = {}) {
   if (!element?.addEventListener) throw new TypeError('element must support addEventListener');
 
   let activePointerId = null;
   let activePointerType = null;
 
-  const stopSecondary = (event) => {
-    if (activePointerId === null || event.pointerId === activePointerId) return false;
+  const stopEvent = (event) => {
     event.preventDefault?.();
     event.stopImmediatePropagation?.();
+  };
+
+  const stopSecondary = (event) => {
+    if (activePointerId === null || event.pointerId === activePointerId) return false;
+    stopEvent(event);
     return true;
   };
 
   const onDown = (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) {
-      event.preventDefault?.();
-      event.stopImmediatePropagation?.();
+      stopEvent(event);
       return;
     }
     if (activePointerId !== null) {
@@ -52,26 +55,12 @@ export function bindLegacyPointerGuard(element) {
     } catch {
       cancelEvent = new Event('pointercancel', { bubbles: true, cancelable: true });
       Object.defineProperty(cancelEvent, 'pointerId', { value: pointerId });
+      Object.defineProperty(cancelEvent, 'pointerType', { value: pointerType });
     }
     element.dispatchEvent?.(cancelEvent);
   };
 
-  const onLostCapture = (event) => {
-    if (event.pointerId !== activePointerId) return;
-    const pointerId = activePointerId;
-    const pointerType = activePointerType || event.pointerType || 'touch';
-    activePointerId = null;
-    activePointerType = null;
-    dispatchCancel(pointerId, pointerType);
-  };
-
-  element.addEventListener('pointerdown', onDown, true);
-  element.addEventListener('pointermove', onMove, true);
-  element.addEventListener('pointerup', releaseIfActive, true);
-  element.addEventListener('pointercancel', releaseIfActive, true);
-  element.addEventListener('lostpointercapture', onLostCapture, true);
-
-  function suspend() {
+  const cancelActive = () => {
     if (activePointerId === null) return false;
     const pointerId = activePointerId;
     const pointerType = activePointerType || 'touch';
@@ -79,6 +68,50 @@ export function bindLegacyPointerGuard(element) {
     activePointerType = null;
     dispatchCancel(pointerId, pointerType);
     return true;
+  };
+
+  const onLostCapture = (event) => {
+    if (event.pointerId !== activePointerId) return;
+    cancelActive();
+  };
+
+  // Some mobile browsers can deliver the final pointerup/cancel to window
+  // when capture is interrupted by browser chrome or a system gesture.
+  const onWindowRelease = (event) => {
+    if (event.pointerId !== activePointerId) return;
+    cancelActive();
+  };
+
+  // If capture never became active, leaving the canvas should not leave the
+  // legacy page in a permanent pouring state. Mouse hover is intentionally
+  // ignored because desktop users can leave/re-enter while holding capture.
+  const onPointerLeave = (event) => {
+    if (event.pointerId !== activePointerId || event.pointerType === 'mouse') return;
+    const hasCapture = typeof element.hasPointerCapture === 'function'
+      ? element.hasPointerCapture(event.pointerId)
+      : false;
+    if (!hasCapture) cancelActive();
+  };
+
+  const preventGesture = (event) => {
+    // Canvas is an interaction surface, not selectable/draggable content.
+    event.preventDefault?.();
+  };
+
+  element.addEventListener('pointerdown', onDown, true);
+  element.addEventListener('pointermove', onMove, true);
+  element.addEventListener('pointerup', releaseIfActive, true);
+  element.addEventListener('pointercancel', releaseIfActive, true);
+  element.addEventListener('lostpointercapture', onLostCapture, true);
+  element.addEventListener('pointerleave', onPointerLeave, true);
+  element.addEventListener('contextmenu', preventGesture, true);
+  element.addEventListener('dragstart', preventGesture, true);
+  element.addEventListener('selectstart', preventGesture, true);
+  view?.addEventListener?.('pointerup', onWindowRelease, true);
+  view?.addEventListener?.('pointercancel', onWindowRelease, true);
+
+  function suspend() {
+    return cancelActive();
   }
 
   function snapshot() {
@@ -91,6 +124,12 @@ export function bindLegacyPointerGuard(element) {
     element.removeEventListener('pointerup', releaseIfActive, true);
     element.removeEventListener('pointercancel', releaseIfActive, true);
     element.removeEventListener('lostpointercapture', onLostCapture, true);
+    element.removeEventListener('pointerleave', onPointerLeave, true);
+    element.removeEventListener('contextmenu', preventGesture, true);
+    element.removeEventListener('dragstart', preventGesture, true);
+    element.removeEventListener('selectstart', preventGesture, true);
+    view?.removeEventListener?.('pointerup', onWindowRelease, true);
+    view?.removeEventListener?.('pointercancel', onWindowRelease, true);
     activePointerId = null;
     activePointerType = null;
   }
@@ -101,8 +140,8 @@ export function bindLegacyPointerGuard(element) {
 export function installLegacyPointerGuard(root = globalThis.document) {
   const canvas = root?.querySelector?.('canvas');
   if (!canvas || canvas.__pourInputGuard) return canvas?.__pourInputGuard || null;
-  const guard = bindLegacyPointerGuard(canvas);
   const view = root.defaultView || globalThis.window;
+  const guard = bindLegacyPointerGuard(canvas, { view });
   const onVisibility = () => { if (root.hidden) guard.suspend(); };
   const onBlur = () => guard.suspend();
   root.addEventListener?.('visibilitychange', onVisibility);
