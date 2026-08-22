@@ -18,6 +18,7 @@
 - [x] Reusable BufferGeometry 水柱，动态更新不再重复 new/dispose TubeGeometry
 - [x] 帧率无关目标点 / 壶位平滑与水柱自适应刷新
 - [x] 生命周期安全 Training / Replay 时钟，hidden/blur 不污染训练时间
+- [x] Flow runtime suspend settling：后台/锁屏时清除残余 actualFlow，不把隐藏时间伪尾流带回前台
 - [x] 统一 Pointer binding：主触点锁定、第二触点隔离、off-canvas release、capture 清理、missed pointerup 自愈
 - [x] Service Worker 弱网/离线缓存与 Three.js 多 CDN 超时回退
 - [x] Brew Analysis：流速稳定、落点停留、外圈暴露、中圈利用、路径等诊断
@@ -35,7 +36,7 @@
 - 浏览器真实交互回归
 - Three.js 首次访问仍依赖 CDN：改为仓库自托管 vendor 文件或构建产物
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
-- 页面恢复后的尾流视觉与采样一致性回归
+- 将 `flowRuntime.suspend()` 正式接入主页面 lifecycle suspend，并验证恢复后 HUD / 水柱 / Replay 首样本一致
 
 ### P1 核心训练体验
 - Replay 结果轨迹热力图
