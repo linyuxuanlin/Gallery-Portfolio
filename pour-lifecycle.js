@@ -89,8 +89,26 @@ export function createPageLifecycleController({
   return { suspend, resume, isSuspended };
 }
 
+export async function registerPourServiceWorker(navigatorLike = globalThis.navigator) {
+  const serviceWorker = navigatorLike?.serviceWorker;
+  if (!serviceWorker?.register) return { supported: false, registration: null };
+  try {
+    const registration = await serviceWorker.register('./sw.js', { scope: './' });
+    return { supported: true, registration };
+  } catch (error) {
+    console.warn('POUR Lab service worker registration failed', error);
+    return { supported: true, registration: null, error };
+  }
+}
+
 // The page already imports this module. Install the capture-phase guard after
-// the module job finishes, when the renderer canvas has been appended.
+// the module job finishes, when the renderer canvas has been appended. Register
+// the service worker lazily so first paint is never blocked by caching setup.
 if (typeof document !== 'undefined') {
   queueMicrotask(() => installLegacyPointerGuard(document));
+  if (document.readyState === 'complete') {
+    registerPourServiceWorker();
+  } else {
+    addEventListener('load', () => registerPourServiceWorker(), { once: true });
+  }
 }
