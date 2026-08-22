@@ -15,14 +15,20 @@ class FakeElement extends FakeTarget {
 }
 
 const element=new FakeElement(),windowTarget=new FakeTarget();
-const starts=[],moves=[],stops=[];
+const starts=[],moves=[],hovers=[],stops=[];
 const binding=bindPourPointerInput(element,{
   windowTarget,
   canStart:()=>true,
   onStart:(e,s)=>starts.push([e.pointerId,s.pouring]),
   onMove:(e)=>moves.push(e.pointerId),
+  onHover:(e)=>hovers.push([e.pointerId,e.pointerType]),
   onStop:(e,s,reason)=>stops.push([e?.pointerId??null,s.pouring,reason]),
 });
+
+element.emit('pointermove',{pointerId:90,pointerType:'mouse',isPrimary:true});
+element.emit('pointermove',{pointerId:91,pointerType:'pen',isPrimary:true});
+element.emit('pointermove',{pointerId:92,pointerType:'touch',isPrimary:true});
+assert.deepEqual(hovers,[[90,'mouse'],[91,'pen']], 'desktop/pen hover should work without accepting passive touch movement');
 
 const touch1={pointerId:1,pointerType:'touch',isPrimary:true};
 const touch2={pointerId:2,pointerType:'touch',isPrimary:false};
@@ -32,6 +38,7 @@ assert.deepEqual(element.captured,[1]);
 
 element.emit('pointermove',touch2);
 assert.equal(moves.length,0,'secondary pointer must not move target');
+assert.equal(hovers.length,2,'secondary touch must not be treated as hover');
 element.emit('pointerdown',touch2);
 assert.equal(starts.length,1,'secondary pointer must not steal control');
 element.emit('pointerup',touch2);
