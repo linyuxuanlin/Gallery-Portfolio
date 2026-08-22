@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { bindLegacyPointerGuard, installLegacyPointerGuard } from '../pour-input-guard.js';
 
 class MockEventTarget {
-  constructor(){ this.listeners = new Map(); this.captured = new Set(); }
+  constructor(){ this.listeners = new Map(); this.captured = new Set(); this.released = []; }
   addEventListener(type, fn, capture=false){
     const list=this.listeners.get(type)||[]; list.push({fn,capture:!!capture}); this.listeners.set(type,list);
   }
@@ -11,6 +11,7 @@ class MockEventTarget {
   }
   dispatchEvent(event){ return this.emit(event.type,event); }
   hasPointerCapture(id){ return this.captured.has(id); }
+  releasePointerCapture(id){ this.captured.delete(id); this.released.push(id); }
   emit(type,event={}){
     try { event.type=type; } catch {}
     event.__stopped=false; event.__prevented=false;
@@ -30,9 +31,10 @@ class MockRoot extends MockEventTarget {
 }
 
 const view=new MockEventTarget(),el=new MockEventTarget();
-let legacyDown=0,legacyMove=0,legacyCancel=0;
+let legacyDown=0,legacyMove=0,legacyUp=0,legacyCancel=0;
 el.addEventListener('pointerdown',()=>legacyDown++);
 el.addEventListener('pointermove',()=>legacyMove++);
+el.addEventListener('pointerup',()=>legacyUp++);
 el.addEventListener('pointercancel',()=>legacyCancel++);
 const guard=bindLegacyPointerGuard(el,{view});
 
@@ -55,24 +57,35 @@ el.emit('pointerdown',{pointerId:3,pointerType:'mouse',button:2});
 assert.equal(legacyDown,1,'right click must not start pouring');
 assert.equal(guard.snapshot().active,false);
 
+// A normal release that will reach canvas must NOT be converted to pointercancel
+// by the window capture fallback.
 el.emit('pointerdown',{pointerId:4,pointerType:'touch',button:0});
-assert.equal(legacyDown,2);
-view.emit('pointerup',{pointerId:4,pointerType:'touch'});
-assert.equal(guard.snapshot().active,false,'window pointerup must clear pointer if canvas misses release');
-assert.equal(legacyCancel,2,'window fallback must synthesize canvas pointercancel');
+const normalRelease={pointerId:4,pointerType:'touch',target:el,composedPath:()=>[el,view]};
+view.emit('pointerup',normalRelease);
+assert.equal(guard.snapshot().active,true,'window capture must leave normal canvas release alone');
+assert.equal(legacyCancel,1,'normal canvas release must not synthesize cancel');
+el.emit('pointerup',normalRelease);
+assert.equal(guard.snapshot().active,false);
+assert.equal(legacyUp,1,'normal pointerup should retain pointerup semantics');
 
+// A release that really lands outside canvas should still synthesize cancel.
 el.emit('pointerdown',{pointerId:5,pointerType:'touch',button:0});
-el.emit('pointerleave',{pointerId:5,pointerType:'touch'});
+view.emit('pointerup',{pointerId:5,pointerType:'touch',target:view,composedPath:()=>[view]});
+assert.equal(guard.snapshot().active,false,'off-canvas window pointerup must clear pointer');
+assert.equal(legacyCancel,2,'off-canvas fallback must synthesize canvas pointercancel');
+
+el.emit('pointerdown',{pointerId:6,pointerType:'touch',button:0});
+el.emit('pointerleave',{pointerId:6,pointerType:'touch'});
 assert.equal(guard.snapshot().active,false,'touch leaving without capture must cancel');
 assert.equal(legacyCancel,3);
 
-el.emit('pointerdown',{pointerId:6,pointerType:'touch',button:0});
-el.captured.add(6);
-el.emit('pointerleave',{pointerId:6,pointerType:'touch'});
+el.emit('pointerdown',{pointerId:7,pointerType:'touch',button:0});
+el.captured.add(7);
+el.emit('pointerleave',{pointerId:7,pointerType:'touch'});
 assert.equal(guard.snapshot().active,true,'touch leaving with capture should stay active');
-el.captured.delete(6);
 assert.equal(guard.suspend(),true,'suspend should cancel active pointer');
 assert.equal(legacyCancel,4,'suspend must reach legacy pointercancel handler');
+assert.deepEqual(el.released,[7],'suspend should release active browser pointer capture');
 assert.equal(guard.suspend(),false,'repeated suspend should be idempotent');
 
 for (const type of ['contextmenu','dragstart','selectstart']) {
