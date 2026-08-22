@@ -1,7 +1,11 @@
-const CACHE_VERSION = 'pour-lab-v1';
+const CACHE_VERSION = 'pour-lab-v2';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+const THREE_SOURCES = [
+  THREE_URL,
+  'https://unpkg.com/three@0.180.0/build/three.module.js',
+];
 
 const APP_SHELL = [
   './',
@@ -19,15 +23,34 @@ const APP_SHELL = [
   './pour-input-guard.js',
 ];
 
+async function fetchFirstAvailable(urls, options = {}) {
+  let lastError = null;
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, options);
+      if (response?.ok) return response;
+      lastError = new Error(`HTTP ${response?.status || 0} for ${url}`);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error('No dependency source available');
+}
+
+async function warmThreeCache() {
+  const runtime = await caches.open(RUNTIME_CACHE);
+  const cached = await runtime.match(THREE_URL);
+  if (cached) return cached;
+  const response = await fetchFirstAvailable(THREE_SOURCES, { mode: 'cors', cache: 'no-cache' });
+  await runtime.put(THREE_URL, response.clone());
+  return response;
+}
+
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const app = await caches.open(APP_CACHE);
     await Promise.allSettled(APP_SHELL.map(url => app.add(url)));
-    const runtime = await caches.open(RUNTIME_CACHE);
-    try {
-      const three = await fetch(THREE_URL, { mode: 'cors', cache: 'no-cache' });
-      if (three.ok) await runtime.put(THREE_URL, three.clone());
-    } catch {}
+    try { await warmThreeCache(); } catch {}
     await self.skipWaiting();
   })());
 });
@@ -36,7 +59,11 @@ self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keep = new Set([APP_CACHE, RUNTIME_CACHE]);
     const names = await caches.keys();
-    await Promise.all(names.filter(name => name.startsWith('pour-lab-') && !keep.has(name)).map(name => caches.delete(name)));
+    await Promise.all(
+      names
+        .filter(name => name.startsWith('pour-lab-') && !keep.has(name))
+        .map(name => caches.delete(name))
+    );
     await self.clients.claim();
   })());
 });
@@ -48,17 +75,23 @@ async function networkFirst(request, fallbackUrl) {
     if (response?.ok) await cache.put(request, response.clone());
     return response;
   } catch {
-    return (await cache.match(request)) || (fallbackUrl ? await cache.match(fallbackUrl) : undefined) || Response.error();
+    return (await cache.match(request))
+      || (fallbackUrl ? await cache.match(fallbackUrl) : undefined)
+      || Response.error();
   }
 }
 
-async function cacheFirst(request, cacheName = RUNTIME_CACHE) {
-  const cache = await caches.open(cacheName);
-  const cached = await cache.match(request);
+async function threeCacheFirst() {
+  const cache = await caches.open(RUNTIME_CACHE);
+  const cached = await cache.match(THREE_URL);
   if (cached) return cached;
-  const response = await fetch(request);
-  if (response && (response.ok || response.type === 'opaque')) await cache.put(request, response.clone());
-  return response;
+  try {
+    const response = await fetchFirstAvailable(THREE_SOURCES, { mode: 'cors' });
+    await cache.put(THREE_URL, response.clone());
+    return response;
+  } catch {
+    return Response.error();
+  }
 }
 
 async function staleWhileRevalidate(request) {
@@ -82,7 +115,7 @@ self.addEventListener('fetch', event => {
   }
 
   if (url.href === THREE_URL) {
-    event.respondWith(cacheFirst(request, RUNTIME_CACHE));
+    event.respondWith(threeCacheFirst());
     return;
   }
 
