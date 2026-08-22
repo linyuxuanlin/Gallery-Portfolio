@@ -18,6 +18,15 @@ for(let i=0;i<600;i++) bed.step(1/60);
 m=bed.metrics();
 assert(m.totalWaterField<beforeDrain,'drainage should reduce retained water');
 
+// Diffusion is redistribution, not a source/sink. This matters most around the
+// circular bed edge where cells have different neighbour counts.
+const conservative=createBedPhysics({diffusion:.35,drainRate:0,capacity:10});
+conservative.deposit(.64,.08,2,{efficiency:.02});
+const conservedBefore=conservative.metrics().totalWaterField;
+for(let i=0;i<1200;i++) conservative.step(1/120);
+const conservedAfter=conservative.metrics().totalWaterField;
+assert(Math.abs(conservedAfter-conservedBefore)<1e-9,`diffusion must conserve moisture: ${conservedBefore} -> ${conservedAfter}`);
+
 function run(fps){
   const b=createBedPhysics();
   for(let i=0;i<fps*3;i++){
