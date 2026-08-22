@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'pour-lab-v8';
+const CACHE_VERSION = 'pour-lab-v9';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
@@ -30,6 +30,7 @@ const APP_SHELL = [
   './pour-brew-trend.js',
   './pour-brew-trend-panel.js',
   './pour-training-plan.js',
+  './pour-training-progress.js',
   './pour-training-plan-panel.js',
 ];
 
