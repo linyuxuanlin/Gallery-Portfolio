@@ -1,5 +1,6 @@
 import { installBrewInsights } from './pour-brew-insights.js';
 import { installBrewHistory } from './pour-brew-history.js';
+import { installBrewTrend } from './pour-brew-trend-panel.js';
 
 export function createLifecycleClock(now = () => performance.now()) {
   let startedAt = 0;
@@ -102,12 +103,11 @@ export async function registerPourServiceWorker(navigatorLike = globalThis.navig
   }
 }
 
-// The main page owns pointer input. Lifecycle side effects stay limited to
-// non-blocking result/history enhancements and Service Worker registration.
 if (typeof document !== 'undefined') {
   queueMicrotask(() => {
     installBrewInsights(document, globalThis.localStorage);
     installBrewHistory(document, globalThis.localStorage);
+    installBrewTrend(document, globalThis.localStorage);
   });
   if (document.readyState === 'complete') {
     registerPourServiceWorker();
