@@ -1,3 +1,5 @@
+import { installLegacyPointerGuard } from './pour-input-guard.js';
+
 export function createLifecycleClock(now = () => performance.now()) {
   let startedAt = 0;
   let pausedAt = 0;
@@ -85,4 +87,10 @@ export function createPageLifecycleController({
   }
 
   return { suspend, resume, isSuspended };
+}
+
+// The page already imports this module. Install the capture-phase guard after
+// the module job finishes, when the renderer canvas has been appended.
+if (typeof document !== 'undefined') {
+  queueMicrotask(() => installLegacyPointerGuard(document));
 }
