@@ -37,13 +37,14 @@
 - [x] 统一 pointer binding 已补齐 capture 释放、window 级 off-canvas pointerup/cancel fallback、幂等 suspend，可安全替代 legacy 事件层
 - [x] 统一 pointer binding 保留 mouse / pen 悬停选落点，同时禁止被动 touch move 改写目标
 - [x] pointermove 检测 mouse / pen `buttons=0` 自愈遗漏 pointerup，主动收水并释放 capture
+- [x] Service Worker 离线/弱网缓存：缓存应用壳、本地物理模块与 Three.js CDN 响应；导航 network-first，本地模块 stale-while-revalidate
 
 ## 下一阶段优先级
 
 ### P0 物理与稳定性
 - 浏览器真实交互回归
 - 用统一 pointer binding 完全替换主页面 legacy Pointer Events（binding 自身已完成替代前的稳定性补强）
-- CDN / 静态依赖可用性优化
+- Three.js 首次访问仍依赖 CDN：下一步改为仓库自托管 vendor 文件或构建产物，彻底消除首次加载单点依赖
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
 - 页面恢复后的尾流视觉与采样一致性回归
 
