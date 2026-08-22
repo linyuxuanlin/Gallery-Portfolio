@@ -1,6 +1,7 @@
 import { installBrewInsights } from './pour-brew-insights.js';
 import { installBrewHistory } from './pour-brew-history.js';
 import { installBrewTrend } from './pour-brew-trend-panel.js';
+import { installTrainingPlan } from './pour-training-plan-panel.js';
 
 export function createLifecycleClock(now = () => performance.now()) {
   let startedAt = 0;
@@ -108,6 +109,7 @@ if (typeof document !== 'undefined') {
     installBrewInsights(document, globalThis.localStorage);
     installBrewHistory(document, globalThis.localStorage);
     installBrewTrend(document, globalThis.localStorage);
+    installTrainingPlan(document, globalThis.localStorage);
   });
   if (document.readyState === 'complete') {
     registerPourServiceWorker();
