@@ -18,10 +18,9 @@ export function createBedPhysics({size=25,radius=0.70,diffusion=0.22,drainRate=0
   }
   function step(dt){
     dt=Math.max(0,Number(dt)||0);if(dt===0)return;
-    // Diffuse by symmetric pairwise fluxes. Every amount removed from one cell
-    // is added to its neighbour, so diffusion alone cannot create/destroy bed
-    // moisture at the circular boundary. Reuse one scratch buffer to avoid a
-    // per-frame wet.slice() allocation on mobile.
+    // Symmetric pairwise fluxes conserve moisture even where the circular bed
+    // gives edge cells fewer neighbours. Reuse one scratch buffer so stepping
+    // does not allocate a wet.slice() every animation frame.
     delta.fill(0);
     const k=Math.min(.24,diffusion*dt);
     if(k>0){
@@ -37,11 +36,14 @@ export function createBedPhysics({size=25,radius=0.70,diffusion=0.22,drainRate=0
         }
       }
     }
-    const drain=Math.exp(-drainRate*dt);
+    const draining=drainRate>0,drain=Math.exp(-Math.max(0,drainRate)*dt);
     for(let i=0;i<n;i++){
       if(!valid[i])continue;
       let next=(wet[i]+delta[i])*drain;
-      if(next<1e-8)next=0;
+      // Only collapse numerical dust when physical drainage exists. With
+      // drainRate=0, diffusion must be exactly mass-conservative apart from FP
+      // roundoff, so tiny positive amounts are preserved.
+      if(draining&&next<1e-12)next=0;
       wet[i]=Math.min(capacity,Math.max(0,next));
     }
   }
