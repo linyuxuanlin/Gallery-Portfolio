@@ -5,9 +5,19 @@ export function bindPourPointerInput(element, {
   onMove = () => {},
   onStop = () => {},
   canStart = () => true,
+  windowTarget = globalThis.window,
 } = {}) {
   if (!element?.addEventListener) throw new TypeError('element must support addEventListener');
   const runtime = createPointerInputRuntime();
+
+  const releaseCapture = (pointerId) => {
+    if (!Number.isFinite(pointerId) || !element.releasePointerCapture) return;
+    try {
+      if (!element.hasPointerCapture || element.hasPointerCapture(pointerId)) {
+        element.releasePointerCapture(pointerId);
+      }
+    } catch {}
+  };
 
   const handleDown = (event) => {
     if (!canStart(event)) return;
@@ -27,22 +37,33 @@ export function bindPourPointerInput(element, {
 
   const stopWith = (method, event, reason) => {
     const result = runtime[method](event);
-    if (!result.accepted && !result.stopped) return;
+    if (!result.accepted && !result.stopped) return result;
+    releaseCapture(result.releasedPointerId);
     onStop(event, result.state, reason || result.reason);
+    return result;
   };
 
   const handleUp = (event) => stopWith('pointerUp', event, 'up');
   const handleCancel = (event) => stopWith('pointerCancel', event, 'cancel');
   const handleLostCapture = (event) => stopWith('lostPointerCapture', event, 'lost-capture');
+  const handleWindowEnd = (event) => {
+    if (event?.target === element || event?.composedPath?.().includes?.(element)) return;
+    const state = runtime.snapshot();
+    if (!state.hasActivePointer || event?.pointerId !== state.activePointerId) return;
+    stopWith('pointerCancel', event, 'off-canvas');
+  };
 
   element.addEventListener('pointerdown', handleDown);
   element.addEventListener('pointermove', handleMove);
   element.addEventListener('pointerup', handleUp);
   element.addEventListener('pointercancel', handleCancel);
   element.addEventListener('lostpointercapture', handleLostCapture);
+  windowTarget?.addEventListener?.('pointerup', handleWindowEnd, true);
+  windowTarget?.addEventListener?.('pointercancel', handleWindowEnd, true);
 
   function suspend(reason = 'suspend') {
     const result = runtime.suspend(reason);
+    releaseCapture(result.releasedPointerId);
     if (result.stopped) onStop(null, result.state, reason);
     return result;
   }
@@ -53,6 +74,8 @@ export function bindPourPointerInput(element, {
     element.removeEventListener('pointerup', handleUp);
     element.removeEventListener('pointercancel', handleCancel);
     element.removeEventListener('lostpointercapture', handleLostCapture);
+    windowTarget?.removeEventListener?.('pointerup', handleWindowEnd, true);
+    windowTarget?.removeEventListener?.('pointercancel', handleWindowEnd, true);
     suspend('destroy');
   }
 
