@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { bindLegacyPointerGuard, installLegacyPointerGuard } from '../pour-input-guard.js';
 
 class MockEventTarget {
-  constructor(){ this.listeners = new Map(); }
+  constructor(){ this.listeners = new Map(); this.captured = new Set(); }
   addEventListener(type, fn, capture=false){
     const list=this.listeners.get(type)||[]; list.push({fn,capture:!!capture}); this.listeners.set(type,list);
   }
@@ -10,10 +10,11 @@ class MockEventTarget {
     const list=this.listeners.get(type)||[]; this.listeners.set(type,list.filter(x=>x.fn!==fn||x.capture!==!!capture));
   }
   dispatchEvent(event){ return this.emit(event.type,event); }
+  hasPointerCapture(id){ return this.captured.has(id); }
   emit(type,event={}){
     try { event.type=type; } catch {}
-    event.__stopped=false;
-    if (!event.preventDefault) event.preventDefault=()=>{};
+    event.__stopped=false; event.__prevented=false;
+    if (!event.preventDefault) event.preventDefault=()=>{event.__prevented=true};
     if (!event.stopImmediatePropagation) event.stopImmediatePropagation=()=>{event.__stopped=true};
     const list=this.listeners.get(type)||[];
     for(const phase of [true,false]) for(const {fn,capture} of list){
@@ -28,12 +29,12 @@ class MockRoot extends MockEventTarget {
   querySelector(selector){ return selector==='canvas'?this.canvas:null; }
 }
 
-const el=new MockEventTarget();
+const view=new MockEventTarget(),el=new MockEventTarget();
 let legacyDown=0,legacyMove=0,legacyCancel=0;
 el.addEventListener('pointerdown',()=>legacyDown++);
 el.addEventListener('pointermove',()=>legacyMove++);
 el.addEventListener('pointercancel',()=>legacyCancel++);
-const guard=bindLegacyPointerGuard(el);
+const guard=bindLegacyPointerGuard(el,{view});
 
 el.emit('pointerdown',{pointerId:1,pointerType:'touch',button:0});
 assert.equal(legacyDown,1,'primary pointer should reach page handler');
@@ -56,18 +57,37 @@ assert.equal(guard.snapshot().active,false);
 
 el.emit('pointerdown',{pointerId:4,pointerType:'touch',button:0});
 assert.equal(legacyDown,2);
+view.emit('pointerup',{pointerId:4,pointerType:'touch'});
+assert.equal(guard.snapshot().active,false,'window pointerup must clear pointer if canvas misses release');
+assert.equal(legacyCancel,2,'window fallback must synthesize canvas pointercancel');
+
+el.emit('pointerdown',{pointerId:5,pointerType:'touch',button:0});
+el.emit('pointerleave',{pointerId:5,pointerType:'touch'});
+assert.equal(guard.snapshot().active,false,'touch leaving without capture must cancel');
+assert.equal(legacyCancel,3);
+
+el.emit('pointerdown',{pointerId:6,pointerType:'touch',button:0});
+el.captured.add(6);
+el.emit('pointerleave',{pointerId:6,pointerType:'touch'});
+assert.equal(guard.snapshot().active,true,'touch leaving with capture should stay active');
+el.captured.delete(6);
 assert.equal(guard.suspend(),true,'suspend should cancel active pointer');
-assert.equal(legacyCancel,2,'suspend must reach legacy pointercancel handler');
+assert.equal(legacyCancel,4,'suspend must reach legacy pointercancel handler');
 assert.equal(guard.suspend(),false,'repeated suspend should be idempotent');
+
+for (const type of ['contextmenu','dragstart','selectstart']) {
+  const event={}; el.emit(type,event);
+  assert.equal(event.__prevented,true,`${type} should be prevented on brew canvas`);
+}
 guard.destroy();
 
-const canvas=new MockEventTarget(),view=new MockEventTarget(),root=new MockRoot(canvas,view);
+const canvas=new MockEventTarget(),installView=new MockEventTarget(),root=new MockRoot(canvas,installView);
 let installCancels=0;
 canvas.addEventListener('pointercancel',()=>installCancels++);
 const installed=installLegacyPointerGuard(root);
 canvas.emit('pointerdown',{pointerId:10,pointerType:'touch',button:0});
 assert.equal(installed.snapshot().active,true);
-view.emit('blur',{});
+installView.emit('blur',{});
 assert.equal(installed.snapshot().active,false,'window blur must clear active pointer');
 assert.equal(installCancels,1,'blur should synthesize cancel');
 canvas.emit('pointerdown',{pointerId:11,pointerType:'touch',button:0});
