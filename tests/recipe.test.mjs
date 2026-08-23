@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { activeRecipe, defaultRecipe, forkRecipe, normalizeRecipe, parseRecipe, persistRecipes, readRecipes, recipeStageAtWater, saveRecipe, serializeRecipe, setActiveRecipe } from '../pour-recipe.js';
+const memory=()=>{const map=new Map();return{getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,String(v)),map}};
+const base=defaultRecipe();assert.equal(base.water,250);assert.equal(base.dose,15);assert.equal(base.ratio,16.67);assert.equal(base.stages.length,3);
+const dirty=normalizeRecipe({name:'Test',dose:0,water:20,temperature:120,targetFlow:20,bloomWater:999,bloomSeconds:999,stages:[{name:'A',fromWater:50,toWater:10},{name:'B',fromWater:0,toWater:60,targetFlow:99}]});assert.equal(dirty.dose,1);assert.equal(dirty.water,50);assert.equal(dirty.temperature,100);assert.equal(dirty.targetFlow,10);assert.equal(dirty.bloomWater,22.5);assert.equal(dirty.bloomSeconds,180);assert.equal(dirty.stages.length,1);assert.equal(dirty.stages[0].targetFlow,10);
+assert.equal(recipeStageAtWater(base,20).id,'bloom');assert.equal(recipeStageAtWater(base,100).id,'main');assert.equal(recipeStageAtWater(base,220).id,'finish');
+const fork=forkRecipe(base);assert.equal(fork.parentId,base.id);assert.notEqual(fork.id,base.id);assert(fork.name.includes('Fork'));
+const text=serializeRecipe(base);const parsed=parseRecipe(text);assert.equal(parsed.ok,true);assert.equal(parsed.recipe.water,250);assert.equal(parseRecipe('{broken').reason,'invalid-json');assert.equal(parseRecipe('[]').reason,'unsupported-format');
+const storage=memory();let result=saveRecipe(storage,base);assert.equal(result.ok,true);assert.equal(readRecipes(storage).length,1);assert.equal(setActiveRecipe(storage,base.id),true);assert.equal(activeRecipe(storage).id,base.id);assert.equal(setActiveRecipe(storage,'missing'),false);
+for(let i=0;i<50;i++)saveRecipe(storage,normalizeRecipe({id:`r${i}`,name:`R${i}`,water:200+i}));assert(readRecipes(storage).length<=40);
+const blocked={getItem(){throw new Error('blocked')},setItem(){throw new Error('blocked')}};assert.equal(readRecipes(blocked)[0].id,'recipe-default-v60');assert.equal(persistRecipes(blocked,[base]).ok,false);
+console.log('recipe tests: PASS');
