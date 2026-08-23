@@ -12,6 +12,7 @@ import { installGhostDeviation } from './pour-ghost-deviation.js';
 import { installRecipePanel } from './pour-recipe-panel.js';
 import { installRecipeTraining } from './pour-recipe-training.js';
 import { installRecipeScoring } from './pour-recipe-scoring.js';
+import { installRecipeExecution } from './pour-recipe-execution.js';
 import { installRecipeComparison } from './pour-recipe-compare.js';
 import { suspendAllFlowRuntimes } from './pour-flow-runtime.js';
 import { clearPendingLifecycleBreaks, recordLifecycleBreak } from './pour-replay-breaks.js';
@@ -79,6 +80,7 @@ if (typeof document !== 'undefined') {
   queueMicrotask(() => {
     installReplayBreakPersistence(document, globalThis.localStorage, globalThis.sessionStorage);
     installRecipeScoring(document, globalThis.localStorage);
+    installRecipeExecution(document, globalThis.localStorage);
     installBrewHistory(document, globalThis.localStorage);
     installBrewPortability(document, globalThis.localStorage);
     installBrewInsights(document, globalThis.localStorage);
