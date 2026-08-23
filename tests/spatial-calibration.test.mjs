@@ -1,8 +1,12 @@
 import assert from 'node:assert/strict';
 import {
   POUR_SPATIAL_CALIBRATION,
+  rotatedNozzleLocal,
   kettlePositionForTarget,
   nozzlePositionForTarget,
+  kettlePositionForTargetAtTilt,
+  nozzlePositionForTargetAtTilt,
+  uncompensatedTiltDrift,
   spatialRelationship,
   validateSpatialCalibration,
 } from '../pour-spatial-calibration.js';
@@ -35,9 +39,33 @@ for(const target of [
   close(r.horizontal,rel.horizontal);
 }
 
+const tiltedLocal=rotatedNozzleLocal(c.maxPourTilt);
+assert(tiltedLocal.y>c.nozzleLocalY,'uncompensated negative Z tilt raises the current nozzle tip');
+const drift=uncompensatedTiltDrift(c.maxPourTilt);
+assert(drift.distance>.35,'current long spout should expose meaningful tilt drift without compensation');
+
+const neutralNozzle=nozzlePositionForTarget(center);
+const tiltedKettle=kettlePositionForTargetAtTilt(center,c.maxPourTilt);
+const compensatedNozzle=nozzlePositionForTargetAtTilt(center,c.maxPourTilt);
+assert(tiltedKettle.y<kettle.y,'body must translate down to hold the tilted nozzle at a stable world height');
+close(compensatedNozzle.x,neutralNozzle.x,1e-10);
+close(compensatedNozzle.y,neutralNozzle.y,1e-10);
+close(compensatedNozzle.z,neutralNozzle.z,1e-10);
+
+for(const tilt of [0,-.05,-.085,-.18,c.maxPourTilt]){
+  for(const target of [center,{x:.60,y:c.bedY,z:.20},{x:-.55,y:c.bedY,z:-.25}]){
+    const expected=nozzlePositionForTarget(target);
+    const actual=nozzlePositionForTargetAtTilt(target,tilt);
+    close(actual.x,expected.x,1e-10);
+    close(actual.y,expected.y,1e-10);
+    close(actual.z,expected.z,1e-10);
+  }
+}
+
 const audit=validateSpatialCalibration();
 assert.equal(audit.valid,true);
 assert.equal(audit.checks.length,5);
+assert(audit.checks.every(check=>check.compensatedTiltError<1e-9));
 
 const brokenHeight={...c,kettleBodyY:4.5};
 assert.equal(validateSpatialCalibration(brokenHeight).valid,false);
