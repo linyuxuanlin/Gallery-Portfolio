@@ -3,6 +3,7 @@ import { installBrewHistory, prepareGhostReferenceForBoot } from './pour-brew-hi
 import { installBrewTrend } from './pour-brew-trend-panel.js';
 import { installTrainingPlan } from './pour-training-plan-panel.js';
 import { installReplayVisualization } from './pour-replay-visualization.js';
+import { installGhostDeviation } from './pour-ghost-deviation.js';
 import { suspendAllFlowRuntimes } from './pour-flow-runtime.js';
 
 export function createLifecycleClock(now = () => performance.now()) {
@@ -116,6 +117,7 @@ if (typeof document !== 'undefined') {
   queueMicrotask(() => {
     installBrewInsights(document, globalThis.localStorage);
     installReplayVisualization(document, globalThis.localStorage);
+    installGhostDeviation(document, globalThis.localStorage);
     installBrewHistory(document, globalThis.localStorage);
     installBrewTrend(document, globalThis.localStorage);
     installTrainingPlan(document, globalThis.localStorage);
