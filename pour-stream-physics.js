@@ -1,4 +1,5 @@
-import { POUR_SPATIAL_CALIBRATION, kettlePositionForTarget } from './pour-spatial-calibration.js';
+import { POUR_SPATIAL_CALIBRATION, kettlePositionForTarget, kettlePositionForTargetAtTilt } from './pour-spatial-calibration.js';
+import { activeFlowTilt } from './pour-flow-runtime.js';
 
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 
@@ -103,21 +104,26 @@ export function createStreamMotionRuntime({
   kettleOffset=DEFAULT_KETTLE_OFFSET,
   targetResponseHz=DEFAULT_STREAM_PHYSICS.targetResponseHz,
   kettleResponseHz=DEFAULT_STREAM_PHYSICS.kettleResponseHz,
+  tiltProvider=activeFlowTilt,
 }={}){
   let desired={...point};
   let actual={...point};
   let kettlePos={...kettle};
   const offset={...kettleOffset};
+  const usesSharedCalibration=Math.abs(offset.x-DEFAULT_KETTLE_OFFSET.x)<1e-9&&Math.abs(offset.y-DEFAULT_KETTLE_OFFSET.y)<1e-9&&Math.abs(offset.z-DEFAULT_KETTLE_OFFSET.z)<1e-9;
+  function targetForTilt(){
+    if(!usesSharedCalibration)return{x:actual.x+offset.x,y:actual.y+offset.y,z:actual.z+offset.z};
+    return kettlePositionForTargetAtTilt(actual,Number(tiltProvider?.())||0);
+  }
   return{
     setDesired(next){desired={x:Number(next?.x)||0,y:Number(next?.y)||0,z:Number(next?.z)||0};return this.snapshot()},
-    reset(next=point){desired={...next};actual={...next};kettlePos={x:actual.x+offset.x,y:actual.y+offset.y,z:actual.z+offset.z};return this.snapshot()},
+    reset(next=point){desired={...next};actual={...next};kettlePos=targetForTilt();return this.snapshot()},
     step(dt){
       actual=smoothPoint(actual,desired,dt,targetResponseHz);
-      const kettleTarget={x:actual.x+offset.x,y:actual.y+offset.y,z:actual.z+offset.z};
-      kettlePos=smoothPoint(kettlePos,kettleTarget,dt,kettleResponseHz);
+      kettlePos=smoothPoint(kettlePos,targetForTilt(),dt,kettleResponseHz);
       return this.snapshot();
     },
-    snapshot(){return{desired:{...desired},actual:{...actual},kettle:{...kettlePos}}},
+    snapshot(){return{desired:{...desired},actual:{...actual},kettle:{...kettlePos},tilt:Number(tiltProvider?.())||0}},
   };
 }
 
