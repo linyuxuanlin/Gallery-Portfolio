@@ -48,6 +48,7 @@
 - [x] Recipe JSON / 保存 / Fork / 导入导出与动态总水量训练目标
 - [x] Recipe 分阶段 Coach 与目标流速控制
 - [x] Recipe-aware 评分：按累计水量阶段目标流速重算基础质量并写入 Replay 元数据
+- [x] Recipe-scoped Trend / NEXT SESSION：不同配方的长期趋势与专项挑战完全隔离，切换 Recipe 不再互相污染
 
 ## 下一阶段优先级
 
@@ -61,7 +62,8 @@
 - Recipe A/B 对比与配方执行差异复盘
 
 ### P2 数据能力
-- 将 Recipe ID / 阶段目标与 History 趋势聚合，区分不同配方的长期训练数据
+- [x] History 趋势按 Recipe ID 聚合，区分不同配方的长期训练数据
+- Recipe A/B 的阶段流速 / 覆盖率 / 均匀度 / 轨迹分布对比
 
 ### P3 AI 能力
 - AI Brew Doctor
