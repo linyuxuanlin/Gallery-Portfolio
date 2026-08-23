@@ -15,6 +15,16 @@ export function activeFlowTilt() {
   return Number(activeFlowSnapshot()?.tilt) || 0;
 }
 
+export function setActiveFlowTargetWater(value) {
+  const states = [];
+  for (const runtime of activeFlowRuntimes) {
+    try {
+      states.push(runtime.setTargetWater(value));
+    } catch {}
+  }
+  return states;
+}
+
 export function suspendAllFlowRuntimes() {
   const states = [];
   for (const runtime of activeFlowRuntimes) {
@@ -29,6 +39,7 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
   let actualFlow = 0;
   let targetFlow = Number(controlFlow) || 0;
   let water = 0;
+  let waterTarget = Math.max(1, Number(targetWater) || 250);
   let targetReached = false;
 
   function makeState(inputPouring = false, addedWater = 0) {
@@ -40,6 +51,8 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       streamRadius: streamRadiusForFlow(actualFlow),
       tilt: flowToTilt(actualFlow),
       water,
+      targetWater: waterTarget,
+      progress: Math.min(1, water / waterTarget),
       addedWater,
       inputPouring: Boolean(inputPouring),
       pouring: Boolean(inputPouring) && !targetReached,
@@ -55,16 +68,25 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       targetFlow = Math.max(0, Number(value) || 0);
       return targetFlow;
     },
+    setTargetWater(value) {
+      const next = Math.max(1, Number(value) || waterTarget);
+      waterTarget = next;
+      if (water >= waterTarget - 1e-9) {
+        water = waterTarget;
+        targetReached = true;
+      } else {
+        targetReached = false;
+      }
+      return makeState(false, 0);
+    },
     reset({ water: nextWater = 0, actualFlow: nextFlow = 0, controlFlow: nextControl = targetFlow } = {}) {
-      water = Math.max(0, Math.min(targetWater, Number(nextWater) || 0));
+      water = Math.max(0, Math.min(waterTarget, Number(nextWater) || 0));
       actualFlow = Math.max(0, Number(nextFlow) || 0);
       targetFlow = Math.max(0, Number(nextControl) || 0);
-      targetReached = water >= targetWater - 1e-9;
+      targetReached = water >= waterTarget - 1e-9;
       return makeState(false, 0);
     },
     suspend() {
-      // Hidden/background time must never preserve a pre-suspend stream.
-      // Settle visual momentum immediately without integrating phantom mass.
       actualFlow = 0;
       return makeState(false, 0);
     },
@@ -76,15 +98,15 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
 
       if (!effectivePouring) {
         actualFlow = stepFlow(actualFlow, targetFlow, false, safeDt);
-        const integrated = integrateFlowSegment(water, previousFlow, actualFlow, safeDt, targetWater);
+        const integrated = integrateFlowSegment(water, previousFlow, actualFlow, safeDt, waterTarget);
         water = integrated.water;
-        if (water >= targetWater - 1e-9) targetReached = true;
+        if (water >= waterTarget - 1e-9) targetReached = true;
         return makeState(inputPouring, integrated.added);
       }
 
       const fullFrameFlow = stepFlow(actualFlow, targetFlow, true, safeDt);
-      const fullFrame = integrateFlowSegment(water, previousFlow, fullFrameFlow, safeDt, targetWater);
-      const remainingMass = Math.max(0, targetWater - water);
+      const fullFrame = integrateFlowSegment(water, previousFlow, fullFrameFlow, safeDt, waterTarget);
+      const remainingMass = Math.max(0, waterTarget - water);
 
       if (fullFrame.added + 1e-12 < remainingMass) {
         actualFlow = fullFrameFlow;
@@ -105,9 +127,9 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       const releaseDt = safeDt - crossingDt;
       const flowAtCrossing = stepFlow(previousFlow, targetFlow, true, crossingDt);
       actualFlow = stepFlow(flowAtCrossing, targetFlow, false, releaseDt);
-      water = targetWater;
+      water = waterTarget;
       targetReached = true;
-      return makeState(inputPouring, Math.max(0, targetWater - previousWater));
+      return makeState(inputPouring, Math.max(0, waterTarget - previousWater));
     },
     snapshot(inputPouring = false) {
       return makeState(inputPouring, 0);
