@@ -32,19 +32,22 @@ export function applyRecipeToTraining(recipe,doc=globalThis.document) {
   return {applied:states.length>0,targetWater:recipe.water,targetFlow:recipe.targetFlow};
 }
 
+function currentMode(doc){return doc?.getElementById?.('modeLabel')?.textContent||''}
 function shouldOwnCoach(doc){
   const pause=doc?.getElementById?.('pauseMetric');
   if(pause?.classList?.contains?.('show')) return false;
-  const mode=doc?.getElementById?.('modeLabel')?.textContent||'';
-  return !/REPLAY|GHOST/i.test(mode);
+  return !/REPLAY|GHOST/i.test(currentMode(doc));
 }
 
 function paintRecipeTraining(doc,recipe,snapshot){
   const state=recipeTrainingState(recipe,snapshot);
-  const bar=doc.getElementById('bar');
-  if(bar) bar.style.width=`${Math.min(100,state.progress*100)}%`;
+  const modeText=currentMode(doc);
+  if(!/REPLAY/i.test(modeText)){
+    const bar=doc.getElementById('bar');
+    if(bar) bar.style.width=`${Math.min(100,state.progress*100)}%`;
+  }
   const mode=doc.getElementById('modeLabel');
-  if(mode&&!/REPLAY|GHOST/i.test(mode.textContent||'')) mode.textContent=`${recipe.name} · ${recipe.dose}g:${recipe.water}g`;
+  if(mode&&!/REPLAY|GHOST/i.test(modeText)) mode.textContent=`${recipe.name} · ${recipe.dose}g:${recipe.water}g`;
   if(shouldOwnCoach(doc)){
     const phase=doc.getElementById('phase'),coach=doc.getElementById('coach');
     if(phase) phase.textContent=state.phase;
