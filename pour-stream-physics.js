@@ -1,3 +1,5 @@
+import { POUR_SPATIAL_CALIBRATION, kettlePositionForTarget } from './pour-spatial-calibration.js';
+
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 
 export const DEFAULT_STREAM_PHYSICS=Object.freeze({
@@ -15,6 +17,14 @@ export const DEFAULT_STREAM_PHYSICS=Object.freeze({
   streamPointEpsilon:.012,
   streamFlowEpsilon:.08,
   streamRadiusEpsilon:.0012,
+});
+
+const DEFAULT_POINT=Object.freeze({x:0,y:POUR_SPATIAL_CALIBRATION.bedY,z:0});
+const DEFAULT_KETTLE=Object.freeze(kettlePositionForTarget(DEFAULT_POINT));
+const DEFAULT_KETTLE_OFFSET=Object.freeze({
+  x:DEFAULT_KETTLE.x-DEFAULT_POINT.x,
+  y:DEFAULT_KETTLE.y-DEFAULT_POINT.y,
+  z:DEFAULT_KETTLE.z-DEFAULT_POINT.z,
 });
 
 export function streamDownVelocityForFlow(flow,options={}){
@@ -88,9 +98,9 @@ export function pointDistance(a,b){
 }
 
 export function createStreamMotionRuntime({
-  point={x:0,y:1.18,z:0},
-  kettle={x:1.72,y:3.15,z:.08},
-  kettleOffset={x:1.72,y:1.97,z:.08},
+  point=DEFAULT_POINT,
+  kettle=DEFAULT_KETTLE,
+  kettleOffset=DEFAULT_KETTLE_OFFSET,
   targetResponseHz=DEFAULT_STREAM_PHYSICS.targetResponseHz,
   kettleResponseHz=DEFAULT_STREAM_PHYSICS.kettleResponseHz,
 }={}){
