@@ -27,6 +27,7 @@
 - [x] Brew Analysis：流速稳定、落点停留、外圈暴露、中圈利用、路径等诊断
 - [x] Brew Analysis 结果页与 NEXT BREW 可执行建议
 - [x] Replay Map：粉床轨迹热力图、真实路径与 ≥0.5s 暂停节点可视化
+- [x] 粉床热点回放：按累计水量构建冲刷热力图、检测局部/外圈热点，并跳过 lifecycle break
 - [x] Brew History：最近 30 杯持久化、去重排序、BEST 标记、任意历史杯设为 Ghost 参考
 - [x] Brew History storage quota / 私密模式容错、轨迹压缩与自动降级
 - [x] Ghost reference 按 History ID 持久化，启动时瞬时兼容旧主页面读取，避免重复长期存储 Replay
@@ -42,7 +43,6 @@
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
 
 ### P1 核心训练体验
-- 粉床热点回放
 - History 支持指定杯不刷新页面直接进入 Ghost
 - 专项挑战连续 2 杯达标模式与训练 streak
 - 专项结果页显示“前一杯 → 本杯”的指标变化
