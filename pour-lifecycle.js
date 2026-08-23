@@ -2,6 +2,7 @@ import { installBrewInsights } from './pour-brew-insights.js';
 import { installBrewHistory, prepareGhostReferenceForBoot } from './pour-brew-history.js';
 import { installBrewTrend } from './pour-brew-trend-panel.js';
 import { installTrainingPlan } from './pour-training-plan-panel.js';
+import { suspendAllFlowRuntimes } from './pour-flow-runtime.js';
 
 export function createLifecycleClock(now = () => performance.now()) {
   let startedAt = 0;
@@ -72,8 +73,9 @@ export function createPageLifecycleController({
     suspended = true;
     suspendedAt = at;
     clock?.pause?.(at);
-    onSuspend({ reason, at });
-    return { changed: true, suspended, reason, at };
+    const flowStates = suspendAllFlowRuntimes();
+    onSuspend({ reason, at, flowStates });
+    return { changed: true, suspended, reason, at, flowStates };
   }
 
   function resume(reason = 'visible', at = now()) {
