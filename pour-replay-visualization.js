@@ -18,9 +18,12 @@ export function buildReplayHeatmap(samples, {
   const pauses = [];
   const src = Array.isArray(samples) ? samples : [];
   let max = 0;
+  let segment = 0;
 
   for (let i = 0; i < src.length; i++) {
     const sample = src[i];
+    const breakBefore = sample?.breakBefore === true;
+    if (breakBefore) segment++;
     const x = finite(sample?.x);
     const z = finite(sample?.z);
     const flow = Math.max(0, finite(sample?.flow));
@@ -28,12 +31,12 @@ export function buildReplayHeatmap(samples, {
     const t = Math.max(0, finite(sample?.t));
     const water = Math.max(0, finite(sample?.water));
 
-    path.push({ x, z, t, water, flow, pouring });
+    path.push({ x, z, t, water, flow, pouring, breakBefore, segment });
 
     if (!pouring) {
       const previous = pauses.at(-1);
-      if (!previous || previous.endIndex !== i - 1) {
-        pauses.push({ startIndex: i, endIndex: i, startT: t, endT: t, x, z, water });
+      if (!previous || previous.endIndex !== i - 1 || breakBefore) {
+        pauses.push({ startIndex: i, endIndex: i, startT: t, endT: t, x, z, water, segment });
       } else {
         previous.endIndex = i;
         previous.endT = t;
@@ -68,10 +71,10 @@ export function buildReplayHeatmap(samples, {
   }
 
   const pauseSegments = pauses
-    .map(segment => ({ ...segment, duration: Math.max(0, segment.endT - segment.startT) }))
-    .filter(segment => segment.duration >= 500);
+    .map(item => ({ ...item, duration: Math.max(0, item.endT - item.startT) }))
+    .filter(item => item.duration >= 500);
 
-  return { size: gridSize, radius, grid, max, path, pauses: pauseSegments };
+  return { size: gridSize, radius, grid, max, path, pauses: pauseSegments, breakCount: segment };
 }
 
 export function replayVisualizationSummary(model) {
@@ -99,6 +102,7 @@ export function replayVisualizationSummary(model) {
     maxRadius,
     outerShare,
     pauseCount: model.pauses.length,
+    breakCount: model.breakCount || 0,
   };
 }
 
@@ -161,7 +165,8 @@ function drawModel(canvas, model) {
     active.forEach((point, index) => {
       const x = cx + (point.x / model.radius) * r;
       const y = cy + (point.z / model.radius) * r;
-      if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      const previous = active[index - 1];
+      if (index === 0 || point.segment !== previous?.segment) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.strokeStyle = 'rgba(167,223,176,.9)';
     ctx.lineWidth = 2;
@@ -193,14 +198,14 @@ export function renderReplayVisualization(doc = globalThis.document, storage = g
   const model = buildReplayHeatmap(replay.samples);
   const summary = replayVisualizationSummary(model);
   drawModel(doc.getElementById('replayVizCanvas'), model);
-  doc.getElementById('replayVizMeta').textContent = `${model.path.length} 点 · ${model.pauses.length} 次暂停`;
+  doc.getElementById('replayVizMeta').textContent = `${model.path.length} 点 · ${model.pauses.length} 次暂停${model.breakCount ? ` · ${model.breakCount} 次中断` : ''}`;
   const copy = doc.getElementById('replayVizCopy');
   copy.replaceChildren();
   const title = doc.createElement('b');
   title.textContent = summary.headline;
   const detail = doc.createElement('div');
   detail.textContent = summary.valid
-    ? `平均半径 ${Math.round(summary.meanRadius / model.radius * 100)}% · 外圈占比 ${Math.round(summary.outerShare * 100)}% · 黄色点为 ≥0.5s 暂停`
+    ? `平均半径 ${Math.round(summary.meanRadius / model.radius * 100)}% · 外圈占比 ${Math.round(summary.outerShare * 100)}% · 黄色点为 ≥0.5s 暂停${model.breakCount ? ' · 系统中断处轨迹已断开' : ''}`
     : '完成一杯后显示轨迹热力图';
   copy.append(title, detail);
   panel.classList.add('show');
