@@ -1,5 +1,17 @@
 import { stepFlow, flowToTilt, streamRadiusForFlow, integrateFlowSegment } from './pour-flow-physics.js';
 
+const activeFlowRuntimes = new Set();
+
+export function suspendAllFlowRuntimes() {
+  const states = [];
+  for (const runtime of activeFlowRuntimes) {
+    try {
+      states.push(runtime.suspend());
+    } catch {}
+  }
+  return states;
+}
+
 export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
   let actualFlow = 0;
   let targetFlow = Number(controlFlow) || 0;
@@ -25,7 +37,7 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
     };
   }
 
-  return {
+  const runtime = {
     setControlFlow(value) {
       targetFlow = Math.max(0, Number(value) || 0);
       return targetFlow;
@@ -38,10 +50,8 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
       return makeState(false, 0);
     },
     suspend() {
-      // Page lifecycle suspension freezes the training timeline. Carrying a
-      // pre-suspend residual stream into the first visible frame would create
-      // a phantom tail after unlock/background recovery. Settle the visual
-      // stream immediately without integrating hidden-time water.
+      // Hidden/background time must never preserve a pre-suspend stream.
+      // Settle visual momentum immediately without integrating phantom mass.
       actualFlow = 0;
       return makeState(false, 0);
     },
@@ -89,5 +99,11 @@ export function createFlowRuntime({ controlFlow = 5, targetWater = 250 } = {}) {
     snapshot(inputPouring = false) {
       return makeState(inputPouring, 0);
     },
+    dispose() {
+      activeFlowRuntimes.delete(runtime);
+    },
   };
+
+  activeFlowRuntimes.add(runtime);
+  return runtime;
 }
