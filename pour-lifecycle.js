@@ -6,6 +6,7 @@ import { installReplayVisualization } from './pour-replay-visualization.js';
 import { installGhostDeviation } from './pour-ghost-deviation.js';
 import { suspendAllFlowRuntimes } from './pour-flow-runtime.js';
 import { clearPendingLifecycleBreaks, recordLifecycleBreak } from './pour-replay-breaks.js';
+import { installReplayBreakPersistence } from './pour-replay-break-persistence.js';
 
 export function createLifecycleClock(now = () => performance.now()) {
   let startedAt = 0;
@@ -132,6 +133,7 @@ if (bootGhostReference.prepared) queueMicrotask(() => bootGhostReference.cleanup
 
 if (typeof document !== 'undefined') {
   queueMicrotask(() => {
+    installReplayBreakPersistence(document, globalThis.localStorage, globalThis.sessionStorage);
     installBrewHistory(document, globalThis.localStorage);
     installBrewInsights(document, globalThis.localStorage);
     installReplayVisualization(document, globalThis.localStorage);
