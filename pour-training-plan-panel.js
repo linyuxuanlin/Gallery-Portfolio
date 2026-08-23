@@ -1,11 +1,11 @@
 import { persistLatestBrew } from './pour-brew-history.js';
 import { chooseTrainingPlan, trainingPlanSummary } from './pour-training-plan.js';
-import { advanceTrainingChallenge, challengeSummary, restoreChallenge, saveChallenge } from './pour-training-progress.js';
+import { DEFAULT_REQUIRED_PASSES, advanceTrainingChallenge, challengeSummary, restoreChallenge, saveChallenge } from './pour-training-progress.js';
 
 function ensureStyle(doc){
   if(doc.getElementById('pourTrainingPlanStyle'))return;
   const s=doc.createElement('style');s.id='pourTrainingPlanStyle';
-  s.textContent='.training-plan{display:none;margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0003}.training-plan.show{display:block}.training-plan-head{display:flex;justify-content:space-between;gap:8px;font-size:10px}.training-plan-body{display:grid;gap:4px;margin-top:6px;font-size:9px;color:var(--muted)}.training-plan-goal{color:var(--good);font-weight:700}.training-plan-pass{color:var(--good);font-weight:800}.training-plan-fail{color:var(--warn);font-weight:700}.training-plan-cue{padding-top:3px;border-top:1px solid var(--line)}';
+  s.textContent='.training-plan{display:none;margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0003}.training-plan.show{display:block}.training-plan-head{display:flex;justify-content:space-between;gap:8px;font-size:10px}.training-plan-body{display:grid;gap:4px;margin-top:6px;font-size:9px;color:var(--muted)}.training-plan-goal{color:var(--good);font-weight:700}.training-plan-pass{color:var(--good);font-weight:800}.training-plan-fail{color:var(--warn);font-weight:700}.training-plan-cue{padding-top:3px;border-top:1px solid var(--line)}.training-plan-streak{display:inline-flex;gap:4px;align-items:center}.training-plan-dot{width:7px;height:7px;border-radius:50%;border:1px solid var(--line);background:#fff1}.training-plan-dot.on{background:var(--good);border-color:var(--good)}';
   doc.head.appendChild(s);
 }
 
@@ -26,12 +26,25 @@ function appendLines(doc,body,lines,{goalIndex=-1,status=null}={}){
 
 function pct(v){return `${Math.round(Number(v||0)*100)}%`}
 
+function appendStreak(doc,body,challenge){
+  if(!challenge)return;
+  const needed=Math.max(1,challenge.requiredPasses||DEFAULT_REQUIRED_PASSES);
+  const streak=Math.min(needed,challenge.consecutivePasses||0);
+  const row=doc.createElement('div');row.className='training-plan-streak';
+  const label=doc.createElement('span');label.textContent='连续达标';row.appendChild(label);
+  for(let i=0;i<needed;i++){
+    const dot=doc.createElement('i');dot.className=`training-plan-dot${i<streak?' on':''}`;row.appendChild(dot);
+  }
+  const count=doc.createElement('span');count.textContent=`${streak}/${needed}`;row.appendChild(count);body.appendChild(row);
+}
+
 export function renderTrainingPlan(doc=globalThis.document,storage=globalThis.localStorage){
   const p=ensurePanel(doc);if(!p)return {rendered:false};
   const history=persistLatestBrew(storage);
   const latest=history[0]||null;
   const current=restoreChallenge(storage);
-  const transition=advanceTrainingChallenge(history,current,latest,{requiredPasses:1,window:8});
+  const requiredPasses=current?.requiredPasses||DEFAULT_REQUIRED_PASSES;
+  const transition=advanceTrainingChallenge(history,current,latest,{requiredPasses,window:8});
   saveChallenge(transition.challenge,storage);
   p.replaceChildren();
 
@@ -43,21 +56,27 @@ export function renderTrainingPlan(doc=globalThis.document,storage=globalThis.lo
   const title=doc.createElement('b');
   if(transition.status==='graduated-next') title.textContent=`已晋级 · ${transition.challenge.title}`;
   else if(transition.status==='graduated-maintain') title.textContent='专项毕业 · 综合稳定';
-  else title.textContent=transition.challenge?.title||(fallbackPlan?.mode==='maintenance'?'综合稳定训练':'专项训练');
+  else if(transition.challenge) title.textContent=`${transition.challenge.title} · 连续 ${transition.challenge.requiredPasses||DEFAULT_REQUIRED_PASSES} 杯`;
+  else title.textContent=fallbackPlan?.mode==='maintenance'?'综合稳定训练':'专项训练';
   h.append(label,title);p.appendChild(h);
 
   const body=doc.createElement('div');body.className='training-plan-body';
   if(transition.status==='graduated-next'||transition.status==='graduated-maintain'){
     const old=current;
-    appendLines(doc,body,[`${old?.title||'专项'}达标 ✅ · ${pct(transition.evaluation?.value)}`],{status:'pass'});
+    const evalValue=transition.evaluation?.value;
+    const previous=transition.evaluation?.previousValue;
+    appendLines(doc,body,[`${old?.title||'专项'}连续达标 ✅ · ${pct(evalValue)}`],{status:'pass'});
+    if(previous!==null&&previous!==undefined){appendLines(doc,body,[`上一杯 ${pct(previous)} → 本杯 ${pct(evalValue)}`]);}
     if(transition.challenge){
-      appendLines(doc,body,[`下一专项：${transition.challenge.title}`,transition.challenge.targetText,transition.challenge.cue],{goalIndex:1});
+      appendLines(doc,body,[`下一专项：${transition.challenge.title}`,transition.challenge.targetText,`新专项同样需连续 ${transition.challenge.requiredPasses||DEFAULT_REQUIRED_PASSES} 杯达标`,transition.challenge.cue],{goalIndex:1});
+      appendStreak(doc,body,transition.challenge);
     }else{
       appendLines(doc,body,['进入综合稳定训练','保持已达标能力，同时降低整杯波动。'],{goalIndex:0});
     }
   }else if(transition.challenge){
     const summary=challengeSummary(transition.challenge,transition.evaluation);
     appendLines(doc,body,summary,{goalIndex:1,status:transition.evaluation?.applicable?(transition.evaluation.passed?'pass':'fail'):null});
+    appendStreak(doc,body,transition.challenge);
     const cue=doc.createElement('div');cue.className='training-plan-cue';cue.textContent=transition.challenge.cue;body.appendChild(cue);
   }else if(fallbackPlan?.valid){
     appendLines(doc,body,trainingPlanSummary(fallbackPlan),{goalIndex:fallbackPlan.mode==='focus'?1:-1});
