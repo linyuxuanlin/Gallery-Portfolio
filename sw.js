@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'pour-lab-v13';
+const CACHE_VERSION = 'pour-lab-v14';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
@@ -35,6 +35,7 @@ const APP_SHELL = [
   './pour-training-progress.js',
   './pour-training-plan-panel.js',
   './pour-replay-visualization.js',
+  './pour-bed-hotspots.js',
   './pour-ghost-deviation.js',
 ];
 
