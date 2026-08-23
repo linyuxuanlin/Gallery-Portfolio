@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'pour-lab-v12';
+const CACHE_VERSION = 'pour-lab-v13';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
@@ -20,6 +20,8 @@ const APP_SHELL = [
   './pour-stream-mesh.js',
   './pour-stream-three.js',
   './pour-lifecycle.js',
+  './pour-replay-breaks.js',
+  './pour-replay-break-persistence.js',
   './pour-input-runtime.js',
   './pour-input-bindings.js',
   './pour-input-guard.js',
