@@ -3,6 +3,7 @@ import { installBrewHistory, prepareGhostReferenceForBoot } from './pour-brew-hi
 import { installBrewPortability } from './pour-brew-portability.js';
 import { installBrewTrend } from './pour-brew-trend-panel.js';
 import { installTrainingPlan } from './pour-training-plan-panel.js';
+import { installTrainingPeriod } from './pour-training-period.js';
 import { installReplayVisualization } from './pour-replay-visualization.js';
 import { installReplayPlayback } from './pour-replay-playback.js';
 import { installBedHotspots } from './pour-bed-hotspots.js';
@@ -81,6 +82,7 @@ if (typeof document !== 'undefined') {
     installGhostDeviation(document, globalThis.localStorage);
     installBrewTrend(document, globalThis.localStorage);
     installTrainingPlan(document, globalThis.localStorage);
+    installTrainingPeriod(document, globalThis.localStorage);
   });
   if (document.readyState === 'complete') registerPourServiceWorker();
   else addEventListener('load', () => registerPourServiceWorker(), { once: true });
