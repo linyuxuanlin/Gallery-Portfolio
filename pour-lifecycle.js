@@ -5,6 +5,7 @@ import { installTrainingPlan } from './pour-training-plan-panel.js';
 import { installReplayVisualization } from './pour-replay-visualization.js';
 import { installGhostDeviation } from './pour-ghost-deviation.js';
 import { suspendAllFlowRuntimes } from './pour-flow-runtime.js';
+import { clearPendingLifecycleBreaks, recordLifecycleBreak } from './pour-replay-breaks.js';
 
 export function createLifecycleClock(now = () => performance.now()) {
   let startedAt = 0;
@@ -66,12 +67,19 @@ export function createPageLifecycleController({
   onSuspend = () => {},
   onResume = () => {},
   now = () => performance.now(),
+  breakStorage = globalThis.sessionStorage,
 } = {}) {
   let suspended = false;
   let suspendedAt = 0;
+  let suspendedElapsed = null;
+  let suspendReason = 'hidden';
+  clearPendingLifecycleBreaks(breakStorage);
 
   function suspend(reason = 'hidden', at = now()) {
     if (suspended) return { changed: false, suspended, reason, at: suspendedAt };
+    const before = clock?.snapshot?.(at);
+    suspendedElapsed = before?.running ? before.elapsed : null;
+    suspendReason = reason;
     suspended = true;
     suspendedAt = at;
     clock?.pause?.(at);
@@ -85,6 +93,15 @@ export function createPageLifecycleController({
     const hiddenMs = Math.max(0, at - suspendedAt);
     suspended = false;
     clock?.resume?.(at);
+    if (suspendedElapsed !== null) {
+      recordLifecycleBreak({
+        t: suspendedElapsed,
+        hiddenMs,
+        reason: suspendReason,
+        recordedAt: Date.now(),
+      }, breakStorage);
+    }
+    suspendedElapsed = null;
     onResume({ reason, at, hiddenMs });
     return { changed: true, suspended, reason, at, hiddenMs };
   }
@@ -115,10 +132,10 @@ if (bootGhostReference.prepared) queueMicrotask(() => bootGhostReference.cleanup
 
 if (typeof document !== 'undefined') {
   queueMicrotask(() => {
+    installBrewHistory(document, globalThis.localStorage);
     installBrewInsights(document, globalThis.localStorage);
     installReplayVisualization(document, globalThis.localStorage);
     installGhostDeviation(document, globalThis.localStorage);
-    installBrewHistory(document, globalThis.localStorage);
     installBrewTrend(document, globalThis.localStorage);
     installTrainingPlan(document, globalThis.localStorage);
   });
