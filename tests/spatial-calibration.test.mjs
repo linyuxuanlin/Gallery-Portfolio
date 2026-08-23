@@ -12,14 +12,15 @@ const center={x:0,y:c.bedY,z:0};
 const kettle=kettlePositionForTarget(center);
 const nozzle=nozzlePositionForTarget(center);
 const rel=spatialRelationship(center);
+const close=(actual,expected,epsilon=1e-12)=>assert(Math.abs(actual-expected)<epsilon,`${actual} ≉ ${expected}`);
 
-assert.equal(kettle.x,1.72);
-assert.equal(kettle.y,3.15);
-assert.equal(kettle.z,.08);
-assert.equal(nozzle.x,.42);
-assert.equal(nozzle.y,3.35);
-assert.equal(nozzle.z,.08);
-assert(Math.abs(rel.clearance-2.17)<1e-12);
+close(kettle.x,1.72);
+close(kettle.y,3.15);
+close(kettle.z,.08);
+close(nozzle.x,.42);
+close(nozzle.y,3.35);
+close(nozzle.z,.08);
+close(rel.clearance,2.17);
 assert(rel.horizontal>.4&&rel.horizontal<.45);
 
 for(const target of [
@@ -30,8 +31,8 @@ for(const target of [
   {x:.49,y:c.bedY,z:.49},
 ]){
   const r=spatialRelationship(target);
-  assert(Math.abs(r.clearance-rel.clearance)<1e-12,'nozzle height above bed must not drift with target');
-  assert(Math.abs(r.horizontal-rel.horizontal)<1e-12,'horizontal nozzle-to-target relationship must remain invariant');
+  close(r.clearance,rel.clearance);
+  close(r.horizontal,rel.horizontal);
 }
 
 const audit=validateSpatialCalibration();
