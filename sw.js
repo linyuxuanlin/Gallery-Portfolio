@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'pour-lab-v14';
+const CACHE_VERSION = 'pour-lab-v15';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
@@ -16,6 +16,7 @@ const APP_SHELL = [
   './pour-flow-physics.js',
   './pour-flow-runtime.js',
   './pour-bed-physics.js',
+  './pour-spatial-calibration.js',
   './pour-stream-physics.js',
   './pour-stream-mesh.js',
   './pour-stream-three.js',
