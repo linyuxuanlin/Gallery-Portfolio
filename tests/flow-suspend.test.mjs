@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createFlowRuntime } from '../pour-flow-runtime.js';
+import { createFlowRuntime, suspendAllFlowRuntimes } from '../pour-flow-runtime.js';
 
 const rt = createFlowRuntime({ controlFlow: 6, targetWater: 250 });
 let state;
@@ -23,6 +23,17 @@ const resumedPour = rt.step(1 / 60, true);
 assert.ok(resumedPour.actualFlow > 0, 'new input should ramp from rest after suspension');
 assert.ok(resumedPour.actualFlow < 1, 'new input must not inherit the old pre-suspend momentum');
 
+const registered = createFlowRuntime({ controlFlow: 7, targetWater: 250 });
+for (let i = 0; i < 90; i++) state = registered.step(1 / 60, true);
+const registeredWater = state.water;
+const allStates = suspendAllFlowRuntimes();
+assert.ok(allStates.length >= 2, 'all active runtimes should participate in lifecycle settlement');
+state = registered.snapshot(false);
+assert.equal(state.actualFlow, 0, 'registry settlement must clear active flow');
+assert.equal(state.water, registeredWater, 'registry settlement must preserve scale water');
+registered.dispose();
+rt.dispose();
+
 const capped = createFlowRuntime({ controlFlow: 8, targetWater: 1 });
 let hit;
 for (let i = 0; i < 300; i++) {
@@ -37,5 +48,6 @@ assert.equal(cappedSuspend.actualFlow, 0);
 assert.equal(cappedSuspend.tailActive, false);
 assert.equal(cappedSuspend.settled, true);
 assert.equal(cappedSuspend.complete, true, 'suspending after target should settle completion without extra mass');
+capped.dispose();
 
 console.log('flow suspend regression: PASS');
