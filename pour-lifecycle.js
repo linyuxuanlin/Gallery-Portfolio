@@ -11,6 +11,7 @@ import { installBedHotspots } from './pour-bed-hotspots.js';
 import { installGhostDeviation } from './pour-ghost-deviation.js';
 import { installRecipePanel } from './pour-recipe-panel.js';
 import { installRecipeTraining } from './pour-recipe-training.js';
+import { installRecipeScoring } from './pour-recipe-scoring.js';
 import { suspendAllFlowRuntimes } from './pour-flow-runtime.js';
 import { clearPendingLifecycleBreaks, recordLifecycleBreak } from './pour-replay-breaks.js';
 import { installReplayBreakPersistence } from './pour-replay-break-persistence.js';
@@ -76,6 +77,7 @@ if (bootGhostReference.prepared) queueMicrotask(() => bootGhostReference.cleanup
 if (typeof document !== 'undefined') {
   queueMicrotask(() => {
     installReplayBreakPersistence(document, globalThis.localStorage, globalThis.sessionStorage);
+    installRecipeScoring(document, globalThis.localStorage);
     installBrewHistory(document, globalThis.localStorage);
     installBrewPortability(document, globalThis.localStorage);
     installBrewInsights(document, globalThis.localStorage);
