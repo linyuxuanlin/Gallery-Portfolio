@@ -2,6 +2,19 @@ import { stepFlow, flowToTilt, streamRadiusForFlow, integrateFlowSegment } from 
 
 const activeFlowRuntimes = new Set();
 
+export function activeFlowSnapshot() {
+  for (const runtime of activeFlowRuntimes) {
+    try {
+      return runtime.snapshot(false);
+    } catch {}
+  }
+  return null;
+}
+
+export function activeFlowTilt() {
+  return Number(activeFlowSnapshot()?.tilt) || 0;
+}
+
 export function suspendAllFlowRuntimes() {
   const states = [];
   for (const runtime of activeFlowRuntimes) {
