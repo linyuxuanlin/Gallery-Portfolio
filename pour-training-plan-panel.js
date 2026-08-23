@@ -1,11 +1,12 @@
 import { persistLatestBrew } from './pour-brew-history.js';
 import { chooseTrainingPlan, trainingPlanSummary } from './pour-training-plan.js';
 import { DEFAULT_REQUIRED_PASSES, advanceTrainingChallenge, challengeSummary, restoreChallenge, saveChallenge } from './pour-training-progress.js';
+import { recordTrainingTransition, trainingHistorySummary } from './pour-training-history.js';
 
 function ensureStyle(doc){
   if(doc.getElementById('pourTrainingPlanStyle'))return;
   const s=doc.createElement('style');s.id='pourTrainingPlanStyle';
-  s.textContent='.training-plan{display:none;margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0003}.training-plan.show{display:block}.training-plan-head{display:flex;justify-content:space-between;gap:8px;font-size:10px}.training-plan-body{display:grid;gap:4px;margin-top:6px;font-size:9px;color:var(--muted)}.training-plan-goal{color:var(--good);font-weight:700}.training-plan-pass{color:var(--good);font-weight:800}.training-plan-fail{color:var(--warn);font-weight:700}.training-plan-cue{padding-top:3px;border-top:1px solid var(--line)}.training-plan-streak{display:inline-flex;gap:4px;align-items:center}.training-plan-dot{width:7px;height:7px;border-radius:50%;border:1px solid var(--line);background:#fff1}.training-plan-dot.on{background:var(--good);border-color:var(--good)}';
+  s.textContent='.training-plan{display:none;margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#0003}.training-plan.show{display:block}.training-plan-head{display:flex;justify-content:space-between;gap:8px;font-size:10px}.training-plan-body{display:grid;gap:4px;margin-top:6px;font-size:9px;color:var(--muted)}.training-plan-goal{color:var(--good);font-weight:700}.training-plan-pass{color:var(--good);font-weight:800}.training-plan-fail{color:var(--warn);font-weight:700}.training-plan-cue{padding-top:3px;border-top:1px solid var(--line)}.training-plan-streak{display:inline-flex;gap:4px;align-items:center}.training-plan-dot{width:7px;height:7px;border-radius:50%;border:1px solid var(--line);background:#fff1}.training-plan-dot.on{background:var(--good);border-color:var(--good)}.training-plan-archive{margin-top:4px;padding-top:6px;border-top:1px solid var(--line);font-size:8px;color:var(--muted);line-height:1.45}.training-plan-archive b{color:var(--text)}';
   doc.head.appendChild(s);
 }
 
@@ -38,6 +39,15 @@ function appendStreak(doc,body,challenge){
   const count=doc.createElement('span');count.textContent=`${streak}/${needed}`;row.appendChild(count);body.appendChild(row);
 }
 
+function appendArchive(doc,body,archive){
+  if(!archive?.attempts)return;
+  const row=doc.createElement('div');row.className='training-plan-archive';
+  const title=doc.createElement('b');title.textContent='TRAINING LOG';
+  const copy=doc.createElement('span');
+  copy.textContent=` · ${archive.attempts} 杯验收 · 达标 ${Math.round(archive.passRate*100)}% · 当前连胜 ${archive.currentStreak} · 最长 ${archive.bestStreak} · 专项毕业 ${archive.graduates} · 活跃 ${archive.activeDays} 天`;
+  row.append(title,copy);body.appendChild(row);
+}
+
 export function renderTrainingPlan(doc=globalThis.document,storage=globalThis.localStorage){
   const p=ensurePanel(doc);if(!p)return {rendered:false};
   const history=persistLatestBrew(storage);
@@ -46,10 +56,12 @@ export function renderTrainingPlan(doc=globalThis.document,storage=globalThis.lo
   const requiredPasses=current?.requiredPasses||DEFAULT_REQUIRED_PASSES;
   const transition=advanceTrainingChallenge(history,current,latest,{requiredPasses,window:8});
   saveChallenge(transition.challenge,storage);
+  recordTrainingTransition(storage,transition);
+  const archive=trainingHistorySummary(storage);
   p.replaceChildren();
 
   const fallbackPlan=transition.nextPlan||chooseTrainingPlan(history,{window:8});
-  if(!transition.challenge&&!fallbackPlan?.valid){p.classList.remove('show');return {rendered:false,transition,plan:fallbackPlan}}
+  if(!transition.challenge&&!fallbackPlan?.valid){p.classList.remove('show');return {rendered:false,transition,plan:fallbackPlan,archive}}
 
   const h=doc.createElement('div');h.className='training-plan-head';
   const label=doc.createElement('span');label.textContent='NEXT SESSION';
@@ -81,9 +93,10 @@ export function renderTrainingPlan(doc=globalThis.document,storage=globalThis.lo
   }else if(fallbackPlan?.valid){
     appendLines(doc,body,trainingPlanSummary(fallbackPlan),{goalIndex:fallbackPlan.mode==='focus'?1:-1});
   }
+  appendArchive(doc,body,archive);
   p.appendChild(body);p.classList.add('show');
   doc.__pourTrainingPlanLastTransition=transition;
-  return {rendered:true,transition,challenge:transition.challenge,plan:fallbackPlan};
+  return {rendered:true,transition,challenge:transition.challenge,plan:fallbackPlan,archive};
 }
 
 export function installTrainingPlan(doc=globalThis.document,storage=globalThis.localStorage){
