@@ -11,6 +11,7 @@
 - [x] Brew Replay
 - [x] Ghost Pour 按累计水量同步
 - [x] Ghost 暂停节奏识别与评分
+- [x] Ghost 轨迹/流速偏差时间线与最差水量区段定位
 - [x] 分项评分：轨迹 / 流速 / 节奏 / 粉床
 - [x] actualFlow runtime、流量惯性、壶身倾角、250g 锁存与尾流状态机
 - [x] 2 / 4 / 6 / 8 g/s 启动、收水、水柱半径与 flow-aware 弹道校准
@@ -41,7 +42,6 @@
 - 恢复后 Replay 首样本显式记录 `flow=0 / pouring=false` 生命周期断点，防止轨迹分析把后台前后误连成连续注水
 
 ### P1 核心训练体验
-- Ghost 轨迹偏差时间线
 - 粉床热点回放
 - History 支持指定杯不刷新页面直接进入 Ghost
 - 专项挑战连续 2 杯达标模式与训练 streak
