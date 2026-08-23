@@ -5,19 +5,21 @@ function sampleDtMs(samples,i){if(i<=0)return 0;return Math.max(0,finite(samples
 
 export function analyzeBrew(samples,{bedRadius=.70,gridSize=9,minFlow=.08}={}){
   if(!Array.isArray(samples)||samples.length<2){
-    return {valid:false,activeMs:0,totalMs:0,water:0,avgFlow:0,flowStability:0,pathDistance:0,pathEfficiency:0,dwellConcentration:0,edgeExposure:0,radial:{inner:0,middle:0,outer:0},pauseCount:0};
+    return {valid:false,activeMs:0,totalMs:0,water:0,avgFlow:0,flowStability:0,pathDistance:0,pathEfficiency:0,dwellConcentration:0,edgeExposure:0,radial:{inner:0,middle:0,outer:0},pauseCount:0,lifecycleBreakCount:0};
   }
   const cells=new Float64Array(gridSize*gridSize);
-  let activeMs=0,flowArea=0,flowSqArea=0,pathDistance=0,activePathDistance=0,edgeMs=0,innerMs=0,middleMs=0,outerMs=0,pauseCount=0;
-  let previousActive=false,previous=null;
+  let activeMs=0,flowArea=0,flowSqArea=0,pathDistance=0,activePathDistance=0,edgeMs=0,innerMs=0,middleMs=0,outerMs=0,pauseCount=0,lifecycleBreakCount=0;
+  let previousActive=false;
   const firstT=finite(samples[0].t),lastT=finite(samples.at(-1).t,firstT),totalMs=Math.max(0,lastT-firstT);
   for(let i=1;i<samples.length;i++){
     const s=samples[i],p=samples[i-1],dt=sampleDtMs(samples,i);
     if(dt<=0)continue;
+    const broken=s?.breakBefore===true;
+    if(broken)lifecycleBreakCount++;
     const flow=Math.max(0,finite(s.flow));
     const active=flow>minFlow||s.pouring===true;
     const x=finite(s.x),z=finite(s.z),px=finite(p.x),pz=finite(p.z);
-    const step=Math.hypot(x-px,z-pz);pathDistance+=step;
+    const step=broken?0:Math.hypot(x-px,z-pz);pathDistance+=step;
     if(active){
       activeMs+=dt;flowArea+=flow*dt;flowSqArea+=flow*flow*dt;activePathDistance+=step;
       const r=Math.hypot(x,z)/Math.max(1e-9,bedRadius);
@@ -26,8 +28,8 @@ export function analyzeBrew(samples,{bedRadius=.70,gridSize=9,minFlow=.08}={}){
       const gx=clamp((x/bedRadius*.5+.5),0,.999999),gz=clamp((z/bedRadius*.5+.5),0,.999999);
       const ix=Math.floor(gx*gridSize),iz=Math.floor(gz*gridSize);cells[iz*gridSize+ix]+=dt;
     }
-    if(previousActive&&!active)pauseCount++;
-    previousActive=active;previous=s;
+    if(!broken&&previousActive&&!active)pauseCount++;
+    previousActive=active;
   }
   const avgFlow=activeMs?flowArea/activeMs:0;
   const variance=activeMs?Math.max(0,flowSqArea/activeMs-avgFlow*avgFlow):0;
@@ -41,7 +43,7 @@ export function analyzeBrew(samples,{bedRadius=.70,gridSize=9,minFlow=.08}={}){
   return {
     valid:true,totalMs,activeMs,water:Math.max(0,finite(samples.at(-1).water)),avgFlow,flowStability,
     pathDistance:activePathDistance,pathEfficiency,dwellConcentration,edgeExposure:activeMs?edgeMs/activeMs:0,
-    radial:{inner:innerMs/radialTotal,middle:middleMs/radialTotal,outer:outerMs/radialTotal},pauseCount,
+    radial:{inner:innerMs/radialTotal,middle:middleMs/radialTotal,outer:outerMs/radialTotal},pauseCount,lifecycleBreakCount,
   };
 }
 
