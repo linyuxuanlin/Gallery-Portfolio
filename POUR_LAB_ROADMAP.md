@@ -19,10 +19,12 @@
 - [x] 帧率无关目标点 / 壶位平滑与水柱自适应刷新
 - [x] 生命周期安全 Training / Replay 时钟，hidden/blur 不污染训练时间
 - [x] Flow runtime suspend settling：后台/锁屏时清除残余 actualFlow，不把隐藏时间伪尾流带回前台
+- [x] Flow runtime lifecycle registry：页面 suspend 时统一 settle active runtimes，恢复后 HUD / 水柱从零流量继续
 - [x] 统一 Pointer binding：主触点锁定、第二触点隔离、off-canvas release、capture 清理、missed pointerup 自愈
 - [x] Service Worker 弱网/离线缓存与 Three.js 多 CDN 超时回退
 - [x] Brew Analysis：流速稳定、落点停留、外圈暴露、中圈利用、路径等诊断
 - [x] Brew Analysis 结果页与 NEXT BREW 可执行建议
+- [x] Replay Map：粉床轨迹热力图、真实路径与 ≥0.5s 暂停节点可视化
 - [x] Brew History：最近 30 杯持久化、去重排序、BEST 标记、任意历史杯设为 Ghost 参考
 - [x] Brew History storage quota / 私密模式容错、轨迹压缩与自动降级
 - [x] Ghost reference 按 History ID 持久化，启动时瞬时兼容旧主页面读取，避免重复长期存储 Replay
@@ -36,16 +38,15 @@
 - 浏览器真实交互回归
 - Three.js 首次访问仍依赖 CDN：改为仓库自托管 vendor 文件或构建产物
 - 校准壶嘴高度 / 壶身位置与目标落点关系，避免壶体穿帮或手柄遮挡
-- 将 `flowRuntime.suspend()` 正式接入主页面 lifecycle suspend，并验证恢复后 HUD / 水柱 / Replay 首样本一致
+- 恢复后 Replay 首样本显式记录 `flow=0 / pouring=false` 生命周期断点，防止轨迹分析把后台前后误连成连续注水
 
 ### P1 核心训练体验
-- Replay 结果轨迹热力图
 - Ghost 轨迹偏差时间线
-- 暂停节点可视化
 - 粉床热点回放
 - History 支持指定杯不刷新页面直接进入 Ghost
 - 专项挑战连续 2 杯达标模式与训练 streak
 - 专项结果页显示“前一杯 → 本杯”的指标变化
+- Replay Map 增加时间播放游标与可切换“路径 / 热点 / 暂停”图层
 
 ### P2 数据能力
 - Recipe JSON 数据结构
