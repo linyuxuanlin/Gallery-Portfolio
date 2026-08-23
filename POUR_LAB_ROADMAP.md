@@ -49,6 +49,7 @@
 - [x] Recipe 分阶段 Coach 与目标流速控制
 - [x] Recipe-aware 评分：按累计水量阶段目标流速重算基础质量并写入 Replay 元数据
 - [x] Recipe-scoped Trend / NEXT SESSION：不同配方的长期趋势与专项挑战完全隔离，切换 Recipe 不再互相污染
+- [x] Recipe A/B 执行差异复盘：区分配方参数差异与阶段流速执行误差，并对比覆盖率 / 均匀度 / 轨迹分布
 
 ## 下一阶段优先级
 
@@ -59,11 +60,11 @@
 
 ### P1 核心训练体验
 - History 支持指定杯不刷新页面直接进入 Ghost
-- Recipe A/B 对比与配方执行差异复盘
+- Recipe A/B 已完成，下一步增加阶段级可视化和同 Recipe 多杯执行一致性对比
 
 ### P2 数据能力
 - [x] History 趋势按 Recipe ID 聚合，区分不同配方的长期训练数据
-- Recipe A/B 的阶段流速 / 覆盖率 / 均匀度 / 轨迹分布对比
+- [x] Recipe A/B 的阶段流速 / 覆盖率 / 均匀度 / 轨迹分布对比
 
 ### P3 AI 能力
 - AI Brew Doctor
