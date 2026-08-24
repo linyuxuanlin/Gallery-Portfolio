@@ -1,0 +1,72 @@
+const STORAGE_KEY='pourLabRecipeStageChallenge';
+const VERSION=1;
+const MAX_COMPLETED=12;
+const finite=(value,fallback=null)=>Number.isFinite(Number(value))?Number(value):fallback;
+
+function safeParse(text,fallback){try{return JSON.parse(text)}catch{return fallback}}
+function emptyStore(){return {version:VERSION,recipes:{}}}
+function safeRead(storage){try{const parsed=safeParse(storage?.getItem?.(STORAGE_KEY)||'null',null);return parsed?.recipes&&typeof parsed.recipes==='object'?parsed:emptyStore()}catch{return emptyStore()}}
+function safeWrite(storage,state){try{storage?.setItem?.(STORAGE_KEY,JSON.stringify(state));return true}catch{return false}}
+function challengeKey(plan){return plan?.stageId&&plan?.focusId?`${plan.stageId}:${plan.focusId}`:null}
+
+export function readRecipeStageProgress(storage=globalThis.localStorage,recipeId){
+  const state=safeRead(storage),entry=state.recipes?.[recipeId];
+  return {recipeId,completedKeys:Array.isArray(entry?.completedKeys)?entry.completedKeys.slice(-MAX_COMPLETED):[],challenge:entry?.challenge||null};
+}
+
+function writeRecipeStageProgress(storage,recipeId,entry){
+  const state=safeRead(storage);state.version=VERSION;
+  state.recipes={...(state.recipes||{}),[recipeId]:{completedKeys:Array.isArray(entry.completedKeys)?entry.completedKeys.slice(-MAX_COMPLETED):[],challenge:entry.challenge||null}};
+  safeWrite(storage,state);return state.recipes[recipeId];
+}
+
+export function createRecipeStageChallenge(plan,latestReplayId,{requiredPasses=2}={}){
+  const key=challengeKey(plan);if(!key||!plan?.target)return null;
+  return {version:1,key,recipeId:plan.recipeId||null,stageId:plan.stageId,stageName:plan.stageName,focusId:plan.focusId,target:{...plan.target},cue:plan.cue||'',headline:plan.headline||'',baselineReplayId:latestReplayId||null,lastReplayId:latestReplayId||null,baselineValue:finite(plan.target.current),previousValue:finite(plan.target.current),lastValue:null,attempts:0,passes:0,consecutivePasses:0,requiredPasses:Math.max(1,Math.floor(requiredPasses||2)),lastPassed:null,completed:false};
+}
+
+export function syncRecipeStageChallenge(storage=globalThis.localStorage,{recipeId,plan,consistency,latestReplayId,evaluate,requiredPasses=2}={}){
+  if(!recipeId)return {applicable:false,status:'no-recipe',progress:null};
+  let progress=readRecipeStageProgress(storage,recipeId);const completedKeys=progress.completedKeys.slice();let challenge=progress.challenge;
+  if(challenge&&challenge.recipeId&&challenge.recipeId!==recipeId)challenge=null;
+
+  if(!challenge){
+    if(!plan?.applicable||plan.mode!=='focus'||!plan.focusId){
+      writeRecipeStageProgress(storage,recipeId,{completedKeys,challenge:null});
+      return {applicable:!!plan?.applicable,status:plan?.mode==='maintenance'?'maintenance':'no-focus',progress:{recipeId,completedKeys,challenge:null},plan};
+    }
+    challenge=createRecipeStageChallenge({...plan,recipeId},latestReplayId,{requiredPasses});
+    writeRecipeStageProgress(storage,recipeId,{completedKeys,challenge});
+    return {applicable:true,status:'started',progress:{recipeId,completedKeys,challenge},plan,evaluation:null};
+  }
+
+  const challengePlan={applicable:true,mode:'focus',recipeId,stageId:challenge.stageId,stageName:challenge.stageName,focusId:challenge.focusId,target:challenge.target,cue:challenge.cue,headline:challenge.headline};
+  if(!latestReplayId||latestReplayId===challenge.lastReplayId){
+    return {applicable:true,status:'waiting',progress:{recipeId,completedKeys,challenge},plan:challengePlan,evaluation:null};
+  }
+
+  const evaluation=typeof evaluate==='function'?evaluate(challengePlan,consistency):{applicable:false};
+  if(!evaluation?.applicable){
+    challenge={...challenge,lastReplayId:latestReplayId};writeRecipeStageProgress(storage,recipeId,{completedKeys,challenge});
+    return {applicable:true,status:'unscored',progress:{recipeId,completedKeys,challenge},plan:challengePlan,evaluation};
+  }
+
+  const passed=!!evaluation.passed;
+  challenge={...challenge,lastReplayId:latestReplayId,previousValue:challenge.lastValue??challenge.previousValue,lastValue:finite(evaluation.current),attempts:(challenge.attempts||0)+1,passes:(challenge.passes||0)+(passed?1:0),consecutivePasses:passed?(challenge.consecutivePasses||0)+1:0,lastPassed:passed};
+  challenge.completed=challenge.consecutivePasses>=challenge.requiredPasses;
+
+  if(challenge.completed){
+    const completed=[...completedKeys.filter(key=>key!==challenge.key),challenge.key].slice(-MAX_COMPLETED);
+    writeRecipeStageProgress(storage,recipeId,{completedKeys:completed,challenge:null});
+    return {applicable:true,status:'graduated',graduated:true,completedKey:challenge.key,progress:{recipeId,completedKeys:completed,challenge:null},plan:challengePlan,evaluation:{...evaluation,passed:true},completedChallenge:challenge};
+  }
+
+  writeRecipeStageProgress(storage,recipeId,{completedKeys,challenge});
+  return {applicable:true,status:passed?'passed':'failed',graduated:false,progress:{recipeId,completedKeys,challenge},plan:challengePlan,evaluation:{...evaluation,passed}};
+}
+
+export function resetRecipeStageChallenges(storage=globalThis.localStorage,recipeId){
+  if(!recipeId)return false;const state=safeRead(storage);if(!state.recipes?.[recipeId])return false;delete state.recipes[recipeId];return safeWrite(storage,state);
+}
+
+export const RECIPE_STAGE_CHALLENGE_STORAGE_KEY=STORAGE_KEY;
