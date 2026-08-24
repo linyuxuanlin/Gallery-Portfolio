@@ -28,8 +28,7 @@ export function chooseRecipeStageTrainingTarget(consistency,{stableThreshold=.82
   }
   const excluded=new Set(Array.isArray(excludeKeys)?excludeKeys:[]);
   const candidates=stages.map(stage=>({stage,focus:focusForStage(stage)})).sort((a,b)=>(b.focus.severity||0)-(a.focus.severity||0)||a.stage.repeatability-b.stage.repeatability);
-  let selected=candidates.find(item=>!excluded.has(`${item.stage.id}:${item.focus.id}`));
-  let cycleRestart=false;
+  let selected=candidates.find(item=>!excluded.has(`${item.stage.id}:${item.focus.id}`));let cycleRestart=false;
   if(!selected){selected=candidates[0];cycleRestart=true}
   const worst=selected?.stage,focus=selected?.focus;
   if(!worst||!focus)return {applicable:false,mode:'insufficient',headline:'阶段数据不足',target:null};
@@ -71,43 +70,39 @@ function ensurePanel(doc){
   host.insertAdjacentElement('afterend',panel);return panel;
 }
 
-export function renderRecipeStageTraining(doc=globalThis.document,storage=globalThis.localStorage){
+export function renderRecipeStageTraining(doc=globalThis.document,storage=globalThis.localStorage,{evaluateLatest=true}={}){
   const panel=ensurePanel(doc);if(!panel)return {rendered:false};
   const recipe=activeRecipe(storage),history=readBrewHistory(storage),consistency=analyzeRecipeConsistency(history,recipe.id);
   if(!consistency.applicable){panel.classList.remove('show');return {rendered:false,consistency}}
   let progress=readRecipeStageProgress(storage,recipe.id);
   let plan=chooseRecipeStageTrainingTarget(consistency,{excludeKeys:progress.completedKeys});
   const latest=consistency.brews?.at(-1)||null;
-  let transition=syncRecipeStageChallenge(storage,{recipeId:recipe.id,plan,consistency,latestReplayId:latest?.id||null,evaluate:evaluateRecipeStageTrainingTarget,requiredPasses:2});
+  let transition=syncRecipeStageChallenge(storage,{recipeId:recipe.id,plan,consistency,latestReplayId:latest?.id||null,evaluate:evaluateRecipeStageTrainingTarget,requiredPasses:2,allowEvaluation:evaluateLatest});
   if(transition.graduated){
-    progress=transition.progress;
-    plan=chooseRecipeStageTrainingTarget(consistency,{excludeKeys:progress.completedKeys});
-    transition=syncRecipeStageChallenge(storage,{recipeId:recipe.id,plan,consistency,latestReplayId:latest?.id||null,evaluate:evaluateRecipeStageTrainingTarget,requiredPasses:2});
+    progress=transition.progress;plan=chooseRecipeStageTrainingTarget(consistency,{excludeKeys:progress.completedKeys});
+    transition=syncRecipeStageChallenge(storage,{recipeId:recipe.id,plan,consistency,latestReplayId:latest?.id||null,evaluate:evaluateRecipeStageTrainingTarget,requiredPasses:2,allowEvaluation:false});
   }
   const shownPlan=transition.plan||plan;
   if(!shownPlan?.applicable){panel.classList.remove('show');return {rendered:false,plan:shownPlan,consistency,transition}}
   const challenge=transition.progress?.challenge||null;
   doc.getElementById('recipeStageTrainingScore').textContent=consistency.overallConsistency===null?'--':`${Math.round(consistency.overallConsistency*100)}% consistency`;
   doc.getElementById('recipeStageTrainingMain').textContent=shownPlan.headline;
-  doc.getElementById('recipeStageTrainingTarget').textContent=shownPlan.target?`${shownPlan.target.label} · 当前 ${fmt(shownPlan.target.metric,shownPlan.target.current??challenge?.lastValue)}`:'保持当前表现';
+  const currentValue=challenge&&Number.isFinite(Number(challenge.lastValue))?challenge.lastValue:shownPlan.target?.current;
+  doc.getElementById('recipeStageTrainingTarget').textContent=shownPlan.target?`${shownPlan.target.label} · 当前 ${fmt(shownPlan.target.metric,currentValue)}`:'保持当前表现';
   const progressEl=doc.getElementById('recipeStageTrainingProgress');
   if(shownPlan.mode==='maintenance')progressEl.textContent='本配方进入综合稳定训练';
-  else if(challenge){
-    const streak=`连续达标 ${challenge.consecutivePasses||0}/${challenge.requiredPasses||2}`;
-    const attempts=`已验收 ${challenge.attempts||0} 杯`;
-    const delta=fmtDelta(challenge.target.metric,challenge.previousValue,challenge.lastValue);
-    progressEl.textContent=[streak,attempts,delta].filter(Boolean).join(' · ');
-  }else progressEl.textContent='下一杯开始记录专项挑战';
-  doc.getElementById('recipeStageTrainingCue').textContent=shownPlan.cue;
-  panel.classList.add('show');
+  else if(challenge){const streak=`连续达标 ${challenge.consecutivePasses||0}/${challenge.requiredPasses||2}`;const attempts=`已验收 ${challenge.attempts||0} 杯`;const delta=fmtDelta(challenge.target.metric,challenge.previousValue,challenge.lastValue);progressEl.textContent=[streak,attempts,delta].filter(Boolean).join(' · ')}
+  else progressEl.textContent='下一杯开始记录专项挑战';
+  doc.getElementById('recipeStageTrainingCue').textContent=shownPlan.cue;panel.classList.add('show');
   return {rendered:true,plan:shownPlan,consistency,transition};
 }
 
 export function installRecipeStageTraining(doc=globalThis.document,storage=globalThis.localStorage){
   if(!doc||doc.__pourRecipeStageTrainingInstalled)return {installed:false};
   doc.__pourRecipeStageTrainingInstalled=true;ensureStyle(doc);ensurePanel(doc);
-  const update=()=>renderRecipeStageTraining(doc,storage);
-  doc.addEventListener?.('pour:history-imported',update);doc.addEventListener?.('pour:recipe-changed',update);doc.addEventListener?.('pour:recipe-score-updated',update);
-  const results=doc.getElementById?.('results');if(results&&typeof MutationObserver!=='undefined'){const observer=new MutationObserver(()=>{if(results.classList.contains('show'))queueMicrotask(update)});observer.observe(results,{attributes:true,attributeFilter:['class']})}
-  update();return {installed:true,update};
+  const refresh=()=>renderRecipeStageTraining(doc,storage,{evaluateLatest:false});
+  const evaluate=()=>renderRecipeStageTraining(doc,storage,{evaluateLatest:true});
+  doc.addEventListener?.('pour:history-imported',refresh);doc.addEventListener?.('pour:recipe-changed',refresh);doc.addEventListener?.('pour:recipe-score-updated',evaluate);
+  const results=doc.getElementById?.('results');if(results&&typeof MutationObserver!=='undefined'){const observer=new MutationObserver(()=>{if(results.classList.contains('show'))queueMicrotask(evaluate)});observer.observe(results,{attributes:true,attributeFilter:['class']})}
+  refresh();return {installed:true,update:refresh,evaluate};
 }
