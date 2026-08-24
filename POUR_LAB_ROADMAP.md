@@ -55,6 +55,7 @@
 - [x] Recipe 阶段持久化挑战：按真实新 Replay 去重验收，连续 2 杯达标才毕业，自动排除已完成弱项并切到下一阶段/目标；导入历史与切换 Recipe 不计作训练尝试
 - [x] Recipe Stage Training Log：阶段挑战失败/达标/毕业写入长期 Training History，按 Recipe + Stage + Focus 聚合尝试次数、通过率、毕业数与 streak，并在结果页可见复盘
 - [x] Recipe Stage 时间趋势：最近 3–5 次同阶段指标判断收敛 / 回落，并区分“尚未过线”“已达标保持”“曾达标后反弹”等目标线状态
+- [x] Target-aware Stage Challenge：当前杯先进入趋势预览；持续收敛但未过线时保留专项，达标后反弹/远离目标时进入恢复模式并阻止晋级，只有稳定保持目标线才允许累计连续 2 杯毕业
 
 ## 下一阶段优先级
 
@@ -65,7 +66,7 @@
 
 ### P1 核心训练体验
 - History 支持指定杯不刷新页面直接进入 Ghost
-- 让 Stage Trend 的“收敛但未过线 / 已达标后反弹”直接影响 Recipe Stage Challenge 的保留、降级和晋级策略
+- 恢复模式进一步加入“重新连续稳定 2 杯后解除”的独立状态提示与历史统计
 
 ### P2 数据能力
 - [x] History 趋势按 Recipe ID 聚合，区分不同配方的长期训练数据
