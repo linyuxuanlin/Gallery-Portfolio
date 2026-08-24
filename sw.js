@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'pour-lab-v28';
+const CACHE_VERSION = 'pour-lab-v29';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
@@ -10,7 +10,7 @@ const THREE_SOURCES = [
 const DEPENDENCY_TIMEOUT_MS = 3500;
 
 const APP_SHELL = [
-  './', './index.html', './pour-ghost-sync.js', './pour-flow-physics.js', './pour-flow-runtime.js', './pour-bed-physics.js', './pour-spatial-calibration.js', './pour-stream-physics.js', './pour-stream-mesh.js', './pour-stream-three.js', './pour-lifecycle.js', './pour-replay-breaks.js', './pour-replay-break-persistence.js', './pour-input-runtime.js', './pour-input-bindings.js', './pour-input-guard.js', './pour-brew-analysis.js', './pour-brew-insights.js', './pour-brew-history.js', './pour-brew-portability.js', './pour-brew-compare.js', './pour-brew-trend.js', './pour-brew-trend-panel.js', './pour-brew-profile.js', './pour-training-plan.js', './pour-training-progress.js', './pour-training-history.js', './pour-training-period.js', './pour-training-plan-panel.js', './pour-replay-visualization.js', './pour-replay-playback.js', './pour-bed-hotspots.js', './pour-ghost-deviation.js', './pour-recipe.js', './pour-recipe-panel.js', './pour-recipe-training.js', './pour-recipe-scoring.js', './pour-recipe-execution.js', './pour-recipe-compare.js', './pour-recipe-consistency.js',
+  './', './index.html', './pour-ghost-sync.js', './pour-flow-physics.js', './pour-flow-runtime.js', './pour-bed-physics.js', './pour-spatial-calibration.js', './pour-stream-physics.js', './pour-stream-mesh.js', './pour-stream-three.js', './pour-lifecycle.js', './pour-replay-breaks.js', './pour-replay-break-persistence.js', './pour-input-runtime.js', './pour-input-bindings.js', './pour-input-guard.js', './pour-brew-analysis.js', './pour-brew-insights.js', './pour-brew-history.js', './pour-brew-portability.js', './pour-brew-compare.js', './pour-brew-trend.js', './pour-brew-trend-panel.js', './pour-brew-profile.js', './pour-training-plan.js', './pour-training-progress.js', './pour-training-history.js', './pour-training-period.js', './pour-training-plan-panel.js', './pour-replay-visualization.js', './pour-replay-playback.js', './pour-bed-hotspots.js', './pour-ghost-deviation.js', './pour-recipe.js', './pour-recipe-panel.js', './pour-recipe-training.js', './pour-recipe-scoring.js', './pour-recipe-execution.js', './pour-recipe-compare.js', './pour-recipe-consistency.js', './pour-recipe-stage-training.js',
 ];
 
 async function fetchWithTimeout(url, options = {}, timeoutMs = DEPENDENCY_TIMEOUT_MS) {
