@@ -1,3 +1,5 @@
+import { recordRecipeStageTransition } from './pour-training-history.js';
+
 const STORAGE_KEY='pourLabRecipeStageChallenge';
 const VERSION=1;
 const MAX_COMPLETED=12;
@@ -54,6 +56,8 @@ export function syncRecipeStageChallenge(storage=globalThis.localStorage,{recipe
   const passed=!!evaluation.passed;
   challenge={...challenge,lastReplayId:latestReplayId,previousValue:challenge.lastValue??challenge.previousValue,lastValue:finite(evaluation.current),attempts:(challenge.attempts||0)+1,passes:(challenge.passes||0)+(passed?1:0),consecutivePasses:passed?(challenge.consecutivePasses||0)+1:0,lastPassed:passed};
   challenge.completed=challenge.consecutivePasses>=challenge.requiredPasses;
+  const status=challenge.completed?'graduated':passed?'passed':'failed';
+  recordRecipeStageTransition(storage,{status,graduated:challenge.completed,plan:challengePlan,evaluation:{...evaluation,passed},completedChallenge:challenge.completed?challenge:null},{replayId:latestReplayId,recipeId});
 
   if(challenge.completed){
     const completed=[...completedKeys.filter(key=>key!==challenge.key),challenge.key].slice(-MAX_COMPLETED);
