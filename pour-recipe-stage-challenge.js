@@ -25,7 +25,7 @@ export function createRecipeStageChallenge(plan,latestReplayId,{requiredPasses=2
   return {version:1,key,recipeId:plan.recipeId||null,stageId:plan.stageId,stageName:plan.stageName,focusId:plan.focusId,target:{...plan.target},cue:plan.cue||'',headline:plan.headline||'',baselineReplayId:latestReplayId||null,lastReplayId:latestReplayId||null,baselineValue:finite(plan.target.current),previousValue:finite(plan.target.current),lastValue:null,attempts:0,passes:0,consecutivePasses:0,requiredPasses:Math.max(1,Math.floor(requiredPasses||2)),lastPassed:null,completed:false};
 }
 
-export function syncRecipeStageChallenge(storage=globalThis.localStorage,{recipeId,plan,consistency,latestReplayId,evaluate,requiredPasses=2}={}){
+export function syncRecipeStageChallenge(storage=globalThis.localStorage,{recipeId,plan,consistency,latestReplayId,evaluate,requiredPasses=2,allowEvaluation=true}={}){
   if(!recipeId)return {applicable:false,status:'no-recipe',progress:null};
   let progress=readRecipeStageProgress(storage,recipeId);const completedKeys=progress.completedKeys.slice();let challenge=progress.challenge;
   if(challenge&&challenge.recipeId&&challenge.recipeId!==recipeId)challenge=null;
@@ -41,7 +41,7 @@ export function syncRecipeStageChallenge(storage=globalThis.localStorage,{recipe
   }
 
   const challengePlan={applicable:true,mode:'focus',recipeId,stageId:challenge.stageId,stageName:challenge.stageName,focusId:challenge.focusId,target:challenge.target,cue:challenge.cue,headline:challenge.headline};
-  if(!latestReplayId||latestReplayId===challenge.lastReplayId){
+  if(!allowEvaluation||!latestReplayId||latestReplayId===challenge.lastReplayId){
     return {applicable:true,status:'waiting',progress:{recipeId,completedKeys,challenge},plan:challengePlan,evaluation:null};
   }
 
