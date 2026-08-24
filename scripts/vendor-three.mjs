@@ -53,7 +53,7 @@ export function patchIndexForVendoredThree(source) {
 }
 
 export function patchServiceWorkerForVendoredThree(source) {
-  let next = source.replace(/const CACHE_VERSION = 'pour-lab-v\\d+';/, "const CACHE_VERSION = 'pour-lab-v42';");
+  let next = source.replace(/const CACHE_VERSION = 'pour-lab-v\d+';/, "const CACHE_VERSION = 'pour-lab-v42';");
   const marker = "  './pour-input-guard.js',";
   if (!next.includes("'./vendor/three/three.module.min.js'")) {
     if (!next.includes(marker)) throw new Error('APP_SHELL marker not found in sw.js');
