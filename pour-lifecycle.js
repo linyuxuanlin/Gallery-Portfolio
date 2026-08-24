@@ -16,6 +16,7 @@ import { installRecipeExecution } from './pour-recipe-execution.js';
 import { installRecipeComparison } from './pour-recipe-compare.js';
 import { installRecipeConsistency } from './pour-recipe-consistency.js';
 import { installRecipeStageTraining } from './pour-recipe-stage-training.js';
+import { installRecipeStageHistory } from './pour-recipe-stage-history-panel.js';
 import { suspendAllFlowRuntimes } from './pour-flow-runtime.js';
 import { clearPendingLifecycleBreaks, recordLifecycleBreak } from './pour-replay-breaks.js';
 import { installReplayBreakPersistence } from './pour-replay-break-persistence.js';
@@ -99,6 +100,7 @@ if (typeof document !== 'undefined') {
     installRecipeComparison(document);
     installRecipeConsistency(document, globalThis.localStorage);
     installRecipeStageTraining(document, globalThis.localStorage);
+    installRecipeStageHistory(document, globalThis.localStorage);
   });
   if (document.readyState === 'complete') registerPourServiceWorker();
   else addEventListener('load', () => registerPourServiceWorker(), { once: true });
