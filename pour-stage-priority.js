@@ -16,6 +16,29 @@ export function recoveryRiskForFocus(stageId,focusId,historyStages=[]){
   return matches.map(stage=>recoveryRisk(stage?.recovery)).sort((a,b)=>b.score-a.score)[0];
 }
 
+export function graduationCooldownForFocus(stageId,focusId,historyStages=[],{
+  cooldownCups=2,
+  severityOverride=3,
+  recoveryOverride=85,
+}={}){
+  const matches=(Array.isArray(historyStages)?historyStages:[]).filter(stage=>stage?.stageId===stageId&&stage?.focusId===focusId&&Number(stage?.graduates)>0);
+  if(!matches.length)return{active:false,cupsSinceGraduation:null,remaining:0,penalty:0,reason:'never-graduated',severityOverride,recoveryOverride};
+  const recent=matches.slice().sort((a,b)=>String(b?.lastGraduatedAt||'').localeCompare(String(a?.lastGraduatedAt||'')))[0];
+  const cups=Number.isFinite(Number(recent?.cupsSinceGraduation))?Math.max(0,Math.floor(Number(recent.cupsSinceGraduation))):null;
+  if(cups===null||cups>=cooldownCups)return{active:false,cupsSinceGraduation:cups,remaining:0,penalty:0,reason:'cooldown-complete',severityOverride,recoveryOverride};
+  const remaining=Math.max(0,cooldownCups-cups);
+  return{
+    active:true,
+    cupsSinceGraduation:cups,
+    remaining,
+    penalty:1.15*(remaining/cooldownCups),
+    severityOverride,
+    recoveryOverride,
+    lastGraduatedAt:recent?.lastGraduatedAt||null,
+    reason:'recently-graduated',
+  };
+}
+
 export function stageTrainingPriority({severity=0,repeatability=1,recovery={}}={}){
   const execution=Math.max(0,finite(severity));
   const instability=Math.max(0,1-Math.max(0,Math.min(1,finite(repeatability,1))));
@@ -23,11 +46,12 @@ export function stageTrainingPriority({severity=0,repeatability=1,recovery={}}={
   return execution+instability*.75+riskScore/45;
 }
 
-export function focusTrainingPriority({severity=0,recovery={}}={}){
+export function focusTrainingPriority({severity=0,recovery={},cooldown={}}={}){
   const execution=Math.max(0,finite(severity));
   const riskScore=Math.max(0,Math.min(100,finite(recovery?.score)));
-  // Historical fragility can beat a modest one-cup deviation, not an extreme live error.
-  return execution+riskScore/50;
+  const emergency=execution>=finite(cooldown?.severityOverride,3)||riskScore>=finite(cooldown?.recoveryOverride,85);
+  const penalty=cooldown?.active&&!emergency?Math.max(0,finite(cooldown?.penalty)):0;
+  return execution+riskScore/50-penalty;
 }
 
 function focusFromStage(stage,focusId){
@@ -56,7 +80,16 @@ export function rankFocusTrainingCandidates(stage,baseFocus,historyStages=[]){
     const focus=id===baseFocus?.id?baseFocus:focusFromStage(stage,id);
     if(!focus)return null;
     const recovery=recoveryRiskForFocus(stageId,id,historyStages);
-    return{...focus,recovery,priority:focusTrainingPriority({severity:focus.severity,recovery}),switchedByRecovery:id!==baseFocus?.id};
+    const cooldown=graduationCooldownForFocus(stageId,id,historyStages);
+    const emergency=(focus.severity||0)>=cooldown.severityOverride||(recovery?.score||0)>=cooldown.recoveryOverride;
+    return{
+      ...focus,
+      recovery,
+      cooldown,
+      cooldownBypassed:cooldown.active&&emergency,
+      priority:focusTrainingPriority({severity:focus.severity,recovery,cooldown}),
+      switchedByRecovery:id!==baseFocus?.id,
+    };
   }).filter(Boolean).sort((a,b)=>b.priority-a.priority||(b.recovery?.score||0)-(a.recovery?.score||0)||(b.severity||0)-(a.severity||0));
 }
 
@@ -69,6 +102,6 @@ export function rankStageTrainingCandidates(candidates=[],historyStages=[],{stic
     const selectedFocus=sticky.selected||focusCandidates[0]||item?.focus;
     const focusRecovery=selectedFocus?.recovery||recoveryRiskForFocus(item?.stage?.id,selectedFocus?.id,historyStages);
     const priority=stageTrainingPriority({severity:selectedFocus?.severity,repeatability:item?.stage?.repeatability,recovery});
-    return{...item,focus:selectedFocus,recovery,focusRecovery,focusSwitchedByRecovery:selectedFocus?.switchedByRecovery===true,focusStickiness:sticky,priority};
+    return{...item,focus:selectedFocus,recovery,focusRecovery,focusCooldown:selectedFocus?.cooldown||null,cooldownBypassed:selectedFocus?.cooldownBypassed===true,focusSwitchedByRecovery:selectedFocus?.switchedByRecovery===true,focusStickiness:sticky,priority};
   }).sort((a,b)=>b.priority-a.priority||(b.recovery?.score||0)-(a.recovery?.score||0)||(a.stage?.repeatability??1)-(b.stage?.repeatability??1));
 }
