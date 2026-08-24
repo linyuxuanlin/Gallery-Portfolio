@@ -170,17 +170,27 @@ function finishRecoveryStats(stats,state){
   return stats;
 }
 
+function replayOrdinals(events){
+  const ordinals=new Map();
+  for(const event of events){
+    if(!ordinals.has(event.replayId))ordinals.set(event.replayId,ordinals.size);
+  }
+  return ordinals;
+}
+
 export function summarizeRecipeStageHistory(events,{recipeId,stageId=null,focusId=null}={}){
   const filtered=(Array.isArray(events)?events:[]).filter(event=>
     event?.type==='recipe-stage'&&
     (!recipeId||event.recipeId===recipeId)&&
     (!stageId||event.stageId===stageId)&&
     (!focusId||event.focusId===focusId)
-  );
+  ).slice().sort((a,b)=>String(a.recordedAt||'').localeCompare(String(b.recordedAt||'')));
   const base=summarizeTrainingHistory(filtered);
   const stages=new Map();
   const overallRecovery=createRecoveryStats();
   const overallRecoveryState=new Map();
+  const ordinals=replayOrdinals(filtered);
+  const latestReplayOrdinal=Math.max(-1,...ordinals.values());
 
   for(const event of filtered){
     const key=`${event.stageId||'unknown'}:${event.focusId||'unknown'}`;
@@ -195,12 +205,20 @@ export function summarizeRecipeStageHistory(events,{recipeId,stageId=null,focusI
       lastValue:null,
       target:null,
       lastRecordedAt:null,
+      lastGraduatedAt:null,
+      lastGraduatedReplayId:null,
+      lastGraduatedReplayOrdinal:null,
       recovery:createRecoveryStats(),
       recoveryState:new Map(),
     };
     stat.attempts++;
     if(event.passed)stat.passes++;
-    if(event.graduated)stat.graduates++;
+    if(event.graduated){
+      stat.graduates++;
+      stat.lastGraduatedAt=event.recordedAt||stat.lastGraduatedAt;
+      stat.lastGraduatedReplayId=event.replayId||stat.lastGraduatedReplayId;
+      stat.lastGraduatedReplayOrdinal=ordinals.get(event.replayId)??stat.lastGraduatedReplayOrdinal;
+    }
     stat.lastValue=event.value;
     stat.target=event.target;
     stat.lastRecordedAt=event.recordedAt||stat.lastRecordedAt;
@@ -212,8 +230,12 @@ export function summarizeRecipeStageHistory(events,{recipeId,stageId=null,focusI
   const stageStats=[...stages.values()].map(stat=>{
     const recovery=finishRecoveryStats(stat.recovery,stat.recoveryState);
     const {recoveryState,...clean}=stat;
+    const cupsSinceGraduation=Number.isInteger(stat.lastGraduatedReplayOrdinal)
+      ?Math.max(0,latestReplayOrdinal-stat.lastGraduatedReplayOrdinal)
+      :null;
     return {
       ...clean,
+      cupsSinceGraduation,
       recovery,
       passRate:stat.attempts?stat.passes/stat.attempts:0,
     };
@@ -226,6 +248,7 @@ export function summarizeRecipeStageHistory(events,{recipeId,stageId=null,focusI
   return {
     ...base,
     recipeId:recipeId||null,
+    latestReplayOrdinal,
     recovery:finishRecoveryStats(overallRecovery,overallRecoveryState),
     stages:stageStats,
   };
