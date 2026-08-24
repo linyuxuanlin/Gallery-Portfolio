@@ -64,10 +64,8 @@ export function rankStageTrainingCandidates(candidates=[],historyStages=[],{stic
   return (Array.isArray(candidates)?candidates:[]).map(item=>{
     const recovery=recoveryRiskForStage(item?.stage?.id,historyStages);
     const focusCandidates=rankFocusTrainingCandidates(item?.stage,item?.focus,historyStages);
-    const sticky=selectStickyFocus(focusCandidates,{
-      previousFocusId:item?.stage?.id===stickyStageId?stickyFocusId:null,
-      switchMargin,
-    });
+    const previousFocusId=item?.stage?.id===stickyStageId&&stickyFocusId?stickyFocusId:item?.focus?.id||null;
+    const sticky=selectStickyFocus(focusCandidates,{previousFocusId,switchMargin});
     const selectedFocus=sticky.selected||focusCandidates[0]||item?.focus;
     const focusRecovery=selectedFocus?.recovery||recoveryRiskForFocus(item?.stage?.id,selectedFocus?.id,historyStages);
     const priority=stageTrainingPriority({severity:selectedFocus?.severity,repeatability:item?.stage?.repeatability,recovery});
