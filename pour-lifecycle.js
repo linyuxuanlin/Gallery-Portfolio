@@ -16,6 +16,7 @@ import { installRecipeExecution } from './pour-recipe-execution.js';
 import { installRecipeComparison } from './pour-recipe-compare.js';
 import { installRecipeConsistency } from './pour-recipe-consistency.js';
 import { installRecipeStageTraining } from './pour-recipe-stage-training.js';
+import { installRecipeStageRecovery } from './pour-recipe-stage-recovery.js';
 import { installRecipeStageHistory } from './pour-recipe-stage-history-panel.js';
 import { installRecipeStageTrend } from './pour-recipe-stage-trend.js';
 import { suspendAllFlowRuntimes } from './pour-flow-runtime.js';
@@ -101,6 +102,7 @@ if (typeof document !== 'undefined') {
     installRecipeComparison(document);
     installRecipeConsistency(document, globalThis.localStorage);
     installRecipeStageTraining(document, globalThis.localStorage);
+    installRecipeStageRecovery(document, globalThis.localStorage);
     installRecipeStageHistory(document, globalThis.localStorage);
     installRecipeStageTrend(document, globalThis.localStorage);
   });
