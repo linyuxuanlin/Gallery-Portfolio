@@ -1,0 +1,46 @@
+name: Vendor Three.js r180
+
+on:
+  push:
+    branches: [pour-lab-mvp]
+    paths:
+      - .github/workflows/vendor-three.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: pour-lab-mvp
+          fetch-depth: 0
+
+      - name: Vendor pinned Three.js build
+        run: node scripts/vendor-three.mjs
+
+      - name: Run vendoring regression
+        run: node tests/vendor-three.test.mjs
+
+      - name: Verify generated files
+        run: |
+          test -s vendor/three/three.module.min.js
+          test -s vendor/three/three.core.min.js
+          ! grep -q "cdn.jsdelivr.net/npm/three" index.html
+          ! grep -q "unpkg.com/three\|cdnjs.cloudflare.com/ajax/libs/three.js\|THREE_SOURCES\|THREE_URL" sw.js
+          grep -q "./vendor/three/three.module.min.js" index.html
+          grep -q "./vendor/three/three.module.min.js" sw.js
+          grep -q "./vendor/three/three.core.min.js" sw.js
+
+      - name: Commit verified vendor files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vendor/three index.html sw.js
+          if ! git diff --cached --quiet; then
+            git commit -m "vendor: self-host verified Three.js r180"
+            git push origin HEAD:pour-lab-mvp
+          fi
