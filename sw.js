@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'pour-lab-v40';
+const CACHE_VERSION = 'pour-lab-v41';
 const APP_CACHE = `${CACHE_VERSION}-app`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
