@@ -41,8 +41,9 @@ export function recipeStageHistoryEvent(transition,{replayId,recipeId,recordedAt
   const focusId=plan?.focusId||transition?.completedChallenge?.focusId||null;
   if(!e?.applicable||!replayId||!recipeId||!stageId||!focusId)return null;
   const challengeId=`recipe:${recipeId}:stage:${stageId}:${focusId}`;
+  const recoveryStatus=typeof e.recoveryStatus==='string'?e.recoveryStatus:null;
   return {
-    version:1,
+    version:2,
     type:'recipe-stage',
     replayId,
     challengeId,
@@ -56,6 +57,9 @@ export function recipeStageHistoryEvent(transition,{replayId,recipeId,recordedAt
     stageId,
     stageName,
     focusId,
+    recoveryStatus,
+    recoveryPass:recoveryStatus?e.recoveryPass===true:null,
+    trendPolicy:typeof e.trendPolicy==='string'?e.trendPolicy:null,
   };
 }
 
@@ -124,6 +128,48 @@ export function summarizeTrainingHistory(events){
   };
 }
 
+function createRecoveryStats(){
+  return {
+    recoveryEpisodes:0,
+    recoveredEpisodes:0,
+    activeRecoveries:0,
+    recoveryAttempts:0,
+    recoveryPasses:0,
+    recoveryCupsToRecover:[],
+    recoveryPassRate:0,
+    averageRecoveryCups:null,
+  };
+}
+
+function applyRecoveryStats(stats,event,state){
+  const status=event?.recoveryStatus;
+  if(!status)return;
+  const key=event.challengeId||`${event.recipeId||''}:${event.stageId||''}:${event.focusId||''}`;
+  let episode=state.get(key);
+  if(!episode){
+    episode={attempts:0};
+    state.set(key,episode);
+    stats.recoveryEpisodes++;
+  }
+  episode.attempts++;
+  stats.recoveryAttempts++;
+  if(event.recoveryPass===true)stats.recoveryPasses++;
+  if(status==='recovered'){
+    stats.recoveredEpisodes++;
+    stats.recoveryCupsToRecover.push(episode.attempts);
+    state.delete(key);
+  }
+}
+
+function finishRecoveryStats(stats,state){
+  stats.activeRecoveries=state.size;
+  stats.recoveryPassRate=stats.recoveryAttempts?stats.recoveryPasses/stats.recoveryAttempts:0;
+  stats.averageRecoveryCups=stats.recoveryCupsToRecover.length
+    ?stats.recoveryCupsToRecover.reduce((sum,value)=>sum+value,0)/stats.recoveryCupsToRecover.length
+    :null;
+  return stats;
+}
+
 export function summarizeRecipeStageHistory(events,{recipeId,stageId=null,focusId=null}={}){
   const filtered=(Array.isArray(events)?events:[]).filter(event=>
     event?.type==='recipe-stage'&&
@@ -133,6 +179,9 @@ export function summarizeRecipeStageHistory(events,{recipeId,stageId=null,focusI
   );
   const base=summarizeTrainingHistory(filtered);
   const stages=new Map();
+  const overallRecovery=createRecoveryStats();
+  const overallRecoveryState=new Map();
+
   for(const event of filtered){
     const key=`${event.stageId||'unknown'}:${event.focusId||'unknown'}`;
     const stat=stages.get(key)||{
@@ -146,6 +195,8 @@ export function summarizeRecipeStageHistory(events,{recipeId,stageId=null,focusI
       lastValue:null,
       target:null,
       lastRecordedAt:null,
+      recovery:createRecoveryStats(),
+      recoveryState:new Map(),
     };
     stat.attempts++;
     if(event.passed)stat.passes++;
@@ -153,15 +204,30 @@ export function summarizeRecipeStageHistory(events,{recipeId,stageId=null,focusI
     stat.lastValue=event.value;
     stat.target=event.target;
     stat.lastRecordedAt=event.recordedAt||stat.lastRecordedAt;
+    applyRecoveryStats(stat.recovery,event,stat.recoveryState);
+    applyRecoveryStats(overallRecovery,event,overallRecoveryState);
     stages.set(key,stat);
   }
+
+  const stageStats=[...stages.values()].map(stat=>{
+    const recovery=finishRecoveryStats(stat.recovery,stat.recoveryState);
+    const {recoveryState,...clean}=stat;
+    return {
+      ...clean,
+      recovery,
+      passRate:stat.attempts?stat.passes/stat.attempts:0,
+    };
+  }).sort((a,b)=>
+    b.recovery.recoveryEpisodes-a.recovery.recoveryEpisodes||
+    b.attempts-a.attempts||
+    b.passRate-a.passRate
+  );
+
   return {
     ...base,
     recipeId:recipeId||null,
-    stages:[...stages.values()].map(stat=>({
-      ...stat,
-      passRate:stat.attempts?stat.passes/stat.attempts:0,
-    })).sort((a,b)=>b.attempts-a.attempts||b.passRate-a.passRate),
+    recovery:finishRecoveryStats(overallRecovery,overallRecoveryState),
+    stages:stageStats,
   };
 }
 
