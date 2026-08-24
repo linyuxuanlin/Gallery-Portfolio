@@ -52,12 +52,52 @@ export function patchIndexForVendoredThree(source) {
   return source.replace(cdn, "import * as THREE from './vendor/three/three.module.min.js';");
 }
 
+function removeFunction(source, name) {
+  const start = source.indexOf(`async function ${name}(`);
+  if (start < 0) return source;
+  const brace = source.indexOf('{', start);
+  if (brace < 0) return source;
+  let depth = 0;
+  for (let index = brace; index < source.length; index++) {
+    if (source[index] === '{') depth++;
+    else if (source[index] === '}') {
+      depth--;
+      if (depth === 0) {
+        let end = index + 1;
+        while (source[end] === '\r' || source[end] === '\n') end++;
+        return source.slice(0, start) + source.slice(end);
+      }
+    }
+  }
+  throw new Error(`Unable to remove ${name} from sw.js`);
+}
+
 export function patchServiceWorkerForVendoredThree(source) {
   let next = source.replace(/const CACHE_VERSION = 'pour-lab-v\d+';/, "const CACHE_VERSION = 'pour-lab-v42';");
-  const marker = "  './pour-input-guard.js',";
+
+  next = next
+    .replace(/^const RUNTIME_CACHE = .*\n/m, '')
+    .replace(/^const THREE_URL = .*\n/m, '')
+    .replace(/const THREE_SOURCES = \[[\s\S]*?\];\n/m, '')
+    .replace(/^const DEPENDENCY_TIMEOUT_MS = .*\n/m, '');
+
+  for (const name of ['fetchWithTimeout', 'fetchFirstAvailable', 'warmThreeCache', 'threeCacheFirst']) {
+    next = removeFunction(next, name);
+  }
+
+  next = next
+    .replace(/^\s*try \{ await warmThreeCache\(\); \} catch \{\}\n/m, '')
+    .replace("const keep = new Set([APP_CACHE, RUNTIME_CACHE]);", 'const keep = new Set([APP_CACHE]);')
+    .replace(/^\s*if \(url\.href === THREE_URL\) \{ event\.respondWith\(threeCacheFirst\(\)\); return; \}\n/m, '');
+
+  const marker = "'./pour-stage-priority.js',";
   if (!next.includes("'./vendor/three/three.module.min.js'")) {
     if (!next.includes(marker)) throw new Error('APP_SHELL marker not found in sw.js');
-    next = next.replace(marker, `${marker}\n  './vendor/three/three.module.min.js',\n  './vendor/three/three.core.min.js',`);
+    next = next.replace(marker, `${marker} './vendor/three/three.module.min.js', './vendor/three/three.core.min.js',`);
+  }
+
+  if (/cdn\.jsdelivr\.net\/npm\/three|unpkg\.com\/three|cdnjs\.cloudflare\.com\/ajax\/libs\/three\.js|THREE_SOURCES|THREE_URL|warmThreeCache|threeCacheFirst/.test(next)) {
+    throw new Error('Three.js external runtime remained in sw.js after patch');
   }
   return next;
 }
@@ -81,10 +121,10 @@ export async function vendorThree({ root = ROOT, fetcher = fetchPinned } = {}) {
   await writeFile(swPath, patchServiceWorkerForVendoredThree(sw));
 
   const provenance = [
-    '# Vendored Three.js',
+    '# Vendored Three.js provenance',
     '',
     `Version: ${VERSION}`,
-    'Source: https://github.com/mrdoob/three.js',
+    'Source repository: mrdoob/three.js',
     'License: MIT (SPDX headers retained in vendored build files)',
     '',
     ...written.map(file => `- ${file.path}: ${file.gitBlobSha} (${file.bytes} bytes)`),
