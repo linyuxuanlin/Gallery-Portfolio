@@ -1,4 +1,5 @@
 import { recoveryRisk } from './pour-recovery-risk.js';
+import { selectStickyFocus } from './pour-focus-stickiness.js';
 
 const finite=(value,fallback=0)=>Number.isFinite(Number(value))?Number(value):fallback;
 const clamp01=value=>Math.max(0,Math.min(1,finite(value)));
@@ -59,13 +60,17 @@ export function rankFocusTrainingCandidates(stage,baseFocus,historyStages=[]){
   }).filter(Boolean).sort((a,b)=>b.priority-a.priority||(b.recovery?.score||0)-(a.recovery?.score||0)||(b.severity||0)-(a.severity||0));
 }
 
-export function rankStageTrainingCandidates(candidates=[],historyStages=[]){
+export function rankStageTrainingCandidates(candidates=[],historyStages=[],{stickyStageId=null,stickyFocusId=null,switchMargin=.45}={}){
   return (Array.isArray(candidates)?candidates:[]).map(item=>{
     const recovery=recoveryRiskForStage(item?.stage?.id,historyStages);
     const focusCandidates=rankFocusTrainingCandidates(item?.stage,item?.focus,historyStages);
-    const selectedFocus=focusCandidates[0]||item?.focus;
+    const sticky=selectStickyFocus(focusCandidates,{
+      previousFocusId:item?.stage?.id===stickyStageId?stickyFocusId:null,
+      switchMargin,
+    });
+    const selectedFocus=sticky.selected||focusCandidates[0]||item?.focus;
     const focusRecovery=selectedFocus?.recovery||recoveryRiskForFocus(item?.stage?.id,selectedFocus?.id,historyStages);
     const priority=stageTrainingPriority({severity:selectedFocus?.severity,repeatability:item?.stage?.repeatability,recovery});
-    return{...item,focus:selectedFocus,recovery,focusRecovery,focusSwitchedByRecovery:selectedFocus?.switchedByRecovery===true,priority};
+    return{...item,focus:selectedFocus,recovery,focusRecovery,focusSwitchedByRecovery:selectedFocus?.switchedByRecovery===true,focusStickiness:sticky,priority};
   }).sort((a,b)=>b.priority-a.priority||(b.recovery?.score||0)-(a.recovery?.score||0)||(a.stage?.repeatability??1)-(b.stage?.repeatability??1));
 }
