@@ -1,5 +1,6 @@
 import { activeRecipe } from './pour-recipe.js';
 import { recipeStageHistorySummary } from './pour-training-history.js';
+import { recoveryRisk, rankRecoveryRisks } from './pour-recovery-risk.js';
 
 const FOCUS_LABELS={
   'pause-rhythm':'暂停节奏',
@@ -13,7 +14,7 @@ function ensureStyle(doc){
   if(doc.getElementById('pourRecipeStageHistoryStyle'))return;
   const style=doc.createElement('style');
   style.id='pourRecipeStageHistoryStyle';
-  style.textContent='.recipe-stage-history{display:none;margin-top:9px;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#0003}.recipe-stage-history.show{display:block}.recipe-stage-history-head{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--muted)}.recipe-stage-history-head b{color:var(--text)}.recipe-stage-history-summary{margin-top:6px;font-size:9px;color:var(--muted)}.recipe-stage-history-recovery{margin-top:5px;font-size:9px;color:var(--warn)}.recipe-stage-history-list{display:grid;gap:5px;margin-top:7px}.recipe-stage-history-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:6px 7px;border-radius:9px;background:#fff1;font-size:9px}.recipe-stage-history-row b{display:block;color:var(--text);font-size:9px}.recipe-stage-history-row span{color:var(--muted)}.recipe-stage-history-rate{align-self:center;color:var(--good);font-variant-numeric:tabular-nums}.recipe-stage-history-recovery-meta{display:block;margin-top:2px;color:var(--warn)!important}';
+  style.textContent='.recipe-stage-history{display:none;margin-top:9px;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#0003}.recipe-stage-history.show{display:block}.recipe-stage-history-head{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--muted)}.recipe-stage-history-head b{color:var(--text)}.recipe-stage-history-summary{margin-top:6px;font-size:9px;color:var(--muted)}.recipe-stage-history-recovery{margin-top:5px;font-size:9px;color:var(--warn)}.recipe-stage-history-list{display:grid;gap:5px;margin-top:7px}.recipe-stage-history-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:6px 7px;border-radius:9px;background:#fff1;font-size:9px}.recipe-stage-history-row b{display:block;color:var(--text);font-size:9px}.recipe-stage-history-row span{color:var(--muted)}.recipe-stage-history-rate{align-self:center;color:var(--good);font-variant-numeric:tabular-nums}.recipe-stage-history-recovery-meta{display:block;margin-top:2px;color:var(--warn)!important}.recipe-stage-history-risk{display:block;margin-top:2px;font-size:9px}.recipe-stage-history-risk.low{color:var(--good)!important}.recipe-stage-history-risk.medium{color:var(--muted)!important}.recipe-stage-history-risk.high,.recipe-stage-history-risk.critical{color:var(--warn)!important}';
   doc.head.appendChild(style);
 }
 
@@ -38,6 +39,11 @@ function recoveryCopy(recovery){
   return `${recovered}${average}${active}`;
 }
 
+function riskCopy(risk){
+  if(!risk?.applicable)return '';
+  return `Recovery Risk ${risk.score} · ${risk.label} · ${risk.reason}`;
+}
+
 export function renderRecipeStageHistory(doc=globalThis.document,storage=globalThis.localStorage){
   const panel=ensurePanel(doc);
   if(!panel)return {rendered:false};
@@ -45,15 +51,19 @@ export function renderRecipeStageHistory(doc=globalThis.document,storage=globalT
   const summary=recipeStageHistorySummary(storage,{recipeId:recipe.id});
   if(!summary.attempts){panel.classList.remove('show');return {rendered:false,summary,recipe}}
 
+  const overallRisk=recoveryRisk(summary.recovery);
   doc.getElementById('recipeStageHistoryMeta').textContent=`${summary.attempts} 杯验收`;
   doc.getElementById('recipeStageHistorySummary').textContent=`达标 ${Math.round(summary.passRate*100)}% · 连胜 ${summary.currentStreak} · 最长 ${summary.bestStreak} · 毕业 ${summary.graduates} · 活跃 ${summary.activeDays} 天`;
   const recoveryEl=doc.getElementById('recipeStageHistoryRecovery');
-  recoveryEl.textContent=recoveryCopy(summary.recovery);
+  const overallRecovery=recoveryCopy(summary.recovery);
+  const overallRiskText=riskCopy(overallRisk);
+  recoveryEl.textContent=[overallRecovery,overallRiskText].filter(Boolean).join(' · ');
   recoveryEl.style.display=recoveryEl.textContent?'block':'none';
 
   const list=doc.getElementById('recipeStageHistoryList');
   list.replaceChildren();
-  for(const stage of summary.stages.slice(0,6)){
+  const rankedStages=rankRecoveryRisks(summary.stages);
+  for(const stage of rankedStages.slice(0,6)){
     const row=doc.createElement('div');row.className='recipe-stage-history-row';
     const copy=doc.createElement('div');
     const title=doc.createElement('b');title.textContent=`${stage.stageName} · ${FOCUS_LABELS[stage.focusId]||stage.focusId||'专项'}`;
@@ -66,11 +76,17 @@ export function renderRecipeStageHistory(doc=globalThis.document,storage=globalT
       recoveryMeta.textContent=recovery;
       copy.appendChild(recoveryMeta);
     }
+    if(stage.recoveryRisk?.applicable){
+      const riskMeta=doc.createElement('span');
+      riskMeta.className=`recipe-stage-history-risk ${stage.recoveryRisk.level}`;
+      riskMeta.textContent=riskCopy(stage.recoveryRisk);
+      copy.appendChild(riskMeta);
+    }
     const rate=doc.createElement('div');rate.className='recipe-stage-history-rate';rate.textContent=`${Math.round(stage.passRate*100)}%`;
     row.append(copy,rate);list.appendChild(row);
   }
   panel.classList.add('show');
-  return {rendered:true,summary,recipe};
+  return {rendered:true,summary,recipe,overallRisk,rankedStages};
 }
 
 export function installRecipeStageHistory(doc=globalThis.document,storage=globalThis.localStorage){
