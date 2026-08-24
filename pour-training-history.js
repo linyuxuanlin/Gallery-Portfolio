@@ -21,6 +21,7 @@ export function trainingHistoryEvent(transition,{recordedAt=new Date().toISOStri
   const challengeTitle=e?.challenge?.title||transition?.challenge?.title||null;
   return {
     version:1,
+    type:'challenge',
     replayId:e.replayId,
     challengeId,
     challengeTitle,
@@ -32,12 +33,37 @@ export function trainingHistoryEvent(transition,{recordedAt=new Date().toISOStri
   };
 }
 
+export function recipeStageHistoryEvent(transition,{replayId,recipeId,recordedAt=new Date().toISOString()}={}){
+  const e=transition?.evaluation;
+  const plan=transition?.plan||null;
+  const stageId=plan?.stageId||transition?.completedChallenge?.stageId||null;
+  const stageName=plan?.stageName||transition?.completedChallenge?.stageName||stageId;
+  const focusId=plan?.focusId||transition?.completedChallenge?.focusId||null;
+  if(!e?.applicable||!replayId||!recipeId||!stageId||!focusId)return null;
+  const challengeId=`recipe:${recipeId}:stage:${stageId}:${focusId}`;
+  return {
+    version:1,
+    type:'recipe-stage',
+    replayId,
+    challengeId,
+    challengeTitle:`${stageName} · ${focusId}`,
+    recordedAt,
+    passed:!!e.passed,
+    value:Number.isFinite(Number(e.current))?Number(e.current):null,
+    target:Number.isFinite(Number(e.target))?Number(e.target):null,
+    graduated:transition.status==='graduated'||transition.graduated===true,
+    recipeId,
+    stageId,
+    stageName,
+    focusId,
+  };
+}
+
 export function readTrainingHistory(storage=globalThis.localStorage){
   return safeRead(storage).filter(event=>event?.replayId);
 }
 
-export function recordTrainingTransition(storage=globalThis.localStorage,transition,options={}){
-  const event=trainingHistoryEvent(transition,options);
+function recordHistoryEvent(storage,event){
   const events=readTrainingHistory(storage);
   if(!event)return {recorded:false,event:null,events};
   const key=`${event.challengeId||''}|${event.replayId}`;
@@ -46,6 +72,14 @@ export function recordTrainingTransition(storage=globalThis.localStorage,transit
   }
   const next=safeWrite(storage,[...events,event]);
   return {recorded:true,event,events:next};
+}
+
+export function recordTrainingTransition(storage=globalThis.localStorage,transition,options={}){
+  return recordHistoryEvent(storage,trainingHistoryEvent(transition,options));
+}
+
+export function recordRecipeStageTransition(storage=globalThis.localStorage,transition,options={}){
+  return recordHistoryEvent(storage,recipeStageHistoryEvent(transition,options));
 }
 
 export function summarizeTrainingHistory(events){
@@ -88,6 +122,51 @@ export function summarizeTrainingHistory(events){
     activeDays:days.size,
     challenges:challengeStats,
   };
+}
+
+export function summarizeRecipeStageHistory(events,{recipeId,stageId=null,focusId=null}={}){
+  const filtered=(Array.isArray(events)?events:[]).filter(event=>
+    event?.type==='recipe-stage'&&
+    (!recipeId||event.recipeId===recipeId)&&
+    (!stageId||event.stageId===stageId)&&
+    (!focusId||event.focusId===focusId)
+  );
+  const base=summarizeTrainingHistory(filtered);
+  const stages=new Map();
+  for(const event of filtered){
+    const key=`${event.stageId||'unknown'}:${event.focusId||'unknown'}`;
+    const stat=stages.get(key)||{
+      key,
+      stageId:event.stageId||null,
+      stageName:event.stageName||event.stageId||'阶段',
+      focusId:event.focusId||null,
+      attempts:0,
+      passes:0,
+      graduates:0,
+      lastValue:null,
+      target:null,
+      lastRecordedAt:null,
+    };
+    stat.attempts++;
+    if(event.passed)stat.passes++;
+    if(event.graduated)stat.graduates++;
+    stat.lastValue=event.value;
+    stat.target=event.target;
+    stat.lastRecordedAt=event.recordedAt||stat.lastRecordedAt;
+    stages.set(key,stat);
+  }
+  return {
+    ...base,
+    recipeId:recipeId||null,
+    stages:[...stages.values()].map(stat=>({
+      ...stat,
+      passRate:stat.attempts?stat.passes/stat.attempts:0,
+    })).sort((a,b)=>b.attempts-a.attempts||b.passRate-a.passRate),
+  };
+}
+
+export function recipeStageHistorySummary(storage=globalThis.localStorage,scope={}){
+  return summarizeRecipeStageHistory(readTrainingHistory(storage),scope);
 }
 
 export function trainingHistorySummary(storage=globalThis.localStorage){
