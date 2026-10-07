@@ -1,7 +1,7 @@
 name: Gallery checks
 on:
   push:
-    branches: [main]
+    branches: [gallery-beta]
   pull_request:
 permissions:
   contents: read
@@ -9,7 +9,6 @@ jobs:
   check:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
         browser: [chromium, webkit]
     steps:
@@ -21,6 +20,6 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npx playwright install --with-deps ${{ matrix.browser }}
-      - run: npm run test:browser
+      - run: npm run test:beta
         env:
           GALLERY_BROWSER: ${{ matrix.browser }}

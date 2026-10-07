@@ -1,3 +1,44 @@
+# POWER LIN · 白色策展实验站
+
+此分支 `gallery-beta` 是独立实验站，目标域名 https://gallery-beta.wiki-power.com/ 。原站由 `main` 部署。
+
+## Cloudflare Pages
+
+新建独立 Pages 项目 `gallery-beta`，连接本仓库，生产分支选 `gallery-beta`。框架预设 None；构建命令 `npm run build`；输出目录 `dist`；Node 版本 22。不要修改原站 Pages 项目的生产分支。构建不需要 R2 凭证。
+
+在此新项目的 Custom domains 中添加 `gallery-beta.wiki-power.com`。同一 Cloudflare 账户内的域名通常由 Pages 引导创建对应 DNS CNAME；应使用项目实际生成的 Pages 主机名，不要凭空猜测。检查域名状态 Active 与 HTTPS 证书后再验证线上各路由。当前仅完成代码和本地验证时，不应宣称 DNS 或 Pages 已部署成功。
+
+## 开发与检查
+
+```bash
+npm ci
+npm test
+npm run build
+npx serve dist
+npx playwright install --with-deps webkit chromium
+GALLERY_BROWSER=webkit npm run test:beta
+GALLERY_BROWSER=chromium npm run test:beta
+```
+
+`curation.json` 管理两张封面、12 张精选作品、地点封面和关于页图片；图片均来自原站 318 张作品。精选标题为展览式命名，描述基于图片内容，不虚构拍摄年份、客户或获奖信息。所有图片保留 R2 原图链接，进入看图后才按访客操作加载原图。
+
+`gallery-index.json` 中的 `preview` 是仓库内带内容哈希的轻量 WebP；`sourcePreview` 保留来源 R2 地址，`original` 保留原图。960 像素用于列表，封面和关于页另有 1600 像素预览。现有预览资源合计约 25.6 MiB，按页面懒加载；这不是每次访问的下载量。
+
+未来更新 R2 索引后，先下载新的预览到本地缓存，再运行：
+
+```bash
+GALLERY_SOURCE_CACHE=/absolute/path/to/r2-preview-cache npm run beta:previews
+npm run build
+```
+
+缓存文件命名为 `分类_图片名.webp`。该脚本不改动 R2 原图；不需上传任何凭证。新预览应与更新后的索引一起提交。
+
+浏览器检查覆盖 20 个页面、5 种视口、手机菜单、图片数量、原图加载、100% 查看、上一张/下一张、失败重试与超时、键盘焦点、刷新和历史导航；无 JavaScript 时仍可浏览照片并打开原图。首次部署后还要抽查真实 R2 原图。
+
+---
+
+## 原项目说明
+
 <h2 align="center">
 <img width="27" src="./public/assets/favicon.svg">
 Gallery-Portfolio 
