@@ -165,6 +165,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     await swipe(-100, 140); assert.equal(historyPage.url(), sharedURL);
     await swipe(-100, 0, 2); assert.equal(historyPage.url(), sharedURL);
     await historyPage.locator('#viewer-share').click();
+    await historyPage.waitForFunction(() => /链接/.test(document.querySelector('#viewer-status').textContent));
     assert.ok(/链接/.test(await historyPage.locator('#viewer-status').innerText()));
     await historyPage.goto(origin + '/about/');
     assert.ok((await historyPage.getByRole('link', { name: /linyuxuanlin@outlook.com/ }).getAttribute('href')).startsWith('mailto:linyuxuanlin@outlook.com'));
