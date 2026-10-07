@@ -17,7 +17,11 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const origin = process.env.GALLERY_BASE_URL || `http://127.0.0.1:${server.address().port}`;
-  const navigate = (page, url) => page.goto(url, { waitUntil: process.env.GALLERY_BASE_URL ? 'domcontentloaded' : 'load', timeout: 60000 });
+  const navigate = async (page, url) => {
+    await page.goto(url, { waitUntil: process.env.GALLERY_BASE_URL ? 'domcontentloaded' : 'load', timeout: 60000 });
+    await page.waitForFunction(() => getComputedStyle(document.body).backgroundColor === 'rgb(247, 246, 242)');
+    await page.evaluate(() => document.fonts.ready);
+  };
   const browser = await (name === 'webkit' ? webkit : chromium).launch(name === 'webkit' ? { headless: true } : { headless: true, executablePath: process.env.GALLERY_CHROMIUM_PATH || undefined, args: ['--no-sandbox', '--disable-dev-shm-usage'] }).catch(error => { server.close(); throw error; });
   const inside = async (page, selector, viewport) => {
     const box = await page.locator(selector).boundingBox();
