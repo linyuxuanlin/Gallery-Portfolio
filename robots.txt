@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gallery-beta.wiki-power.com/sitemap.xml

@@ -44,4 +44,12 @@ writeFileSync('dist/_redirects', Object.keys(data.gallery).map(category => `/${c
 writeFileSync('dist/robots.txt', 'User-agent: *\nAllow: /\nSitemap: https://gallery-beta.wiki-power.com/sitemap.xml\n');
 const routes = ['/', '/works/', '/places/', '/about/', ...Object.keys(data.gallery).map(categoryPath)];
 writeFileSync('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${routes.map(path => `<url><loc>https://gallery-beta.wiki-power.com${path}</loc></url>`).join('')}</urlset>`);
+// Keep a prebuilt root for the existing Pages project's static branch previews.
+// A separate Pages project can continue to build and publish dist normally.
+for (const route of routes) {
+  const relative = route.slice(1);
+  mkdirSync(relative || '.', { recursive: true });
+  cpSync(join('dist', relative, 'index.html'), join(relative, 'index.html'));
+}
+for (const file of ['404.html', '_redirects', 'robots.txt', 'sitemap.xml']) cpSync(join('dist', file), file);
 console.log(`Built ${routes.length} editorial pages, ${all.length} photos, ${selected.length} selected works.`);
