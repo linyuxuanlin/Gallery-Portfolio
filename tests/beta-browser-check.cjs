@@ -63,7 +63,8 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
             await page.getByRole('button', { name: '上一张作品' }).click();
             assert.equal(await page.getByRole('button', { name: '上一张作品' }).isEnabled(), false);
           }
-          await page.keyboard.press('Escape'); assert.equal(await page.locator('#viewer').isVisible(), false);
+          await page.keyboard.press('Escape'); await page.locator('#viewer').waitFor({ state: 'hidden' });
+          await page.waitForFunction(() => !document.body.classList.contains('viewer-open'));
           assert.equal(await page.locator('body').evaluate(body => body.classList.contains('viewer-open')), false);
         }
         console.log(`${name} ${viewport.width}px ${route}: layout, navigation, ${expected} photos and viewer passed`);
@@ -90,7 +91,9 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     await page.locator('#viewer-link').focus(); await page.keyboard.press('Tab'); assert.equal(await page.evaluate(() => document.activeElement.id), 'viewer-close');
     await page.keyboard.press('Shift+Tab'); assert.equal(await page.evaluate(() => document.activeElement.id), 'viewer-link');
     const popupPromise = context.waitForEvent('page'); await page.locator('#viewer-link').click(); const popup = await popupPromise; assert.ok(popup.url().startsWith(originalURL)); await popup.close();
-    await page.keyboard.press('Escape'); await page.locator('[data-photo]').first().click();
+    await page.keyboard.press('Escape'); await page.locator('#viewer').waitFor({ state: 'hidden' });
+    await page.waitForFunction(() => !document.body.classList.contains('viewer-open'));
+    await page.locator('[data-photo]').first().click();
     await context.unroute(originalURL + '**'); await context.route(originalURL + '**', () => {});
     await page.clock.install(); await page.locator('#viewer-original').click(); await page.clock.fastForward(61000); await page.getByRole('button', { name: '重试加载原图' }).waitFor();
     await page.keyboard.press('Escape');
