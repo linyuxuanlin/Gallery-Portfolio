@@ -70,7 +70,12 @@ class Gallery {
         }
 
         const path = window.location.pathname;
-        const tagFromUrl = path.substring(1); // 移除开头的斜杠
+        let tagFromUrl;
+        try {
+            tagFromUrl = decodeURIComponent(path.substring(1).replace(/\/$/, ''));
+        } catch {
+            tagFromUrl = '';
+        }
 
         console.log('处理URL参数:', { path, tagFromUrl });
 
@@ -81,19 +86,16 @@ class Gallery {
             if (categories.includes(tagFromUrl)) {
                 console.log('找到匹配的标签:', tagFromUrl);
                 this.tagFilter.selectTagByValue(tagFromUrl);
-                this.imageLoader.filterImages(tagFromUrl);
             } else {
                 console.log('标签不存在:', tagFromUrl);
                 if (this.tagFilter.getCurrentTag() !== 'all') {
                     this.tagFilter.selectTagByValue('all');
-                    this.imageLoader.filterImages('all');
                 }
             }
         } else {
             console.log('URL中没有标签参数，选择All标签');
             if (this.tagFilter.getCurrentTag() !== 'all') {
                 this.tagFilter.selectTagByValue('all');
-                this.imageLoader.filterImages('all');
             }
         }
     }
@@ -108,7 +110,7 @@ class Gallery {
                 window.history.pushState({}, '', '/');
             }
         } else {
-            const newUrl = `/${tag}`;
+            const newUrl = `/${encodeURIComponent(tag)}`;
             if (window.location.pathname !== newUrl) {
                 console.log('更新URL为:', newUrl);
                 window.history.pushState({}, '', newUrl);

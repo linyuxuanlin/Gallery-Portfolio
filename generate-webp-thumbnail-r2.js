@@ -1,140 +1,78 @@
-import {
-  S3Client,
-  HeadObjectCommand,
-  PutObjectCommand,
-  GetObjectCommand,
-  ListObjectsV2Command,
-} from "@aws-sdk/client-s3";
-import sharp from "sharp";
-import dotenv from "dotenv";
-import path from "path";
+import { S3Client, HeadObjectCommand, PutObjectCommand, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import sharp from 'sharp';
+import dotenv from 'dotenv';
+import { pathToFileURL } from 'node:url';
+import { imagePaths, normalizeDirectory } from './scripts/image-paths.js';
 
 dotenv.config();
-
-const REGION = process.env.R2_REGION || "auto";
-const ENDPOINT = process.env.R2_ENDPOINT;
-const ACCESS_KEY = process.env.R2_ACCESS_KEY_ID;
-const SECRET_KEY = process.env.R2_SECRET_ACCESS_KEY;
+const IMAGE_DIR = normalizeDirectory(process.env.R2_IMAGE_DIR);
 const BUCKET = process.env.R2_BUCKET_NAME;
-const IMAGE_DIR = (process.env.R2_IMAGE_DIR || "").replace(/^\/+|\/+$/g, "");
 const QUALITY = Number(process.env.IMAGE_COMPRESSION_QUALITY || 80);
-
+const MAX_EDGE = Number(process.env.PREVIEW_MAX_EDGE || 960);
 const s3 = new S3Client({
-  region: REGION,
-  endpoint: ENDPOINT,
-  credentials: {
-    accessKeyId: ACCESS_KEY,
-    secretAccessKey: SECRET_KEY,
-  },
+    region: process.env.R2_REGION || 'auto', endpoint: process.env.R2_ENDPOINT,
+    credentials: { accessKeyId: process.env.R2_ACCESS_KEY_ID, secretAccessKey: process.env.R2_SECRET_ACCESS_KEY },
 });
 
-const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"]; // 输入可能包含 webp
-
-function toPreviewKey(srcKey) {
-  // srcKey: gallery/Category/Filename.EXT
-  const rel = IMAGE_DIR ? srcKey.replace(new RegExp(`^${IMAGE_DIR}/`), "") : srcKey;
-  const parts = rel.split("/");
-  if (parts.length < 2) return null;
-  const category = parts[0];
-  if (category === "0_preview") return null;
-  const filename = parts[parts.length - 1];
-  const baseName = filename.replace(/\.[^.]+$/, "");
-  const prefix = IMAGE_DIR ? `${IMAGE_DIR}/` : "";
-  return `${prefix}0_preview/${category}/${baseName}.webp`;
+export async function createPreview(buffer, { quality = QUALITY, maxEdge = MAX_EDGE } = {}) {
+    if (!Number.isInteger(quality) || quality < 1 || quality > 100) throw new Error('IMAGE_COMPRESSION_QUALITY 必须为 1–100 的整数');
+    if (!Number.isInteger(maxEdge) || maxEdge < 1 || maxEdge > 4096) throw new Error('PREVIEW_MAX_EDGE 必须为 1–4096 的整数');
+    return sharp(buffer).rotate()
+        .resize({ width: maxEdge, height: maxEdge, fit: 'inside', withoutEnlargement: true })
+        .webp({ quality }).toBuffer({ resolveWithObject: true });
 }
 
-async function ensurePreviewExists(srcKey) {
-  const previewKey = toPreviewKey(srcKey);
-  if (!previewKey) return;
-
-  try {
-    await s3.send(new HeadObjectCommand({ Bucket: BUCKET, Key: previewKey }));
-    console.log(`预览已存在，跳过: ${previewKey}`);
-    return;
-  } catch (err) {
-    if (err?.$metadata?.httpStatusCode && err.$metadata.httpStatusCode !== 404) {
-      throw err;
+export async function ensurePreviewExists(source, { client = s3, bucket = BUCKET, imageDirectory = IMAGE_DIR, quality = QUALITY, maxEdge = MAX_EDGE, force = false } = {}) {
+    const paths = imagePaths(source.Key, imageDirectory);
+    if (!paths) return;
+    const recipe = `resize-v2-${maxEdge}-${quality}`;
+    const etag = source.ETag || '';
+    if (!force) {
+        try {
+            const existing = await client.send(new HeadObjectCommand({ Bucket: bucket, Key: paths.previewKey }));
+            if (existing.Metadata?.recipe === recipe && existing.Metadata?.['source-etag'] === etag) {
+                console.log(`预览未变，跳过: ${paths.previewKey}`);
+                return;
+            }
+        } catch (error) {
+            if (error?.$metadata?.httpStatusCode !== 404 && error.name !== 'NotFound' && error.name !== 'NoSuchKey') throw error;
+        }
     }
-  }
-
-  // 下载原图 -> 生成 webp -> 上传
-  const obj = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: srcKey }));
-  const fileBuffer = await streamToBuffer(obj.Body);
-
-  const previewBuffer = await sharp(fileBuffer)
-    .rotate()
-    .webp({ quality: QUALITY })
-    .toBuffer();
-
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: BUCKET,
-      Key: previewKey,
-      Body: previewBuffer,
-      ContentType: "image/webp",
-    })
-  );
-
-  console.log(`预览生成完成: ${previewKey}`);
-}
-
-async function listAllObjects(prefix) {
-  let token = undefined;
-  const out = [];
-  do {
-    const res = await s3.send(
-      new ListObjectsV2Command({ Bucket: BUCKET, Prefix: prefix, ContinuationToken: token })
-    );
-    if (res.Contents) out.push(...res.Contents);
-    token = res.NextContinuationToken;
-  } while (token);
-  return out;
-}
-
-async function streamToBuffer(stream) {
-  return new Promise((resolve, reject) => {
+    const original = await client.send(new GetObjectCommand({ Bucket: bucket, Key: paths.originalKey }));
     const chunks = [];
-    stream.on("data", (chunk) => chunks.push(chunk));
-    stream.on("end", () => resolve(Buffer.concat(chunks)));
-    stream.on("error", reject);
-  });
+    for await (const chunk of original.Body) chunks.push(Buffer.from(chunk));
+    const { data, info } = await createPreview(Buffer.concat(chunks), { quality, maxEdge });
+    await client.send(new PutObjectCommand({
+        Bucket: bucket, Key: paths.previewKey, Body: data, ContentType: 'image/webp',
+        CacheControl: 'public, max-age=3600, must-revalidate',
+        Metadata: { recipe, 'source-etag': etag, width: String(info.width), height: String(info.height) },
+    }));
+    console.log(`预览已更新 (${info.width}×${info.height}): ${paths.previewKey}`);
 }
 
 async function main() {
-  console.log("========================================");
-  console.log("生成 R2 预览图 (WebP)");
-  console.log("========================================");
-  console.log(`Bucket: ${BUCKET}`);
-  console.log(`Endpoint: ${ENDPOINT}`);
-  console.log(`目录前缀: ${IMAGE_DIR || '(root)'}`);
-
-  const objects = await listAllObjects(IMAGE_DIR);
-  const keys = objects
-    .map((o) => o.Key)
-    .filter(Boolean)
-    .filter((k) => {
-      if (IMAGE_DIR && !k.startsWith(`${IMAGE_DIR}/`)) return false;
-      if (k.endsWith("/")) return false; // 目录占位
-      if (k.includes("/0_preview/")) return false; // 跳过预览目录
-      const ext = path.extname(k).toLowerCase();
-      return IMAGE_EXTENSIONS.includes(ext);
-    });
-
-  console.log(`发现原图数量: ${keys.length}`);
-
-  for (const key of keys) {
-    try {
-      await ensurePreviewExists(key);
-    } catch (e) {
-      console.error(`处理失败: ${key}`, e?.message || e);
+    for (const name of ['R2_ENDPOINT', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET_NAME']) {
+        if (!process.env[name]) throw new Error(`缺少配置: ${name}`);
     }
-  }
-
-  console.log("全部预览处理完成");
+    let token;
+    let failures = 0;
+    do {
+        const result = await s3.send(new ListObjectsV2Command({ Bucket: BUCKET, Prefix: IMAGE_DIR ? `${IMAGE_DIR}/` : '', ContinuationToken: token }));
+        for (const source of result.Contents || []) {
+            if (!source.Key || !imagePaths(source.Key, IMAGE_DIR)) continue;
+            try {
+                await ensurePreviewExists(source, { force: process.argv.includes('--force') });
+            } catch (error) {
+                failures++;
+                console.error(`处理失败: ${source.Key}`, error.message);
+            }
+        }
+        token = result.NextContinuationToken;
+    } while (token);
+    if (failures) throw new Error(`${failures} 张预览生成失败，请重试`);
+    console.log('预览处理完成，原图保持不变。');
 }
 
-main().catch((e) => {
-  console.error("发生错误:", e?.message || e);
-  process.exit(1);
-});
-
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+    main().catch(error => { console.error(error.message); process.exitCode = 1; });
+}

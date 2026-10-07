@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 图标路径配置
     const iconPaths = {
-        dark: ['public/assets/brightness_7.svg', 'assets/brightness_7.svg', '/assets/brightness_7.svg'],
-        light: ['public/assets/brightness_4.svg', 'assets/brightness_4.svg', '/assets/brightness_4.svg']
+        dark: ['/public/assets/brightness_7.svg', 'assets/brightness_7.svg', '/assets/brightness_7.svg'],
+        light: ['/public/assets/brightness_4.svg', 'assets/brightness_4.svg', '/assets/brightness_4.svg']
     };
 
     // 智能图标加载函数

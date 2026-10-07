@@ -128,7 +128,8 @@ R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
 R2_REGION=auto
 R2_IMAGE_BASE_URL=https://your-domain.com
 R2_IMAGE_DIR=gallery
-IMAGE_COMPRESSION_QUALITY=100
+IMAGE_COMPRESSION_QUALITY=80
+    PREVIEW_MAX_EDGE=960
 
 ### 3. 生成预览图
 
@@ -188,7 +189,8 @@ npx serve .
 
 3. 部署项目：
    ```bash
-   wrangler pages deploy . --project-name your-project-name
+   npm run build
+    wrangler pages deploy dist --project-name your-project-name
    ```
 
 #### 使用部署脚本
@@ -227,7 +229,7 @@ chmod +x deploy.sh
 
 系统具备智能预览图检测功能：
 
-- 如果预览图加载失败，会自动尝试加载原图
+- 如果预览图加载失败，会显示提示，访客可主动点击加载原图
 - 确保即使预览图缺失，用户仍能正常浏览作品
 - 提供友好的错误提示和降级处理
 
@@ -281,7 +283,7 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 
 #### 部署脚本（Cloudflare Pages 会自动执行）
 
-- `npm run build` - 构建脚本（静态网站无需构建）
+- `npm run build` - 生成只含公开资源的 `dist/` 部署目录
 
 #### 本地开发脚本（仅在本地执行）
 
@@ -311,7 +313,7 @@ function buildImageUrls(categoryName, fileName, fileExt) {
 
 ### 技术实现
 
-- 使用 JavaScript 的 `sort()` 方法配合 `Math.random()` 实现随机排序
+- 使用 Fisher–Yates 洗牌生成新数组，每次筛选固定一次顺序
 - 每次调用数据加载方法时都会重新随机排序
 - 保持原有的去重逻辑，避免重复图片出现
 
@@ -406,3 +408,16 @@ ISC License
 ---
 
 **Enjoy your own Gallery!** 🎉
+
+
+## 图片加载与部署优化
+
+- 预览生成器默认生成长边不超过 960px、质量 80 的 WebP；不放大小图，也不修改原图。
+- 再次运行 `npm run r2:generate-previews` 会自动替换没有尺寸优化元数据的旧预览。之后按源图 ETag、尺寸和质量增量生成，原图更新时预览也会更新。强制刷新用 `npm run r2:generate-previews -- --force`。
+- 更新步骤：生成预览 → `npm run r2:generate-index` → `npm run build` → 部署 `dist/`。旧预览缓存可能需要一段时间才失效；若 R2 有自定义长期缓存规则，需清理对应预览缓存。
+- 列表最多并发加载 4 张预览，分类切换会取消旧任务；缺失预览不再自动下载大原图，访客可主动点击原图按钮或链接。
+- 原图按需加载，提供 100% 查看和独立原图链接。跨域链接打开原图后，可使用浏览器保存；没有客户端重新压缩。
+- 图片顺序每次筛选随机一次，加载过程中保持稳定，避免遗漏与重复。
+- Cloudflare Pages：构建命令 `npm run build`，输出目录 `dist`。手动部署也只上传 `dist/`；凭证、依赖、归档和本地脚本不进入部署产物。
+- 网站 JS/CSS 使用重新验证缓存，避免同名文件更新后仍使用旧代码。R2 标准存储有免费额度，超额仍会计费；原图和预览图都计入存储。
+- 验证：`npm test`。这里的“原图”指上传的浏览器可显示图片（例如 JPEG），不表示浏览器能够解码相机 RAW。

@@ -14,7 +14,7 @@ class DataLoader {
         this.loading = true;
         
         try {
-            const response = await fetch('gallery-index.json');
+            const response = await fetch('/gallery-index.json');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -25,11 +25,12 @@ class DataLoader {
         } catch (error) {
             console.error('加载图片数据失败:', error);
             // 返回空数据，避免页面崩溃
-            return {
+            this.galleryData = {
                 gallery: {},
                 total_images: 0,
                 generated_at: new Date().toISOString()
             };
+            return this.galleryData;
         } finally {
             this.loading = false;
         }
@@ -46,7 +47,7 @@ class DataLoader {
         if (!this.galleryData || !this.galleryData.gallery) return [];
         const images = this.galleryData.gallery[category]?.images || [];
         // 随机打乱分类内图片的顺序
-        return images.sort(() => Math.random() - 0.5);
+        return this.shuffle(images);
     }
 
     // 获取所有图片（用于"全部"标签）
@@ -73,7 +74,17 @@ class DataLoader {
         });
         
         // 随机打乱所有图片的顺序
-        return allImages.sort(() => Math.random() - 0.5);
+        return this.shuffle(allImages);
+    }
+
+    // Fisher–Yates：不修改索引中的原始数组。
+    shuffle(images) {
+        const result = [...images];
+        for (let i = result.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [result[i], result[j]] = [result[j], result[i]];
+        }
+        return result;
     }
 
     // 获取总图片数

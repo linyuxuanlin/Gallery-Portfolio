@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gallery-Portfolio</title>
-    <link rel="stylesheet" href="public/styles.css" />
-    <link rel="stylesheet" href="public/gallery.css" />
-    <link rel="icon" href="public/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/public/styles.css" />
+    <link rel="stylesheet" href="/public/gallery.css" />
+    <link rel="icon" href="/public/assets/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
     <header>
@@ -19,15 +19,15 @@
           href="https://github.com/linyuxuanlin/Gallery-Portfolio"
           target="_blank"
         >
-          <img 
-            src="public/assets/github.svg" 
-            alt="GitHub 仓库链接" 
+          <img
+            src="/public/assets/github.svg"
+            alt="GitHub 仓库链接"
             aria-label="访问 GitHub 仓库"
           />
         </a>
         <button id="theme-toggle" aria-label="切换深色/浅色主题">
           <img
-            src="public/assets/brightness_4.svg"
+            src="/public/assets/brightness_4.svg"
             alt="Toggle Theme"
             id="theme-icon"
           />
@@ -38,19 +38,23 @@
     <div class="gallery" id="gallery"></div>
 
     <!-- Modal for image display -->
-    <div id="myModal" class="modal">
-      <span class="close">&times;</span>
-      <img class="modal-content" id="img01" />
+    <div id="myModal" class="modal" role="dialog" aria-modal="true" aria-label="作品大图" tabindex="-1">
+      <button class="close" aria-label="关闭大图">&times;</button>
+      <img class="modal-content" id="img01" alt="作品大图" />
       <div id="exif-info"></div>
-      <button id="load-original-btn" class="load-original-btn">加载原图</button>
+      <div class="modal-actions">
+        <button id="load-original-btn" class="load-original-btn">加载原图</button>
+        <button id="zoom-original-btn" hidden>100% 查看</button>
+        <a id="original-link" target="_blank" rel="noopener noreferrer">打开 / 保存原图</a>
+      </div>
     </div>
 
     <!-- 加载JavaScript模块 -->
-    <script src="public/data-loader.js"></script>
-    <script src="public/tag-filter.js"></script>
-    <script src="public/image-loader.js"></script>
-    <script src="public/auto-scroll.js"></script>
-    <script src="public/layout.js"></script>
-    <script src="public/gallery.js"></script>
+    <script src="/public/data-loader.js"></script>
+    <script src="/public/tag-filter.js"></script>
+    <script src="/public/image-loader.js"></script>
+    <script src="/public/auto-scroll.js"></script>
+    <script src="/public/layout.js"></script>
+    <script src="/public/gallery.js"></script>
   </body>
-</html> 
+</html>

@@ -50,7 +50,9 @@ echo
 echo "开始部署到Cloudflare Pages..."
 echo "项目名称: gallery-portfolio-static"
 
-if wrangler pages deploy . --project-name gallery-portfolio-static; then
+npm run build || exit 1
+
+if wrangler pages deploy dist --project-name gallery-portfolio-static; then
     echo
     echo "========================================"
     echo "部署成功！"

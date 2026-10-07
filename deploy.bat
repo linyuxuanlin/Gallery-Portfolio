@@ -28,7 +28,9 @@ echo 开始部署到 Cloudflare Pages...
 echo.
 
 :: 使用wrangler部署
-wrangler pages deploy . --project-name gallery-portfolio-static
+call npm run build
+if errorlevel 1 exit /b 1
+call wrangler pages deploy dist --project-name gallery-portfolio-static
 
 if errorlevel 1 (
     echo.

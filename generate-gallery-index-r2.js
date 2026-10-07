@@ -6,8 +6,8 @@
  */
 
 import fs from "fs";
-import path from "path";
 import dotenv from "dotenv";
+import { imagePaths, normalizeDirectory, publicObjectUrl } from "./scripts/image-paths.js";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
 dotenv.config();
@@ -23,9 +23,8 @@ const ENDPOINT = process.env.R2_ENDPOINT;
 const REGION = process.env.R2_REGION || "auto";
 const ACCESS_KEY = process.env.R2_ACCESS_KEY_ID;
 const SECRET_KEY = process.env.R2_SECRET_ACCESS_KEY;
-const IMAGE_DIR = process.env.R2_IMAGE_DIR || ""; // R2 根目录下的父目录，比如 "gallery/"
+const IMAGE_DIR = normalizeDirectory(process.env.R2_IMAGE_DIR); // R2 根目录下的父目录，比如 "gallery/"
 
-const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"];
 
 // 初始化 S3 客户端
 const s3 = new S3Client({
@@ -36,17 +35,6 @@ const s3 = new S3Client({
     secretAccessKey: SECRET_KEY,
   },
 });
-
-// 构建图片URL（从 .env 读取自定义域名/路径）
-function buildImageUrls(categoryName, fileName, fileExt) {
-  const baseUrl = (process.env.R2_IMAGE_BASE_URL || "").replace(/\/+$/, ""); // 去除末尾斜杠
-  const dir = (process.env.R2_IMAGE_DIR || "").replace(/^\/+|\/+$/g, ""); // 去除首尾斜杠
-
-  const pathBase = dir ? `${baseUrl}/${dir}` : baseUrl;
-  const originalUrl = `${pathBase}/${categoryName}/${fileName}.${fileExt}`;
-  const previewUrl = `${pathBase}/0_preview/${categoryName}/${fileName}.webp`;
-  return { originalUrl, previewUrl };
-}
 
 // 从 R2 获取所有对象
 async function listAllObjects(prefix) {
@@ -73,6 +61,9 @@ async function listAllObjects(prefix) {
 
 // 主函数
 async function generateGalleryIndex() {
+  for (const name of ['R2_ENDPOINT', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET_NAME', 'R2_IMAGE_BASE_URL']) {
+    if (!process.env[name]) throw new Error(`缺少配置: ${name}`);
+  }
   console.log(`正在扫描 R2 存储桶: ${BUCKET}`);
   console.log(`输出文件: ${OUTPUT_FILE}`);
   console.log();
@@ -81,7 +72,7 @@ async function generateGalleryIndex() {
   let totalImages = 0;
 
   // 获取所有对象
-  const objects = await listAllObjects(IMAGE_DIR);
+  const objects = await listAllObjects(IMAGE_DIR ? `${IMAGE_DIR}/` : '');
 
   // 按 "目录" 分类
   const categories = {};
@@ -90,31 +81,15 @@ async function generateGalleryIndex() {
     const key = obj.Key;
     if (!key) continue;
 
-    const ext = path.extname(key).toLowerCase();
-    if (!IMAGE_EXTENSIONS.includes(ext)) continue;
-
-    // 获取 category 和 文件名
-    const relativePath = key.replace(IMAGE_DIR, "").replace(/^\/+/, "");
-    const parts = relativePath.split("/");
-    if (parts.length < 2) continue; // 必须至少有 "category/filename"
-    const categoryName = parts[0];
-    if (categoryName === "0_preview") continue; // 跳过预览目录
-
-    const file = parts[parts.length - 1];
-    const originalExt = path.extname(file);
-    const fileName = path.basename(file, originalExt);
-
-    const { originalUrl, previewUrl } = buildImageUrls(
-      categoryName,
-      fileName,
-      originalExt.substring(1)
-    );
-
+    const paths = imagePaths(key, IMAGE_DIR);
+    if (!paths) continue;
+    const categoryName = paths.category;
     const imageInfo = {
-      name: fileName,
-      original: originalUrl,
-      preview: previewUrl,
+      name: paths.name,
+      original: publicObjectUrl(process.env.R2_IMAGE_BASE_URL, paths.originalKey),
+      preview: publicObjectUrl(process.env.R2_IMAGE_BASE_URL, paths.previewKey),
       category: categoryName,
+      bytes: obj.Size,
     };
 
     if (!categories[categoryName]) {
