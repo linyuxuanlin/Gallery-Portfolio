@@ -233,12 +233,18 @@ body.dark #exif-info {
     border: none;
     border-radius: 15px;
     background-color: #e1e1e1; 
+    color: #333;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.15s ease;
 }
 
-.tag:hover {
-    background: #45a049; /* 更深的绿色 */
+@media (hover: hover) and (pointer: fine) {
+  .tag:not([aria-pressed="true"]):hover {
+    background: #d0d0d0;
+  }
+  body.dark .tag:not([aria-pressed="true"]):hover {
+    background: #444;
+  }
 }
 
 body.dark .tag-filter {
@@ -248,10 +254,6 @@ body.dark .tag-filter {
 body.dark .tag {
     background: #333;
     color: #fff;
-}
-
-body.dark .tag:hover {
-    background: #388E3C; /* 深色模式下的绿色 */
 }
 
 .tag-filter-vertical {

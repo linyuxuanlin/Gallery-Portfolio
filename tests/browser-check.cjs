@@ -1,5 +1,8 @@
 const fs=require('fs'),path=require('path'),http=require('http'),assert=require('assert/strict');
-const {chromium}=require('playwright');
+const engines=require('playwright');
+const browserName=process.env.GALLERY_BROWSER || 'chromium';
+const engine=engines[browserName];
+if(!engine || !['chromium','webkit'].includes(browserName))throw new Error('Use GALLERY_BROWSER=chromium or webkit');
 const sharp=require('sharp');
 const root=path.resolve(__dirname,'..');
 (async()=>{
@@ -8,7 +11,7 @@ const original=await sharp({create:{width:2160,height:3240,channels:3,background
 const server=http.createServer((req,res)=>{let p=new URL(req.url,'http://localhost').pathname;let f=path.join(root,p);if(!path.extname(p))f=path.join(root,'index.html');if(!fs.existsSync(f)){res.writeHead(404);res.end();return;}res.setHeader('Content-Type', f.endsWith('.css')?'text/css':f.endsWith('.js')?'text/javascript':f.endsWith('.json')?'application/json':f.endsWith('.svg')?'image/svg+xml':'text/html');res.end(fs.readFileSync(f));});
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const origin=`http://127.0.0.1:${server.address().port}`;
-const browser=await chromium.launch({executablePath:process.env.GALLERY_CHROMIUM_PATH || undefined,args:['--no-sandbox','--disable-dev-shm-usage'],headless:true}).catch(error=>{server.close();throw error;});
+const browser=await engine.launch(browserName==='chromium'?{executablePath:process.env.GALLERY_CHROMIUM_PATH || undefined,args:['--no-sandbox','--disable-dev-shm-usage'],headless:true}:{headless:true}).catch(error=>{server.close();throw error;});
 try {
 const data=JSON.parse(fs.readFileSync(path.join(root,'gallery-index.json'))); const categories=Object.keys(data.gallery);
 for(const viewport of [{width:390,height:844},{width:320,height:568},{width:844,height:390},{width:768,height:1024},{width:1440,height:900}]) {
@@ -30,14 +33,33 @@ for(const viewport of [{width:390,height:844},{width:320,height:568},{width:844,
  await page.locator('#theme-toggle').click();assert.ok(await page.locator('body').evaluate(el=>el.classList.contains('dark')));await page.reload();assert.ok(await page.locator('body').evaluate(el=>el.classList.contains('dark')));
  await page.getByRole('button',{name:'Kyoto',exact:true}).click();await page.waitForURL('**/Kyoto');await page.getByRole('button',{name:'Tokyo',exact:true}).click();await page.waitForURL('**/Tokyo');await page.goBack();await page.waitForURL('**/Kyoto');await page.goBack();await page.waitForURL(origin+'/');await page.goForward();await page.waitForURL('**/Kyoto');
  await page.goto(origin+'/%E6%9C%AA%E7%9F%A5');await page.locator('.gallery img').first().waitFor();assert.equal(await page.locator('[data-tag="all"]').getAttribute('aria-pressed'),'true');
- if(viewport.width===390||viewport.width===1440){
+ if(viewport.width<=390||viewport.width===1440){
   for(const category of ['all',...categories]){
    await page.goto(origin+'/'+(category==='all'?'':encodeURIComponent(category)));await page.locator('.gallery img').first().waitFor();
    const expected=category==='all'?Object.values(data.gallery).reduce((sum,c)=>sum+c.images.length,0):data.gallery[category].images.length;
    for(let i=0;i<70&&await page.locator('.gallery img').count()<expected;i++){await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));await page.waitForTimeout(40);}
    assert.equal(await page.locator('.gallery img').count(),expected,category+' missing pictures');assert.equal(await page.locator('.preview-error').count(),0);
    assert.equal(await page.locator(`[data-tag="${category}"]`).getAttribute('aria-pressed'),'true');
-   console.log(viewport.width+'px '+category+': '+expected+' photos, passed');
+   if(viewport.width<=390){
+    const selected=page.locator(`[data-tag="${category}"]`);
+    assert.equal(await page.locator('.tag[aria-pressed="true"]').count(),1,'multiple selected categories');
+    const nextName=category==='all'?categories[0]:'all';
+    const next=page.locator(`[data-tag="${nextName}"]`);
+    await next.hover({force:true});
+    const nextStyle=await next.evaluate(el=>({color:getComputedStyle(el).color,background:getComputedStyle(el).backgroundColor}));
+    assert.notEqual(nextStyle.background,'rgb(76, 175, 80)','touch hover looks selected');
+    assert.notEqual(nextStyle.color,'rgb(0, 122, 255)','Safari native blue label');
+    await next.tap();await selected.tap();
+    assert.equal(await page.locator('.tag[aria-pressed="true"]').count(),1);
+    await page.locator('.gallery img').first().waitFor();
+    await page.locator('.gallery img').first().tap();await inside('.close');await inside('#load-original-btn');await inside('#original-link');
+    await page.locator('#load-original-btn').tap();await page.locator('#zoom-original-btn').waitFor();await inside('#zoom-original-btn');
+    await page.locator('#zoom-original-btn').tap();assert.equal(Math.round((await page.locator('#img01').boundingBox()).width),2160);
+    await page.locator('#zoom-original-btn').tap();await inside('#img01');await page.locator('.close').tap();
+    assert.equal(await page.locator('#myModal').isVisible(),false);
+   }
+
+   console.log(browserName+' '+viewport.width+'px '+category+': '+expected+' photos and mobile functions passed');
   }
  }
  assert.deepEqual(errors,[]);console.log('PASS viewport '+viewport.width+'×'+viewport.height+' modal, original, zoom, theme, routes, history');await ctx.close();
