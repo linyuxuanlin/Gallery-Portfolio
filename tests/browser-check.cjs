@@ -45,7 +45,7 @@ for(const viewport of [{width:390,height:844},{width:320,height:568},{width:844,
     assert.equal(await page.locator('.tag[aria-pressed="true"]').count(),1,'multiple selected categories');
     const nextName=category==='all'?categories[0]:'all';
     const next=page.locator(`[data-tag="${nextName}"]`);
-    await next.hover({force:true});
+    await next.hover();
     const nextStyle=await next.evaluate(el=>({color:getComputedStyle(el).color,background:getComputedStyle(el).backgroundColor}));
     assert.notEqual(nextStyle.background,'rgb(76, 175, 80)','touch hover looks selected');
     assert.notEqual(nextStyle.color,'rgb(0, 122, 255)','Safari native blue label');
