@@ -38,6 +38,10 @@ Gallery-Portfolio
 - 🔗 **图床兼容** - 支持任意图床服务（Cloudflare R2、阿里云 OSS、腾讯云 COS 等）
 - 🎲 **随机展示** - 图片以随机顺序展示，每次刷新都有不同的排列
 
+## 🖼️ 示例站点
+
+- **[DeepSeek酱语录](https://ai-meme.cdqyfdbymn.me/)** —— 基于本项目改造的 DeepSeek 娘化表情包瀑布流站：128 张台词级梗图、标签筛选、日夜间模式、分享卡片生成，图片托管 Cloudflare R2 + Supabase
+
 ## 🏗️ 项目结构
 
 ```
