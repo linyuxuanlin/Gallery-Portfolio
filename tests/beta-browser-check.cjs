@@ -19,7 +19,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
   const origin = process.env.GALLERY_BASE_URL || `http://127.0.0.1:${server.address().port}`;
   const navigate = async (page, url) => {
     await page.goto(url, { waitUntil: process.env.GALLERY_BASE_URL ? 'domcontentloaded' : 'load', timeout: 60000 });
-    await page.waitForFunction(() => getComputedStyle(document.body).backgroundColor === 'rgb(247, 246, 242)');
+    await page.waitForFunction(() => document.body && getComputedStyle(document.body).backgroundColor === 'rgb(247, 246, 242)');
     await page.evaluate(() => document.fonts.ready);
   };
   const browser = await (name === 'webkit' ? webkit : chromium).launch(name === 'webkit' ? { headless: true } : { headless: true, executablePath: process.env.GALLERY_CHROMIUM_PATH || undefined, args: ['--no-sandbox', '--disable-dev-shm-usage'] }).catch(error => { server.close(); throw error; });
