@@ -59,12 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     themeToggle.addEventListener('click', () => {
         const isDark = document.body.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch { /* Theme still works if storage is unavailable. */ }
         loadIcon(isDark ? 'dark' : 'light', themeIcon);
     });
 
     // 初始化主题
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    let savedTheme = 'light';
+    try { savedTheme = localStorage.getItem('theme') || 'light'; } catch { /* Private/storage-restricted browsing. */ }
     setTheme(savedTheme);
 
     // Add footer dynamically

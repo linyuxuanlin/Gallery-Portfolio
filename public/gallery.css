@@ -444,3 +444,52 @@ body.dark .auto-scroll-indicator {
 header { box-sizing: border-box; height: auto; min-height: 60px; }
 @media (max-width: 600px) { header h1 { font-size: 1.1em; } .gallery { width: 94%; padding: 6px; gap: 8px; } .gallery .column { gap: 8px; } .modal-content { margin-top: 70px; max-height: 70vh; } }
 @media (prefers-reduced-motion: reduce) { .gallery img.loaded { animation: none; transform: none; } }
+
+/* Shared controls reset avoids Safari's native oversized button appearance. */
+button, .modal-actions a { -webkit-appearance: none; appearance: none; box-sizing: border-box; font-family: inherit; }
+:root { --bg-color: #fff; --shadow-color: rgba(0, 0, 0, .2); --primary-color-dark: #388e3c; }
+header { padding: 10px max(12px, env(safe-area-inset-right)) 10px max(12px, env(safe-area-inset-left)); padding-top: max(10px, env(safe-area-inset-top)); gap: 8px; }
+header h1 { min-width: 0; font-size: clamp(17px, 3vw, 24px); }
+header h1 a { display: block; margin: 0; font-size: inherit; }
+.header-buttons { align-items: center; gap: 4px; flex-shrink: 0; }
+.header-buttons a, header #theme-toggle { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin: 0; padding: 0; }
+.gallery { box-sizing: border-box; }
+.gallery .column { min-width: 0; }
+.tag { flex-shrink: 0; font-size: 14px; min-height: 36px; }
+.tag[aria-pressed="true"], body.dark .tag[aria-pressed="true"] { background: #4caf50; color: white; }
+.scroll-to-bottom:not(.visible) { visibility: hidden; pointer-events: none; }
+.auto-scroll-indicator:not(.visible) { visibility: hidden; }
+body.modal-open .scroll-to-bottom, body.modal-open .auto-scroll-indicator { visibility: hidden; }
+
+/* The photo scrolls inside its stage; toolbar and actions stay within the viewport. */
+#myModal { box-sizing: border-box; height: 100vh; height: 100dvh; overflow: hidden; background: rgba(0, 0, 0, .96); padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); grid-template-rows: auto minmax(0, 1fr) auto; overscroll-behavior: contain; touch-action: auto; }
+.modal-toolbar { display: flex; justify-content: flex-end; padding: 6px 10px; }
+#myModal .close { position: static; display: flex; align-items: center; justify-content: center; flex: 0 0 44px; width: 44px; height: 44px; min-width: 44px; min-height: 44px; margin: 0; padding: 0; border: 0; border-radius: 50%; background: #252525; color: #fff; font: 32px/1 Arial, sans-serif; cursor: pointer; }
+.modal-stage { min-height: 0; min-width: 0; display: flex; align-items: center; justify-content: center; overflow: auto; padding: 0 12px; -webkit-overflow-scrolling: touch; }
+#myModal .modal-content { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; margin: 0; object-fit: contain; flex-shrink: 0; background: transparent; }
+.modal-footer { min-width: 0; padding: 8px 12px 12px; background: #111; color: #fff; }
+#myModal #exif-info { width: auto; max-width: none; margin: 0; padding: 0 0 8px; color: #eee; font-size: 13px; overflow-wrap: anywhere; }
+#myModal #exif-info:empty { display: none; }
+#myModal .modal-actions { position: static; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; background: transparent; }
+#myModal .modal-actions button, #myModal .modal-actions a { position: static; display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 14px; font: 14px/1.3 Arial, sans-serif; white-space: nowrap; margin: 0; box-shadow: none; transform: none; background: #388e3c; color: #fff; }
+#myModal .modal-actions [hidden] { display: none; }
+#myModal #original-link { background: #333; }
+#myModal.original-size .modal-stage { display: block; }
+#myModal.original-size .modal-content { max-width: none; max-height: none; margin: 0; }
+@media (max-width: 600px) {
+  .gallery { width: 100%; padding: 0 10px; }
+  .tag-filter-vertical { box-sizing: border-box; flex-direction: row; top: var(--header-height, 64px); bottom: auto; left: 0; width: 100%; max-height: none; overflow-x: auto; overflow-y: hidden; gap: 6px; padding: 8px 10px; border-radius: 0; }
+  .tag-filter-vertical .tag { min-height: 44px; padding: 8px 14px; }
+  .modal-stage { padding: 0 8px; }
+  #myModal .modal-actions > * { flex: 1 1 auto; }
+  .scroll-to-bottom { right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
+}
+@media (max-height: 450px) {
+  .modal-toolbar { padding: 2px 8px; }
+  .modal-footer { padding: 4px 8px; }
+  #myModal #exif-info { padding-bottom: 4px; }
+}
+:focus-visible { outline: 3px solid #90caf9; outline-offset: 3px; }
+#loading.failed { display: flex; flex-direction: column; gap: 12px; width: min(80vw, 360px); color: #333; background: #fff; text-align: center; }
+#loading.failed::after { display: none; }
+#loading.failed button { min-height: 44px; border: 0; border-radius: 8px; padding: 10px 16px; background: #388e3c; color: white; cursor: pointer; }

@@ -54,6 +54,7 @@ class ImageLoader {
     getCurrentImages() { return this.currentImages; }
 
     filterImages(tag) {
+        window.gallery?.autoScroll?.stopAutoScroll();
         this.closeModal();
         this.generation++;
         // 完成旧任务、清除事件，再开启新队列，防止回调污染新分类。
@@ -92,7 +93,7 @@ class ImageLoader {
             this.queue.push({ card, data, generation });
         }
         this.pumpQueue();
-        if (this.currentIndex === this.currentImages.length) this.handleAllImagesLoaded();
+        if (this.currentIndex === this.currentImages.length && !this.queue.length && !this.activeLoads) this.handleAllImagesLoaded();
     }
 
     pumpQueue() {
@@ -150,6 +151,7 @@ class ImageLoader {
             }
             this.pumpQueue();
             this.checkIfMoreImagesNeeded();
+            if (this.currentIndex === this.currentImages.length && !this.queue.length && !this.activeLoads) this.handleAllImagesLoaded();
         };
         this.pendingLoads.add(task);
         img.onload = () => complete(true);
@@ -178,7 +180,10 @@ class ImageLoader {
     }
 
     setGalleryMarginTop() {
-        this.galleryElement.style.marginTop = `${document.querySelector('header').offsetHeight + 20}px`;
+        const headerHeight = document.querySelector('header').offsetHeight;
+        document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+        const filterHeight = window.innerWidth <= 600 ? document.querySelector('.tag-filter-vertical')?.offsetHeight || 0 : 0;
+        this.galleryElement.style.marginTop = `${headerHeight + filterHeight + 16}px`;
     }
 
     handleAllImagesLoaded() {
@@ -200,10 +205,14 @@ class ImageLoader {
         img.alt = data.name || '作品大图';
         img.removeAttribute('src');
         if (preview) img.src = preview;
-        modal.style.display = 'block';
+        modal.style.display = 'grid';
+        const stage = modal.querySelector('.modal-stage');
+        if (stage) stage.scrollTop = stage.scrollLeft = 0;
         modal.style.opacity = '1';
         modal.classList.remove('original-size');
         document.body.classList.add('no-scroll', 'modal-open');
+        this.inertElements = [...document.body.children].filter(el => el !== modal && el.tagName !== 'SCRIPT').map(el => ({ el, inert: el.inert }));
+        this.inertElements.forEach(({ el }) => { el.inert = true; });
         const button = document.getElementById('load-original-btn');
         button.style.display = 'flex';
         button.disabled = false;
@@ -216,6 +225,7 @@ class ImageLoader {
         const info = document.getElementById('exif-info');
         info.textContent = '';
         if (data.bytes) info.textContent = `原图 ${(data.bytes / 1024 / 1024).toFixed(1)} MB`;
+        if (!preview) info.textContent = '预览暂不可用，请加载原图或通过链接打开。';
         modal.focus();
     }
 
@@ -228,21 +238,30 @@ class ImageLoader {
         button.textContent = '加载原图中…';
         const image = new Image();
         this.currentHighResImage = image;
+        const fail = () => {
+            if (!this.isModalOpen || request !== this.modalRequest) return;
+            clearTimeout(this.originalTimeout);
+            image.onload = image.onerror = null;
+            image.removeAttribute('src');
+            button.disabled = false;
+            button.textContent = '重试加载原图';
+            document.getElementById('exif-info').textContent = '原图加载失败或超时，可重试或通过链接打开。';
+        };
+        this.originalTimeout = setTimeout(fail, 60000);
         image.onload = () => {
             if (!this.isModalOpen || request !== this.modalRequest) return;
+            clearTimeout(this.originalTimeout);
             const modalImg = document.getElementById('img01');
             modalImg.src = url;
+            const hadFocus = document.activeElement === button;
             button.style.display = 'none';
-            document.getElementById('zoom-original-btn').hidden = false;
+            const zoom = document.getElementById('zoom-original-btn');
+            zoom.hidden = false;
+            if (hadFocus) zoom.focus();
             document.getElementById('exif-info').textContent = `原图 ${image.naturalWidth} × ${image.naturalHeight}`;
             image.onload = image.onerror = null;
         };
-        image.onerror = () => {
-            if (!this.isModalOpen || request !== this.modalRequest) return;
-            button.disabled = false;
-            button.textContent = '重试加载原图';
-            document.getElementById('exif-info').textContent = '原图加载失败，可重试或通过链接打开。';
-        };
+        image.onerror = fail;
         image.src = url;
     }
 
@@ -250,11 +269,15 @@ class ImageLoader {
         const modal = document.getElementById('myModal');
         const img = document.getElementById('img01');
         modal.querySelector('.close').addEventListener('click', () => this.closeModal());
-        modal.addEventListener('click', event => { if (event.target === modal) this.closeModal(); });
+        modal.addEventListener('click', event => {
+            if (event.target === modal || (event.target.classList.contains('modal-stage') && !modal.classList.contains('original-size'))) this.closeModal();
+        });
         document.getElementById('load-original-btn').addEventListener('click', () => this.loadOriginalImage());
         document.getElementById('zoom-original-btn').addEventListener('click', event => {
             const zoomed = modal.classList.toggle('original-size');
             img.style.width = zoomed ? `${img.naturalWidth}px` : '';
+            const stage = modal.querySelector('.modal-stage');
+            if (stage) stage.scrollTop = stage.scrollLeft = 0;
             event.target.textContent = zoomed ? '适应屏幕' : '100% 查看';
         });
         document.addEventListener('keydown', event => {
@@ -274,6 +297,7 @@ class ImageLoader {
     }
 
     closeModal() {
+        clearTimeout(this.originalTimeout);
         this.modalRequest++;
         this.isModalOpen = false;
         if (this.currentHighResImage) {
@@ -288,6 +312,8 @@ class ImageLoader {
         img.style.width = '';
         img.removeAttribute('src');
         document.body.classList.remove('no-scroll', 'modal-open');
+        this.inertElements?.forEach(({ el, inert }) => { el.inert = inert; });
+        this.inertElements = null;
         if (this.returnFocus?.isConnected) this.returnFocus.focus({ preventScroll: true });
         this.returnFocus = null;
     }

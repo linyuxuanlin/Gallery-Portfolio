@@ -12,9 +12,12 @@ class DataLoader {
         }
 
         this.loading = true;
+        this.loadError = null;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 20000);
         
         try {
-            const response = await fetch('/gallery-index.json');
+            const response = await fetch('/gallery-index.json', { signal: controller.signal });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -23,6 +26,7 @@ class DataLoader {
             console.log('图片数据加载成功:', this.galleryData);
             return this.galleryData;
         } catch (error) {
+            this.loadError = error;
             console.error('加载图片数据失败:', error);
             // 返回空数据，避免页面崩溃
             this.galleryData = {
@@ -32,6 +36,7 @@ class DataLoader {
             };
             return this.galleryData;
         } finally {
+            clearTimeout(timeout);
             this.loading = false;
         }
     }
@@ -94,4 +99,4 @@ class DataLoader {
 }
 
 // 导出为全局变量
-window.DataLoader = DataLoader; 
+window.DataLoader = DataLoader;

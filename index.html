@@ -2,10 +2,10 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Gallery-Portfolio</title>
-    <link rel="stylesheet" href="/public/styles.css" />
-    <link rel="stylesheet" href="/public/gallery.css" />
+    <link rel="stylesheet" href="/public/styles.css?v=20261007-2" />
+    <link rel="stylesheet" href="/public/gallery.css?v=20261007-2" />
     <link rel="icon" href="/public/assets/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
@@ -39,22 +39,24 @@
 
     <!-- Modal for image display -->
     <div id="myModal" class="modal" role="dialog" aria-modal="true" aria-label="作品大图" tabindex="-1">
-      <button class="close" aria-label="关闭大图">&times;</button>
-      <img class="modal-content" id="img01" alt="作品大图" />
-      <div id="exif-info"></div>
+      <div class="modal-toolbar"><button class="close" type="button" aria-label="关闭大图">&times;</button></div>
+      <div class="modal-stage"><img class="modal-content" id="img01" alt="作品大图" /></div>
+      <div class="modal-footer">
+      <div id="exif-info" role="status" aria-live="polite"></div>
       <div class="modal-actions">
         <button id="load-original-btn" class="load-original-btn">加载原图</button>
         <button id="zoom-original-btn" hidden>100% 查看</button>
         <a id="original-link" target="_blank" rel="noopener noreferrer">打开 / 保存原图</a>
       </div>
+      </div>
     </div>
 
     <!-- 加载JavaScript模块 -->
-    <script src="/public/data-loader.js"></script>
-    <script src="/public/tag-filter.js"></script>
-    <script src="/public/image-loader.js"></script>
-    <script src="/public/auto-scroll.js"></script>
-    <script src="/public/layout.js"></script>
-    <script src="/public/gallery.js"></script>
+    <script src="/public/data-loader.js?v=20261007-2"></script>
+    <script src="/public/tag-filter.js?v=20261007-2"></script>
+    <script src="/public/image-loader.js?v=20261007-2"></script>
+    <script src="/public/auto-scroll.js?v=20261007-2"></script>
+    <script src="/public/layout.js?v=20261007-2"></script>
+    <script src="/public/gallery.js?v=20261007-2"></script>
   </body>
 </html>

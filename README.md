@@ -421,3 +421,14 @@ ISC License
 - Cloudflare Pages：构建命令 `npm run build`，输出目录 `dist`。手动部署也只上传 `dist/`；凭证、依赖、归档和本地脚本不进入部署产物。
 - 网站 JS/CSS 使用重新验证缓存，避免同名文件更新后仍使用旧代码。R2 标准存储有免费额度，超额仍会计费；原图和预览图都计入存储。
 - 验证：`npm test`。这里的“原图”指上传的浏览器可显示图片（例如 JPEG），不表示浏览器能够解码相机 RAW。
+
+### 页面与交互回归检查
+
+```bash
+npm test
+npx playwright install chromium
+npm run test:browser
+npm run build
+```
+
+浏览器检查覆盖 320/390/768/844/1440 像素视口、首页和所有分类的照片数量、分类直达与刷新、前进后退、主题、弹窗尺寸、原图与 100% 查看、索引和原图失败后的重试、焦点循环、原图链接及自动滚动停止。测试使用受控图片验证交互，不批量下载线上大图；上线后仍需抽查实际媒体与 Safari。`GALLERY_CHROMIUM_PATH` 可指定本机 Chromium，`GALLERY_SCREENSHOT_DIR` 可保存布局检查截图。每次推送 main 或提交 PR，GitHub Actions 自动执行上述检查。
