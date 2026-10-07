@@ -1,4 +1,15 @@
-# POWER LIN · 白色策展实验站
+# Power’s Gallery · 白色策展实验站
+
+品牌、合作邮箱及版权声明在 `scripts/build-beta.js` 中维护。大图支持原图、缩放、手机滑动、作品分享链接及浏览器返回；查看器显示轻微版权水印。
+
+## 无浏览器的 Cloudflare 部署
+
+`node scripts/setup-cloudflare-beta.js --plan` 可查看独立 Pages 项目及 DNS 配置计划。
+提供私有环境变量 `CLOUDFLARE_API_TOKEN`，或通过 `CF_TOKEN_FILE` 指向未提交的令牌文件后，运行 `node scripts/setup-cloudflare-beta.js`。
+令牌需要账户的 Cloudflare Pages 编辑权限，以及 `wiki-power.com` 的 Zone 读取和 DNS 编辑权限。
+脚本复用现有 `gallery-portfolio` 的 GitHub 集成，创建生产分支为 `gallery-beta` 的独立项目，配置 `npm run build` / `dist`，再绑定实验域名并验证 DNS；不会覆盖已有的冲突记录。
+认证信息不要提交到仓库。初始化后，GitHub 推送会自动触发 Pages 构建。
+也可以把令牌保存在本仓库的 Actions Secret `CLOUDFLARE_API_TOKEN`，重跑 `Setup gallery-beta` 工作流；令牌值不会出现在代码或日志中。
 
 此分支 `gallery-beta` 是独立实验站，目标域名 https://gallery-beta.wiki-power.com/ 。原站由 `main` 部署。
 
@@ -473,3 +484,8 @@ npm run build
 ```
 
 浏览器检查覆盖 320/390/768/844/1440 像素视口、首页和所有分类的照片数量、分类直达与刷新、前进后退、主题、弹窗尺寸、原图与 100% 查看、索引和原图失败后的重试、焦点循环、原图链接及自动滚动停止。测试使用受控图片验证交互，不批量下载线上大图；上线后仍需抽查实际媒体与 Safari。`GALLERY_CHROMIUM_PATH` 可指定本机 Chromium，`GALLERY_SCREENSHOT_DIR` 可保存布局检查截图。每次推送 main 或提交 PR，GitHub Actions 自动执行上述检查。
+
+## 中英文与手机浏览
+
+构建生成 40 个静态页面，中文位于 `/`，英文位于 `/en/`。首选语言为中文的浏览器初始显示中文，其他语言初始显示英文；显式英文链接保持英文。手动切换会记住偏好，作品分享链接可直接打开大图。
+手机采用独立编排、停靠导航、当前分类自动定位和不小于 44px 的大图触控区域；未加载 JavaScript 时，导航和原图链接仍然可用。

@@ -1,7 +1,7 @@
 {
   "name": "gallery-portfolio-editorial-beta",
   "version": "1.0.0",
-  "description": "POWER LIN 白色策展摄影作品站",
+  "description": "Power’s Gallery 白色策展摄影作品站",
   "main": "index.html",
   "type": "module",
   "scripts": {

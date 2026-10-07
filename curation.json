@@ -4,13 +4,17 @@
       "category": "Australia",
       "name": "DSC07520",
       "title": "潮汐的形状",
-      "description": "澳大利亚海岸，浅色沙洲与蓝绿色海水交织。"
+      "description": "澳大利亚海岸，浅色沙洲与蓝绿色海水交织。",
+      "titleEn": "Tidal Forms",
+      "descriptionEn": "Pale sandbars meet turquoise water along the Australian coast."
     },
     {
       "category": "Kyoto",
       "name": "DSC02777",
       "title": "街巷之间",
-      "description": "京都街巷中的屋顶、行人与远山。"
+      "description": "京都街巷中的屋顶、行人与远山。",
+      "titleEn": "Among the Rooftops",
+      "descriptionEn": "Rooftops, passersby and distant hills in Kyoto."
     }
   ],
   "selected": [
@@ -18,73 +22,97 @@
       "category": "Australia",
       "name": "DSC07749",
       "title": "蓝色的纹理",
-      "description": "从高处俯瞰海水与礁石的纹理。"
+      "description": "从高处俯瞰海水与礁石的纹理。",
+      "titleEn": "Blue Textures",
+      "descriptionEn": "Patterns of water and reef seen from above."
     },
     {
       "category": "Hongkong",
       "name": "DSC09617",
       "title": "城市的缝隙",
-      "description": "香港街巷中，高楼之间的行人与道路。"
+      "description": "香港街巷中，高楼之间的行人与道路。",
+      "titleEn": "Between the Buildings",
+      "descriptionEn": "A street, pedestrians and tall buildings in Hong Kong."
     },
     {
       "category": "Bankok",
       "name": "DSC04302",
       "title": "渡船上的片刻",
-      "description": "曼谷渡船上，一位乘客望向河岸。"
+      "description": "曼谷渡船上，一位乘客望向河岸。",
+      "titleEn": "A Moment on the Ferry",
+      "descriptionEn": "A passenger looks towards the riverbank from a ferry in Bangkok."
     },
     {
       "category": "Shanghai",
       "name": "IMG_20240518_223126",
       "title": "光里的身影",
-      "description": "室内展览空间中，三个人的剪影。"
+      "description": "室内展览空间中，三个人的剪影。",
+      "titleEn": "Figures in the Light",
+      "descriptionEn": "Three silhouettes inside an exhibition space."
     },
     {
       "category": "Nanjing",
       "name": "DSC00886",
       "title": "林间的光",
-      "description": "南京林间，阳光穿过树木落在草地上。"
+      "description": "南京林间，阳光穿过树木落在草地上。",
+      "titleEn": "Light Through the Trees",
+      "descriptionEn": "Sunlight falls through the trees onto grass in Nanjing."
     },
     {
       "category": "Vietnam",
       "name": "DSC00272_1",
       "title": "一餐的温度",
-      "description": "越南街头，一位厨师在灶台前烹饪。"
+      "description": "越南街头，一位厨师在灶台前烹饪。",
+      "titleEn": "A Meal in the Making",
+      "descriptionEn": "A cook at work beside a street-side stove in Vietnam."
     },
     {
       "category": "Australia",
       "name": "IMG_20240430_085311",
       "title": "经过海面",
-      "description": "蓝绿色海面上，船只留下弧形的白色航迹。"
+      "description": "蓝绿色海面上，船只留下弧形的白色航迹。",
+      "titleEn": "Across the Sea",
+      "descriptionEn": "A boat leaves a curved white wake across turquoise water."
     },
     {
       "category": "Macau",
       "name": "IMG_20240213_210927",
       "title": "一束光",
-      "description": "澳门室内空间中的十字架、石块与天光。"
+      "description": "澳门室内空间中的十字架、石块与天光。",
+      "titleEn": "A Beam of Light",
+      "descriptionEn": "A cross, stone and daylight inside a space in Macau."
     },
     {
       "category": "Osaka",
       "name": "DSC09079",
       "title": "朱红的秩序",
-      "description": "大阪，朱红色鸟居框出的神社入口。"
+      "description": "大阪，朱红色鸟居框出的神社入口。",
+      "titleEn": "Vermilion Rhythm",
+      "descriptionEn": "A vermilion torii frames a shrine entrance in Osaka."
     },
     {
       "category": "Tokyo",
       "name": "IMG_20250308_232434",
       "title": "雨落东京",
-      "description": "雨夜东京街头，灯光映照湿润的路面。"
+      "description": "雨夜东京街头，灯光映照湿润的路面。",
+      "titleEn": "Rain in Tokyo",
+      "descriptionEn": "Street lights reflect on the wet pavement in Tokyo at night."
     },
     {
       "category": "Xiamen",
       "name": "IMG_20250203_161907",
       "title": "水边的静处",
-      "description": "厦门水面上的亭子与倒影。"
+      "description": "厦门水面上的亭子与倒影。",
+      "titleEn": "Stillness by the Water",
+      "descriptionEn": "A pavilion and its reflection on the water in Xiamen."
     },
     {
       "category": "Jeju",
       "name": "DSC01813",
       "title": "灰蓝的海",
-      "description": "济州岛海岸，岩石与海鸟。"
+      "description": "济州岛海岸，岩石与海鸟。",
+      "titleEn": "A Grey-Blue Sea",
+      "descriptionEn": "Rocks and seabirds along the coast of Jeju."
     }
   ],
   "featuredPlaces": [
