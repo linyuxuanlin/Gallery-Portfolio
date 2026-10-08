@@ -43,7 +43,7 @@ npm run build
 
 ## 搜索与客户询问
 
-每页包含独立 title/description、正式域名 canonical、双语 hreflang、分享封面和结构化数据。合作页提供真实上海服务方向、项目询问邮件和作品授权入口；404 不索引。`/sitemap.xml` 包含双语页面及 318 张作品的最佳预览，`/robots.txt` 指向 sitemap。域名启用后可在 `canonicalRedirectHosts` 中填入 beta 预览主机名，构建对应的 301，避免重复地址；不要填主站 Pages 主机名。
+每页包含独立 title/description、正式域名 canonical、双语 hreflang、分享封面和结构化数据。合作页提供真实上海服务方向、项目询问邮件和作品授权入口；404 不索引。`/sitemap.xml` 包含双语页面及 318 张作品的最佳预览，`/robots.txt` 指向 sitemap。正式域名页面可索引；Cloudflare 为 Pages 预览域名自动添加 `X-Robots-Tag: noindex`，页面 canonical 指向正式域名。Pages 的 `_redirects` 不支持按主机名重定向，不应在其中写入这种无效规则。
 
 在 Google Search Console 的 wiki-power.com 域名资源（或已验证的新网址资源）提交 `https://photo-gallery.wiki-power.com/sitemap.xml`，检查首页和合作页的 URL，并持续观察有效索引、上海相关摄影查询、点击和实际询问。搜索排名由 Google 决定，技术优化和提交 sitemap 不保证前列排名。后续内容应围绕真实作品、拍摄过程与客户关心的问题补充，不堆砌关键词或虚构评价。
 

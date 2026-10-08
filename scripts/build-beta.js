@@ -84,10 +84,6 @@ for (language of ['zh', 'en']) {
   const missing = page(t('这一页尚未抵达', 'Off the map'), t('找不到这个页面。', 'This page could not be found.'), `${heading('404 / OFF THE MAP', t('这一页尚未抵达。', 'This page is off the map.'), t('回到作品，继续看见。', 'Return to the archive and keep exploring.'))}<a class="text-link" href="${local('/works/')}">${t('返回作品档案', 'Return to the archive')} ↗</a>`, '', '/404.html', { noindex: true });
   writeFileSync(join('dist', language === 'en' ? 'en/404.html' : '404.html'), missing);
 }
-for (const host of site.canonicalRedirectHosts) {
-  if (!/^[a-z0-9.-]+$/.test(host) || host === new URL(site.url).hostname) throw new Error('Invalid canonical redirect host');
-  redirects.unshift(`https://${host}/* ${site.url}/:splat 301`);
-}
 writeFileSync('dist/_redirects', redirects.join('\n') + '\n');
 writeFileSync('dist/robots.txt', `User-agent: *\nAllow: /\nSitemap: ${siteURL('/sitemap.xml')}\n`);
 writeFileSync('dist/sitemap.xml', sitemap(routes));
