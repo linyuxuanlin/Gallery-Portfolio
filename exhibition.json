@@ -4,36 +4,36 @@
   "standfirst": "潮汐退去，船只经过。有人穿过光，有人在窗边停留。",
   "standfirstEn": "Tides recede. A boat passes. Someone crosses the light; someone pauses by a window.",
   "introduction": [
-    "沙洲在水中显出轮廓，渡船把一位乘客带向河岸，雨后的路面暂时收留了霓虹。这些照片拍摄于不同的地方，却反复回到同一种相遇：在事物即将改变的片刻，与它保持一段可以凝视的距离。",
-    "十四幅作品沿水面、人的日常与光线展开。地名留在图注里；照片之间，航迹与街道、窗框与鸟居、树影与人的身影彼此应答。观看也成为一次停留，容许一个地方显露出地图之外的样子。"
+    "沙洲在水中显出轮廓，渡船上的乘客望向岸边，雨后的路面留着霓虹。这些照片来自相距很远的地方；流动的线、人的身影与一道划开空间的光，却不断把它们带到一起。",
+    "十四幅照片从海面与屋顶开始，逐渐走向岸边、街巷和室内。它们在这里重新相邻，让目光在远处与近处之间往返。"
   ],
   "introductionEn": [
-    "A sandbank takes shape in the water. A ferry carries a passenger towards the shore. A wet road holds the neon for a moment. Made in different places, these photographs return to a similar encounter: staying close enough to look as something begins to change.",
-    "Fourteen photographs unfold through water, daily life and light. Place names remain in the captions. Between pictures, wakes answer streets, windows answer gates, and shadows of trees answer human figures. Looking becomes a pause in which a place can appear beyond its position on a map."
+    "A sandbank takes shape in the water. A ferry passenger looks towards the shore. A wet road holds the neon. These photographs come from distant places, brought together by lines of movement, human figures and light crossing a space.",
+    "Fourteen photographs begin with the sea and rooftops, then move towards the shore, streets and interiors. Placed alongside one another here, they let the eye travel between what is far away and what is close at hand."
   ],
   "chapters": [
     {
       "id": "water",
       "title": "水面，余迹",
       "titleEn": "Water, traces",
-      "text": "从高处看，海水接近一张平面；礁石、船只与航迹又把距离带回来。到了岸边，岩石、浅水与亭子的倒影让目光慢下来。同样是水，有时留下经过的痕迹，有时把周围的事物暂时留住。",
-      "textEn": "From above, the sea approaches a flat surface; reefs, a boat and its wake bring distance back into the picture. At the shore, rocks, shallow water and a reflected pavilion slow the eye. Water carries traces of passage, or holds its surroundings for a moment.",
+      "text": "礁石在蓝色里铺开纹理，船的航迹把海面划出一条细线。目光降到岸边，岩石、白鸟与亭子的倒影逐渐进入画面。",
+      "textEn": "Reefs spread a texture through the blue; a boat's wake draws a thin line across the sea. As the view descends to the shore, rocks, a white bird and the reflection of a pavilion come into the frame.",
       "works": ["Australia/DSC07749", "Australia/IMG_20240430_085311", "Jeju/DSC01813", "Xiamen/IMG_20250203_161907"]
     },
     {
       "id": "passing",
       "title": "与人擦肩",
       "titleEn": "Passing lives",
-      "text": "狭窄的街道、渡船的座椅、灶台前的一步，构成了各自的日常。相机经过这里，留下人与周围空间的关系：谁被建筑围住，谁望向画外，谁正忙于手边的动作。观看停在擦肩的距离。",
-      "textEn": "A narrow street, a ferry seat and a step beside a stove belong to different daily routines. The camera passes through, attending to people in their surroundings: a figure enclosed by buildings, a gaze beyond the frame, a hand absorbed in a task. The view stays at the distance of passing by.",
+      "text": "楼宇之间，人与街道的尺度悬殊；渡船和灶台旁，距离又变得很近。一些日常在擦肩的片刻进入画面，也保留着各自的去向。",
+      "textEn": "Between buildings, people appear small against the street; beside a ferry seat or a stove, the distance closes. These daily scenes enter the frame in passing, each continuing on its own course.",
       "works": ["Hongkong/DSC09617", "Bankok/DSC04302", "Vietnam/DSC00272_1", "Tokyo/IMG_20250308_232434"]
     },
     {
       "id": "light",
       "title": "光的停留",
       "titleEn": "Where light stays",
-      "text": "光在墙面上划出边界，让人物成为剪影；一道天光照入石块之间，朱红的门框把庭院收进画面。林间的树影则把草地分成明暗。空间由此有了入口、深度，以及一段适合停留的时间。",
-      "textEn": "Light marks a boundary on a wall and turns people into silhouettes. Daylight falls among stones; vermilion gates gather a courtyard into the frame. In the woods, shadows divide the grass into light and dark. These spaces acquire an entrance, a depth and a moment in which to stay.",
+      "text": "光把墙面分成明暗，也让人影、门框与树枝有了轮廓。从室内的一道斜线到林间铺开的树影，空间在光里重新显露。",
+      "textEn": "Light divides a wall into brightness and shade, outlining figures, doorways and branches. From a diagonal inside a room to shadows spreading through the trees, light reveals the shape of a space.",
       "works": ["Shanghai/IMG_20240518_223126", "Macau/IMG_20240213_210927", "Osaka/DSC09079", "Nanjing/DSC00886"]
     }
   ],

@@ -4,6 +4,8 @@
 
 ## 参考与判断
 
+参考已扩展至十二个个展。完整比较、原始资料链接、实际排版观察与本项目的取舍见 [《个展参考：观看、编排与文字》](EXHIBITION_REFERENCES.md)。此次进一步收短总序与章节说明，用画面中的线、人物和光提示关系，减少替读者预设解读的文字。
+
 - [MoMA：Wolfgang Tillmans, To look without fear](https://www.moma.org/calendar/exhibitions/5440)。展览从观看方式切入，将多种题材放入彼此关联的图像编排。此次借鉴的是作品之间的关系与不同尺度的并置。
 - [川内伦子：M/E，Artworks](https://rinkokawauchi-me.exhibit.jp/en/works/)。页面采用清晰的系列标题、简短说明、图像与图注层级。展陈说明强调不同空间通过一条路径连接。此次借鉴章节顺序、阅读留白以及宏观与细节之间的转换。
 - [Fraenkel Gallery：Alec Soth, A Pound of Pictures](https://fraenkelgallery.com/exhibitions/alec-soth-a-pound-of-pictures)。展览页先交代核心问题，再以具体作品展开，艺术家介绍与咨询位于后部。此次借鉴主题、正文、作品、联系信息的层级。
