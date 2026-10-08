@@ -56,3 +56,35 @@
 /* Long English service names and headings must wrap on narrow Safari screens. */
 .commission-lead>*,.inquiry-section>*,.service-grid>*{min-width:0}.page-heading h1{overflow-wrap:anywhere}.commission-section .contact-email{max-width:100%}
 @media(max-width:700px){html[lang=en] .commission-page .page-heading h1{font-size:clamp(30px,9vw,44px);letter-spacing:1px}}
+
+/* The selection reads as an exhibition: opening, wall text, then three sequences. */
+.exhibition-home .exhibition-intro{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:60px;align-items:end;padding-top:45px;margin-bottom:42px}
+.exhibition-intro h1{font:clamp(44px,5.8vw,86px)/1.25 var(--serif);letter-spacing:.12em;margin-top:18px;overflow-wrap:anywhere}
+.exhibition-subtitle{display:block;margin-top:18px;font:11px/1.6 var(--sans);letter-spacing:3px;color:var(--muted)}
+.exhibition-standfirst{padding-bottom:4px;max-width:340px;justify-self:end;min-width:0}
+.exhibition-standfirst p{font:16px/2 var(--serif);color:var(--muted);letter-spacing:.5px}
+.exhibition-standfirst>.eyebrow{display:block;margin-top:23px;letter-spacing:1.5px}
+.exhibition-prologue{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:60px;margin:72px 0 108px;align-items:start}
+.exhibition-prologue h2{font-size:21px;letter-spacing:1.5px;margin-top:14px}
+.exhibition-prologue p,.chapter-heading>p{font:15px/2.15 var(--serif);color:var(--muted);letter-spacing:.5px;max-width:44em}
+.exhibition-prologue p+p{margin-top:18px}
+.exhibition-chapter{margin-top:100px}
+.chapter-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:70px;border-top:1px solid var(--line);padding-top:30px;margin-bottom:48px;align-items:start}
+.chapter-heading h2{font-size:32px;letter-spacing:3px;margin-top:14px}
+.chapter-heading>p{font-size:14px}
+.exhibition-archive-link{display:flex;justify-content:space-between;gap:24px;align-items:center;margin-top:55px}
+.exhibition-home .artist-note h2{font-size:32px;letter-spacing:2px}
+.about-layout .contact-details{font-size:11px;margin-top:20px}.photograph-context .photograph-reading{font:18px/2 var(--serif);color:var(--ink);margin-bottom:30px;letter-spacing:.5px}
+html[lang=en] .exhibition-intro h1{font-size:clamp(46px,5.4vw,82px);letter-spacing:0;max-width:9em}
+html[lang=en] .chapter-heading h2{letter-spacing:.3px}
+@media(max-width:1000px){.exhibition-home .exhibition-intro{gap:30px;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}.exhibition-standfirst p{font-size:14px}.exhibition-prologue{gap:35px}.chapter-heading{gap:35px}}
+@media(max-width:700px){
+  .exhibition-home .exhibition-intro{grid-template-columns:1fr;gap:24px;padding-top:32px;margin-bottom:30px}
+  .exhibition-intro h1{font-size:clamp(36px,9.5vw,58px);letter-spacing:.1em;margin-top:17px}
+  .exhibition-subtitle{font-size:10px;letter-spacing:2px;margin-top:13px}
+  .exhibition-standfirst{max-width:360px;justify-self:start}.exhibition-standfirst p{font-size:14px;line-height:1.9}.exhibition-standfirst>.eyebrow{margin-top:14px}
+  .exhibition-prologue{grid-template-columns:1fr;gap:22px;margin:48px 0 60px}.exhibition-prologue h2{font-size:20px;margin-top:10px}.exhibition-prologue p{font-size:14px;line-height:2.1}
+  .exhibition-chapter{margin-top:65px}.chapter-heading{grid-template-columns:1fr;gap:18px;padding-top:23px;margin-bottom:30px}.chapter-heading h2{font-size:27px;letter-spacing:2px;margin-top:11px}.chapter-heading>p{font-size:13px;line-height:2.1}
+  .exhibition-archive-link{align-items:start;flex-direction:column;gap:8px;margin-top:35px}.exhibition-home .artist-note h2{font-size:28px;letter-spacing:2px}
+  html[lang=en] .exhibition-intro h1{font-size:clamp(40px,10vw,64px);letter-spacing:0}.photograph-context .photograph-reading{font-size:16px}
+}

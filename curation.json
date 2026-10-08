@@ -6,7 +6,9 @@
       "title": "潮汐的形状",
       "description": "澳大利亚海岸，浅色沙洲与蓝绿色海水交织。",
       "titleEn": "Tidal Forms",
-      "descriptionEn": "Pale sandbars meet turquoise water along the Australian coast."
+      "descriptionEn": "Pale sandbars meet turquoise water along the Australian coast.",
+      "note": "沙洲的浅色曲线把水面分成几种深浅。远处的山与近处的潮水叠在一起，辽阔的空间有了细小而缓慢的变化。",
+      "noteEn": "Pale curves of sand divide the water into shades of depth. Distant hills meet the nearer tide, giving an expansive space a small, slow movement."
     },
     {
       "category": "Kyoto",
@@ -14,7 +16,9 @@
       "title": "街巷之间",
       "description": "京都街巷中的屋顶、行人与远山。",
       "titleEn": "Among the Rooftops",
-      "descriptionEn": "Rooftops, passersby and distant hills in Kyoto."
+      "descriptionEn": "Rooftops, passersby and distant hills in Kyoto.",
+      "note": "屋顶层层向远山延伸，行人被留在街道的窄处。建筑与山的轮廓连在一起，目光沿着人群走入画面。",
+      "noteEn": "Roofs extend towards the distant hills; people occupy the narrow street below. The outlines of buildings and mountains join, drawing the eye into the picture along the crowd."
     }
   ],
   "selected": [
@@ -24,7 +28,9 @@
       "title": "蓝色的纹理",
       "description": "从高处俯瞰海水与礁石的纹理。",
       "titleEn": "Blue Textures",
-      "descriptionEn": "Patterns of water and reef seen from above."
+      "descriptionEn": "Patterns of water and reef seen from above.",
+      "note": "礁石的纹理隔着海水显露出来。俯瞰让距离变得难以判断：海的深度，暂时成为一片颜色与线条。",
+      "noteEn": "The reef shows through the water. From above, distance becomes difficult to judge: the depth of the sea briefly takes the form of colour and line."
     },
     {
       "category": "Hongkong",
@@ -32,7 +38,9 @@
       "title": "城市的缝隙",
       "description": "香港街巷中，高楼之间的行人与道路。",
       "titleEn": "Between the Buildings",
-      "descriptionEn": "A street, pedestrians and tall buildings in Hong Kong."
+      "descriptionEn": "A street, pedestrians and tall buildings in Hong Kong.",
+      "note": "街道被高楼夹成一道细缝，人的身形因而显得很小。视线顺着建筑向下，最终落在仍然有人走过的路上。",
+      "noteEn": "Tall buildings narrow the street to a seam and make the figures seem small. The eye follows the architecture down to a road where people continue to pass."
     },
     {
       "category": "Bankok",
@@ -40,7 +48,9 @@
       "title": "渡船上的片刻",
       "description": "曼谷渡船上，一位乘客望向河岸。",
       "titleEn": "A Moment on the Ferry",
-      "descriptionEn": "A passenger looks towards the riverbank from a ferry in Bangkok."
+      "descriptionEn": "A passenger looks towards the riverbank from a ferry in Bangkok.",
+      "note": "座椅、窗框与乘客的侧影，把流动的河岸围进一个安静的片刻。船在移动，画面却把目光留在了她身旁。",
+      "noteEn": "Seats, a window frame and a passenger’s profile enclose the moving riverbank in a quiet moment. The boat is travelling, but the picture keeps our gaze beside her."
     },
     {
       "category": "Shanghai",
@@ -48,7 +58,9 @@
       "title": "光里的身影",
       "description": "室内展览空间中，三个人的剪影。",
       "titleEn": "Figures in the Light",
-      "descriptionEn": "Three silhouettes inside an exhibition space."
+      "descriptionEn": "Three silhouettes inside an exhibition space.",
+      "note": "亮处与暗处在墙面上分开，三个人的身影成为这道边界的尺度。人物之间的空隙，也像空间的一部分。",
+      "noteEn": "Light and shade divide the wall; three figures give that boundary a human scale. The gaps between them become part of the space."
     },
     {
       "category": "Nanjing",
@@ -56,15 +68,19 @@
       "title": "林间的光",
       "description": "南京林间，阳光穿过树木落在草地上。",
       "titleEn": "Light Through the Trees",
-      "descriptionEn": "Sunlight falls through the trees onto grass in Nanjing."
+      "descriptionEn": "Sunlight falls through the trees onto grass in Nanjing.",
+      "note": "树影把草地分成明亮与幽暗的部分。细密的枝干在画面里重复，光从它们之间落下来。",
+      "noteEn": "Shadows divide the grass into bright and dark areas. Slender branches repeat across the frame, with light falling between them."
     },
     {
       "category": "Vietnam",
       "name": "DSC00272_1",
-      "title": "一餐的温度",
+      "title": "灶台前",
       "description": "越南街头，一位厨师在灶台前烹饪。",
-      "titleEn": "A Meal in the Making",
-      "descriptionEn": "A cook at work beside a street-side stove in Vietnam."
+      "titleEn": "At the Stove",
+      "descriptionEn": "A cook at work beside a street-side stove in Vietnam.",
+      "note": "灶台与锅占据了前景，人的动作在器具之间展开。颜色、手势与狭窄的工作空间，构成这一刻的秩序。",
+      "noteEn": "The stove and pan occupy the foreground, with a gesture unfolding among the utensils. Colour, movement and a narrow working space give this moment its order."
     },
     {
       "category": "Australia",
@@ -72,7 +88,9 @@
       "title": "经过海面",
       "description": "蓝绿色海面上，船只留下弧形的白色航迹。",
       "titleEn": "Across the Sea",
-      "descriptionEn": "A boat leaves a curved white wake across turquoise water."
+      "descriptionEn": "A boat leaves a curved white wake across turquoise water.",
+      "note": "船很小，身后的白色线条却向远处展开。水面保存了它刚刚经过的方向，航迹也成为画面里的时间刻度。",
+      "noteEn": "The boat is small, but the white line behind it extends into the distance. The water holds the direction of its passage; the wake becomes a measure of time within the frame."
     },
     {
       "category": "Macau",
@@ -80,7 +98,9 @@
       "title": "一束光",
       "description": "澳门室内空间中的十字架、石块与天光。",
       "titleEn": "A Beam of Light",
-      "descriptionEn": "A cross, stone and daylight inside a space in Macau."
+      "descriptionEn": "A cross, stone and daylight inside a space in Macau.",
+      "note": "天光沿墙面落下，十字架与石块留在暖色的暗处。简单的形状因明暗的分界而有了重量与距离。",
+      "noteEn": "Daylight falls along the wall, while a cross and stones remain in warm shadow. A boundary between light and dark gives these simple forms weight and distance."
     },
     {
       "category": "Osaka",
@@ -88,7 +108,9 @@
       "title": "朱红的秩序",
       "description": "大阪，朱红色鸟居框出的神社入口。",
       "titleEn": "Vermilion Rhythm",
-      "descriptionEn": "A vermilion torii frames a shrine entrance in Osaka."
+      "descriptionEn": "A vermilion torii frames a shrine entrance in Osaka.",
+      "note": "重复的朱红门框把视线推向庭院。进入与停留之间，只隔着一道明亮的边界。",
+      "noteEn": "Repeating vermilion gates lead the eye towards the courtyard. A bright boundary separates entering from pausing."
     },
     {
       "category": "Tokyo",
@@ -96,7 +118,9 @@
       "title": "雨落东京",
       "description": "雨夜东京街头，灯光映照湿润的路面。",
       "titleEn": "Rain in Tokyo",
-      "descriptionEn": "Street lights reflect on the wet pavement in Tokyo at night."
+      "descriptionEn": "Street lights reflect on the wet pavement in Tokyo at night.",
+      "note": "雨水让路面成为另一幅城市图像。灯牌与人的身影在上下两层空间里相遇，倒影很快又被脚步打断。",
+      "noteEn": "Rain makes the road into another image of the city. Signs and figures meet above and below, their reflections interrupted by passing feet."
     },
     {
       "category": "Xiamen",
@@ -104,7 +128,9 @@
       "title": "水边的静处",
       "description": "厦门水面上的亭子与倒影。",
       "titleEn": "Stillness by the Water",
-      "descriptionEn": "A pavilion and its reflection on the water in Xiamen."
+      "descriptionEn": "A pavilion and its reflection on the water in Xiamen.",
+      "note": "亭子与倒影在水面上下相接。岸边的树木围住这一小块空间，使目光暂时从远处回到水边。",
+      "noteEn": "The pavilion meets its reflection across the water. Trees enclose this small space, bringing the eye back from a distance to the water’s edge."
     },
     {
       "category": "Jeju",
@@ -112,7 +138,9 @@
       "title": "灰蓝的海",
       "description": "济州岛海岸，岩石与海鸟。",
       "titleEn": "A Grey-Blue Sea",
-      "descriptionEn": "Rocks and seabirds along the coast of Jeju."
+      "descriptionEn": "Rocks and seabirds along the coast of Jeju.",
+      "note": "浅水、石块与一只白色水鸟，把海岸的边缘分成细小的层次。海面没有明确的终点，近处却有一个安静的落脚处。",
+      "noteEn": "Shallow water, stones and a white shorebird give the edge of the coast its small layers. The sea has no clear endpoint, while the foreground offers a quiet place to rest the eye."
     }
   ],
   "featuredPlaces": [
