@@ -3,13 +3,33 @@
   "name": "Power’s Gallery",
   "photographer": "Power",
   "email": "linyuxuanlin@outlook.com",
-  "city": { "zh": "上海", "en": "Shanghai" },
+  "city": {
+    "zh": "上海",
+    "en": "Shanghai"
+  },
   "services": [
-    { "zh": "旅行人文摄影", "en": "Travel & documentary photography" },
-    { "zh": "活动纪实摄影", "en": "Event documentary photography" },
-    { "zh": "风景摄影", "en": "Landscape photography" },
-    { "zh": "品牌商业摄影", "en": "Brand & commercial photography" }
+    {
+      "zh": "旅行人文摄影",
+      "en": "Travel & documentary photography"
+    },
+    {
+      "zh": "活动纪实摄影",
+      "en": "Event documentary photography"
+    },
+    {
+      "zh": "风景摄影",
+      "en": "Landscape photography"
+    },
+    {
+      "zh": "品牌商业摄影",
+      "en": "Brand & commercial photography"
+    }
   ],
-  "sameAs": ["https://wiki-power.com/", "https://github.com/linyuxuanlin"],
-  "canonicalRedirectHosts": []
+  "sameAs": [
+    "https://wiki-power.com/",
+    "https://github.com/linyuxuanlin"
+  ],
+  "canonicalRedirectHosts": [
+    "gallery-beta.gallery-portfolio.pages.dev"
+  ]
 }
