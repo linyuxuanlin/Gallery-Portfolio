@@ -37,3 +37,21 @@
 @media(max-width:700px){.header-controls{margin-left:auto}.site-header nav{margin-left:0}html[lang=en] .intro h1{font-size:26px;letter-spacing:0}html[lang=en] .ampersand{letter-spacing:0}html[lang=en] .about-layout h2{font-size:23px;letter-spacing:.2px}.language-switch{font-size:10px}.wordmark{font-size:21px}.place-caption h3 span{font-size:9px}}
 @media(min-width:701px) and (max-width:1150px){html[lang=en] .intro{display:grid;grid-template-columns:minmax(0,1fr);gap:22px}html[lang=en] .intro>p{justify-self:end;padding-bottom:0}}
 .wordmark,.footer-name{font-family:"Baskerville","Iowan Old Style",Georgia,"Times New Roman","Liberation Serif",serif}
+
+/* Commissions and photograph pages keep the editorial rhythm of the archive. */
+.intro-inquiry{display:inline-flex;align-items:center;min-height:44px;margin-top:8px;font:11px/1.6 var(--sans);letter-spacing:.3px;border-bottom:1px solid var(--line)}
+.footer-inquiry{min-height:44px;display:inline-flex;align-items:center}
+.photo-title{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px}
+.commission-lead{display:grid;grid-template-columns:1.5fr 1fr;gap:80px;padding-bottom:30px}
+.commission-lead h2{margin-bottom:20px}.commission-lead p,.commission-section p{font-size:14px;line-height:2;color:var(--muted);max-width:660px}
+.commission-aside{align-self:center;font-family:var(--serif)}
+.commission-section{margin-top:65px}.service-grid{display:grid;grid-template-columns:1fr 1fr;gap:35px 60px}
+.service-grid article{border-top:1px solid var(--line);padding-top:22px}.service-grid h3{font:24px/1.5 var(--serif);letter-spacing:1px;margin:12px 0 16px}
+.commission-works{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;align-items:start}.section-note{margin-top:24px}
+.inquiry-section{display:grid;grid-template-columns:1fr 1fr;gap:60px;border-top:1px solid var(--line);padding-top:32px}.inquiry-section h2{margin:12px 0 20px}
+.inquiry-list{padding-left:20px;margin:0;color:var(--muted);font-size:14px;line-height:2.2}
+.licensing-section{border-top:1px solid var(--line);padding-top:32px;padding-bottom:70px}.licensing-section h2{margin:12px 0 20px}
+.breadcrumbs{display:flex;flex-wrap:wrap;gap:9px 14px;padding-top:25px;font-size:11px;color:var(--muted)}.breadcrumbs a{min-height:24px;display:inline-flex;align-items:center}
+.photograph-detail{max-width:1200px;margin:0 auto;padding-bottom:70px}.photograph-context{padding-top:30px;max-width:750px}.photograph-context p{color:var(--muted);font-size:13px;line-height:2;margin-bottom:14px}.photograph-context .text-link{margin-right:28px}
+@media(max-width:1000px){.commission-lead{gap:35px}.commission-works{gap:20px}.inquiry-section{gap:35px}.service-grid{gap:30px}}
+@media(max-width:700px){.intro-inquiry{font-size:11px}.commission-lead,.inquiry-section,.service-grid,.commission-works{grid-template-columns:1fr;gap:28px}.commission-lead h2,.inquiry-section h2,.licensing-section h2{font-size:24px;letter-spacing:1px}.commission-lead p,.commission-section p{font-size:14px}.commission-section{margin-top:45px}.service-grid h3{font-size:23px}.licensing-section,.photograph-detail{padding-bottom:45px}.commission-works .photo{width:100%}.commission-works .photo:nth-child(2){width:82%;justify-self:end}.inquiry-list{font-size:13px}.breadcrumbs{padding-top:18px;font-size:10px}.photograph-context .text-link{display:flex;margin-right:0}.footer-inquiry{order:3}.site-footer>a[href="https://gallery.wiki-power.com/"]{order:4}.site-footer .copyright{order:5}}

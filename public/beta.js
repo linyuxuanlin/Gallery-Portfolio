@@ -4,8 +4,10 @@
   const tr = (zh, en) => language === 'en' ? en : zh;
   const languageSwitch = document.querySelector('.language-switch');
   languageSwitch.addEventListener('click', () => {
-    try { localStorage.setItem('power-gallery-language', languageSwitch.dataset.language); } catch {}
-    languageSwitch.href += location.hash;
+    const target = new URL(languageSwitch.href);
+    target.search = location.search;
+    target.hash = location.hash;
+    languageSwitch.href = target.href;
   });
   const menu = document.querySelector('.menu-toggle');
   const nav = document.getElementById('site-nav');
@@ -111,7 +113,8 @@
   previous.addEventListener('click', () => { if (current > 0) navigatePhoto(current - 1); });
   next.addEventListener('click', () => { if (current < photos.length - 1) navigatePhoto(current + 1); });
   share.addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(location.href); status.textContent = tr('作品链接已复制，可以分享这张照片。', 'Photograph link copied. Ready to share.'); }
+    const url = photos[current].dataset.shareUrl || location.href;
+    try { await navigator.clipboard.writeText(url); status.textContent = tr('作品链接已复制，可以分享这张照片。', 'Photograph link copied. Ready to share.'); }
     catch { status.textContent = tr('可复制地址栏中的链接，分享这张照片。', 'Copy the address bar link to share this photograph.'); }
   });
   dialog.addEventListener('keydown', event => {

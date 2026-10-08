@@ -27,7 +27,8 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     const box = await page.locator(selector).boundingBox();
     assert.ok(box && box.x >= -1 && box.y >= -1 && box.x + box.width <= viewport.width + 1 && box.y + box.height <= viewport.height + 1, `${selector} outside ${viewport.width}×${viewport.height}`);
   };
-  const routes = ['/', '/works/', '/places/', '/about/', ...Object.keys(data.gallery).map(category => `/works/${category}/`)];
+  const featured = [...new Map([...selection.hero, ...selection.selected].map(image => [image.category + '/' + image.name, image])).values()];
+  const routes = ['/', '/works/', '/places/', '/about/', '/photography/', ...Object.keys(data.gallery).map(category => `/works/${category}/`), ...featured.map(image => `/photographs/${image.category}/${image.name}/`)];
   try {
     if (process.env.GALLERY_TEST_LANGUAGE !== 'en') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
       const context = await browser.newContext({ locale: 'zh-CN', viewport, isMobile: viewport.width < 900, hasTouch: viewport.width < 900 });
@@ -40,7 +41,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
         assert.equal(await page.locator('h1').count(), 1, route + ' missing heading');
         assert.ok((await page.title()).includes('Power’s Gallery'));
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, route + ' horizontal overflow');
-        const expected = route === '/works/' ? 318 : route.startsWith('/works/') ? data.gallery[route.split('/')[2]].images.length : route === '/' ? selection.hero.length + selection.selected.length : route === '/about/' ? 1 : 0;
+        const expected = route === '/works/' ? 318 : route.startsWith('/works/') ? data.gallery[route.split('/')[2]].images.length : route === '/' ? selection.hero.length + selection.selected.length : route === '/about/' || route.startsWith('/photographs/') ? 1 : route === '/photography/' ? 3 : 0;
         assert.equal(await page.locator('[data-photo]').count(), expected, route + ' photo count');
         if (route === '/places/') assert.equal(await page.locator('.place-card').count(), 16);
         if (viewport.width <= 390) {
@@ -127,15 +128,17 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
       assert.deepEqual(errors, []); await context.close();
     }
     const auto = await browser.newContext({ locale: 'en-GB', viewport: { width: 390, height: 844 } }); const autoPage = await auto.newPage();
-    await navigate(autoPage, origin + '/works/Tokyo/'); await autoPage.waitForURL(origin + '/en/works/Tokyo/');
+    await navigate(autoPage, origin + '/works/Tokyo/');
+    assert.equal(await autoPage.locator('html').getAttribute('lang'), 'zh-CN', 'explicit Chinese URL must remain crawlable in an English browser');
+    await autoPage.locator('.language-switch').click(); await autoPage.waitForURL(origin + '/en/works/Tokyo/');
     await autoPage.locator('[data-photo]').first().click(); const photoHash = new URL(autoPage.url()).hash;
-    // Close first, then exercise the normal header switch and persistence.
+    // Close first, then exercise the normal header switch and stable language URLs.
     await autoPage.locator('#viewer-close').click(); await autoPage.locator('#viewer').waitFor({ state: 'hidden' });
     await autoPage.locator('.language-switch').click(); await autoPage.waitForURL(origin + '/works/Tokyo/');
     await autoPage.reload(); assert.equal(await autoPage.locator('html').getAttribute('lang'), 'zh-CN');
     await navigate(autoPage, origin + '/en/works/Tokyo/' + photoHash); await autoPage.locator('#viewer[open]').waitFor();
     assert.equal(await autoPage.locator('#viewer-original').innerText(), 'Load original');
-    await auto.close(); console.log('PASS environment language, manual choice, persistence and English photo links');
+    await auto.close(); console.log('PASS stable language URLs, explicit switching and English photo links');
     const context = await browser.newContext({ locale: 'zh-CN', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }); const page = await context.newPage();
     let fail = true;
     await context.route(originalURL + '**', route => route.fulfill(fail ? { status: 503 } : { contentType: 'image/jpeg', body: original }));

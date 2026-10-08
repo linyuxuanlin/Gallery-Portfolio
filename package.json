@@ -4,13 +4,14 @@
   "description": "Power’s Gallery 白色策展摄影作品站",
   "main": "index.html",
   "type": "module",
+  "engines": { "node": "^22.22.2 || >=24.15.0" },
   "scripts": {
     "build": "node scripts/build-beta.js",
     "dev": "echo '请使用本地服务器运行，如: npx serve .'",
     "serve": "npx serve .",
     "r2:generate-index": "node generate-gallery-index-r2.js",
     "r2:generate-previews": "node generate-webp-thumbnail-r2.js",
-    "test": "node --test tests/*.test.js",
+    "test": "node --test --test-concurrency=1 tests/*.test.js",
     "test:browser": "node tests/beta-browser-check.cjs",
     "test:beta": "node tests/beta-browser-check.cjs",
     "beta:previews": "node scripts/prepare-beta-previews.js"

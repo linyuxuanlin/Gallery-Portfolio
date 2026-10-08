@@ -69,7 +69,7 @@ test('category shuffle does not mutate the source index or drop photos', () => {
 
 test('build includes only public assets, independent of local credentials or scripts', () => {
     execFileSync(process.execPath, ['scripts/build-beta.js']);
-    assert.deepEqual(readdirSync('dist').sort(), ['404.html', '_headers', '_redirects', 'about', 'en', 'index.html', 'places', 'public', 'robots.txt', 'sitemap.xml', 'works']);
+    assert.deepEqual(readdirSync('dist').sort(), ['404.html', '_headers', '_redirects', 'about', 'en', 'index.html', 'photographs', 'photography', 'places', 'public', 'robots.txt', 'sitemap.xml', 'works']);
     assert.equal(existsSync('dist/works/Australia/index.html'), true);
     assert.equal(existsSync('dist/en/works/Australia/index.html'), true);
     assert.equal(existsSync('dist/.env'), false);

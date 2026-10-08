@@ -1,23 +1,14 @@
-# Power’s Gallery · 白色策展实验站
+# Power’s Gallery · 摄影作品与合作
 
-品牌、合作邮箱及版权声明在 `scripts/build-beta.js` 中维护。大图支持原图、缩放、手机滑动、作品分享链接及浏览器返回；查看器显示轻微版权水印。
+此分支 `gallery-beta` 的对外网址是 https://photo-gallery.wiki-power.com/ 。摄影师位于上海，服务旅行人文、活动纪实、风景和品牌商业摄影。品牌、域名、城市、服务和合作邮箱集中维护在 `site.config.json`；作品选择和真实描述维护在 `curation.json`。
 
-## 无浏览器的 Cloudflare 部署
+## Cloudflare Pages 与 beta 域名
 
-`node scripts/setup-cloudflare-beta.js --plan` 可查看独立 Pages 项目及 DNS 配置计划。
-提供私有环境变量 `CLOUDFLARE_API_TOKEN`，或通过 `CF_TOKEN_FILE` 指向未提交的令牌文件后，运行 `node scripts/setup-cloudflare-beta.js`。
-令牌需要账户的 Cloudflare Pages 编辑权限，以及 `wiki-power.com` 的 Zone 读取和 DNS 编辑权限。
-脚本复用现有 `gallery-portfolio` 的 GitHub 集成，创建生产分支为 `gallery-beta` 的独立项目，配置 `npm run build` / `dist`，再绑定实验域名并验证 DNS；不会覆盖已有的冲突记录。
-认证信息不要提交到仓库。初始化后，GitHub 推送会自动触发 Pages 构建。
-也可以把令牌保存在本仓库的 Actions Secret `CLOUDFLARE_API_TOKEN`，重跑 `Setup gallery-beta` 工作流；令牌值不会出现在代码或日志中。
+复用现有 `gallery-portfolio` Pages 项目：生产分支保持 `main`，`gallery-beta` 使用预览部署。先在项目 Custom domains 添加 `photo-gallery.wiki-power.com`，再将该域名的 CNAME 指向实际成功部署的 beta 分支别名 `gallery-beta.gallery-portfolio.pages.dev`，**开启 Cloudflare 代理**。只添加 CNAME 而不在 Pages 注册域名会导致错误；未开启代理会落到生产分支。参见 [Cloudflare 分支域名说明](https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/)。保留原站及其域名设置。
 
-此分支 `gallery-beta` 是独立实验站，目标域名 https://gallery-beta.wiki-power.com/ 。原站由 `main` 部署。
+仓库提交了构建后的页面，可直接静态部署；需要重新构建时使用 Node 24、`npm ci`、`npm run build`，输出为 `dist`，无需 R2 凭证。部署后检查域名 Active、HTTPS、页面内容是否来自 beta，以及 robots/sitemap。
 
-## Cloudflare Pages
-
-新建独立 Pages 项目 `gallery-beta`，连接本仓库，生产分支选 `gallery-beta`。框架预设 None；构建命令 `npm run build`；输出目录 `dist`；Node 版本 22。不要修改原站 Pages 项目的生产分支。构建不需要 R2 凭证。
-
-在此新项目的 Custom domains 中添加 `gallery-beta.wiki-power.com`。同一 Cloudflare 账户内的域名通常由 Pages 引导创建对应 DNS CNAME；应使用项目实际生成的 Pages 主机名，不要凭空猜测。检查域名状态 Active 与 HTTPS 证书后再验证线上各路由。当前仅完成代码和本地验证时，不应宣称 DNS 或 Pages 已部署成功。
+`node scripts/setup-cloudflare-beta.js --plan` 查看 API 配置计划。可选私有环境变量 `CLOUDFLARE_API_TOKEN` 或 `CF_TOKEN_FILE`；权限限于账户 Pages 编辑和 wiki-power.com 的 Zone 读取、DNS 编辑。脚本检查已有成功 beta 别名，注册自定义域，将对应 CNAME 设为代理模式；不创建新项目、不改变 main，不覆盖冲突记录。凭证不要提交。手动 Actions 工作流 `Setup gallery-beta` 使用仓库 Secret；缺少授权会明确失败。
 
 ## 开发与检查
 
@@ -31,20 +22,28 @@ GALLERY_BROWSER=webkit npm run test:beta
 GALLERY_BROWSER=chromium npm run test:beta
 ```
 
-`curation.json` 管理两张封面、12 张精选作品、地点封面和关于页图片；图片均来自原站 318 张作品。精选标题为展览式命名，描述基于图片内容，不虚构拍摄年份、客户或获奖信息。所有图片保留 R2 原图链接，进入看图后才按访客操作加载原图。
+中英文共 70 个页面：作品、地点、关于、摄影合作，以及 14 张精选作品的独立页面。语言由用户明确切换，保留当前页面、查询参数和锚点，不按浏览器语言自动跳转。大图支持原图、缩放、手机滑动、分享和浏览器返回；精选分享链接指向可抓取且有独立封面的作品页。
 
-`gallery-index.json` 中的 `preview` 是仓库内带内容哈希的轻量 WebP；`sourcePreview` 保留来源 R2 地址，`original` 保留原图。960 像素用于列表，封面和关于页另有 1600 像素预览。现有预览资源合计约 25.6 MiB，按页面懒加载；这不是每次访问的下载量。
+`curation.json` 管理两张封面、12 张精选、地点封面和关于图片，均来自原有 318 张作品。描述基于图片内容，不虚构客户、获奖或商业案例。R2 原图由访客主动打开时加载。
 
-未来更新 R2 索引后，先下载新的预览到本地缓存，再运行：
+`gallery-index.json` 的 `preview` 是带内容哈希的本地 WebP，`sourcePreview` 保留 R2 来源，`original` 保留原图。列表采用最长边 960 像素，封面及关于另有最长边 1600 像素；图片 HTML 尺寸与 srcset 使用实际像素值，避免竖图被错误标注为 960 像素宽。现有预览约 25.6 MiB，按页加载。
+
+更新 R2 索引后，下载对应来源到本地缓存，再运行：
 
 ```bash
 GALLERY_SOURCE_CACHE=/absolute/path/to/r2-preview-cache npm run beta:previews
 npm run build
 ```
 
-缓存文件命名为 `分类_图片名.webp`。该脚本不改动 R2 原图；不需上传任何凭证。新预览应与更新后的索引一起提交。
+缓存文件命名为 `分类_图片名.webp`，封面和关于的三个来源最长边必须达到 1600 像素。脚本会先检查完整缓存，不放大或将低分辨率文件冒充高清预览，不修改 R2 原图。新预览与索引一起提交；构建会拒绝未经本地预览准备的远程索引。
 
-浏览器检查覆盖 20 个页面、5 种视口、手机菜单、图片数量、原图加载、100% 查看、上一张/下一张、失败重试与超时、键盘焦点、刷新和历史导航；无 JavaScript 时仍可浏览照片并打开原图。首次部署后还要抽查真实 R2 原图。
+自动检查覆盖页面元数据、70 个页面的站内链接与双语对应、真实图片尺寸、318 张作品的图片 sitemap，以及 Chromium/WebKit 的五种视口、菜单、大图、重试、超时、焦点和历史导航。
+
+## 搜索与客户询问
+
+每页包含独立 title/description、正式域名 canonical、双语 hreflang、分享封面和结构化数据。合作页提供真实上海服务方向、项目询问邮件和作品授权入口；404 不索引。`/sitemap.xml` 包含双语页面及 318 张作品的最佳预览，`/robots.txt` 指向 sitemap。域名启用后可在 `canonicalRedirectHosts` 中填入 beta 预览主机名，构建对应的 301，避免重复地址；不要填主站 Pages 主机名。
+
+在 Google Search Console 的 wiki-power.com 域名资源（或已验证的新网址资源）提交 `https://photo-gallery.wiki-power.com/sitemap.xml`，检查首页和合作页的 URL，并持续观察有效索引、上海相关摄影查询、点击和实际询问。搜索排名由 Google 决定，技术优化和提交 sitemap 不保证前列排名。后续内容应围绕真实作品、拍摄过程与客户关心的问题补充，不堆砌关键词或虚构评价。
 
 ---
 

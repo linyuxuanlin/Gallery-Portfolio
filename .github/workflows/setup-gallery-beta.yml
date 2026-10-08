@@ -1,9 +1,6 @@
 name: Setup gallery-beta
 on:
   workflow_dispatch:
-  push:
-    branches: [gallery-beta]
-    paths: ['scripts/setup-cloudflare-beta.js', '.github/workflows/setup-gallery-beta.yml']
 permissions:
   contents: read
 jobs:
@@ -13,20 +10,17 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
       - name: Check Cloudflare authorization
         id: auth
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "configured=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Cloudflare API token is not configured; the existing branch preview remains available."
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is missing. Domain setup was not completed."
+            exit 1
           fi
-      - name: Create separate Pages project and bind beta domain
-        if: steps.auth.outputs.configured == 'true'
+      - name: Bind the photo gallery domain to the beta branch
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: node scripts/setup-cloudflare-beta.js
