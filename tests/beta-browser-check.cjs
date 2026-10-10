@@ -4,6 +4,22 @@ const sharp = require('sharp');
 const root = path.resolve(__dirname, '..'), dist = path.join(root, 'dist');
 const data = JSON.parse(fs.readFileSync(path.join(root, 'gallery-index.json')));
 const selection = JSON.parse(fs.readFileSync(path.join(root, 'curation.json')));
+const exhibits = JSON.parse(fs.readFileSync(path.join(root, 'exhibitions/index.json'))).exhibitions.map(slug => JSON.parse(fs.readFileSync(path.join(root, `exhibitions/${slug}.json`)))).filter(exhibit => exhibit.status !== 'draft');
+const exhibitionIds = exhibit => [...exhibit.opening, ...exhibit.chapters.flatMap(chapter => chapter.works)];
+const viewPath = exhibits.length ? `/exhibitions/${exhibits[0].slug}/` : '/works/';
+const sampleIds = exhibits.length ? exhibitionIds(exhibits[0]) : selection.photographs.map(image => image.category + '/' + image.name);
+const sample = sampleIds.map(id => selection.photographs.find(image => image.category + '/' + image.name === id));
+const pageSize = 72;
+const expectedPhotos = route => {
+  if (route.startsWith('/works/')) {
+    const parts = route.split('/').filter(Boolean), category = parts[1] && parts[1] !== 'page' ? parts[1] : '';
+    const number = parts.includes('page') ? Number(parts[parts.indexOf('page') + 1]) : 1;
+    const count = category ? data.gallery[category].images.length : Object.values(data.gallery).reduce((count, album) => count + album.images.length, 0);
+    return Math.max(0, Math.min(pageSize, count - (number - 1) * pageSize));
+  }
+  if (route.startsWith('/exhibitions/')) return exhibitionIds(exhibits.find(exhibit => route === `/exhibitions/${exhibit.slug}/`)).length;
+  return route === '/about/' || route.startsWith('/photographs/') ? 1 : route === '/photography/' ? selection.commission.length : 0;
+};
 const name = process.env.GALLERY_BROWSER || 'webkit';
 const originalURL = 'https://media.wiki-power.com/';
 const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
@@ -27,8 +43,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     const box = await page.locator(selector).boundingBox();
     assert.ok(box && box.x >= -1 && box.y >= -1 && box.x + box.width <= viewport.width + 1 && box.y + box.height <= viewport.height + 1, `${selector} outside ${viewport.width}×${viewport.height}`);
   };
-  const featured = [...new Map([...selection.hero, ...selection.selected].map(image => [image.category + '/' + image.name, image])).values()];
-  const routes = ['/', '/works/', '/places/', '/about/', '/photography/', ...Object.keys(data.gallery).map(category => `/works/${category}/`), ...featured.map(image => `/photographs/${image.category}/${image.name}/`)];
+  const routes = [...fs.readFileSync(path.join(dist, 'sitemap.xml'), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => new URL(match[1]).pathname).filter(route => !route.startsWith('/en/'));
   try {
     if (process.env.GALLERY_TEST_LANGUAGE !== 'en') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
       const context = await browser.newContext({ locale: 'zh-CN', viewport, isMobile: viewport.width < 900, hasTouch: viewport.width < 900 });
@@ -41,9 +56,10 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
         assert.equal(await page.locator('h1').count(), 1, route + ' missing heading');
         assert.ok((await page.title()).includes('Power’s Gallery'));
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, route + ' horizontal overflow');
-        const expected = route === '/works/' ? 318 : route.startsWith('/works/') ? data.gallery[route.split('/')[2]].images.length : route === '/' ? selection.hero.length + selection.selected.length : route === '/about/' || route.startsWith('/photographs/') ? 1 : route === '/photography/' ? 3 : 0;
+        const expected = expectedPhotos(route);
         assert.equal(await page.locator('[data-photo]').count(), expected, route + ' photo count');
-        if (route === '/places/') assert.equal(await page.locator('.place-card').count(), 16);
+        if (route === '/') { assert.equal(await page.locator('.exhibition-card').count(), exhibits.length); await page.locator('.exhibition-card').first().click(); await page.waitForURL(origin + viewPath); await navigate(page, origin); }
+        if (route === '/places/') assert.equal(await page.locator('.place-card').count(), Object.keys(data.gallery).length);
         if (viewport.width <= 390) {
           if (route.startsWith('/works/')) {
             const active = await page.locator('.filters [aria-current]').boundingBox();
@@ -85,14 +101,14 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
         console.log(`${name} ${viewport.width}px ${route}: layout, navigation, ${expected} photos and viewer passed`);
       }
       await navigate(page, origin + '/places/'); await page.locator('.place-card').first().click(); await page.waitForURL(origin + '/works/Australia/');
-      await page.reload(); assert.equal(await page.locator('[data-photo]').count(), 38);
+      await page.reload(); assert.equal(await page.locator('[data-photo]').count(), expectedPhotos('/works/Australia/'));
       await page.goBack(); await page.waitForURL(origin + '/places/'); await page.goForward(); await page.waitForURL(origin + '/works/Australia/');
       await navigate(page, origin + '/missing-page/'); assert.ok((await page.locator('h1').innerText()).includes('尚未抵达'));
       if (process.env.GALLERY_SCREENSHOT_DIR) {
         fs.mkdirSync(process.env.GALLERY_SCREENSHOT_DIR, { recursive: true });
-        await navigate(page, origin); await page.waitForFunction(() => [...document.querySelectorAll('.hero-pair img')].every(img => img.complete && img.naturalWidth > 0));
+        await navigate(page, origin); await page.waitForFunction(() => [...document.querySelectorAll('.exhibition-card img')].every(img => img.complete && img.naturalWidth > 0));
         await page.screenshot({ path: path.join(process.env.GALLERY_SCREENSHOT_DIR, `beta-home-${viewport.width}.png`), fullPage: viewport.width >= 1440 });
-        await page.locator('[data-photo]').first().click(); await page.waitForFunction(() => document.querySelector('#viewer-image').naturalWidth > 0);
+        await navigate(page, origin + viewPath); await page.locator('[data-photo]').first().click(); await page.waitForFunction(() => document.querySelector('#viewer-image').naturalWidth > 0);
         await page.screenshot({ path: path.join(process.env.GALLERY_SCREENSHOT_DIR, `beta-viewer-${viewport.width}.png`) });
       }
       assert.deepEqual(errors, []); await context.close();
@@ -142,7 +158,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     const context = await browser.newContext({ locale: 'zh-CN', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }); const page = await context.newPage();
     let fail = true;
     await context.route(originalURL + '**', route => route.fulfill(fail ? { status: 503 } : { contentType: 'image/jpeg', body: original }));
-    await navigate(page, origin); await page.locator('[data-photo]').first().click();
+    await navigate(page, origin + viewPath); await page.locator('[data-photo]').first().click();
     await page.locator('#viewer-original').click(); await page.getByRole('button', { name: '重试加载原图' }).waitFor();
     fail = false; await page.getByRole('button', { name: '重试加载原图' }).click(); await page.locator('#viewer-zoom').waitFor();
     await page.locator('#viewer-link').focus(); await page.keyboard.press('Tab'); assert.equal(await page.evaluate(() => document.activeElement.id), 'viewer-close');
@@ -157,19 +173,19 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     console.log('PASS retry, timeout, original link, focus trap and close'); await context.close();
     const historyContext = await browser.newContext({ locale: 'zh-CN', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
     const historyPage = await historyContext.newPage();
-    await navigate(historyPage, origin); await historyPage.locator('[data-photo]').first().click();
+    await navigate(historyPage, origin + viewPath); await historyPage.locator('[data-photo]').first().click();
     const sharedURL = historyPage.url();
     await historyPage.goBack(); await historyPage.locator('#viewer').waitFor({ state: 'hidden' });
     await historyPage.goForward(); await historyPage.locator('#viewer[open]').waitFor();
     await historyPage.reload(); await historyPage.locator('#viewer[open]').waitFor();
-    assert.equal(await historyPage.locator('#viewer-title').innerText(), selection.hero[0].title);
+    assert.equal(await historyPage.locator('#viewer-title').innerText(), sample[0].title);
     const swipe = async (dx, dy = 0, fingers = 1) => historyPage.evaluate(({ dx, dy, fingers }) => {
       const stage = document.querySelector('.viewer-stage');
       for (const [type, touches, changedTouches] of [['touchstart', Array.from({ length: fingers }, () => ({ clientX: 200, clientY: 200 })), []], ['touchend', [], [{ clientX: 200 + dx, clientY: 200 + dy }]]]) {
         const event = new Event(type, { bubbles: true }); Object.defineProperties(event, { touches: { value: touches }, changedTouches: { value: changedTouches } }); stage.dispatchEvent(event);
       }
     }, { dx, dy, fingers });
-    await swipe(-100); assert.equal(await historyPage.locator('#viewer-title').innerText(), selection.hero[1].title);
+    await swipe(-100); assert.equal(await historyPage.locator('#viewer-title').innerText(), sample[1].title);
     await swipe(100); assert.equal(historyPage.url(), sharedURL);
     await swipe(-100, 140); assert.equal(historyPage.url(), sharedURL);
     await swipe(-100, 0, 2); assert.equal(historyPage.url(), sharedURL);
@@ -183,11 +199,27 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     const direct = await browser.newContext({ locale: 'zh-CN' }); const directPage = await direct.newPage();
     await navigate(directPage, sharedURL); await directPage.locator('#viewer[open]').waitFor();
     await directPage.locator('#viewer-close').click(); await directPage.locator('#viewer').waitFor({ state: 'hidden' });
-    assert.equal(new URL(directPage.url()).pathname, '/'); assert.equal(new URL(directPage.url()).hash, '');
+    assert.equal(new URL(directPage.url()).pathname, viewPath); assert.equal(new URL(directPage.url()).hash, '');
     await direct.close(); console.log('PASS photo history, deep links, swipe, share, contact and copyright');
     const noJS = await browser.newContext({ locale: 'zh-CN', javaScriptEnabled: false, viewport: { width: 390, height: 844 } }); const staticPage = await noJS.newPage();
-    await navigate(staticPage, origin + '/works/'); assert.equal(await staticPage.locator('[data-photo]').count(), 318); assert.ok((await staticPage.locator('[data-photo]').first().getAttribute('href')).startsWith(originalURL));
+    await navigate(staticPage, origin + '/works/'); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/')); assert.ok((await staticPage.locator('[data-photo]').first().getAttribute('href')).startsWith(originalURL));
     for (const link of await staticPage.locator('#site-nav a').all()) assert.equal(await link.isVisible(), true);
-    await noJS.close(); console.log('PASS photos and navigation without JavaScript');
+    await staticPage.locator('.pagination [rel=next]').first().click(); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/page/2/'));
+    await navigate(staticPage, origin); assert.equal(await staticPage.locator('.exhibition-card').count(), exhibits.length);
+    await staticPage.locator('.exhibition-card').first().click(); assert.equal(new URL(staticPage.url()).pathname, viewPath);
+    await noJS.close(); console.log('PASS exhibition links, archive pagination, photos and navigation without JavaScript');
+    const legacyContext = await browser.newContext(); const legacyPage = await legacyContext.newPage();
+    await legacyPage.goto(origin + '/#photo=' + encodeURIComponent(sampleIds[0]), { waitUntil: 'commit' });
+    await legacyPage.waitForURL(origin + `/photographs/${sample[0].category}/${sample[0].name}/#photo=` + encodeURIComponent(sampleIds[0]));
+    await legacyPage.locator('#viewer[open]').waitFor(); await legacyContext.close(); console.log('PASS legacy homepage photo fragment reaches stable detail URL');
+    const archiveRoutes = JSON.parse(fs.readFileSync(path.join(dist, 'public/archive-routes.json'), 'utf8'));
+    const moved = Object.entries(archiveRoutes).find(([, route]) => route.all !== '/works/');
+    if (moved) for (const prefix of ['', '/en']) {
+      const movedContext = await browser.newContext(); const movedPage = await movedContext.newPage();
+      await movedPage.goto(origin + prefix + '/works/?shared=1#photo=' + encodeURIComponent(moved[0]), { waitUntil: 'commit' });
+      await movedPage.waitForURL(origin + prefix + moved[1].all + '?shared=1#photo=' + encodeURIComponent(moved[0]));
+      await movedPage.locator('#viewer[open]').waitFor(); await movedContext.close();
+    }
+    console.log('PASS old bilingual archive fragments follow photographs across paginated pages');
   } finally { await browser.close(); server.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

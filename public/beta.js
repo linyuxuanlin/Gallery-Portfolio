@@ -46,6 +46,17 @@
   const next = document.getElementById('viewer-next');
   const share = document.getElementById('viewer-share');
   const photos = [...document.querySelectorAll('[data-photo]')];
+  const legacyLinks = document.getElementById('legacy-photo-links');
+  const legacyPhotoRoutes = legacyLinks ? JSON.parse(legacyLinks.textContent) : {};
+  let archiveRoutes;
+  const redirectPhoto = (path, hash) => {
+    if (!path || location.hash !== hash) return;
+    const target = new URL(path, location.origin);
+    if (target.origin === location.origin && target.pathname !== location.pathname) {
+      target.search = location.search; target.hash = hash;
+      location.replace(target.href);
+    }
+  };
   let current = 0, request = 0, timer, pending, opener, scrollY = 0;
   const cancelLoad = () => { request++; clearTimeout(timer); if (pending) { pending.onload = pending.onerror = null; pending.removeAttribute('src'); pending = null; } };
   const resetZoom = () => { dialog.classList.remove('zoomed'); image.style.width = ''; zoom.textContent = tr('100% 查看', 'View at 100%'); stage.scrollTop = stage.scrollLeft = 0; };
@@ -84,6 +95,22 @@
     try { id = location.hash.startsWith('#photo=') ? decodeURIComponent(location.hash.slice(7)) : ''; } catch { id = ''; }
     const index = photos.findIndex(photo => photo.dataset.photoId === id);
     if (index >= 0) { setMenu(false); if (!dialog.open || current !== index) show(index); }
+    else if (id && legacyPhotoRoutes[id]) {
+      // Old homepage photo fragments now lead to the photograph's stable detail page.
+      redirectPhoto(legacyPhotoRoutes[id], location.hash);
+    }
+    else if (id && /^\/(?:en\/)?works\//.test(location.pathname)) {
+      const hash = location.hash, global = /^\/(?:en\/)?works\/(?:page\/\d+\/)?$/.test(location.pathname);
+      // Load the small route index only when a shared photograph moved off this page.
+      archiveRoutes ||= fetch('/public/archive-routes.json').then(response => {
+        if (!response.ok) throw new Error('Archive route index unavailable.');
+        return response.json();
+      });
+      archiveRoutes.then(routes => {
+        const path = routes[id]?.[global ? 'all' : 'place'];
+        if (path) redirectPhoto((language === 'en' ? '/en' : '') + path, hash);
+      }).catch(() => {});
+    }
     else if (dialog.open) dialog.close();
   };
   addEventListener('popstate', syncLocation); addEventListener('hashchange', syncLocation);

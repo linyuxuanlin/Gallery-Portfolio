@@ -5,6 +5,15 @@ import { join } from 'node:path';
 import { JSDOM } from 'jsdom';
 import sharp from 'sharp';
 import { site } from '../scripts/site-config.js';
+import { readExhibitions, exhibitionPhotoIds } from '../scripts/exhibitions.js';
+import { ARCHIVE_PAGE_SIZE } from '../scripts/archive.js';
+
+const library = Object.values(JSON.parse(readFileSync('gallery-index.json', 'utf8')).gallery);
+const publicExhibitions = readExhibitions().filter(exhibition => exhibition.status !== 'draft');
+const captions = JSON.parse(readFileSync('curation.json', 'utf8')).photographs;
+const details = new Set([...captions.map(image => image.category + '/' + image.name), ...publicExhibitions.flatMap(exhibitionPhotoIds)]);
+const totalImages = library.reduce((count, album) => count + album.images.length, 0);
+const expectedPageCount = 2 * (4 + details.size + publicExhibitions.length + Math.ceil(totalImages / ARCHIVE_PAGE_SIZE) + library.reduce((count, album) => count + Math.max(1, Math.ceil(album.images.length / ARCHIVE_PAGE_SIZE)), 0));
 
 const root = new URL('../', import.meta.url).pathname;
 function pages(directory = 'dist') {
@@ -54,7 +63,7 @@ test('published pages have distinct metadata, matching bilingual canonicals, val
     }
     dom.window.close();
   }
-  assert.equal(count, 70);
+  assert.equal(count, expectedPageCount);
   assert.ok(readFileSync('dist/index.html', 'utf8').includes('上海摄影师'));
   assert.ok(!readFileSync('dist/index.html', 'utf8').includes('location.replace'));
 });
@@ -86,7 +95,7 @@ test('sitemap lists only published pages, reciprocal language variants and a pre
   const doc = new JSDOM(readFileSync('dist/sitemap.xml', 'utf8'), { contentType: 'application/xml' }).window.document;
   const ns = 'http://www.sitemaps.org/schemas/sitemap/0.9';
   const entries = [...doc.getElementsByTagNameNS(ns, 'url')], images = new Set();
-  assert.equal(entries.length, 70);
+  assert.equal(entries.length, expectedPageCount);
   const paths = new Set();
   for (const entry of entries) {
     const url = new URL(entry.getElementsByTagNameNS(ns, 'loc')[0].textContent);
@@ -99,7 +108,7 @@ test('sitemap lists only published pages, reciprocal language variants and a pre
   const data = JSON.parse(readFileSync('gallery-index.json', 'utf8'));
   const expected = new Set(Object.values(data.gallery).flatMap(album => album.images.map(image => site.url + (image.largePreview || image.preview))));
   assert.deepEqual(images, expected);
-  assert.equal(images.size, 318);
+  assert.equal(images.size, totalImages);
   assert.ok(readFileSync('dist/robots.txt', 'utf8').includes(site.url + '/sitemap.xml'));
 });
 

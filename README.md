@@ -1,6 +1,6 @@
-# Power’s Gallery · 摄影作品与合作
+# Power’s Gallery · 摄影特展与作品档案
 
-此分支 `gallery-beta` 的对外网址是 https://photo-gallery.wiki-power.com/ 。摄影师位于上海，服务旅行人文、活动纪实、风景和品牌商业摄影。品牌、域名、城市、服务和合作邮箱集中维护在 `site.config.json`；作品选择和真实描述维护在 `curation.json`。
+此分支 `gallery-beta` 的对外网址是 https://photo-gallery.wiki-power.com/ 。摄影师位于上海，服务旅行人文、活动纪实、风景和品牌商业摄影。品牌、域名、城市、服务和合作邮箱集中维护在 `site.config.json`；各场特展独立维护在 `exhibitions/`，作品的真实描述维护在 `curation.json`，创作自述维护在 `artist.json`。后续批量上传与选片流程见 [特展维护说明](CURATION_WORKFLOW.md)。
 
 ## Cloudflare Pages 与 beta 域名
 
@@ -22,11 +22,11 @@ GALLERY_BROWSER=webkit npm run test:beta
 GALLERY_BROWSER=chromium npm run test:beta
 ```
 
-首页保留原有的策展布局、文案和页脚，不添加摄影合作推广入口；服务信息放在关于页与独立摄影合作页。
+首页作为特展目录，点入独立的主题展览。展览保留原有的白色策展布局、文字与图片编排，不添加首页摄影合作推广区块；服务信息放在关于页与独立委托页。
 
-中英文共 70 个页面：作品、地点、关于、摄影合作，以及 14 张精选作品的独立页面。语言由用户明确切换，保留当前页面、查询参数和锚点，不按浏览器语言自动跳转。大图支持原图、缩放、手机滑动、分享和浏览器返回；精选分享链接指向可抓取且有独立封面的作品页。
+当前中英文共 80 个页面：特展目录、《短暂的在场》独立展览、分页作品档案、地点、关于、委托，以及 14 张精选作品的独立详情页。页面数量随图库和展览清单自动变化。语言由用户明确切换，保留当前页面、查询参数和锚点，不按浏览器语言自动跳转。大图支持原图、缩放、手机滑动、分享和浏览器返回；精选分享链接指向可抓取且有独立封面的作品页。
 
-`curation.json` 管理两张封面、12 张精选、地点封面和关于图片，均来自原有 318 张作品。描述基于图片内容，不虚构客户、获奖或商业案例。R2 原图由访客主动打开时加载。
+`exhibitions/index.json` 登记各场展览，单场清单确定封面、序章和章节顺序；构建检查已发布、草稿与归档选片互不重复。`curation.json` 管理已公开作品的图注、地点封面、关于和委托图片，均来自现有 318 张作品。完整图库每页最多 72 张，首场使用 14 张，另有 304 张未分配。描述基于图片内容，不虚构客户、获奖或商业案例。R2 原图由访客主动打开时加载。
 
 `gallery-index.json` 的 `preview` 是带内容哈希的本地 WebP，`sourcePreview` 保留 R2 来源，`original` 保留原图。列表采用最长边 960 像素，封面及关于另有最长边 1600 像素；图片 HTML 尺寸与 srcset 使用实际像素值，避免竖图被错误标注为 960 像素宽。现有预览约 25.6 MiB，按页加载。
 
@@ -34,16 +34,18 @@ GALLERY_BROWSER=chromium npm run test:beta
 
 ```bash
 GALLERY_SOURCE_CACHE=/absolute/path/to/r2-preview-cache npm run beta:previews
+npm run curate:inventory
+npm run curate:review -- --all
 npm run build
 ```
 
-缓存文件命名为 `分类_图片名.webp`，封面和关于的三个来源最长边必须达到 1600 像素。脚本会先检查完整缓存，不放大或将低分辨率文件冒充高清预览，不修改 R2 原图。新预览与索引一起提交；构建会拒绝未经本地预览准备的远程索引。
+缓存文件命名为 `分类_图片名.webp`，各场封面、序章和关于的来源最长边必须达到 1600 像素。脚本会先检查完整缓存，不放大或将低分辨率文件冒充高清预览，不修改 R2 原图。新预览与索引一起提交；构建会拒绝未经本地预览准备的远程索引。
 
-自动检查覆盖页面元数据、70 个页面的站内链接与双语对应、真实图片尺寸、318 张作品的图片 sitemap，以及 Chromium/WebKit 的五种视口、菜单、大图、重试、超时、焦点和历史导航。
+自动检查覆盖页面元数据、所有页面的站内链接与双语对应、跨展去重和大规模档案分页完整性、真实图片尺寸、全部作品的图片 sitemap，以及 Chromium/WebKit 的五种视口、菜单、大图、重试、超时、焦点和历史导航。
 
 ## 搜索与客户询问
 
-每页包含独立 title/description、正式域名 canonical、双语 hreflang、分享封面和结构化数据。合作页提供真实上海服务方向、项目询问邮件和作品授权入口；404 不索引。`/sitemap.xml` 包含双语页面及 318 张作品的最佳预览，`/robots.txt` 指向 sitemap。正式域名页面可索引；Cloudflare 为 Pages 预览域名自动添加 `X-Robots-Tag: noindex`，页面 canonical 指向正式域名。Pages 的 `_redirects` 不支持按主机名重定向，不应在其中写入这种无效规则。
+每页包含独立 title/description、正式域名 canonical、双语 hreflang、分享封面和结构化数据。合作页提供真实上海服务方向、项目询问邮件和作品授权入口；404 不索引。`/sitemap.xml` 包含双语页面及完整图库的最佳预览，`/robots.txt` 指向 sitemap。正式域名页面可索引；Cloudflare 为 Pages 预览域名自动添加 `X-Robots-Tag: noindex`，页面 canonical 指向正式域名。Pages 的 `_redirects` 不支持按主机名重定向，不应在其中写入这种无效规则。
 
 在 Google Search Console 的 wiki-power.com 域名资源（或已验证的新网址资源）提交 `https://photo-gallery.wiki-power.com/sitemap.xml`，检查首页和合作页的 URL，并持续观察有效索引、上海相关摄影查询、点击和实际询问。搜索排名由 Google 决定，技术优化和提交 sitemap 不保证前列排名。后续内容应围绕真实作品、拍摄过程与客户关心的问题补充，不堆砌关键词或虚构评价。
 

@@ -2,6 +2,7 @@ import sharp from 'sharp';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
+import { readExhibitions, photographId } from './exhibitions.js';
 
 // Reproducible optional preparation; Pages builds use the committed public assets.
 // Use previews from a sufficiently large source cache; original files are never modified.
@@ -10,7 +11,7 @@ if (!cache) throw new Error('Set GALLERY_SOURCE_CACHE to your downloaded R2 prev
 sharp.concurrency(1); sharp.cache(false);
 const data = JSON.parse(readFileSync('gallery-index.json', 'utf8'));
 const curation = JSON.parse(readFileSync('curation.json', 'utf8'));
-const larger = new Set([...curation.hero, curation.about].map(item => `${item.category}/${item.name}`));
+const larger = new Set([photographId(curation.about), ...readExhibitions().flatMap(exhibition => [exhibition.cover, ...exhibition.opening].filter(Boolean))]);
 // Validate the whole cache before writing any previews or changing the index.
 for (const category of Object.values(data.gallery)) {
   for (const image of category.images) {

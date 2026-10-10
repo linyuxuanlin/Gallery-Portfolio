@@ -1,4 +1,11 @@
 {
+  "slug": "a-brief-presence",
+  "status": "published",
+  "cover": "Australia/DSC07520",
+  "opening": [
+    "Australia/DSC07520",
+    "Kyoto/DSC02777"
+  ],
   "title": "短暂的在场",
   "titleEn": "A Brief Presence",
   "standfirst": "潮汐退去，船只经过。有人穿过光，有人在窗边停留。",
@@ -18,7 +25,12 @@
       "titleEn": "Water, traces",
       "text": "礁石在蓝色里铺开纹理，船的航迹把海面划出一条细线。目光降到岸边，岩石、白鸟与亭子的倒影逐渐进入画面。",
       "textEn": "Reefs spread a texture through the blue; a boat's wake draws a thin line across the sea. As the view descends to the shore, rocks, a white bird and the reflection of a pavilion come into the frame.",
-      "works": ["Australia/DSC07749", "Australia/IMG_20240430_085311", "Jeju/DSC01813", "Xiamen/IMG_20250203_161907"]
+      "works": [
+        "Australia/DSC07749",
+        "Australia/IMG_20240430_085311",
+        "Jeju/DSC01813",
+        "Xiamen/IMG_20250203_161907"
+      ]
     },
     {
       "id": "passing",
@@ -26,7 +38,12 @@
       "titleEn": "Passing lives",
       "text": "楼宇之间，人与街道的尺度悬殊；渡船和灶台旁，距离又变得很近。一些日常在擦肩的片刻进入画面，也保留着各自的去向。",
       "textEn": "Between buildings, people appear small against the street; beside a ferry seat or a stove, the distance closes. These daily scenes enter the frame in passing, each continuing on its own course.",
-      "works": ["Hongkong/DSC09617", "Bankok/DSC04302", "Vietnam/DSC00272_1", "Tokyo/IMG_20250308_232434"]
+      "works": [
+        "Hongkong/DSC09617",
+        "Bankok/DSC04302",
+        "Vietnam/DSC00272_1",
+        "Tokyo/IMG_20250308_232434"
+      ]
     },
     {
       "id": "light",
@@ -34,15 +51,12 @@
       "titleEn": "Where light stays",
       "text": "光把墙面分成明暗，也让人影、门框与树枝有了轮廓。从室内的一道斜线到林间铺开的树影，空间在光里重新显露。",
       "textEn": "Light divides a wall into brightness and shade, outlining figures, doorways and branches. From a diagonal inside a room to shadows spreading through the trees, light reveals the shape of a space.",
-      "works": ["Shanghai/IMG_20240518_223126", "Macau/IMG_20240213_210927", "Osaka/DSC09079", "Nanjing/DSC00886"]
+      "works": [
+        "Shanghai/IMG_20240518_223126",
+        "Macau/IMG_20240213_210927",
+        "Osaka/DSC09079",
+        "Nanjing/DSC00886"
+      ]
     }
-  ],
-  "artistStatement": [
-    "我是 Power，生活和工作在上海。这份选辑从海岸、街巷与日常空间中展开，把相距很远的地方放在一起观看。",
-    "在这些照片里，我关心的是人与环境之间的距离，以及光如何改变一个地方的样子：一位渡船上的乘客、一道通向庭院的门、船驶离后留在水面的线。它们使一个短暂的片刻有了可以反复观看的形式。"
-  ],
-  "artistStatementEn": [
-    "I’m Power, based in Shanghai. This selection moves through coasts, streets and everyday spaces, bringing distant places into the same field of view.",
-    "In these photographs, I’m concerned with the distance between people and their surroundings, and how light changes the appearance of a place: a ferry passenger, a gate opening onto a courtyard, a line left on the water after a boat has passed. A brief encounter becomes a form we can return to."
   ]
 }

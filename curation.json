@@ -1,5 +1,5 @@
 {
-  "hero": [
+  "photographs": [
     {
       "category": "Australia",
       "name": "DSC07520",
@@ -19,9 +19,7 @@
       "descriptionEn": "Rooftops, passersby and distant hills in Kyoto.",
       "note": "屋顶层层向远山延伸，行人被留在街道的窄处。建筑与山的轮廓连在一起，目光沿着人群走入画面。",
       "noteEn": "Roofs extend towards the distant hills; people occupy the narrow street below. The outlines of buildings and mountains join, drawing the eye into the picture along the crowd."
-    }
-  ],
-  "selected": [
+    },
     {
       "category": "Australia",
       "name": "DSC07749",
@@ -143,15 +141,24 @@
       "noteEn": "Shallow water, stones and a white shorebird give the edge of the coast its small layers. The sea has no clear endpoint, while the foreground offers a quiet place to rest the eye."
     }
   ],
-  "featuredPlaces": [
-    "Australia",
-    "Hongkong",
-    "Kyoto"
-  ],
   "about": {
     "category": "Bankok",
     "name": "DSC04302"
   },
+  "commission": [
+    {
+      "category": "Hongkong",
+      "name": "DSC09617"
+    },
+    {
+      "category": "Bankok",
+      "name": "DSC04302"
+    },
+    {
+      "category": "Vietnam",
+      "name": "DSC00272_1"
+    }
+  ],
   "covers": {
     "Australia": {
       "category": "Australia",
