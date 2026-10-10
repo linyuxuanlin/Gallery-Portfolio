@@ -13,6 +13,7 @@
     "serve": "npx serve .",
     "r2:generate-index": "node generate-gallery-index-r2.js",
     "r2:generate-previews": "node generate-webp-thumbnail-r2.js",
+    "pretest": "npm run build",
     "test": "node --test --test-concurrency=1 tests/*.test.js",
     "test:browser": "node tests/beta-browser-check.cjs",
     "test:beta": "node tests/beta-browser-check.cjs",
