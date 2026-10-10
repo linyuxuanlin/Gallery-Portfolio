@@ -115,7 +115,7 @@ html[lang=en] .exhibition-card-copy h2{letter-spacing:0}
 @media(max-width:1000px){.exhibition-card{gap:32px}.exhibition-card-copy>p{font-size:14px}.exhibition-card-copy h2{font-size:30px}.exhibition-index-intro{gap:28px}.exhibition-index-intro>p{font-size:15px}}
 @media(max-width:700px){
   .js .site-header nav.is-open{display:grid;grid-template-columns:1fr 1fr;gap:8px 28px}.site-header nav a{min-width:0}html:not(.js) .site-header nav{flex-wrap:wrap}html:not(.js) .site-header nav a{flex-basis:40%}
-  .exhibition-index-intro{grid-template-columns:1fr;padding:32px 0 35px;gap:23px}.exhibition-index-intro h1{font-size:clamp(37px,10vw,58px)}.exhibition-index-intro>p{justify-self:start;font-size:14px}
+  .exhibition-index-intro{grid-template-columns:1fr;padding:32px 0 35px;gap:23px}.exhibition-index-intro h1{font-size:clamp(32px,8.5vw,58px);letter-spacing:.04em}.exhibition-index-intro>p{justify-self:start;font-size:14px}
   .exhibition-card{grid-template-columns:1fr;gap:26px;padding:28px 0 44px}.exhibition-card-copy h2{font-size:31px;margin-top:14px}.exhibition-card-copy>p{margin-top:20px;font-size:14px}.exhibition-card-count{margin-top:18px}.exhibition-card-copy>.text-link{margin-top:14px}
   .index-archive-note{grid-template-columns:1fr;gap:22px;padding:27px 0 45px;margin-top:5px}.index-archive-note h2{font-size:25px}.index-archive-note p{font-size:14px}
   .exhibition-topline>.eyebrow{display:none}.exhibition-ending{margin-top:40px;padding-bottom:45px;gap:12px}.exhibition-ending .text-link{flex-basis:100%}

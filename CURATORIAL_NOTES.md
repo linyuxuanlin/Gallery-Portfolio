@@ -23,10 +23,10 @@
 
 ## 维护
 
-- `exhibitions/a-brief-presence.json`：首场展览的题目、序言、两幅序章与三个章节，含英文版本。`exhibitions/index.json` 登记独立特展，`artist.json` 保存创作自述。
+- `exhibitions/a-brief-presence.json`：首场展览的题目、序言、两幅序章与三个章节，含英文版本。`exhibitions/index.json` 登记独立展览，`artist.json` 保存创作自述。
 - `curation.json`：作品标题、客观图像描述、独立的作品阅读文字。`description` 继续用于图片替代文本，`note` 用于详情页正文。
-- `scripts/exhibition.js`：目录与独立特展的页面编排。`scripts/exhibitions.js` 校验跨展不重复；首场仍由两幅序章与十二幅章节作品组成。后续各场可以采用不同数量与顺序，详见 [特展维护说明](CURATION_WORKFLOW.md)。
+- `scripts/exhibition.js`：目录与独立展览的页面编排。`scripts/exhibitions.js` 校验跨展不重复；首场仍由两幅序章与十二幅章节作品组成。后续各场可以采用不同数量与顺序，详见 [展览维护说明](CURATION_WORKFLOW.md)。
 - 保留白色纸面、衬线字、原有封面双图与错落图片编排。正文宽度与章节间留白用于形成观看节奏。
-- 首页作为特展收录入口；《短暂的在场》移至 `/exhibitions/a-brief-presence/`。上海地区与真实业务信息用于搜索描述、结构化数据、关于页与独立委托页；不加入首页合作推广区块。
+- 首页以“观看的几种方式 / Ways of Looking”为题，作为展览收录入口；《短暂的在场》移至 `/exhibitions/a-brief-presence/`。上海地区与真实业务信息用于搜索描述、结构化数据、关于页与独立委托页；不加入首页合作推广区块。
 
 验证：构建、已有 SEO 与功能测试、Chromium 和 WebKit 多尺寸检查，以及 Safari 实际页面观察。Search Console 的抓取和收录是独立状态，提交 sitemap 不等于已经编入索引。
