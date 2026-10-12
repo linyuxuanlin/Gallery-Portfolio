@@ -1,0 +1,60 @@
+{
+  "slug": "passing-under-the-lights",
+  "status": "published",
+  "cover": "Hongkong/IMG_20250630_221904",
+  "opening": [
+    "Hongkong/IMG_20250630_221904",
+    "Shanghai/IMG_20241102_212058"
+  ],
+  "title": "灯下通行",
+  "titleEn": "Passing Under the Lights",
+  "standfirst": "轨道上的红电车，灯架下的行人。照明划出道路，也勾出黑暗中的楼体与桥拱。",
+  "standfirstEn": "A red tram on its tracks. People beneath a lit arch. Light marks the roadway and outlines towers and a bridge against the dark.",
+  "introduction": [
+    "红电车沿着两条轨道进入画面。另一个地方，地灯从下方照出曲面、孔洞与拼缝。夜间的光各有来处：车头，橱窗，招牌，窗内。它们先照见一些正在使用的地方，周围仍然暗着。",
+    "这十二幅照片从车辆之间的路面，经过树下的转角与悬在头顶的灯架，再把距离拉开。白色亮点斜穿楼体前方，窗格铺成网面，海湾把密集的灯分成两岸。最后，桥拱只留一道橙色的线。"
+  ],
+  "introductionEn": [
+    "A red tram enters the frame along two rails. Elsewhere, ground lights reveal curved surfaces, openings and seams from below. At night, light has separate sources: headlights, shop windows, signs and rooms. Each reveals a place in use while its surroundings remain dark.",
+    "These twelve photographs begin with the road between vehicles, pass a corner beneath trees and an illuminated arch overhead, then draw back. White flecks cross in front of a building; windows form a mesh; a bay separates dense lights along its shores. At the end, an orange line follows a bridge arch."
+  ],
+  "chapters": [
+    {
+      "id": "headlights",
+      "title": "车灯",
+      "titleEn": "Headlights",
+      "text": "红色公交与摩托车挤在一起，敞篷巴士把乘客带到路面上方。距离降到街边，蓝色厢式车停在店灯前，灯光照着可以经过的地方。",
+      "textEn": "A red bus and motorbikes crowd together. An open-top bus carries its passengers above the road. At street level, a blue van stands before shop lights that illuminate a place to pass through.",
+      "works": [
+        "Bankok/DSC06753",
+        "Vietnam/DSC00904_1",
+        "Singapore/DSC01756_1"
+      ]
+    },
+    {
+      "id": "street-corners",
+      "title": "路口",
+      "titleEn": "Street Corners",
+      "text": "树枝遮住招牌的一部分，尾灯把道路引向一扇圆窗。发光的门牌架悬在人群上方；看得清的是通道与名字，人留在较暗的位置。",
+      "textEn": "Branches partly conceal a sign; tail lights lead towards a circular window. A lit arch hangs over the crowd. The passage and its name are visible while people remain in darker areas.",
+      "works": [
+        "Bankok/IMG_20250130_205757",
+        "Hanoi/DSC03414",
+        "Tokyo/IMG_20250306_222721"
+      ]
+    },
+    {
+      "id": "outlines",
+      "title": "轮廓",
+      "titleEn": "Outlines",
+      "text": "斜飞的白点先让楼体前方的空气显露，近处窗格转成密集的线。距离拉开，海湾在灯光之间留出暗处，桥拱收成一道单独的亮边。",
+      "textEn": "Slanting white flecks reveal the air in front of a building; nearby windows become a dense pattern of lines. From farther away, the bay leaves dark space between lights and a bridge arch narrows to a single illuminated edge.",
+      "works": [
+        "Tokyo/IMG_20250308_215559",
+        "Shanghai/DSC08859_1",
+        "Hongkong/IMG_20250630_221842",
+        "Shanghai/2024-10-12_184831"
+      ]
+    }
+  ]
+}

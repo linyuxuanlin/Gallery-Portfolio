@@ -95,6 +95,21 @@ test('retired generated routes disappear from root deployment without deleting s
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
+test('source replacements remain visible to curation when the small preview is identical', () => {
+  const source = { ...images[0], originalContentSHA256: 'original-before', sourceModified: '2026-10-12T00:00:00Z' };
+  const metadata = new Map([[source.preview, { width: 960, height: 640, sha256: 'unchanged-small-preview' }]]);
+  const before = createInventory([source], [], metadata);
+  for (const replacement of [{ ...source, originalContentSHA256: 'original-after' }, { ...source, sourceModified: '2026-10-13T00:00:00Z' }]) {
+    const after = createInventory([replacement], [], metadata);
+    assert.deepEqual(inventoryDiff(before, after), { added: [], removed: [], changed: ['Test/a'] });
+    assert.notEqual(after.libraryFingerprint, before.libraryFingerprint);
+  }
+  const historical = structuredClone(before);
+  delete historical.photographs[0].originalContentSHA256;
+  delete historical.photographs[0].sourceModified;
+  assert.deepEqual(inventoryDiff(historical, before), { added: [], removed: [], changed: [] }, 'enriching a historical inventory is not a new source replacement');
+});
+
 test('the published index links to distinct exhibition pages; complete bilingual archives contain every photo exactly once', () => {
   const publicExhibitions = readExhibitions().filter(exhibition => exhibition.status !== 'draft');
   const data = JSON.parse(readFileSync('gallery-index.json', 'utf8'));

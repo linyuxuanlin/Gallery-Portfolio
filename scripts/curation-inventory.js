@@ -10,7 +10,13 @@ export function inventoryDiff(previous, next) {
   return {
     added: [...after.keys()].filter(id => !before.has(id)),
     removed: [...before.keys()].filter(id => !after.has(id)),
-    changed: [...after.keys()].filter(id => before.has(id) && (before.get(id).sha256 !== after.get(id).sha256 || before.get(id).original !== after.get(id).original))
+    changed: [...after.keys()].filter(id => {
+      if (!before.has(id)) return false;
+      const old = before.get(id), current = after.get(id);
+      return old.sha256 !== current.sha256 || old.original !== current.original
+        || (old.originalContentSHA256 && current.originalContentSHA256 && old.originalContentSHA256 !== current.originalContentSHA256)
+        || (old.sourceModified && current.sourceModified && old.sourceModified !== current.sourceModified);
+    })
   };
 }
 
@@ -22,11 +28,11 @@ export function createInventory(images, exhibitions, metadata) {
     const id = photographId(image), dimensions = metadata.get(image.preview), sha256 = fingerprints.get(id);
     if (!groups.has(sha256)) groups.set(sha256, []);
     groups.get(sha256).push(id);
-    return { id, original: image.original, preview: image.preview, width: dimensions.width, height: dimensions.height, sha256, exhibition: owners.get(id) || null };
+    return { id, original: image.original, originalContentSHA256: image.originalContentSHA256 || null, sourceModified: image.sourceModified || null, preview: image.preview, width: dimensions.width, height: dimensions.height, sha256, exhibition: owners.get(id) || null };
   });
   return {
     schemaVersion: 1,
-    libraryFingerprint: createHash('sha256').update(JSON.stringify(photographs.map(({ id, original, preview, sha256 }) => ({ id, original, preview, sha256 })))).digest('hex'),
+    libraryFingerprint: createHash('sha256').update(JSON.stringify(photographs.map(({ id, original, originalContentSHA256, sourceModified, preview, sha256 }) => ({ id, original, originalContentSHA256, sourceModified, preview, sha256 })))).digest('hex'),
     total: photographs.length, reserved: owners.size, available: photographs.filter(image => !image.exhibition).length,
     duplicatePreviews: [...groups.values()].filter(group => group.length > 1), photographs
   };

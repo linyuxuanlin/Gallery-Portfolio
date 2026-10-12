@@ -1,0 +1,58 @@
+{
+  "slug": "words-along-the-street",
+  "status": "published",
+  "title": "沿街的字",
+  "titleEn": "Words Along the Street",
+  "cover": "Hongkong/IMG_20250629_134740",
+  "opening": [
+    "Hongkong/IMG_20250629_134740",
+    "Osaka/IMG_20250602_174359"
+  ],
+  "standfirst": "招牌伸向路中，字落在车身与墙上。沿街看过去，行人和一只落脚的鸟也进入它们之间。",
+  "standfirstEn": "Signs reach towards the road; lettering sits on cars and walls. Along the street, people and a perching bird enter the same frame.",
+  "introduction": [
+    "横过街面的行人，挤在车道里的电车和巴士，一块向路中伸出的红色招牌。另一幅里，黑色大字包住红灯笼，远处的小字继续沿店铺排列。字首先有一个尺寸，也有一处位置。",
+    "十幅照片从街道纵深转到门头与墙，再靠近车身和一只鸟的落脚处。店名、海报和涂绘与电线、车辆、人物并列：海报上的手留在玻璃后，骑车的人从画在墙上的脸旁经过。最后，博物馆牌与刻字石碑各自托住一只鸟。"
+  ],
+  "introductionEn": [
+    "People cross a street among trams and buses. A red sign projects towards the road. In another picture, large black characters follow a red lantern, while smaller signs continue along the shops behind it. Lettering first has a size and a position.",
+    "Ten photographs move from the depth of the street to frontages and walls, then closer to a car and a bird’s perch. Shop names, posters and painted figures share the frame with wires, vehicles and people. Hands on a poster remain behind glass; a rider passes faces painted on a wall. At the end, a museum sign and a carved stone marker each support a bird."
+  ],
+  "chapters": [
+    {
+      "id": "above-and-below",
+      "title": "上下之间",
+      "titleEn": "Above and Below",
+      "text": "店招从墙上伸出，电线在头顶交叉，白字铺在路面。车辆与人物经过近处，文字仍沿着街道的两边排列。",
+      "textEn": "Signs project from walls, wires cross overhead and white lettering lies on the road. Vehicles and people occupy the foreground as words line the sides of the street.",
+      "works": [
+        "Busan/DSC00919",
+        "Chaozhou/DSC05568",
+        "Hanoi/DSC03365"
+      ]
+    },
+    {
+      "id": "walls-and-vehicles",
+      "title": "墙与车身",
+      "titleEn": "Walls and Vehicles",
+      "text": "工具海报贴在玻璃后，黄色的字沿着车身铺开。墙上的涂绘与骑车人的背影相邻，文字从门面走到日常经过的路上。",
+      "textEn": "Tool posters sit behind glass; yellow lettering spreads along a car. Painted figures on a wall share the frame with a rider seen from behind. Words move from a frontage into the path of everyday traffic.",
+      "works": [
+        "Australia/IMG_20240427_235345",
+        "Singapore/DSC02989",
+        "Penang/DSC04105"
+      ]
+    },
+    {
+      "id": "perches",
+      "title": "停落",
+      "titleEn": "Perches",
+      "text": "红色标牌与刻字石碑各自留出一段上沿。文字先铺出平面，一只鸟又把这个平面变成可以落脚的位置。",
+      "textEn": "A red signboard and a carved stone marker each offer an upper edge. Words occupy a surface; a bird makes that surface a place to perch.",
+      "works": [
+        "Hongkong/IMG_20250629_162040",
+        "Tokyo/DSC06011"
+      ]
+    }
+  ]
+}

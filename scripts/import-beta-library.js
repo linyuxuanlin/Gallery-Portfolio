@@ -13,8 +13,9 @@ const run = promisify(execFile);
 const id = image => `${image.category}/${image.name}`;
 
 export function importPlan(listing, previous, { directory = 'gallery', baseUrl = 'https://media.wiki-power.com' } = {}) {
-  if (!listing.complete || !Array.isArray(listing.objects)) throw new Error('A complete, fully paginated source inventory is required.');
+  if (listing.complete !== true || !Array.isArray(listing.objects)) throw new Error('A complete, fully paginated source inventory is required.');
   const originalKeys = new Set(), identities = new Map(), photographs = [];
+  const sourceKeys = new Set(listing.objects.map(object => object?.Key || object?.key));
   const previousImages = new Map(Object.values(previous.gallery).flatMap(category => category.images).map(image => [id(image), image]));
   for (const object of listing.objects) {
     const key = object.Key || object.key;
@@ -28,11 +29,12 @@ export function importPlan(listing, previous, { directory = 'gallery', baseUrl =
     identities.set(photoId, key);
     const original = publicObjectUrl(baseUrl, key), old = previousImages.get(photoId);
     const modified = object.LastModified || object.lastModified;
-    if (modified && !Number.isFinite(Date.parse(modified))) throw new Error(`Invalid source modification date: ${key}`);
+    if (!modified || !Number.isFinite(Date.parse(modified))) throw new Error(`Original modification date is required to detect replacements: ${key}`);
     const previousModified = old?.sourceModified || previous.generated_at;
     const changed = !!old && !!modified && !!previousModified && Date.parse(modified) > Date.parse(previousModified);
     const unchanged = !!old && old.original === original && !changed;
-    const image = unchanged ? { ...old } : { name: paths.name, category: paths.category, original, sourcePreview: publicObjectUrl(baseUrl, paths.previewKey) };
+    const image = unchanged ? { ...old } : { name: paths.name, category: paths.category, original, ...(sourceKeys.has(paths.previewKey) ? { sourcePreview: publicObjectUrl(baseUrl, paths.previewKey) } : {}) };
+    if (image.sourcePreview && !sourceKeys.has(decodeURIComponent(new URL(image.sourcePreview).pathname.slice(1)))) delete image.sourcePreview;
     if (modified) image.sourceModified = new Date(modified).toISOString();
     photographs.push({ key, id: photoId, image, needsPreview: !unchanged, sourceObject: object });
   }

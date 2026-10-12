@@ -1,0 +1,60 @@
+{
+  "slug": "after-planting",
+  "status": "published",
+  "title": "栽下以后",
+  "titleEn": "After Planting",
+  "cover": "Shanghai/IMG_20250323_005207",
+  "opening": [
+    "Shanghai/IMG_20241118_153450",
+    "Shanghai/IMG_20250323_005207"
+  ],
+  "standfirst": "树列、园路、玻璃与红筐：草木进入人的安排，也保留各自伸展的方向。",
+  "standfirstEn": "Rows of trees, garden paths, glass and red baskets: plants enter human arrangements while keeping their own directions of growth.",
+  "introduction": [
+    "淡色的步道绕入深绿，一排树干从紫色的花间立起。随后，树列把道路收窄，层叠的树冠靠近瓦檐，玻璃穹顶与红色塑料筐为植物划出大小不同的边界。",
+    "这十二幅照片从可以走入的空间，移向叶面和花穗。枝叶与人的安排并行，也让那些安排变得不一样：影子越过路面，花穗偏向一侧，枝上的扇形与地面的扇形在两幅照片中相接。观看由远及近，最后低下头。"
+  ],
+  "introductionEn": [
+    "A pale path curves into deep green; rows of trunks rise from violet flowers. Trees narrow a road, layered crowns meet tiled eaves, and a glass dome and red plastic baskets mark boundaries of different sizes around plants.",
+    "These twelve photographs move from spaces one can enter towards leaf surfaces and feathery plumes. Foliage follows human arrangements while changing their appearance: shadows cross a road, plumes lean to one side, and fan-shaped leaves above meet fan-shaped leaves on the ground across two photographs. The view moves closer and finally looks down."
+  ],
+  "chapters": [
+    {
+      "id": "in-rows",
+      "title": "成行",
+      "titleEn": "In Rows",
+      "text": "树干沿着步道和车道排列，枝条在上方交错。路面的方向清楚可见，树影却从旁边横过来，与经过的人重叠。",
+      "textEn": "Trunks line a walkway and a road, while branches cross overhead. The direction of the pavement is clear; shadows arrive from the side and overlap the people passing through.",
+      "works": [
+        "Nanjing/IMG_20240318_232025",
+        "Jeju/IMG_20241130_131218",
+        "Shanghai/DSC04659"
+      ]
+    },
+    {
+      "id": "at-the-edges",
+      "title": "边缘",
+      "titleEn": "Edges",
+      "text": "树冠与瓦檐相接，绿墙靠近玻璃网格，几株花装在草地上的红筐里。枝叶的尺寸改变了，容纳它们的东西也随之显出来。",
+      "textEn": "A tree crown meets tiled eaves, a planted wall approaches a grid of glass, and flowering plants stand in red baskets on the grass. As the scale of the foliage changes, its containers come into view.",
+      "works": [
+        "Kyoto/DSC02924",
+        "Singapore/DSC01194",
+        "Shanghai/IMG_20250501_195234"
+      ]
+    },
+    {
+      "id": "leaf-surfaces",
+      "title": "叶面",
+      "titleEn": "Leaf Surfaces",
+      "text": "水珠停在圆叶上，细长的花穗向一侧展开。目光再沿一根斜枝向上，最后回到铺满黄叶的地面。近处的草木，逐渐替代远处的道路和框架。",
+      "textEn": "Drops rest on round leaves; slender plumes spread to one side. The view follows a diagonal branch upwards, then returns to a ground covered in yellow leaves. Nearby plants gradually take the place of distant roads and frames.",
+      "works": [
+        "Shaoxing/DSC04684_1",
+        "Shanghai/DSC00435_1",
+        "Nanjing/DSC00861",
+        "Jeju/DSC01398"
+      ]
+    }
+  ]
+}
