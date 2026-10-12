@@ -96,9 +96,15 @@ html[lang=en] .chapter-heading h2{letter-spacing:.3px}
 .exhibition-index-intro>p{font:17px/2 var(--serif);color:var(--muted);justify-self:end;max-width:340px}
 .exhibition-card{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:center;padding:42px 0 65px;border-top:1px solid var(--line)}
 .exhibition-card>*{min-width:0}.exhibition-card-image{background:#e9e8e1}.exhibition-card-image img{width:100%;height:auto}
+.exhibition-card:nth-child(even){grid-template-columns:minmax(0,1fr) minmax(0,1.8fr)}
+.exhibition-card:nth-child(even) .exhibition-card-image{order:2}.exhibition-card:nth-child(even) .exhibition-card-copy{order:1}
+.exhibition-card[data-cover-orientation=portrait] .exhibition-card-image{width:72%}
+.exhibition-card:nth-child(even)[data-cover-orientation=portrait] .exhibition-card-image{justify-self:end}
+.exhibition-home .hero-pair .photo:nth-child(n) .photo-open{aspect-ratio:auto}.exhibition-home .hero-pair .photo-open img{height:auto}
 .exhibition-card-copy h2{font-size:clamp(29px,3vw,43px);letter-spacing:.08em;margin-top:19px;overflow-wrap:anywhere}
 .exhibition-card-subtitle{display:block;color:var(--muted);font-size:10px;letter-spacing:1.5px;margin-top:10px}
 .exhibition-card-copy>p{font:16px/2 var(--serif);color:var(--muted);margin-top:26px;max-width:26em}
+.exhibition-card-copy h2,.exhibition-card-copy>p,.exhibition-intro h1{text-wrap:balance}
 .exhibition-card-count{display:block;font-size:10px;letter-spacing:1px;color:var(--muted);margin-top:24px}
 .exhibition-card-copy>.text-link{margin-top:24px;border-bottom:1px solid var(--line)}
 .index-archive-note{display:grid;grid-template-columns:1fr 1.5fr;gap:60px;border-top:1px solid var(--line);padding:38px 0 75px;margin-top:25px}
@@ -117,6 +123,8 @@ html[lang=en] .exhibition-card-copy h2{letter-spacing:0}
   .js .site-header nav.is-open{display:grid;grid-template-columns:1fr 1fr;gap:8px 28px}.site-header nav a{min-width:0}html:not(.js) .site-header nav{flex-wrap:wrap}html:not(.js) .site-header nav a{flex-basis:40%}
   .exhibition-index-intro{grid-template-columns:1fr;padding:32px 0 35px;gap:23px}.exhibition-index-intro h1{font-size:clamp(32px,8.5vw,58px);letter-spacing:.04em}.exhibition-index-intro>p{justify-self:start;font-size:14px}
   .exhibition-card{grid-template-columns:1fr;gap:26px;padding:28px 0 44px}.exhibition-card-copy h2{font-size:31px;margin-top:14px}.exhibition-card-copy>p{margin-top:20px;font-size:14px}.exhibition-card-count{margin-top:18px}.exhibition-card-copy>.text-link{margin-top:14px}
+  .exhibition-card:nth-child(even){grid-template-columns:1fr}.exhibition-card:nth-child(even) .exhibition-card-image,.exhibition-card:nth-child(even) .exhibition-card-copy{order:initial}
+  .exhibition-card[data-cover-orientation=portrait] .exhibition-card-image{width:84%;justify-self:end}
   .index-archive-note{grid-template-columns:1fr;gap:22px;padding:27px 0 45px;margin-top:5px}.index-archive-note h2{font-size:25px}.index-archive-note p{font-size:14px}
   .exhibition-topline>.eyebrow{display:none}.exhibition-ending{margin-top:40px;padding-bottom:45px;gap:12px}.exhibition-ending .text-link{flex-basis:100%}
   .pagination{flex-direction:column;align-items:flex-start;gap:10px;padding-bottom:24px}.pagination>div{gap:4px}.pagination a{font-size:10px}

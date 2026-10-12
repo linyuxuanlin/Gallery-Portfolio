@@ -48,7 +48,7 @@ export function validateExhibitions(exhibitions, images, fingerprints = new Map(
       if (owners.has(id)) fail(`Photograph reserved by two exhibitions: ${id}: ${owners.get(id)} and ${slug}`);
       owners.set(id, slug);
       const image = library.get(id);
-      const keys = [image.original && 'original:' + new URL(image.original).origin + new URL(image.original).pathname, fingerprints.get(id) && 'preview:' + fingerprints.get(id)].filter(Boolean);
+      const keys = [image.original && 'original:' + new URL(image.original).origin + new URL(image.original).pathname, image.originalContentSHA256 && 'original-content:' + image.originalContentSHA256, fingerprints.get(id) && 'preview:' + fingerprints.get(id)].filter(Boolean);
       for (const key of keys) {
         if (identities.has(key)) fail(`Duplicate photograph content: ${id} (${slug}) and ${identities.get(key)}`);
         identities.set(key, `${id} (${slug})`);

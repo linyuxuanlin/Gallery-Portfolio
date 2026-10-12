@@ -18,6 +18,7 @@
     "test:browser": "node tests/beta-browser-check.cjs",
     "test:beta": "node tests/beta-browser-check.cjs",
     "beta:previews": "node scripts/prepare-beta-previews.js",
+    "beta:import": "node scripts/import-beta-library.js",
     "curate:inventory": "node scripts/curation-inventory.js",
     "curate:review": "node scripts/curation-review.js"
   },

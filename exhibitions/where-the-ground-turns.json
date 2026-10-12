@@ -1,0 +1,64 @@
+{
+  "slug": "where-the-ground-turns",
+  "status": "published",
+  "cover": "America/DSC00109",
+  "opening": [
+    "America/DSC00109",
+    "America/DSC00406"
+  ],
+  "title": "地面转折处",
+  "titleEn": "Where the Ground Turns",
+  "standfirst": "岩壁间，路反复折返。人、树与车，为地面的起伏留下尺度。",
+  "standfirstEn": "A path doubles back between rock walls. People, trees and cars give scale to the changing ground.",
+  "introduction": [
+    "蒸汽从地面升起，观看的人排成一道细线。转到近处，橙色表面显出孔洞；再抬起眼睛，石柱、岩壁与公路又把尺度拉开。这些照片关心地面如何从眼前的纹理，变成围绕身体的环境。",
+    "从石面到步径，再到水边，这组照片在几种距离之间展开。人和车时而可以辨认，时而只剩一小点；一道弯曲的线，也可能是小径、浪边，或水上的船迹。"
+  ],
+  "introductionEn": [
+    "Steam rises from the ground; the people watching it form a fine line. Closer in, hollows appear in an orange surface. Looking up again, columns, rock walls and roads stretch the scale. These photographs follow the ground as it changes from a texture before the eye into an environment around the body.",
+    "From stone to paths and then to water, the sequence moves through several distances. People and cars can be recognisable, or reduced to points. A bending line may belong to a footpath, the edge of a wave, or a boat’s wake."
+  ],
+  "chapters": [
+    {
+      "id": "surfaces",
+      "title": "表面与缝隙",
+      "titleEn": "Surfaces and Gaps",
+      "text": "灰白、橙色与深蓝相遇，近处的地面显出孔洞和细纹。距离逐渐拉开，纹理变成石柱、岩岸与洞口，空隙也有了大小。",
+      "textEn": "Pale grey, orange and deep blue meet as hollows and fine textures appear nearby. As the distance opens, textures become columns, rocky shores and a cave mouth. Gaps acquire a scale of their own.",
+      "works": [
+        "America/DSC00368",
+        "America/DSC07950",
+        "America/DSC08017",
+        "Busan/DSC01409_1",
+        "Australia/DSC07201"
+      ]
+    },
+    {
+      "id": "paths",
+      "title": "路径的宽度",
+      "titleEn": "The Width of a Path",
+      "text": "山谷里、水边，都有一条弯路。路旁细小的车辆和崖缘坐着的人，让景物之间的距离有了身体的尺度。",
+      "textEn": "A road bends through a canyon; another follows water. Small vehicles and people seated at an edge bring the distances within the landscape back to the scale of the body.",
+      "works": [
+        "America/DSC07554",
+        "Shaoxing/DSC04912",
+        "America/DSC08079",
+        "Perth/IMG_20251001_215956",
+        "America/DSC08884"
+      ]
+    },
+    {
+      "id": "water-edge",
+      "title": "水际",
+      "titleEn": "At the Water’s Edge",
+      "text": "漂木停在沙面，白色泡沫抵达岸边。俯看的海岸展开之后，山的远近在雾里分出层次，船留下更细的一道横线。",
+      "textEn": "Driftwood rests on sand and white foam reaches the shore. After the coast opens beneath an elevated view, mist separates the layers of hills and a boat leaves a finer horizontal line.",
+      "works": [
+        "Australia/IMG_20240430_172300",
+        "Australia/DSC06869",
+        "Australia/DSC08975",
+        "Hanoi/DSC02715"
+      ]
+    }
+  ]
+}

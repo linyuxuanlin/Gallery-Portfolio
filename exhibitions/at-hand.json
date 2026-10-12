@@ -1,0 +1,51 @@
+{
+  "slug": "at-hand",
+  "status": "published",
+  "cover": "Shanghai/IMG_20240609_182826",
+  "opening": [
+    "Shanghai/IMG_20240609_182826",
+    "Nanjing/IMG_20240315_112511"
+  ],
+  "title": "手边",
+  "titleEn": "At Hand",
+  "standfirst": "长杆伸向墙，双桨伸向水。有人动手，也有人停在旁边。",
+  "standfirstEn": "A pole reaches towards a wall; two oars reach into the water. Some act, while others pause nearby.",
+  "introduction": [
+    "墙前的长杆、锅上的铲子、船边的双桨、门后的弓：手把身体和物件接在一起。有的动作清楚地露出来，有的只从门边或人群间显出一部分。照片在事情仍在进行时停下。",
+    "十二幅照片从伸手的距离展开，再让周围的人进入——同桌阅览、围在坡边、举着手机，或靠近同一团火花。各自的动作在一幅画面里相遇，保留着不同的方向。"
+  ],
+  "introductionEn": [
+    "A pole against a wall, a spatula over a pan, two oars beside a boat, a bow behind a door: hands connect bodies to objects. Some actions are fully visible; others emerge at the edge of a doorway or between people. Each photograph pauses while something is still underway.",
+    "The twelve photographs begin within reach of a hand, then open to people nearby: reading at shared tables, gathering around a ramp, raising phones, or bringing sparklers towards the same cluster of sparks. Actions meet within the frame while continuing in different directions."
+  ],
+  "chapters": [
+    {
+      "id": "within-reach",
+      "title": "伸手的距离",
+      "titleEn": "Within Reach",
+      "text": "长杆伸向墙面，铲子伸入锅中，双桨从船身向两边张开。手与工具相接，也在一只摊开的掌心里缩短了人与动物的距离。",
+      "textEn": "A pole reaches towards a wall; a spatula reaches into a pan; oars open out from the boat. Hands meet tools, and an open palm closes the distance between a person and an animal.",
+      "works": [
+        "Australia/DSC06647",
+        "Chaozhou/DSC05639",
+        "Nanjing/IMG_20240316_210659",
+        "Australia/DSC08392",
+        "Hanoi/DSC02946"
+      ]
+    },
+    {
+      "id": "nearby",
+      "title": "旁边的人",
+      "titleEn": "People Nearby",
+      "text": "长桌、坡缘、露天场地与木廊，人们靠近同一处，也各有自己的姿势。向外的手势、举起的手机和转向物件的身体，让行动与旁观在一起出现。最后，火花把几只伸来的手照亮。",
+      "textEn": "Reading tables, a ramp edge, an outdoor setting and a wooden corridor: people draw close to a shared space while remaining occupied in different ways. Outstretched hands, lifted phones and bodies turning towards objects bring action and observation into the same frame. At the end, sparks illuminate several outstretched hands.",
+      "works": [
+        "Australia/DSC06568",
+        "Shanghai/DSC08679_1",
+        "Shanghai/IMG_20240405_221505",
+        "Shaoxing/DSC04566",
+        "Other/DSC04090"
+      ]
+    }
+  ]
+}

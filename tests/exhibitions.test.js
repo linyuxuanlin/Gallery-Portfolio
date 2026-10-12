@@ -32,6 +32,9 @@ test('renaming a photograph or changing an original URL query cannot evade cross
   const aliases = structuredClone(images); aliases[1].original = aliases[0].original + '?download=1#photo';
   assert.throws(() => validateExhibitions(selections, aliases), /Duplicate photograph content/);
   assert.throws(() => validateExhibitions(selections, images, new Map([['Test/a', 'same-bytes'], ['Test/b', 'same-bytes']])), /Duplicate photograph content/);
+  const identicalOriginals = structuredClone(images);
+  identicalOriginals[0].originalContentSHA256 = identicalOriginals[1].originalContentSHA256 = 'same-original-bytes';
+  assert.throws(() => validateExhibitions(selections, identicalOriginals, new Map([['Test/a', 'different-a'], ['Test/b', 'different-b']])), /Duplicate photograph content/);
 });
 
 test('incomplete drafts are allowed, but missing works, invalid covers and incomplete published text stop publication', () => {

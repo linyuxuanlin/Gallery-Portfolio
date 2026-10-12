@@ -1,0 +1,60 @@
+{
+  "slug": "unoccupied",
+  "status": "published",
+  "cover": "Penang/DSC03883",
+  "opening": [
+    "Penang/DSC03883",
+    "Shanghai/DSC05726"
+  ],
+  "title": "空位",
+  "titleEn": "Unoccupied",
+  "standfirst": "黄墙下的旧椅，舱窗前的高椅。空着的位置，仍保留着人的尺度。",
+  "standfirstEn": "Worn seats beneath a yellow wall. A tall chair beside cabin windows. Empty places still hold a human scale.",
+  "introduction": [
+    "黄墙下的一排旧座椅，舱窗前的高椅，幕布前层叠的红色椅背。它们留着清楚的用途，画面里不见坐在这里的人。桌上的杯子、眼镜和一页建筑图像，把这个空处拉得更近。",
+    "十二幅照片沿着窗框、天光、梁架和通道展开。空位从一把椅子的大小，延伸到可以经过的地方：一处中庭，一段轨道，一个指向画外的出口。最后只剩屋顶的一道边和上方的云。"
+  ],
+  "introductionEn": [
+    "A row of worn seats beneath a yellow wall. A tall chair by cabin windows. Layers of red seat backs before a curtain. Their uses remain clear, though no one sits in them in these pictures. A cup, glasses and an image of a building on a table bring this empty place closer.",
+    "Twelve photographs follow window frames, light from above, beams and passages. The space of a seat extends into places to move through: an atrium, a stretch of track, an exit pointing beyond the frame. At the end, an edge of roof remains beneath a cloud."
+  ],
+  "chapters": [
+    {
+      "id": "seats",
+      "title": "座位",
+      "titleEn": "Seats",
+      "text": "红色椅背向幕布收拢。桌面上的杯子、眼镜和一张照片，把位置缩到手边；草地上的秋千又让它离开室内。",
+      "textEn": "Red seat backs narrow towards the curtain. A cup, glasses and a photograph bring the place within reach; a swing on the grass carries it outside again.",
+      "works": [
+        "Vietnam/IMG_20250707_152207",
+        "Tokyo/DSC03600",
+        "America/DSC07680"
+      ]
+    },
+    {
+      "id": "roof-lights-and-beams",
+      "title": "天窗与梁",
+      "titleEn": "Roof Lights and Beams",
+      "text": "从方格天窗到层叠中庭，光将墙和楼层分开。扶梯沿斜线升起，车站的铁轨延伸到远处。人的位置退到边缘，空间的结构占据画面。",
+      "textEn": "From a grid of roof lights to layered atriums, light separates walls and floors. An escalator rises diagonally and station tracks extend into the distance. People recede to the edges as the structures of space fill the frame.",
+      "works": [
+        "Tokyo/DSC05838",
+        "Hongkong/DSC09599",
+        "America/DSC07130",
+        "Osaka/DSC09103"
+      ]
+    },
+    {
+      "id": "outward",
+      "title": "向外",
+      "titleEn": "Outward",
+      "text": "箭头指向画外，桥面的线伸过水面。屋顶最终只留一道深色的边，上方的天空没有被填满。",
+      "textEn": "An arrow points beyond the frame; the line of a bridge extends over water. A roof is finally reduced to a dark edge, with open sky above.",
+      "works": [
+        "Shanghai/DSC00390",
+        "Shantou/DSC02286",
+        "Shanghai/DSC08500"
+      ]
+    }
+  ]
+}

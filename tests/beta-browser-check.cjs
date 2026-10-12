@@ -10,6 +10,7 @@ const viewPath = exhibits.length ? `/exhibitions/${exhibits[0].slug}/` : '/works
 const sampleIds = exhibits.length ? exhibitionIds(exhibits[0]) : selection.photographs.map(image => image.category + '/' + image.name);
 const sample = sampleIds.map(id => selection.photographs.find(image => image.category + '/' + image.name === id));
 const pageSize = 72;
+const firstPlacePath = `/works/${encodeURIComponent(Object.keys(data.gallery)[0])}/`;
 const expectedPhotos = route => {
   if (route.startsWith('/works/')) {
     const parts = route.split('/').filter(Boolean), category = parts[1] && parts[1] !== 'page' ? parts[1] : '';
@@ -43,6 +44,19 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     const box = await page.locator(selector).boundingBox();
     assert.ok(box && box.x >= -1 && box.y >= -1 && box.x + box.width <= viewport.width + 1 && box.y + box.height <= viewport.height + 1, `${selector} outside ${viewport.width}×${viewport.height}`);
   };
+  const openingRatios = async page => {
+    for (const image of await page.locator('.hero-pair img').all()) {
+      await image.scrollIntoViewIfNeeded();
+      await image.evaluate(img => img.decode());
+      const dimensions = await image.evaluate(img => {
+        const frame = img.closest('.photo-open').getBoundingClientRect();
+        const picture = img.getBoundingClientRect();
+        return { natural: img.naturalWidth / img.naturalHeight, frame: frame.width / frame.height, picture: picture.width / picture.height, excess: frame.height - picture.height };
+      });
+      assert.ok(Math.abs(dimensions.frame - dimensions.natural) < .02, 'opening frame changes the photograph composition: ' + JSON.stringify(dimensions));
+      assert.ok(Math.abs(dimensions.picture - dimensions.natural) < .02 && Math.abs(dimensions.excess) < 2, 'opening photograph is cropped or leaves an empty frame: ' + JSON.stringify(dimensions));
+    }
+  };
   const routes = [...fs.readFileSync(path.join(dist, 'sitemap.xml'), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => new URL(match[1]).pathname).filter(route => !route.startsWith('/en/'));
   try {
     if (process.env.GALLERY_TEST_LANGUAGE !== 'en') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
@@ -58,6 +72,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, route + ' horizontal overflow');
         const expected = expectedPhotos(route);
         assert.equal(await page.locator('[data-photo]').count(), expected, route + ' photo count');
+        if (route.startsWith('/exhibitions/')) await openingRatios(page);
         if (route === '/') { assert.equal(await page.locator('.exhibition-card').count(), exhibits.length); await page.locator('.exhibition-card').first().click(); await page.waitForURL(origin + viewPath); await navigate(page, origin); }
         if (route === '/places/') assert.equal(await page.locator('.place-card').count(), Object.keys(data.gallery).length);
         if (viewport.width <= 390) {
@@ -100,9 +115,9 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
         }
         console.log(`${name} ${viewport.width}px ${route}: layout, navigation, ${expected} photos and viewer passed`);
       }
-      await navigate(page, origin + '/places/'); await page.locator('.place-card').first().click(); await page.waitForURL(origin + '/works/Australia/');
-      await page.reload(); assert.equal(await page.locator('[data-photo]').count(), expectedPhotos('/works/Australia/'));
-      await page.goBack(); await page.waitForURL(origin + '/places/'); await page.goForward(); await page.waitForURL(origin + '/works/Australia/');
+      await navigate(page, origin + '/places/'); await page.locator('.place-card').first().click(); await page.waitForURL(origin + firstPlacePath);
+      await page.reload(); assert.equal(await page.locator('[data-photo]').count(), expectedPhotos(firstPlacePath));
+      await page.goBack(); await page.waitForURL(origin + '/places/'); await page.goForward(); await page.waitForURL(origin + firstPlacePath);
       await navigate(page, origin + '/missing-page/'); assert.ok((await page.locator('h1').innerText()).includes('尚未抵达'));
       if (process.env.GALLERY_SCREENSHOT_DIR) {
         fs.mkdirSync(process.env.GALLERY_SCREENSHOT_DIR, { recursive: true });
@@ -123,6 +138,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
         assert.equal(await page.locator('h1').count(), 1);
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'English overflow: ' + route);
         assert.equal(/[\u4e00-\u9fff]/.test(await page.locator('main').innerText()), false, 'untranslated English page: ' + route);
+        if (route.startsWith('/exhibitions/')) await openingRatios(page);
         if (viewport.width <= 390) {
           await page.locator('.menu-toggle').click();
           for (const link of await page.locator('#site-nav a').all()) assert.equal(await link.isVisible(), true);

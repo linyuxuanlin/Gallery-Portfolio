@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
+  "title": "所经之地",
+  "titleEn": "Places Along the Way",
   "exhibitions": [
+    "where-the-ground-turns",
+    "unoccupied",
+    "at-hand",
     "a-brief-presence"
   ]
 }
