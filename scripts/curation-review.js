@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, mkdirSync, writeFileSync, readdirSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { escapeHTML } from './seo.js';
 
@@ -31,4 +31,10 @@ for (let page = 1; page <= pages; page++) {
   await sharp({ create: { width, height, channels: 3, background: '#f7f6f2' } }).composite(composites).jpeg({ quality: 88 }).toFile(join(output, filename));
   writeFileSync(join(output, filename.replace('.jpg', '.json')), JSON.stringify({ libraryFingerprint: inventory.libraryFingerprint, page, photographs: group.map(image => ({ id: image.id, exhibition: image.exhibition, preview: image.preview, original: image.original })) }, null, 2) + '\n');
   console.log(`${page}/${pages}: ${join(output, filename)}`);
+}
+// As selections grow, the available set shrinks. Retired sheets must not suggest
+// that previously reviewed photographs are still available for another show.
+for (const filename of readdirSync(output)) {
+  const match = /^sheet-(\d+)\.(?:jpg|json)$/.exec(filename);
+  if (match && Number(match[1]) > pages) rmSync(join(output, filename));
 }
