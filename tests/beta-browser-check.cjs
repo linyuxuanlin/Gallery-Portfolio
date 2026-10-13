@@ -35,7 +35,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const origin = process.env.GALLERY_BASE_URL || `http://127.0.0.1:${server.address().port}`;
   const navigate = async (page, url) => {
-    await page.goto(url, { waitUntil: process.env.GALLERY_BASE_URL ? 'domcontentloaded' : 'load', timeout: 60000 });
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
     await page.waitForFunction(() => document.body && getComputedStyle(document.body).backgroundColor === 'rgb(247, 246, 242)');
     await page.evaluate(() => document.fonts.ready);
   };
@@ -116,7 +116,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
         console.log(`${name} ${viewport.width}px ${route}: layout, navigation, ${expected} photos and viewer passed`);
       }
       await navigate(page, origin + '/places/'); await page.locator('.place-card').first().click(); await page.waitForURL(origin + firstPlacePath);
-      await page.reload(); assert.equal(await page.locator('[data-photo]').count(), expectedPhotos(firstPlacePath));
+      await page.reload({ waitUntil: 'domcontentloaded' }); assert.equal(await page.locator('[data-photo]').count(), expectedPhotos(firstPlacePath));
       await page.goBack(); await page.waitForURL(origin + '/places/'); await page.goForward(); await page.waitForURL(origin + firstPlacePath);
       await navigate(page, origin + '/missing-page/'); assert.ok((await page.locator('h1').innerText()).includes('尚未抵达'));
       if (process.env.GALLERY_SCREENSHOT_DIR) {
@@ -167,7 +167,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     // Close first, then exercise the normal header switch and stable language URLs.
     await autoPage.locator('#viewer-close').click(); await autoPage.locator('#viewer').waitFor({ state: 'hidden' });
     await autoPage.locator('.language-switch').click(); await autoPage.waitForURL(origin + '/works/Tokyo/');
-    await autoPage.reload(); assert.equal(await autoPage.locator('html').getAttribute('lang'), 'zh-CN');
+    await autoPage.reload({ waitUntil: 'domcontentloaded' }); assert.equal(await autoPage.locator('html').getAttribute('lang'), 'zh-CN');
     await navigate(autoPage, origin + '/en/works/Tokyo/' + photoHash); await autoPage.locator('#viewer[open]').waitFor();
     assert.equal(await autoPage.locator('#viewer-original').innerText(), 'Load original');
     await auto.close(); console.log('PASS stable language URLs, explicit switching and English photo links');
@@ -262,6 +262,10 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     await legacyAPIPage.locator('#viewer-original').click();
     await legacyAPIPage.getByText('原图 2160 × 3240', { exact: true }).waitFor();
     assert.equal(legacyOriginals, 1);
+    await legacyAPIPage.evaluate(() => document.activeElement.blur());
+    await legacyAPIPage.keyboard.press('Tab');
+    assert.equal(await legacyAPIPage.evaluate(() => document.activeElement.id), 'viewer-close');
+    await legacyAPIPage.evaluate(() => document.activeElement.blur());
     await legacyAPIPage.keyboard.press('Escape'); await legacyAPIPage.locator('#viewer').waitFor({ state: 'hidden' });
     assert.equal(await legacyAPIPage.locator('main').getAttribute('aria-hidden'), null);
     assert.deepEqual(legacyErrors, []); await legacyAPI.close();
@@ -273,7 +277,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     const safeLink = blockedPage.locator('[data-photo]').first(), previewURL = new URL(await safeLink.getAttribute('href'), origin).href;
     assert.ok(previewURL.startsWith(origin + '/public/photos/'));
     const imageTabPromise = blockedScript.waitForEvent('page'); await safeLink.click(); const imageTab = await imageTabPromise;
-    await imageTab.waitForLoadState('load'); assert.equal(imageTab.url(), previewURL);
+    await imageTab.waitForURL(previewURL, { waitUntil: 'domcontentloaded' }); assert.equal(imageTab.url(), previewURL);
     await imageTab.waitForFunction(() => document.images.length > 0 && document.images[0].naturalWidth > 0);
     const previewResponse = await blockedScript.request.get(previewURL); assert.equal(previewResponse.status(), 200);
     assert.match(previewResponse.headers()['content-type'], /^image\/webp/);

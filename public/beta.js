@@ -170,12 +170,14 @@
     try { await navigator.clipboard.writeText(url); status.textContent = tr('作品链接已复制，可以分享这张照片。', 'Photograph link copied. Ready to share.'); }
     catch { status.textContent = tr('可复制地址栏中的链接，分享这张照片。', 'Copy the address bar link to share this photograph.'); }
   });
-  dialog.addEventListener('keydown', event => {
+  document.addEventListener('keydown', event => {
+    if (!isOpen()) return;
     if (event.key === 'Escape' && !nativeModal) { event.preventDefault(); closeViewer(); }
     if (event.key === 'ArrowLeft' && !dialog.classList.contains('zoomed') && current > 0) { event.preventDefault(); navigatePhoto(current - 1); }
     if (event.key === 'ArrowRight' && !dialog.classList.contains('zoomed') && current < photos.length - 1) { event.preventDefault(); navigatePhoto(current + 1); }
     if (event.key === 'Tab') {
       const controls = [...dialog.querySelectorAll('button,a[href]')].filter(control => !control.disabled && !control.hidden && control.getClientRects().length);
+      if (!dialog.contains(document.activeElement)) { event.preventDefault(); controls[0].focus(); return; }
       if (event.shiftKey && document.activeElement === controls[0]) { event.preventDefault(); controls[controls.length - 1].focus(); }
       if (!event.shiftKey && document.activeElement === controls[controls.length - 1]) { event.preventDefault(); controls[0].focus(); }
     }
