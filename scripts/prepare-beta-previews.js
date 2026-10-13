@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { readExhibitions, photographId } from './exhibitions.js';
+import { publicObjectUrl } from './image-paths.js';
 
 // Reproducible optional preparation; Pages builds use the committed public assets.
 // Use previews from a sufficiently large source cache; original files are never modified.
@@ -28,15 +29,15 @@ for (const category of Object.values(data.gallery)) {
     const source = join(cache, `${image.category}_${image.name}.webp`);
     const bytes = readFileSync(source); sourceTotal += bytes.length;
     const metadata = await sharp(bytes).metadata();
-    image.width = metadata.width; image.height = metadata.height;
-    image.sourcePreview ||= image.preview;
+    image.width ||= metadata.width; image.height ||= metadata.height;
+    if (!image.sourcePreview && /^https?:\/\//.test(image.preview)) image.sourcePreview = image.preview;
     for (const edge of larger.has(`${image.category}/${image.name}`) ? [960, 1600] : [960]) {
       const { data: buffer, info } = await sharp(bytes).rotate().resize({ width: edge, height: edge, fit: 'inside', withoutEnlargement: true }).webp({ quality: edge === 1600 ? 86 : 80, effort: 4 }).toBuffer({ resolveWithObject: true });
       const hash = createHash('sha256').update(buffer).digest('hex').slice(0, 12);
       const relative = `public/photos/${image.category}/${image.name}-${edge}-${hash}.webp`;
       mkdirSync(join('public/photos', image.category), { recursive: true }); writeFileSync(relative, buffer);
-      if (edge === 960) { image.preview = '/' + relative; image.previewWidth = info.width; image.previewHeight = info.height; }
-      else { image.largePreview = '/' + relative; image.largePreviewWidth = info.width; image.largePreviewHeight = info.height; }
+      if (edge === 960) { image.preview = publicObjectUrl('', relative); image.previewWidth = info.width; image.previewHeight = info.height; }
+      else { image.largePreview = publicObjectUrl('', relative); image.largePreviewWidth = info.width; image.largePreviewHeight = info.height; }
       total += buffer.length;
     }
     count++; if (count % 50 === 0) console.log(`${count} previews prepared`);

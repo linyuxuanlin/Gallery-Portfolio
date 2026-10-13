@@ -1,8 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, mkdirSync, writeFileSync, cpSync, symlinkSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import { JSDOM } from 'jsdom';
 import sharp from 'sharp';
 import { importPlan, prepareImportedPhotograph } from '../scripts/import-beta-library.js';
 
@@ -75,5 +78,62 @@ test('imported previews respect orientation and never enlarge a smaller photogra
       assert.equal(result[field + 'Width'], metadata.width); assert.equal(result[field + 'Height'], metadata.height);
     }
     assert.match(result.originalContentSHA256, /^[a-f0-9]{64}$/);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('reserved URL characters survive import, review sheets and built bilingual photograph routes', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'gallery-encoded-import-'));
+  const repository = fileURLToPath(new URL('../', import.meta.url));
+  try {
+    const category = '新 地点#?';
+    const entries = importPlan({ complete: true, objects: ['photo#1', 'photo?2', 'photo%3'].map(name => ({ key: `gallery/${category}/${name}.JPG`, lastModified: '2026-10-13T00:00:00Z' })) }, { gallery: {} });
+    const bytes = await sharp({ create: { width: 40, height: 30, channels: 3, background: '#648080' } }).jpeg().toBuffer();
+    for (const entry of entries) await prepareImportedPhotograph(entry, { cache: join(root, 'cache'), outputRoot: root, fetchOriginal: async () => bytes });
+    cpSync(join(repository, 'scripts'), join(root, 'scripts'), { recursive: true });
+    cpSync(join(repository, 'public/assets'), join(root, 'public/assets'), { recursive: true });
+    for (const file of ['site.config.json', 'artist.json', '_headers', 'public/beta.css', 'public/beta.js']) cpSync(join(repository, file), join(root, file));
+    symlinkSync(join(repository, 'node_modules'), join(root, 'node_modules'), 'dir');
+    writeFileSync(join(root, 'package.json'), JSON.stringify({ type: 'module' }));
+    mkdirSync(join(root, 'exhibitions')); mkdirSync(join(root, '.curation'));
+    writeFileSync(join(root, 'exhibitions/index.json'), JSON.stringify({ schemaVersion: 1, title: '测试', titleEn: 'Test', exhibitions: [] }));
+    const images = entries.map(entry => entry.image);
+    const captions = images.map(image => ({ category, name: image.name, title: image.name, titleEn: image.name, description: '测试图片', descriptionEn: 'Test photograph' }));
+    writeFileSync(join(root, 'gallery-index.json'), JSON.stringify({ gallery: { [category]: { name: category, count: images.length, images } } }));
+    writeFileSync(join(root, 'curation.json'), JSON.stringify({ photographs: captions, about: captions[0], commission: [captions[0]], covers: {} }));
+    writeFileSync(join(root, '.curation/inventory.json'), JSON.stringify({ libraryFingerprint: 'encoded-test', photographs: images.map(image => ({ ...image, id: `${category}/${image.name}`, exhibition: null })) }));
+    execFileSync(process.execPath, ['scripts/curation-review.js'], { cwd: root });
+    assert.ok(existsSync(join(root, '.curation/review/available/sheet-001.jpg')));
+    execFileSync(process.execPath, ['scripts/build-beta.js'], { cwd: root });
+    const cache = join(root, 'preview-cache'); mkdirSync(cache);
+    for (const image of images) await sharp({ create: { width: 1600, height: 1200, channels: 3, background: '#648080' } }).webp().toFile(join(cache, `${category}_${image.name}.webp`));
+    execFileSync(process.execPath, ['scripts/prepare-beta-previews.js'], { cwd: root, env: { ...process.env, GALLERY_SOURCE_CACHE: cache } });
+    const prepared = JSON.parse(readFileSync(join(root, 'gallery-index.json'), 'utf8')).gallery[category].images;
+    for (const image of prepared) {
+      assert.equal(image.sourcePreview, undefined, 'local previews must not be advertised as a remote source');
+      assert.equal(image.width, 40); assert.equal(image.height, 30);
+      assert.equal(new URL(image.preview, 'https://photo-gallery.wiki-power.com').hash, '');
+      assert.equal(new URL(image.preview, 'https://photo-gallery.wiki-power.com').search, '');
+    }
+    for (const image of images) {
+      for (const field of ['preview', 'largePreview']) {
+        const url = new URL(image[field], 'https://photo-gallery.wiki-power.com');
+        assert.equal(url.search, ''); assert.equal(url.hash, '');
+        assert.ok(existsSync(join(root, 'dist', decodeURIComponent(url.pathname).slice(1))));
+      }
+      for (const language of ['', 'en']) {
+        const directory = join(root, 'dist', language, 'photographs', category, image.name);
+        const dom = new JSDOM(readFileSync(join(directory, 'index.html'), 'utf8'));
+        const canonical = dom.window.document.querySelector('link[rel="canonical"]').href;
+        assert.equal(new URL(canonical).hash, ''); assert.equal(new URL(canonical).search, '');
+        for (const element of dom.window.document.querySelectorAll('a[href],img[src]')) {
+          const url = new URL(element.getAttribute('href') || element.getAttribute('src'), canonical);
+          if (url.origin !== new URL(canonical).origin) continue;
+          const relative = decodeURIComponent(url.pathname).slice(1);
+          assert.ok(existsSync(join(root, 'dist', relative.endsWith('/') || !relative ? relative + 'index.html' : relative)), url.href);
+        }
+        dom.window.close();
+      }
+    }
+    assert.throws(() => importPlan({ complete: true, objects: [{ key: 'gallery/Coast/...JPG', lastModified: '2026-10-13T00:00:00Z' }] }, { gallery: {} }), /Invalid photograph name/);
   } finally { rmSync(root, { recursive: true, force: true }); }
 });

@@ -290,7 +290,7 @@
       "noteEn": "Double white lines follow the bend closely as water spreads across the other side. The road reaches an edge and briefly divides two fields of colour.",
       "preview": "/public/photos/Perth/IMG_20251001_215956-960-88c1a38ce199.webp",
       "original": "https://media.wiki-power.com/gallery/Perth/IMG_20251001_215956.jpg",
-      "decisionReason": "第二章转到平缓水边：弯路与色面关系强；不猜测粉色形成机制与湖名。",
+      "decisionReason": "复审发现原图与大预览的蓝天有可见灰斑，退出展览；作品详情和完整档案保留，等待作者清理后的源图。",
       "reviewedAtSize": "960px single image; 1600px when available"
     },
     {
@@ -303,7 +303,7 @@
       "descriptionEn": "Four people sit with their backs to the camera on a nearby rock edge, facing layered reddish-brown canyons beneath a blue sky.",
       "alt": "四个人背向相机坐在近处岩缘上，远处是层层展开的红褐色峡谷与蓝色天空。",
       "altEn": "Four people sit with their backs to the camera on a nearby rock edge, facing layered reddish-brown canyons beneath a blue sky.",
-      "note": "四个身影占据近处一段岩面，远方的断层和曲线则继续伸展开来。经过两段道路后，身体在这里暂时停住。",
+      "note": "四个身影占据近处一段岩面，远方的岩面和曲线则继续伸展开来。沿着道路望去，身体在这里暂时停住。",
       "noteEn": "Four figures occupy a small stretch of rock nearby as distant faces and curves continue to unfold. After the roads, the body pauses here.",
       "preview": "/public/photos/America/DSC08884-960-b30b6707b590.webp",
       "original": "https://media.wiki-power.com/gallery/America/DSC08884.JPG",
@@ -464,9 +464,9 @@
       "category": "America",
       "name": "DSC07680",
       "title": "草地上的空座",
-      "description": "绿色草地上，一架白色木秋千和一张小木椅面向远处的树木与山。",
+      "description": "绿色草地上，一架白色木秋千和一张小木几面向远处的树木与山。",
       "titleEn": "An Empty Seat on the Lawn",
-      "descriptionEn": "A white wooden swing and a small chair stand on green grass before distant trees and hills.",
+      "descriptionEn": "A white wooden swing and a small side table stand on green grass before distant trees and hills.",
       "note": "秋千没有人坐，低处的横线仍然给出一个可以停留的位置。草地伸到树下，椅子周围的空处比座位大得多。",
       "noteEn": "The unoccupied swing still marks a place to stay. Grass reaches towards the trees; the open space around the seat is much larger than the seat itself."
     },
@@ -1229,6 +1229,186 @@
       "descriptionEn": "A black-and-white tail fluke rises above deep blue water and white foam, with ripples extending across the frame.",
       "note": "完整的身体留在水下，只露出一道展开的尾缘。水面把这一小部分托到画面中央。",
       "noteEn": "The full body remains underwater, leaving a spread tail edge visible. Water holds this small part at the centre of the frame."
+    },
+    {
+      "category": "America",
+      "name": "DSC08732",
+      "title": "石拱与暖云",
+      "titleEn": "Arch and Warm Clouds",
+      "description": "橙红色石拱立在近处，后方云层呈粉橙色，右侧天际发亮。",
+      "descriptionEn": "An orange-red rock arch stands before pink-orange clouds, with a bright horizon at the right.",
+      "note": "石拱内外是同一片天色。岩石保留着厚重的暗面，云的亮边从它身后越过去。",
+      "noteEn": "The same sky lies within and beyond the arch. Rock keeps its heavy shadows as the brighter edge of a cloud passes behind it."
+    },
+    {
+      "category": "Hanoi",
+      "name": "DSC03209",
+      "title": "云下的亮处",
+      "titleEn": "Light beneath the Clouds",
+      "description": "深色云层下，山影沿水面排列，一片金色反光落在中间。",
+      "descriptionEn": "Dark clouds hang above a line of hill silhouettes, with golden light reflected on the water between them.",
+      "note": "山影把天空和水分开，亮处却在上下相接。最暗的地方，也因此有了清楚的边。",
+      "noteEn": "Hills separate sky from water while light joins the two. The darkest shapes gain a clear edge."
+    },
+    {
+      "category": "Kyoto",
+      "name": "DSC02686",
+      "title": "朱檐受光",
+      "titleEn": "Light on Vermilion Eaves",
+      "description": "朱红色柱梁与交叠屋檐占据近处，受光面呈亮橙色，背光处较暗，后方是蓝天。",
+      "descriptionEn": "Vermilion beams and overlapping eaves fill the foreground, with bright orange surfaces and deep shadows against a blue sky.",
+      "note": "相邻的木构接住不同明暗。颜色沿着柱与梁转折，阴影把细部重新切开。",
+      "noteEn": "Adjacent timbers receive different amounts of light. Colour turns along columns and beams; shadows divide their details."
+    },
+    {
+      "category": "Osaka",
+      "name": "IMG_20241208_163924",
+      "title": "云下的城",
+      "titleEn": "The Castle beneath Clouds",
+      "description": "浅色多层城楼与高楼前后交叠，周围树冠呈黄褐色，上方天空深灰，近处屋顶较暗。",
+      "descriptionEn": "A pale tiered castle overlaps with taller buildings behind it. Yellow-brown trees stand beneath a dark grey sky, with shaded roofs in the foreground.",
+      "note": "城楼与高楼在同一片光里，屋顶却留在暗处。前后几层建筑，将一束光分出不同距离。",
+      "noteEn": "Castle and towers share the light while nearer roofs remain dark. Layers of buildings give that light different distances."
+    },
+    {
+      "category": "Australia",
+      "name": "DSC09243",
+      "title": "山线退后",
+      "titleEn": "Receding Ridges",
+      "description": "太阳位于明黄色云层之间，下方山线层层变暗，几处水面反射亮光。",
+      "descriptionEn": "The sun sits among bright yellow clouds above overlapping dark ridges and small reflective stretches of water.",
+      "note": "山线由深到浅退向远处，水面只留下几段细亮。大幅的金色之下，仍能辨认这些小的间隔。",
+      "noteEn": "Ridges recede from dark to pale, with water keeping a few thin highlights. Small intervals remain visible beneath the broad field of gold."
+    },
+    {
+      "category": "Australia",
+      "name": "DSC07262",
+      "title": "云隙",
+      "titleEn": "An Opening in the Clouds",
+      "description": "灰色云层覆盖山影与水面，浅色光束穿向下方，近处树冠与屋顶较暗。",
+      "descriptionEn": "Grey clouds spread above hills and water. Pale shafts of light descend towards dark foreground trees and roofs.",
+      "note": "云没有全部让开，光只从几道间隙里穿过。山与水留在下面，明暗各占一段。",
+      "noteEn": "The clouds do not fully part. Light enters through a few gaps, leaving hills and water in separate stretches of brightness and shade."
+    },
+    {
+      "category": "Perth",
+      "name": "IMG_20251002_210747",
+      "title": "海边的剪影",
+      "titleEn": "Silhouettes by the Water",
+      "description": "三个人与一只犬的暗色轮廓经过水边，远处天际呈橙色，水面布满细波。",
+      "descriptionEn": "Three people and a dog appear as dark silhouettes beside rippled water beneath an orange horizon.",
+      "note": "光退到天际，人留在近处。细波仍在横向铺开，几个身体从这片连续的亮处前经过。",
+      "noteEn": "Light retreats to the horizon as people remain nearby. Fine ripples spread horizontally while bodies pass before this continuous brightness."
+    },
+    {
+      "category": "Kyoto",
+      "name": "DSC02711",
+      "title": "门内的远方",
+      "titleEn": "Distance through the Gate",
+      "description": "朱红柱梁与悬挂布幅围出开口，开口外是城市屋顶、山影与浅色天空。",
+      "descriptionEn": "Vermilion posts, beams and hanging fabric frame an opening onto rooftops, hills and a pale sky.",
+      "note": "近处柱子遮住一部分远方，留下的开口却把城市收在一起。目光经过一道边，才抵达外面。",
+      "noteEn": "A nearby post conceals part of the distance, while the remaining opening gathers the city together. The eye crosses an edge before reaching outside."
+    },
+    {
+      "category": "Macau",
+      "name": "IMG_20240213_205009",
+      "title": "街巷尽头",
+      "titleEn": "At the End of the Street",
+      "description": "两侧较暗的楼体夹着窄街，一座亮色曲面高楼从街巷尽头升起，近处有车辆。",
+      "descriptionEn": "Dark buildings enclose a narrow street, with a bright curved tower rising at its far end above vehicles.",
+      "note": "两侧楼体保留着近处的窄，远方的高楼仍然向上展开。城市没有被完整看见，尺度却在这道街缝里相遇。",
+      "noteEn": "The buildings at either side keep the nearer street narrow while the distant tower opens upwards. The city remains incomplete, but its scales meet within this gap."
+    },
+    {
+      "category": "Shantou",
+      "name": "DSC02335_1",
+      "title": "阶上的门",
+      "titleEn": "Gate above the Steps",
+      "description": "几名人物的剪影沿石阶向上，前方是带彩色装饰与红灯笼的石门，亮蓝天空露在门后。",
+      "descriptionEn": "Silhouetted figures climb stone steps towards an ornamented stone gateway and red lanterns, with bright blue sky beyond.",
+      "note": "人物进入门的下沿，天空停在上方。斜向栏杆把近处的暗面，一直接到明亮的开口。",
+      "noteEn": "Figures enter the lower edge of the gateway while sky remains above. Diagonal rails connect the near shadows to its bright opening."
+    },
+    {
+      "category": "Tokyo",
+      "name": "DSC06246",
+      "title": "树下的层门",
+      "titleEn": "Layered Gates beneath Trees",
+      "description": "灰色石鸟居沿步径前后排列，石灯与草木分布在两侧，近处枝叶横过画面。",
+      "descriptionEn": "Grey stone torii gates recede along a path, with a stone lantern and plants beside them and branches crossing the foreground.",
+      "note": "门框之间仍有枝叶，横梁并没有独自决定边界。步径退到树影里，目光跟着一层层向前。",
+      "noteEn": "Leaves remain between the frames; beams do not define the boundary alone. The path recedes into tree shadows, drawing the eye forward through successive layers."
+    },
+    {
+      "category": "Shanghai",
+      "name": "IMG_20240420_202631",
+      "title": "枝叶与柱廊",
+      "titleEn": "Leaves and Colonnade",
+      "description": "近处绿色枝叶围着浅色柱廊，重复的圆柱、栏杆与雕饰从叶间显出。",
+      "descriptionEn": "Green branches surround a pale colonnade, with repeated columns, balustrades and ornament visible between the leaves.",
+      "note": "叶缘打断整齐的柱列。建筑的重复仍在，近处的绿色却让它有了不同的开口。",
+      "noteEn": "Leaf edges interrupt the regular row of columns. Architectural repetition remains, but the nearer green gives it irregular openings."
+    },
+    {
+      "category": "Shaoxing",
+      "name": "DSC05082",
+      "title": "叶间双塔",
+      "titleEn": "Two Towers between Leaves",
+      "description": "虚化的近处枝叶环绕两座浅色塔楼，灰色曲面塔顶上有十字架，下方墙面较暗。",
+      "descriptionEn": "Soft foreground leaves surround two pale towers with curved grey roofs and crosses above darker walls.",
+      "note": "树叶留下的边不规则，两座塔却各有完整轮廓。最近与较远的东西在这里重叠，仍保持不同的清晰度。",
+      "noteEn": "Leaves make an irregular edge around the distinct outlines of two towers. Near and distant forms overlap while keeping different degrees of clarity."
+    },
+    {
+      "category": "America",
+      "name": "DSC09487",
+      "title": "山与山影",
+      "titleEn": "Mountain and Its Reflection",
+      "description": "橙金色山峰位于树林后方，山与树的倒影落在平静水面，近处有草叶。",
+      "descriptionEn": "Orange-gold peaks rise behind trees and reflect in still water, with grass in the foreground.",
+      "note": "山的亮面在水里重新出现，中间隔着一条较暗的树岸。远处被倒置以后，留在了眼前。",
+      "noteEn": "The bright mountain faces reappear in water, separated by a darker wooded bank. Inverted distance remains close at hand."
+    },
+    {
+      "category": "Shaoxing",
+      "name": "DSC04872",
+      "title": "上下的石形",
+      "titleEn": "Rock Forms Above and Below",
+      "description": "石峰、绿色树冠与一座浅黄色建筑位于岸边，形状倒映在水面，细波使边缘略微变动。",
+      "descriptionEn": "Rock formations, green trees and a pale yellow building stand by water, their reflections shifting slightly with fine ripples.",
+      "note": "石体朝上与朝下各有一个轮廓。水并没有增加另一块石头，只让同一个形状延长了。",
+      "noteEn": "The rocks have outlines facing both up and down. Water adds no second stone; it extends the same form."
+    },
+    {
+      "category": "Nanjing",
+      "name": "DSC00955",
+      "title": "岸边的橙色",
+      "titleEn": "Orange beside the Bank",
+      "description": "橙黄色树列沿水岸排列，一条带篷木船停在近处，树与船的倒影被水纹分开。",
+      "descriptionEn": "Orange-yellow trees line the bank beside a covered wooden boat, with ripples dividing the reflections of trees and hull.",
+      "note": "岸上的直线到了水里变得零碎，船篷也有了摇动的弧线。倒影保留颜色，放松了形状。",
+      "noteEn": "Upright lines on the bank break into fragments in the water, and the canopy gains a wavering curve. Reflection keeps colour while loosening form."
+    },
+    {
+      "category": "Australia",
+      "name": "DSC09009",
+      "title": "湿沙上的楼影",
+      "titleEn": "Towers in Wet Sand",
+      "description": "海边高楼位于灰白云层下，人物散布在湿润沙面上，楼体与身影倒映在浅水中。",
+      "descriptionEn": "Towers stand beneath grey-white clouds beside a beach, with scattered figures and buildings reflected in shallow water over wet sand.",
+      "note": "楼体从岸上向脚下延伸，细小人物各自留下竖向的影。海边多出一层城市，又被水纹轻轻改动。",
+      "noteEn": "Towers extend from the shore towards the feet of the viewer. Small figures leave vertical reflections, adding a layer of city that ripples gently revise."
+    },
+    {
+      "category": "Shanghai",
+      "name": "DSC09530",
+      "title": "曲颈与倒影",
+      "titleEn": "Curved Neck and Reflection",
+      "description": "一只黑天鹅位于蓝色水面上，红色喙朝下，曲颈与身体的倒影被波纹折成数段。",
+      "descriptionEn": "A black swan floats on blue water, its red bill pointing down as ripples break the reflected neck and body into separate curves.",
+      "note": "水上的颈线完整，水下的线却不断折转。两道轮廓很近，始终没有合成同一个形状。",
+      "noteEn": "The neck above water keeps a continuous line; below it, the reflection turns repeatedly. The two outlines stay close without becoming the same shape."
     }
   ],
   "about": {

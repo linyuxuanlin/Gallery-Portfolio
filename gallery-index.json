@@ -2345,12 +2345,18 @@
         {
           "name": "DSC02711",
           "original": "https://media.wiki-power.com/gallery/Kyoto/DSC02711.JPG",
-          "preview": "/public/photos/Kyoto/DSC02711-960-e96e90e23cfa.webp",
+          "preview": "/public/photos/Kyoto/DSC02711-960-d36d214486cf.webp",
           "category": "Kyoto",
           "width": 7008,
           "height": 4672,
           "sourcePreview": "https://media.wiki-power.com/gallery/0_preview/Kyoto/DSC02711.webp",
-          "sourceModified": "2025-02-09T10:27:58.000Z"
+          "sourceModified": "2025-02-09T10:27:58.000Z",
+          "originalContentSHA256": "54d4ec6581f1336fce066b249e8c5ada427748ed1f811b81d65fc4a0faef8cab",
+          "previewWidth": 960,
+          "previewHeight": 640,
+          "largePreview": "/public/photos/Kyoto/DSC02711-1600-8652e339396f.webp",
+          "largePreviewWidth": 1600,
+          "largePreviewHeight": 1067
         },
         {
           "name": "DSC02734",
@@ -2472,12 +2478,18 @@
         {
           "name": "IMG_20240213_205009",
           "original": "https://media.wiki-power.com/gallery/Macau/IMG_20240213_205009.jpg",
-          "preview": "/public/photos/Macau/IMG_20240213_205009-960-a646c0ad8a25.webp",
+          "preview": "/public/photos/Macau/IMG_20240213_205009-960-986bb385184d.webp",
           "category": "Macau",
           "width": 4672,
           "height": 7008,
           "sourcePreview": "https://media.wiki-power.com/gallery/0_preview/Macau/IMG_20240213_205009.webp",
-          "sourceModified": "2025-02-09T16:59:14.000Z"
+          "sourceModified": "2025-02-09T16:59:14.000Z",
+          "originalContentSHA256": "1066f0387c35fd96d25c66fe3e041f7163571f3f6c17793d3813f3c6ddff57ac",
+          "previewWidth": 640,
+          "previewHeight": 960,
+          "largePreview": "/public/photos/Macau/IMG_20240213_205009-1600-5cebd212ea5a.webp",
+          "largePreviewWidth": 1067,
+          "largePreviewHeight": 1600
         },
         {
           "name": "IMG_20240213_205228",

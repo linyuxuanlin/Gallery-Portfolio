@@ -1,0 +1,44 @@
+{
+  "slug": "reflected-forms",
+  "status": "published",
+  "title": "映照",
+  "titleEn": "Reflected Forms",
+  "cover": "America/DSC09487",
+  "opening": [
+    "America/DSC09487",
+    "Shaoxing/DSC04872"
+  ],
+  "standfirst": "山与石形在水里倒置，岸上的树与楼向下延伸。到了近处，涟漪让两道轮廓分开。",
+  "standfirstEn": "Mountains and rocks invert in water; trees and towers extend downwards. Nearby, ripples separate two outlines.",
+  "introduction": [
+    "山的亮面在水中再次出现，石形与树冠沿水线向下伸展。同一个地方因此有了两个方向：一个保持重量，另一个随着细波变动。",
+    "五幅照片由完整的山影走向岸边与湿沙，最后停在一条被折开的颈线。水保留了颜色和位置，却没有让上方的形状原样停住。"
+  ],
+  "introductionEn": [
+    "Bright mountain faces reappear in water; rocks and tree canopies extend down from the bank. One place acquires two directions: one keeps its weight while the other changes with fine ripples.",
+    "Five photographs move from mountain reflections towards banks and wet sand, ending with a broken line of a neck. Water retains colour and position while altering the forms above it."
+  ],
+  "chapters": [
+    {
+      "id": "along-the-bank",
+      "title": "沿岸",
+      "titleEn": "Along the Bank",
+      "text": "树列的橙色与楼体的灰色，各自延伸到水面以下。波纹把直线放松，较远的景物来到脚边。",
+      "textEn": "Orange trees and grey towers extend beneath the waterline. Ripples loosen straight lines, bringing farther forms towards the feet.",
+      "works": [
+        "Nanjing/DSC00955",
+        "Australia/DSC09009"
+      ]
+    },
+    {
+      "id": "ripples",
+      "title": "涟漪",
+      "titleEn": "Ripples",
+      "text": "曲颈保持一道完整弧线，倒影却不断折转。水上的身体与水中的形状，在最后一幅里分开。",
+      "textEn": "The neck keeps a continuous curve while its reflection turns repeatedly. Body and reflected form separate in the final photograph.",
+      "works": [
+        "Shanghai/DSC09530"
+      ]
+    }
+  ]
+}

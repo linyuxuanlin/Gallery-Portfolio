@@ -1,0 +1,55 @@
+{
+  "slug": "slanting-light",
+  "status": "published",
+  "title": "斜照",
+  "titleEn": "Slanting Light",
+  "cover": "America/DSC08732",
+  "opening": [
+    "America/DSC08732",
+    "Hanoi/DSC03209"
+  ],
+  "standfirst": "石拱、朱檐与城楼接住亮处；山线退后，海边的人渐渐只剩轮廓。",
+  "standfirstEn": "An arch, eaves and a castle receive the light. Ridges recede; people by the water become outlines.",
+  "introduction": [
+    "石拱内外留着同一片暖云，山影则把金色水面与深云分开。光没有平均地照亮眼前的东西：朱檐上的一段木构，高楼前的城楼，或远山之间几处很小的水面，各自接住一部分。",
+    "七幅照片沿着亮处经过的表面展开，再让云的间隙与海边的人影进入。地点各不相同，照片之间保留的是明暗如何落到一个形状上。"
+  ],
+  "introductionEn": [
+    "Warm clouds lie within and beyond an arch, while hills separate golden water from dark cloud. Light reaches things unevenly: a timber beneath an eave, a castle before towers, or small stretches of water between distant ridges.",
+    "Seven photographs follow the surfaces receiving that light, then move towards openings in cloud and silhouettes by the water. The places differ; the sequence retains how brightness and shade meet a form."
+  ],
+  "chapters": [
+    {
+      "id": "lit-surfaces",
+      "title": "受光面",
+      "titleEn": "Lit Surfaces",
+      "text": "木构的近处细节与城楼的远处轮廓，被同一种偏暖的光照见。阴影留在旁边，继续给出厚度与距离。",
+      "textEn": "Warm light reveals nearby timbers and the outline of a farther castle. Shadows remain beside them, giving depth and distance.",
+      "works": [
+        "Kyoto/DSC02686",
+        "Osaka/IMG_20241208_163924"
+      ]
+    },
+    {
+      "id": "between-clouds",
+      "title": "云间",
+      "titleEn": "Between Clouds",
+      "text": "山线退到金色后面，浅亮水面分成细小几段。转到另一片云下，光束只从间隙里穿过，仍有大片地方暗着。",
+      "textEn": "Ridges recede behind gold, with bright water divided into small stretches. Elsewhere, shafts of light enter through gaps beneath cloud, leaving broad areas dark.",
+      "works": [
+        "Australia/DSC09243",
+        "Australia/DSC07262"
+      ]
+    },
+    {
+      "id": "near-water",
+      "title": "近水",
+      "titleEn": "Beside the Water",
+      "text": "亮处收回天际，近处的人与犬只剩轮廓。水面的细波仍然可见，经过的身体从它前面横过。",
+      "textEn": "Brightness withdraws to the horizon as people and a dog become outlines. Fine ripples remain visible behind the passing bodies.",
+      "works": [
+        "Perth/IMG_20251002_210747"
+      ]
+    }
+  ]
+}

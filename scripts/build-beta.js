@@ -77,7 +77,7 @@ rmSync('dist', { recursive: true, force: true }); mkdirSync('dist', { recursive:
 cpSync('public', 'dist/public', { recursive: true }); cpSync('_headers', 'dist/_headers');
 const routes = [], redirects = [];
 const write = (path, html, images = []) => {
-  const relative = local('/' + path).slice(1), dir = join('dist', relative);
+  const relative = decodeURIComponent(local('/' + path).slice(1)), dir = join('dist', relative);
   mkdirSync(dir, { recursive: true }); writeFileSync(join(dir, 'index.html'), html);
   const basePath = '/' + (path ? path + '/' : '');
   routes.push({ path: local(basePath), basePath, images });
@@ -109,7 +109,7 @@ for (language of ['zh', 'en']) {
       const body = `${heading(category ? esc(english(category).toUpperCase()) : 'THE PHOTOGRAPHIC ARCHIVE', esc(label) + suffix, t(`${images.length} 幅作品 · 第 ${part.number} / ${paged.length} 页`, `${images.length} photographs · Page ${part.number} of ${paged.length}`))}${filters(category)}${controls}<div class="archive-grid">${part.images.map((image, index) => photo(image, part.offset + index)).join('')}</div>${controls}`;
       write(path.slice(1, -1), page(title, description + suffix, body, 'works', path, { type: 'CollectionPage', image: category ? cover(category) : primaryImage }), part.images);
     }
-    if (category) redirects.push(`${local('/' + category)} ${categoryPath(category)} 301`);
+    if (category) redirects.push(`${local('/' + encodeURIComponent(category))} ${categoryPath(category)} 301`);
   }
   write('places', page(t('地点', 'Places'), t('沿地点浏览 Power’s Gallery 的摄影旅程。', 'Explore the photographic journeys in Power’s Gallery.'), `${heading('PLACES & JOURNEYS', t('沿途所见', 'Places & journeys'), t('从一个地方，走进一组照片。', 'A place, a collection, a different way of seeing.'))}<div class="place-grid all-places">${Object.keys(data.gallery).map(placeCard).join('')}</div>`, 'places', '/places/', { type: 'CollectionPage' }), Object.keys(data.gallery).map(cover));
   const statement = t(artist.statement, artist.statementEn).map(text => `<p>${esc(text)}</p>`).join('');
@@ -120,7 +120,7 @@ for (language of ['zh', 'en']) {
   write('photography', page(t('上海摄影师 · 品牌商业、活动纪实与旅行人文拍摄', 'Shanghai Photography Services · Brands, Events & Travel'), t('在上海的摄影师 Power，承接旅行人文、活动纪实、风景和品牌商业摄影。了解拍摄方向与合作流程，发送项目需求并咨询报价、作品授权。', 'Commission Shanghai-based photographer Power for travel, documentary, events, landscapes and brand projects. Share your brief for a quote or enquire about image licensing.'), commission, '', '/photography/', { image: commissionImages[0], mainEntity: { '@type': 'Service', name: t('摄影拍摄与作品授权', 'Photography commissions and image licensing'), provider: { '@id': siteURL('/#photographer') }, areaServed: { '@type': 'City', name: site.city[language] }, serviceType: site.services.map(service => service[language]) } }), commissionImages);
   for (const image of featured) {
     const path = detailPath(image), title = t(image.title, image.titleEn), description = t(image.description, image.descriptionEn);
-    const crumbs = [{ name: site.name, path: '/' }, { name: t('作品', 'Photographs'), path: '/works/' }, { name: place(image.category), path: `/works/${image.category}/` }, { name: title, path }];
+    const crumbs = [{ name: site.name, path: '/' }, { name: t('作品', 'Photographs'), path: '/works/' }, { name: place(image.category), path: `/works/${encodeURIComponent(image.category)}/` }, { name: title, path }];
     const owner = publicExhibitions.find(exhibition => exhibitionPhotoIds(exhibition).includes(photographId(image)));
     const exhibitionLink = owner ? `<a class="text-link" href="${local(exhibitionPath(owner))}">${t('所属展览：', 'In the exhibition: ')}${esc(t(owner.title, owner.titleEn))} ↗</a>` : '';
     const body = `<nav class="breadcrumbs" aria-label="${t('当前位置', 'Breadcrumbs')}">${crumbs.slice(0, -1).map(crumb => `<a href="${local(crumb.path)}">${esc(crumb.name)}</a>`).join('<span aria-hidden="true">/</span>')}</nav>${heading(esc(english(image.category).toUpperCase()), esc(title), esc(description))}<section class="photograph-detail">${photo(image, 0, true, true, '(max-width: 700px) calc(100vw - 40px), (max-width: 1560px) 82vw, 1200px')}<div class="photograph-context">${exhibitionLink}${image.note ? `<p class="photograph-reading">${esc(t(image.note, image.noteEn))}</p>` : ''}<p>${t(`摄影：${site.photographer} · 归档：${place(image.category)}。作品版权归摄影师所有。`, `Photograph by ${site.photographer} · ${place(image.category)} archive. Copyright remains with the photographer.`)}</p><p>${t('如需授权、收藏，或希望合作拍摄，请附上本页链接与用途来信。', 'For licensing, collecting or a photographic commission, include this page link and your intended use in an enquiry.')}</p><a class="text-link" href="${local('/photography/#licensing')}">${t('咨询作品授权与摄影合作', 'Enquire about licensing & commissions')} ↗</a><a class="text-link" href="${categoryPath(image.category)}">${t('更多' + place(image.category) + '作品', 'More photographs from ' + place(image.category))} ↗</a></div></section>`;
@@ -139,7 +139,7 @@ writeFileSync('dist/public/archive-routes.json', archiveRouteJSON);
 // Prebuilt root supports the existing Pages project's static branch previews.
 cleanStalePages(previousPaths, routes.map(route => route.path));
 for (const route of routes) {
-  const relative = route.path.slice(1); mkdirSync(relative || '.', { recursive: true });
+  const relative = decodeURIComponent(route.path.slice(1)); mkdirSync(relative || '.', { recursive: true });
   cpSync(join('dist', relative, 'index.html'), join(relative, 'index.html'));
 }
 for (const file of ['404.html', 'en/404.html', '_redirects', 'robots.txt', 'sitemap.xml']) cpSync(join('dist', file), file);

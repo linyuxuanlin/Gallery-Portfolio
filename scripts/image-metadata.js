@@ -8,7 +8,7 @@ export async function previewMetadata(images) {
   const entries = new Array(files.length);
   let cursor = 0;
   const inspect = async url => {
-    const path = resolve(url.replace(/^\//, ''));
+    const path = resolve(decodeURIComponent(url.replace(/^\//, '')));
     if (!url.startsWith('/public/photos/') || relative(resolve('public/photos'), path).startsWith('..')) {
       throw new Error(`Prepare beta previews before building: ${url}`);
     }

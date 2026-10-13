@@ -26,7 +26,7 @@ function pages(directory = 'dist') {
 test('published pages have distinct metadata, matching bilingual canonicals, valid structured data and reachable links', () => {
   const titles = new Set(); let count = 0;
   for (const file of pages()) {
-    const urlPath = '/' + file.replace(/^dist\//, '').replace(/index\.html$/, '');
+    const urlPath = '/' + file.replace(/^dist\//, '').replace(/index\.html$/, '').split('/').map(encodeURIComponent).join('/');
     const dom = new JSDOM(readFileSync(file, 'utf8'), { url: site.url + urlPath });
     const doc = dom.window.document, english = urlPath.startsWith('/en/');
     assert.equal(doc.querySelectorAll('h1').length, 1, file);
@@ -71,7 +71,7 @@ test('published pages have distinct metadata, matching bilingual canonicals, val
 test('image srcset describes actual pixel widths and page-specific social images are available', async () => {
   const cache = new Map();
   const info = async url => {
-    if (!cache.has(url)) cache.set(url, await sharp(readFileSync(join(root, url.replace(/^\//, '')))).metadata());
+    if (!cache.has(url)) cache.set(url, await sharp(readFileSync(join(root, decodeURIComponent(url.replace(/^\//, ''))))).metadata());
     return cache.get(url);
   };
   for (const file of pages()) {

@@ -20,7 +20,7 @@ for (let page = 1; page <= pages; page++) {
   for (const [index, image] of group.entries()) {
     if (!image.preview.startsWith('/public/photos/')) throw new Error(`Prepare local previews before reviewing: ${image.id}`);
     const left = index % columns * cellWidth, top = Math.floor(index / columns) * cellHeight;
-    const { data, info } = await sharp(readFileSync(resolve(image.preview.slice(1)))).rotate().resize({ width: cellWidth - 24, height: imageHeight, fit: 'inside' }).toBuffer({ resolveWithObject: true });
+    const { data, info } = await sharp(readFileSync(resolve(decodeURIComponent(image.preview.slice(1))))).rotate().resize({ width: cellWidth - 24, height: imageHeight, fit: 'inside' }).toBuffer({ resolveWithObject: true });
     composites.push({ input: data, left: left + Math.floor((cellWidth - info.width) / 2), top: top + Math.floor((imageHeight - info.height) / 2) });
     const number = (page - 1) * pageSize + index + 1;
     labels.push(`<text x="${left + 12}" y="${top + imageHeight + 20}" font-size="11">${number}. ${escapeHTML(image.id)}</text><text x="${left + 12}" y="${top + imageHeight + 38}" font-size="10" fill="#64675f">${escapeHTML(image.exhibition || 'AVAILABLE')}</text>`);

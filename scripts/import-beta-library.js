@@ -24,6 +24,7 @@ export function importPlan(listing, previous, { directory = 'gallery', baseUrl =
     originalKeys.add(key);
     const paths = imagePaths(key, directory);
     if (!paths) continue;
+    if (['.', '..'].includes(paths.name)) throw new Error(`Invalid photograph name: ${key}`);
     const photoId = `${paths.category}/${paths.name}`;
     if (identities.has(photoId)) throw new Error(`Ambiguous photograph identity: ${photoId}`);
     identities.set(photoId, key);
@@ -57,7 +58,7 @@ export async function prepareImportedPhotograph(entry, { cache, fetchOriginal, o
     const relative = `public/photos/${entry.image.category}/${entry.image.name}-${edge}-${fingerprint}.webp`;
     mkdirSync(dirname(join(outputRoot, relative)), { recursive: true }); writeFileSync(join(outputRoot, relative), data);
     const field = edge === 960 ? 'preview' : 'largePreview';
-    entry.image[field] = '/' + relative;
+    entry.image[field] = publicObjectUrl('', relative);
     entry.image[field + 'Width'] = info.width; entry.image[field + 'Height'] = info.height;
   }
   return entry.image;
@@ -96,7 +97,7 @@ async function main() {
   if (failed.length) { writeFileSync('.curation/import-failures.json', JSON.stringify(failed, null, 2) + '\n'); throw new Error(`${failed.length} source photographs could not be prepared; public index has not been replaced.`); }
   const gallery = {};
   for (const entry of plan) {
-    for (const field of ['preview', 'largePreview']) if (entry.image[field] && !existsSync(resolve(entry.image[field].slice(1)))) throw new Error(`Missing local asset: ${entry.id} ${field}`);
+    for (const field of ['preview', 'largePreview']) if (entry.image[field] && !existsSync(resolve(decodeURIComponent(entry.image[field].slice(1))))) throw new Error(`Missing local asset: ${entry.id} ${field}`);
     const category = gallery[entry.image.category] ||= { name: entry.image.category, images: [], count: 0 };
     category.images.push(entry.image); category.count++;
   }

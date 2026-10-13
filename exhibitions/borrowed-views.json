@@ -1,0 +1,45 @@
+{
+  "slug": "borrowed-views",
+  "status": "published",
+  "title": "借景",
+  "titleEn": "Borrowed Views",
+  "cover": "Kyoto/DSC02711",
+  "opening": [
+    "Kyoto/DSC02711",
+    "Macau/IMG_20240213_205009"
+  ],
+  "standfirst": "一道门，一条街缝，一层近处的叶。远方从这些边缘之间显出来。",
+  "standfirstEn": "A gate, a gap in a street, a layer of nearby leaves. Distance appears between these edges.",
+  "introduction": [
+    "门内的柱梁先占住近处，城市与山留在开口里。到了窄街，围住远方的换成两侧楼体。远处仍然很大，眼前的边缘却决定了这次能看见多少。",
+    "六幅照片让门、石阶与枝叶留在取景中。它们没有被移开以获得一个完整的景物：目光经过近处，再抵达较远的形状。"
+  ],
+  "introductionEn": [
+    "Posts and beams occupy the near view while city and hills remain within an opening. In a narrow street, buildings at either side take their place. The distance stays large; the nearer edges decide how much of it enters this view.",
+    "Six photographs keep gates, steps and leaves within the frame. They remain as the eye passes through what is nearby towards forms farther away."
+  ],
+  "chapters": [
+    {
+      "id": "through-gates",
+      "title": "门与步径",
+      "titleEn": "Gates and Paths",
+      "text": "石阶把人物送到亮处，灰色门框又退到树影之中。经过的方向各不相同，开口始终与近处相接。",
+      "textEn": "Steps carry figures towards brightness; grey gates recede into tree shadows. The routes differ, but the openings stay connected to what lies nearby.",
+      "works": [
+        "Shantou/DSC02335_1",
+        "Tokyo/DSC06246"
+      ]
+    },
+    {
+      "id": "edges-of-leaves",
+      "title": "叶的边缘",
+      "titleEn": "Edges of Leaves",
+      "text": "柱列与双塔各有整齐的轮廓，近处的枝叶却留下不规则的边。远方从这些间隙里显出，也保留着不同的清晰度。",
+      "textEn": "Columns and paired towers have regular outlines; nearer leaves give them irregular edges. The distance appears through these gaps, with different degrees of clarity.",
+      "works": [
+        "Shanghai/IMG_20240420_202631",
+        "Shaoxing/DSC05082"
+      ]
+    }
+  ]
+}
