@@ -1,0 +1,46 @@
+{
+  "slug": "away-from-shore",
+  "status": "published",
+  "title": "离岸",
+  "titleEn": "Away from Shore",
+  "cover": "Australia/IMG_20240501_215738",
+  "opening": [
+    "Australia/IMG_20240501_215738",
+    "Hongkong/IMG_20250629_104854"
+  ],
+  "standfirst": "粗绳盘在近处，船沿岸靠拢；拉开距离以后，水面露出另一条路。",
+  "standfirstEn": "Rope coils nearby as boats gather along the shore. Farther out, another route appears on the water.",
+  "introduction": [
+    "帆船与远岸之间留着大片蓝绿的水面。另一幅里，粗绳盘在绿漆甲板上，橙色救生圈贴着金属边缘。船可以很小，也可以近到只剩一截外壳。",
+    "七幅照片沿着船与岸的间距展开：平坦的船体在港口靠拢，人聚在码头前的甲板上，篷顶和屋檐把水道收窄。再从高处望下去，船在楼群之间转弯，一条浅色航迹随之展开。水面的空处，留下了经过的方向。"
+  ],
+  "introductionEn": [
+    "A broad stretch of blue-green water lies between sailboats and a distant shore. In another photograph, thick rope coils on a green-painted deck beside orange life rings and metal edges. A boat can appear small, or come so close that only part of its shell remains.",
+    "Seven photographs follow the distance between boats and the shore: flat hulls gather in a harbour, people occupy a deck beside a pier, and canopies and eaves narrow a channel. Seen from above, a boat turns between buildings and a pale wake spreads behind it. Open water keeps a direction of passage."
+  ],
+  "chapters": [
+    {
+      "id": "alongside",
+      "title": "靠拢",
+      "titleEn": "Alongside",
+      "text": "船体、甲板与篷顶在岸边排列；吊臂、柱廊和屋檐仍在后面。水面从它们之间显出来，有时是一块空处，有时只剩窄窄的缝。",
+      "textEn": "Hulls, decks and canopies line the shore, with cranes, columns and eaves behind them. Water appears between these forms, sometimes as an open space, sometimes as a narrow gap.",
+      "works": [
+        "Busan/DSC00983",
+        "Hongkong/IMG_20240212_001202",
+        "Shanghai/IMG_20250323_004753",
+        "Shaoxing/DSC05085_1"
+      ]
+    },
+    {
+      "id": "drawing-apart",
+      "title": "拉开",
+      "titleEn": "Drawing Apart",
+      "text": "从高处望下去，岸上的建筑把水道围成一道弯，小船在其中留下更细的转折。间隔拉开以后，水面留住了经过的方向。",
+      "textEn": "Seen from above, buildings enclose a broad bend in the waterway. A boat leaves a finer turn within it. As distance opens, the water retains a direction of passage.",
+      "works": [
+        "Australia/DSC08908"
+      ]
+    }
+  ]
+}

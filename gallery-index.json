@@ -883,12 +883,18 @@
         {
           "name": "IMG_20240429_195936",
           "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240429_195936.jpg",
-          "preview": "/public/photos/Australia/IMG_20240429_195936-960-7d3fbd294c31.webp",
+          "preview": "/public/photos/Australia/IMG_20240429_195936-960-88df42e0387f.webp",
           "category": "Australia",
           "width": 4672,
           "height": 7008,
           "sourcePreview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240429_195936.webp",
-          "sourceModified": "2025-02-10T04:15:46.000Z"
+          "sourceModified": "2025-02-10T04:15:46.000Z",
+          "originalContentSHA256": "258958fa624ebd92df77c0170bc7da724866320b5027c274aae5b16444d3e05b",
+          "previewWidth": 640,
+          "previewHeight": 960,
+          "largePreview": "/public/photos/Australia/IMG_20240429_195936-1600-e8b8caac6fb8.webp",
+          "largePreviewWidth": 1067,
+          "largePreviewHeight": 1600
         },
         {
           "name": "IMG_20240430_085311",
@@ -933,12 +939,18 @@
         {
           "name": "IMG_20240501_215738",
           "original": "https://media.wiki-power.com/gallery/Australia/IMG_20240501_215738.jpg",
-          "preview": "/public/photos/Australia/IMG_20240501_215738-960-a075ef4aaac7.webp",
+          "preview": "/public/photos/Australia/IMG_20240501_215738-960-d41d6a7adf7f.webp",
           "category": "Australia",
           "width": 6830,
           "height": 4553,
           "sourcePreview": "https://media.wiki-power.com/gallery/0_preview/Australia/IMG_20240501_215738.webp",
-          "sourceModified": "2025-02-10T06:27:48.000Z"
+          "sourceModified": "2025-02-10T06:27:48.000Z",
+          "originalContentSHA256": "4d42e53cb10957d338dac5a5a8b3e76bc15d2bb02b428edbf37c46ac17923961",
+          "previewWidth": 960,
+          "previewHeight": 640,
+          "largePreview": "/public/photos/Australia/IMG_20240501_215738-1600-6481300b7c0b.webp",
+          "largePreviewWidth": 1600,
+          "largePreviewHeight": 1066
         },
         {
           "name": "IMG_20240501_220223",
@@ -1089,12 +1101,18 @@
         {
           "name": "DSC04200",
           "original": "https://media.wiki-power.com/gallery/Bankok/DSC04200.JPG",
-          "preview": "/public/photos/Bankok/DSC04200-960-be4c26ca65ec.webp",
+          "preview": "/public/photos/Bankok/DSC04200-960-8c3ce383e3a6.webp",
           "category": "Bankok",
-          "width": 4672,
-          "height": 7008,
+          "width": 7008,
+          "height": 4672,
           "sourcePreview": "https://media.wiki-power.com/gallery/0_preview/Bankok/DSC04200.webp",
-          "sourceModified": "2025-07-27T07:35:02.000Z"
+          "sourceModified": "2025-07-27T07:35:02.000Z",
+          "originalContentSHA256": "33a71348db7e8136f53be18563d9b33b7ebbdd6d5d2cb2b15c2b059115ba4d9e",
+          "previewWidth": 640,
+          "previewHeight": 960,
+          "largePreview": "/public/photos/Bankok/DSC04200-1600-7c39ca7c527a.webp",
+          "largePreviewWidth": 1067,
+          "largePreviewHeight": 1600
         },
         {
           "name": "DSC04214",
@@ -1861,12 +1879,18 @@
         {
           "name": "DSC09702",
           "original": "https://media.wiki-power.com/gallery/Hongkong/DSC09702.JPG",
-          "preview": "/public/photos/Hongkong/DSC09702-960-6efa0b12bc3a.webp",
+          "preview": "/public/photos/Hongkong/DSC09702-960-264b0a5e98e6.webp",
           "category": "Hongkong",
           "width": 7008,
           "height": 4672,
           "sourcePreview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/DSC09702.webp",
-          "sourceModified": "2025-07-27T08:04:29.000Z"
+          "sourceModified": "2025-07-27T08:04:29.000Z",
+          "originalContentSHA256": "88b5520cbdadb4117baf2456088941220980fa2201868ccf8236821257f88812",
+          "previewWidth": 960,
+          "previewHeight": 640,
+          "largePreview": "/public/photos/Hongkong/DSC09702-1600-8021675a449e.webp",
+          "largePreviewWidth": 1600,
+          "largePreviewHeight": 1067
         },
         {
           "name": "DSC09884_1",
@@ -1981,12 +2005,18 @@
         {
           "name": "IMG_20250629_104854",
           "original": "https://media.wiki-power.com/gallery/Hongkong/IMG_20250629_104854.jpg",
-          "preview": "/public/photos/Hongkong/IMG_20250629_104854-960-3ded1b31a759.webp",
+          "preview": "/public/photos/Hongkong/IMG_20250629_104854-960-e176b3aa7217.webp",
           "category": "Hongkong",
           "width": 6591,
           "height": 4394,
           "sourcePreview": "https://media.wiki-power.com/gallery/0_preview/Hongkong/IMG_20250629_104854.webp",
-          "sourceModified": "2025-07-27T08:09:47.000Z"
+          "sourceModified": "2025-07-27T08:09:47.000Z",
+          "originalContentSHA256": "33d1d573cdf2d53872402a01026e69095fbd5fb9e4c3b1887e149d52a2f736d6",
+          "previewWidth": 960,
+          "previewHeight": 640,
+          "largePreview": "/public/photos/Hongkong/IMG_20250629_104854-1600-3e9d848890fc.webp",
+          "largePreviewWidth": 1600,
+          "largePreviewHeight": 1067
         },
         {
           "name": "IMG_20250629_134740",

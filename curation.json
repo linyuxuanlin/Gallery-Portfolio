@@ -845,7 +845,7 @@
       "name": "DSC01194",
       "title": "玻璃下的绿墙",
       "titleEn": "A Planted Wall beneath Glass",
-      "description": "玻璃穹顶下是一面密集的绿墙，数道水流从上方落下。",
+      "description": "玻璃拱顶下是一面密集的绿墙，数道水流从上方落下。",
       "descriptionEn": "A densely planted wall stands beneath a glass dome, with several streams of water falling from above.",
       "note": "网格向远处收拢，枝叶把另一面覆盖得几乎不留空隙。透明的外壳与稠密的绿色同时占据画面。",
       "noteEn": "The grid recedes while plants cover the other surface with scarcely a gap. A transparent shell and dense green occupy the frame together."
@@ -999,6 +999,236 @@
       "descriptionEn": "Large characters are carved into a dark stone marker. A bird rests on its upper edge, beside a utility pole and wires against a grey sky.",
       "note": "红牌换成石面，字由白色变成凹下去的暗处。鸟再次停在文字上方，旁边的电线仍把画面接回街道。",
       "noteEn": "The signboard gives way to stone, and white lettering to dark recesses. Again a bird rests above the characters, while nearby wires connect the frame back to the street."
+    },
+    {
+      "category": "Hongkong",
+      "name": "DSC09702",
+      "title": "高处的开口",
+      "titleEn": "An Opening Above",
+      "description": "从地面仰看，楼群与树影围在画面四周，中间露出蓝天与白云。",
+      "descriptionEn": "Seen from below, buildings and tree silhouettes surround an opening of blue sky and white clouds.",
+      "note": "楼的长边向天空收拢。视线停在中间的开口，建筑的全貌留在画外。",
+      "noteEn": "Long edges converge towards the sky. The eye rests in the opening while the full buildings remain outside the frame."
+    },
+    {
+      "category": "Bankok",
+      "name": "DSC04200",
+      "title": "弧顶之下",
+      "titleEn": "Beneath the Curved Roof",
+      "description": "阶梯、栏杆与斜撑在弧形屋顶下层叠，亮光透过上方网格，近处有绿色叶片。",
+      "descriptionEn": "Stairs, railings and diagonal supports overlap beneath a curved roof. Light enters through the grid above, with green leaves in the foreground.",
+      "note": "一层阶梯遮住另一层，斜线把它们接向头顶。亮处也有骨架，光从一格格间隙里落下。",
+      "noteEn": "One stairway overlaps another, with diagonals joining them overhead. The light has a framework too, entering through separate openings."
+    },
+    {
+      "category": "Shanghai",
+      "name": "DSC05467",
+      "title": "红墙转角",
+      "titleEn": "A Corner in Red",
+      "description": "红砖墙与重复窗格在仰视中向上收拢，左侧较低的墙面与右侧高楼围出浅色天空。",
+      "descriptionEn": "Red brick walls and repeated windows converge in an upward view. A lower wall at the left and a taller building at the right enclose pale sky.",
+      "note": "窗格重复，墙的转角保持着一条长边。站在近处，立面成为伸向画外的线。",
+      "noteEn": "Windows repeat along a long corner. From close by, the facade becomes a line extending beyond the frame."
+    },
+    {
+      "category": "Shanghai",
+      "name": "DSC02799",
+      "title": "云间的棱线",
+      "titleEn": "Edges beneath the Clouds",
+      "description": "玻璃楼的转角从下方向蓝天伸出，白云铺在上方，其他楼体与电线进入画面边缘。",
+      "descriptionEn": "A glass building rises into blue sky beneath white clouds, with other buildings and wires entering the edges of the frame.",
+      "note": "建筑的尖角与云的软边并列。线条向上收拢，天空仍占着大部分画面。",
+      "noteEn": "A sharp building edge meets the softer edge of a cloud. Lines converge upwards while sky retains most of the frame."
+    },
+    {
+      "category": "Kyoto",
+      "name": "DSC02557",
+      "title": "两道檐",
+      "titleEn": "Two Eaves",
+      "description": "两层灰色瓦檐在浅色天空前交叠，黄色边线与深色梁架沿屋顶曲线延伸。",
+      "descriptionEn": "Two grey tiled eaves overlap against pale sky, with yellow trim and dark beams following their curves.",
+      "note": "近处的斜边越过后方的弧线。屋檐各自完整，又在取景里相互截断。",
+      "noteEn": "A near diagonal crosses the curve behind it. Each eave is whole in itself; the framing lets one interrupt the other."
+    },
+    {
+      "category": "Xiamen",
+      "name": "DSC05060",
+      "title": "檐间的天",
+      "titleEn": "Sky between Eaves",
+      "description": "深色屋檐从右上方伸入，后方的黄色瓦顶与红色柱梁位于左下，蓝天留在两者之间。",
+      "descriptionEn": "A dark eave enters from the upper right above yellow tiles and red beams at the lower left, with blue sky between them.",
+      "note": "上方的暗面遮住一角，下方的亮色沿斜边铺开。距离只在两道檐之间的一片天里显出来。",
+      "noteEn": "A dark surface covers one corner while brighter colour follows the lower diagonal. Distance appears in the sky between the two eaves."
+    },
+    {
+      "category": "Vietnam",
+      "name": "IMG_20250707_155538",
+      "title": "弧窗与拱顶",
+      "titleEn": "Arched Windows and a Vault",
+      "description": "一列弧形窗与深色弧梁向远处重复，橙色线条把浅色拱顶分成网格，下方有白色柱头。",
+      "descriptionEn": "Arched windows and dark curved beams repeat into the distance. Orange lines divide a pale vault into a grid above white capitals.",
+      "note": "弧线反复跨过视线，窗内的亮处被分成一段段。站在下方，房间先成为一片向远处延伸的顶。",
+      "noteEn": "Curves repeatedly cross the view, dividing the bright windows into sections. From below, the room first becomes a ceiling extending into the distance."
+    },
+    {
+      "category": "Shanghai",
+      "name": "IMG_20240310_171420",
+      "title": "桥底的长线",
+      "titleEn": "A Line beneath the Bridge",
+      "description": "红色桥底从画面上方收向远处的浅色桥柱，下方是河水、船与沿岸建筑。",
+      "descriptionEn": "A red bridge underside narrows from the top of the frame towards a pale support, above water, a boat and riverside buildings.",
+      "note": "桥底把天空分到两边，格子越来越小。到达远处以后，向上的视线重新遇到河岸。",
+      "noteEn": "The underside separates the sky to either side as its grid grows smaller. In the distance, the upward view meets the riverbank again."
+    },
+    {
+      "category": "Australia",
+      "name": "IMG_20240501_215738",
+      "title": "空水中的帆船",
+      "titleEn": "Sailboats in Open Water",
+      "description": "几艘白色帆船分布在蓝绿的水面上，细桅杆伸向灰蓝天空，远岸是一条深色轮廓。",
+      "descriptionEn": "White sailboats are spread across blue-green water, with slender masts against a grey-blue sky and a dark distant shore.",
+      "note": "船彼此隔开，水面在它们之间保持着完整的颜色。前景的空处比船更大，开场先留出一段距离。",
+      "noteEn": "The boats are separated by broad areas of colour. Open water in the foreground is larger than the boats, giving the opening its distance."
+    },
+    {
+      "category": "Hongkong",
+      "name": "IMG_20250629_104854",
+      "title": "盘绳",
+      "titleEn": "Coiled Rope",
+      "description": "粗绳盘在绿漆船边，后方有橙色救生圈与黑色金属构件，一道虚焦的白线斜过前景。",
+      "descriptionEn": "Thick rope coils beside a green-painted boat edge, with orange life rings and black metal fittings behind it; a blurred white line crosses the foreground diagonally.",
+      "note": "船的全貌退到画外，盘绳、铆钉与漆面留在近处。左侧的水仍然露出一片，外壳与水面的距离缩到边缘。",
+      "noteEn": "The whole boat recedes outside the frame, leaving rope, rivets and painted surfaces close by. A patch of water remains at the left, bringing shell and water together at an edge."
+    },
+    {
+      "category": "Busan",
+      "name": "DSC00983",
+      "title": "并靠的船体",
+      "titleEn": "Hulls Alongside",
+      "description": "平坦的船体成排伸向蓝色水面，后方有吊臂、厂房、桥和沿岸建筑。",
+      "descriptionEn": "Rows of flat hulls extend into blue water, with cranes, sheds, a bridge and waterfront buildings behind them.",
+      "note": "重复的长边朝着空水排列，水又从船体之间穿入。港口的密集没有占满画面，左侧仍留着一块未被切开的蓝色。",
+      "noteEn": "Repeated long edges face open water, which reaches between the hulls. The harbour does not fill the frame: an unbroken area of blue remains at the left."
+    },
+    {
+      "category": "Hongkong",
+      "name": "IMG_20240212_001202",
+      "title": "近岸的甲板",
+      "titleEn": "A Deck beside the Pier",
+      "description": "一艘蓝白色船靠近有柱廊的码头，近处甲板聚着人，右侧栏杆后也有人，船身下方落着几道水流。",
+      "descriptionEn": "A blue-and-white boat lies close to a pier with columns. People gather on the near deck and behind the railings to the right, while several streams of water fall beneath the boat.",
+      "note": "两边的人都停在各自的栏杆以内，船与码头之间却留着水。镜头把这段不宽的间隔放到画面中央。",
+      "noteEn": "People on both sides remain within their own railings, with water between boat and pier. The camera places this narrow separation in the centre of the frame."
+    },
+    {
+      "category": "Shanghai",
+      "name": "IMG_20250323_004753",
+      "title": "沿岸的篷顶",
+      "titleEn": "Canopies along the Bank",
+      "description": "彩色篷船沿岸排列，橙色救生圈挂在舱边，垂枝伸到水面上方，近岸可见船与树的倒影。",
+      "descriptionEn": "Colourful canopied boats line the bank, with orange life rings along their sides. Drooping branches reach over the water, which reflects boats and trees near the shore.",
+      "note": "篷顶把岸边分成一段段浅色，倒影则把这些颜色向下展开。远处的一只小船进入较空的水面，使并靠与分开在同一幅里出现。",
+      "noteEn": "Canopies divide the bank into pale sections, while reflections spread their colours downwards. A small boat farther away occupies more open water, bringing closeness and separation into one frame."
+    },
+    {
+      "category": "Shaoxing",
+      "name": "DSC05085_1",
+      "title": "篷沿与水光",
+      "titleEn": "Canopies and Water Light",
+      "description": "深色拱篷靠着临水建筑排列，白墙与瓦檐沿右侧延伸，左侧水面映出树影和明亮的天空。",
+      "descriptionEn": "Dark arched canopies line waterside buildings. White walls and tiled eaves extend along the right, while the water at the left reflects trees and bright sky.",
+      "note": "黑色弧面重复，压住一侧的亮水。瓦檐从上方伸近，岸、水与船在很窄的间隔里并行。",
+      "noteEn": "Repeated dark curves press against bright water. Eaves approach from above; bank, water and boats run alongside one another within a narrow interval."
+    },
+    {
+      "category": "Australia",
+      "name": "DSC08908",
+      "title": "弯折的航迹",
+      "titleEn": "A Wake that Bends",
+      "description": "高处俯看弯曲水道，密集房屋沿两岸展开，一艘小船与弯折的浅色航迹位于水面中央。",
+      "descriptionEn": "Seen from above, a curved waterway runs between dense buildings, with a small boat and a bending pale wake in the middle.",
+      "note": "沿岸的房屋把水面围成一道弯，小船又在其中留下更细的转折。岸的曲线与经过的曲线，在同一幅照片里并行。",
+      "noteEn": "Buildings enclose the water in a broad bend; a boat leaves a finer turn within it. A curve of the shore and a curve of passage run together in the photograph."
+    },
+    {
+      "category": "America",
+      "name": "DSC07241",
+      "title": "岩沿的两只",
+      "titleEn": "Two at the Rock Edge",
+      "description": "两只灰褐色小动物位于岩沿，近处一只朝右，另一只朝向镜头，后方岩石与叶片虚化。",
+      "descriptionEn": "Two small grey-brown animals stand at a rock edge: one faces right, the other towards the camera, against blurred rocks and leaves.",
+      "note": "岩石的斜边托住身体，皮毛与粗糙表面在近处相接。两颗头停在同一段轮廓上。",
+      "noteEn": "A sloping rock edge supports the bodies, bringing fur and rough stone together. Two heads rest along the same outline."
+    },
+    {
+      "category": "Australia",
+      "name": "IMG_20240429_195936",
+      "title": "栏杆上的展开",
+      "titleEn": "Opening above a Railing",
+      "description": "两只白鸟站在墙沿与黑色栏杆上，黄色冠羽展开，近处一只张开翅膀，后方山水虚化。",
+      "descriptionEn": "Two white birds stand on a wall edge and black railing with yellow crests raised. The nearer bird opens its wings against a blurred landscape.",
+      "note": "爪尖落在窄边上，羽毛却向两边展开。身体占去的空间，比承托它的位置更宽。",
+      "noteEn": "Claws rest on a narrow edge while feathers spread to either side. The body occupies more room than the place supporting it."
+    },
+    {
+      "category": "Bankok",
+      "name": "DSC03681",
+      "title": "树影下的长尾",
+      "titleEn": "A Long Tail in the Shade",
+      "description": "爬行动物的长尾横过落叶地面，旁边站着一只黑鸟，后方是树根、木椅与明亮的水面。",
+      "descriptionEn": "A reptile’s long tail crosses leaf-covered ground beside a black bird, with roots, a wooden bench and bright water behind them.",
+      "note": "长尾沿着地面铺开，黑鸟的身体竖在旁边。两种姿态都留在树影里，水面继续亮着。",
+      "noteEn": "A long tail spreads along the ground beside the bird’s upright body. Both remain in shade while the water stays bright."
+    },
+    {
+      "category": "Bankok",
+      "name": "IMG_20250126_165804",
+      "title": "白柱旁的黑色",
+      "titleEn": "Black beside a White Column",
+      "description": "黑猫仰躺在黄叶散落的地面，前爪贴着白色柱脚，头部转向镜头。",
+      "descriptionEn": "A black cat lies on its back among fallen yellow leaves, with its front paws against a white column and its head turned towards the camera.",
+      "note": "身体拉成一道斜线，爪子在白色边缘停住。黄叶和地面的纹理仍从四周围过来。",
+      "noteEn": "The body forms a diagonal, stopping its paws at the white edge. Leaves and ground textures continue around it."
+    },
+    {
+      "category": "Other",
+      "name": "IMG_20240811_114738",
+      "title": "枝杈中的空处",
+      "titleEn": "A Gap in the Fork",
+      "description": "灰色小动物蹲在分叉树干的低处，前爪靠近嘴边，尾巴沿右侧树皮展开，后方叶片虚化。",
+      "descriptionEn": "A small grey animal crouches low in a forked trunk, with its forepaws near its mouth and its tail spread along the bark to the right, against blurred leaves.",
+      "note": "两边树干围出一个低处，身体刚好落在其中。树皮的裂纹继续向两边展开。",
+      "noteEn": "The two trunks enclose a low space occupied by the body. Cracks in the bark continue to either side."
+    },
+    {
+      "category": "Australia",
+      "name": "IMG_20240503_170444",
+      "title": "抱住树干",
+      "titleEn": "Around the Trunk",
+      "description": "灰色动物贴着直立树干，前肢绕到树干前方，腹部露在左侧，周围还有枝干与叶片。",
+      "descriptionEn": "A grey animal holds close to an upright trunk, with its forelimbs wrapped in front and its belly visible to the left, among branches and leaves.",
+      "note": "身体向树干收拢，前肢绕过粗糙表面。直立的线与弯起的身体在近处相接。",
+      "noteEn": "The body gathers around the trunk, with forelimbs crossing its rough surface. An upright line meets a curved body close by."
+    },
+    {
+      "category": "Perth",
+      "name": "IMG_20251003_093711",
+      "title": "圆纹中的头",
+      "titleEn": "A Head in the Ripples",
+      "description": "动物的头部位于一圈水纹前缘，较大的身体轮廓隐在水下，蓝绿色波纹横过画面。",
+      "descriptionEn": "An animal’s head emerges at the near edge of a ring of ripples, with a larger body outline visible beneath blue-green water.",
+      "note": "水纹围出一个椭圆，露出的部分很小。水下的暗色轮廓，使身体在可见与被遮住之间延续。",
+      "noteEn": "Ripples enclose an oval around a small exposed part. A darker outline underwater continues the body between visibility and concealment."
+    },
+    {
+      "category": "Perth",
+      "name": "IMG_20251006_122016",
+      "title": "尾缘",
+      "titleEn": "The Tail Edge",
+      "description": "黑白相间的尾鳍露出深蓝水面，下方有白色泡沫，水纹向画面四周延伸。",
+      "descriptionEn": "A black-and-white tail fluke rises above deep blue water and white foam, with ripples extending across the frame.",
+      "note": "完整的身体留在水下，只露出一道展开的尾缘。水面把这一小部分托到画面中央。",
+      "noteEn": "The full body remains underwater, leaving a spread tail edge visible. Water holds this small part at the centre of the frame."
     }
   ],
   "about": {

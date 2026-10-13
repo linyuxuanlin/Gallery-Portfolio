@@ -1,0 +1,56 @@
+{
+  "slug": "room-for-a-body",
+  "status": "published",
+  "title": "容身",
+  "titleEn": "Room for a Body",
+  "cover": "America/DSC07241",
+  "opening": [
+    "America/DSC07241",
+    "Australia/IMG_20240429_195936"
+  ],
+  "standfirst": "岩沿、栏杆、墙脚与树杈，各自留出一个位置。到了水上，身体只露出一小部分。",
+  "standfirstEn": "A rock edge, railing, column and forked trunk each offer a place. On the water, only part of a body remains visible.",
+  "introduction": [
+    "两只小动物贴着岩石站住，白鸟的翅膀从栏杆上展开。靠近看，身体与承托它的地方接在一起：爪尖，树皮，墙脚的一小片阴影。",
+    "八幅照片从地面走向枝杈，最后停在水线。黑猫的身体拉成一道斜线，灰色的身体贴着树干收拢；水中的头部与尾缘，只露出各自的一段轮廓。身体嵌在原有的缝隙里，周围的地方仍然延续。"
+  ],
+  "introductionEn": [
+    "Two small animals stand close to a rock; white wings open above a railing. Seen nearby, bodies meet the places supporting them: claw tips, bark and a patch of shade beside a column.",
+    "Eight photographs move from ground to branches, then reach the waterline. A black cat forms a diagonal; a grey body gathers around a trunk. A head and a tail edge show only parts of what lies underwater. Bodies fit into existing spaces as the surroundings continue."
+  ],
+  "chapters": [
+    {
+      "id": "on-the-ground",
+      "title": "贴地",
+      "titleEn": "Close to the Ground",
+      "text": "长尾横过落叶，黑猫的爪子停在白柱旁。身体摊开，地面没有因此退出画面。",
+      "textEn": "A long tail crosses leaves; a cat’s paws stop beside a white column. Bodies spread out as the ground remains in view.",
+      "works": [
+        "Bankok/DSC03681",
+        "Bankok/IMG_20250126_165804"
+      ]
+    },
+    {
+      "id": "among-branches",
+      "title": "枝杈",
+      "titleEn": "Among Branches",
+      "text": "树干分开又合拢，留下一处凹下的空位。前肢绕过树皮，身体在直线与弯曲之间找到位置。",
+      "textEn": "Trunks diverge and meet, leaving a hollowed space. Forelimbs wrap around bark; bodies occupy the interval between straight and curved forms.",
+      "works": [
+        "Other/IMG_20240811_114738",
+        "Australia/IMG_20240503_170444"
+      ]
+    },
+    {
+      "id": "waterline",
+      "title": "水线",
+      "titleEn": "Waterline",
+      "text": "头部露在圆纹前缘，尾鳍停在白色泡沫上方。水下的身体仍在，照片只留下它们越过水面的一小部分。",
+      "textEn": "A head emerges at a ring of ripples; a tail fluke stands above white foam. Bodies remain underwater while the photographs retain only the parts crossing its surface.",
+      "works": [
+        "Perth/IMG_20251003_093711",
+        "Perth/IMG_20251006_122016"
+      ]
+    }
+  ]
+}

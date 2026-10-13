@@ -1,0 +1,56 @@
+{
+  "slug": "looking-up",
+  "status": "published",
+  "title": "仰角",
+  "titleEn": "Looking Up",
+  "cover": "Hongkong/DSC09702",
+  "opening": [
+    "Hongkong/DSC09702",
+    "Bankok/DSC04200"
+  ],
+  "standfirst": "楼的长边向天空收拢，屋檐隔着亮处相遇。近处的建筑，在抬头以后改变了形状。",
+  "standfirstEn": "Building edges converge towards the sky; eaves meet across an opening of light. Looking up changes the shape of what stands nearby.",
+  "introduction": [
+    "抬头以后，街面退到画外。楼的长边向同一个方向收拢，天空从建筑之间显出来。在另一幅里，阶梯、斜撑与弧顶层层叠上去，光从头顶穿过。",
+    "八幅照片保留了站在近处观看的角度：墙面折成棱线，屋檐隔着天空相遇，窗与梁架再把亮处分成小块。最后一道桥底向远处收窄，高处的结构落回河岸。地方改变，视线一直向上。"
+  ],
+  "introductionEn": [
+    "Looking up leaves the street outside the frame. Long edges converge and sky appears between buildings. Elsewhere, stairs and diagonal supports overlap beneath a curved roof, with light entering from above.",
+    "Eight photographs retain a view from close by. Walls form edges, eaves face one another across the sky, and windows and beams divide the light. At the end, the underside of a bridge narrows towards the riverbank. The places change; the view remains upward."
+  ],
+  "chapters": [
+    {
+      "id": "edges",
+      "title": "棱线",
+      "titleEn": "Edges",
+      "text": "红墙与玻璃向天空折转，重复的窗格沿边缘收拢。近处的转角，在仰视中显得更长。",
+      "textEn": "Brick and glass turn towards the sky, with repeated windows converging along their edges. Seen from below, a nearby corner grows longer.",
+      "works": [
+        "Shanghai/DSC05467",
+        "Shanghai/DSC02799"
+      ]
+    },
+    {
+      "id": "between-eaves",
+      "title": "檐间",
+      "titleEn": "Between Eaves",
+      "text": "一层屋檐越过另一层，暗面与亮色各自留下边缘。天空从这些交叠的轮廓之间显出来。",
+      "textEn": "One eave crosses another; dark surfaces and brighter colours keep their separate edges. Sky appears between their overlapping outlines.",
+      "works": [
+        "Kyoto/DSC02557",
+        "Xiamen/DSC05060"
+      ]
+    },
+    {
+      "id": "overhead",
+      "title": "头顶",
+      "titleEn": "Overhead",
+      "text": "弧窗重复，桥底的格子向远处收小。视线沿结构延伸，到最后又遇到屋顶以外的河岸。",
+      "textEn": "Arched windows repeat, and the bridge grid grows smaller in the distance. The eye follows the structure until it meets the bank beyond it.",
+      "works": [
+        "Vietnam/IMG_20250707_155538",
+        "Shanghai/IMG_20240310_171420"
+      ]
+    }
+  ]
+}
