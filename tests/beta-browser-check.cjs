@@ -59,7 +59,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
   };
   const routes = [...fs.readFileSync(path.join(dist, 'sitemap.xml'), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => new URL(match[1]).pathname).filter(route => !route.startsWith('/en/'));
   try {
-    if (process.env.GALLERY_TEST_LANGUAGE !== 'en') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
+    if (!process.env.GALLERY_TEST_COMPAT_ONLY && process.env.GALLERY_TEST_LANGUAGE !== 'en') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
       const context = await browser.newContext({ locale: 'zh-CN', viewport, isMobile: viewport.width < 900, hasTouch: viewport.width < 900 });
       let originals = 0;
       await context.route(originalURL + '**', route => { originals++; return route.fulfill({ contentType: 'image/jpeg', body: original }); });
@@ -128,7 +128,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
       }
       assert.deepEqual(errors, []); await context.close();
     }
-    if (process.env.GALLERY_TEST_LANGUAGE !== 'zh') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
+    if (!process.env.GALLERY_TEST_COMPAT_ONLY && process.env.GALLERY_TEST_LANGUAGE !== 'zh') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
       const context = await browser.newContext({ locale: 'en-US', viewport, isMobile: viewport.width < 900, hasTouch: viewport.width < 900 });
       await context.route(originalURL + '**', route => route.fulfill({ contentType: 'image/jpeg', body: original }));
       const page = await context.newPage(); const errors = []; page.on('pageerror', error => errors.push(error.message));
@@ -218,7 +218,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     assert.equal(new URL(directPage.url()).pathname, viewPath); assert.equal(new URL(directPage.url()).hash, '');
     await direct.close(); console.log('PASS photo history, deep links, swipe, share, contact and copyright');
     const noJS = await browser.newContext({ locale: 'zh-CN', javaScriptEnabled: false, viewport: { width: 390, height: 844 } }); const staticPage = await noJS.newPage();
-    await navigate(staticPage, origin + '/works/'); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/')); assert.ok((await staticPage.locator('[data-photo]').first().getAttribute('href')).startsWith(originalURL));
+    await navigate(staticPage, origin + '/works/'); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/')); assert.ok((await staticPage.locator('[data-photo]').first().getAttribute('href')).startsWith('/public/photos/'));
     for (const link of await staticPage.locator('#site-nav a').all()) assert.equal(await link.isVisible(), true);
     await staticPage.locator('.pagination [rel=next]').first().click(); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/page/2/'));
     await navigate(staticPage, origin); assert.equal(await staticPage.locator('.exhibition-card').count(), exhibits.length);
@@ -237,5 +237,47 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
       await movedPage.locator('#viewer[open]').waitFor(); await movedContext.close();
     }
     console.log('PASS old bilingual archive fragments follow photographs across paginated pages');
+    const legacyAPI = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'zh-CN' });
+    await legacyAPI.addInitScript(() => {
+      Object.defineProperty(MediaQueryList.prototype, 'addEventListener', { value: undefined, configurable: true });
+      window.ResizeObserver = undefined;
+      Object.defineProperty(document, 'fonts', { value: undefined, configurable: true });
+      Element.prototype.scrollTo = undefined;
+      HTMLDialogElement.prototype.showModal = undefined;
+      HTMLDialogElement.prototype.close = undefined;
+    });
+    let legacyOriginals = 0;
+    await legacyAPI.route(originalURL + '**', route => { legacyOriginals++; return route.fulfill({ contentType: 'application/octet-stream', body: original }); });
+    const legacyAPIPage = await legacyAPI.newPage(), legacyErrors = [];
+    legacyAPIPage.on('pageerror', error => legacyErrors.push(error.message));
+    // navigate() intentionally awaits document.fonts; this context removes that API.
+    await legacyAPIPage.goto(origin + '/works/Tokyo/', { waitUntil: 'load' });
+    const firstLegacyPhoto = legacyAPIPage.locator('[data-photo]').first();
+    await firstLegacyPhoto.click(); await legacyAPIPage.locator('#viewer[open]').waitFor();
+    await legacyAPIPage.waitForFunction(() => document.querySelector('#viewer-image').naturalWidth > 0);
+    assert.equal(legacyOriginals, 0);
+    assert.equal(await legacyAPIPage.locator('#viewer').getAttribute('aria-modal'), 'true');
+    assert.equal(await legacyAPIPage.locator('main').getAttribute('aria-hidden'), 'true');
+    await inside(legacyAPIPage, '#viewer-close', { width: 390, height: 844 });
+    await legacyAPIPage.locator('#viewer-original').click();
+    await legacyAPIPage.getByText('原图 2160 × 3240', { exact: true }).waitFor();
+    assert.equal(legacyOriginals, 1);
+    await legacyAPIPage.keyboard.press('Escape'); await legacyAPIPage.locator('#viewer').waitFor({ state: 'hidden' });
+    assert.equal(await legacyAPIPage.locator('main').getAttribute('aria-hidden'), null);
+    assert.deepEqual(legacyErrors, []); await legacyAPI.close();
+    console.log('PASS large-photo overlay without native dialog, ResizeObserver, FontFaceSet or modern media-query listeners');
+    const blockedScript = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    await blockedScript.route('**/public/beta.js?*', route => route.abort());
+    const blockedPage = await blockedScript.newPage();
+    await blockedPage.goto(origin + viewPath, { waitUntil: 'load' });
+    const safeLink = blockedPage.locator('[data-photo]').first(), previewURL = new URL(await safeLink.getAttribute('href'), origin).href;
+    assert.ok(previewURL.startsWith(origin + '/public/photos/'));
+    const imageTabPromise = blockedScript.waitForEvent('page'); await safeLink.click(); const imageTab = await imageTabPromise;
+    await imageTab.waitForLoadState('load'); assert.equal(imageTab.url(), previewURL);
+    await imageTab.waitForFunction(() => document.images.length > 0 && document.images[0].naturalWidth > 0);
+    const previewResponse = await blockedScript.request.get(previewURL); assert.equal(previewResponse.status(), 200);
+    assert.match(previewResponse.headers()['content-type'], /^image\/webp/);
+    assert.ok(!previewResponse.headers()['content-disposition']?.includes('attachment'));
+    await blockedScript.close(); console.log('PASS blocked viewer script opens an image-typed local preview instead of a downloadable original');
   } finally { await browser.close(); server.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

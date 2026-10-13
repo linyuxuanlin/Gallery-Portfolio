@@ -130,3 +130,8 @@ html[lang=en] .exhibition-card-copy h2{letter-spacing:0}
   .pagination{flex-direction:column;align-items:flex-start;gap:10px;padding-bottom:24px}.pagination>div{gap:4px}.pagination a{font-size:10px}
   html[lang=en] .exhibition-index-intro h1{font-size:clamp(36px,10vw,52px)}
 }
+/* Closed dialogs also stay hidden in browsers without native dialog support. */
+#viewer{display:none;position:fixed;inset:0;z-index:1000}
+#viewer[open]{display:grid}
+.photo-failed::after{content:"预览暂不可用 · 点击打开大图"}
+html[lang=en] .photo-failed::after{content:"Preview unavailable · Open photograph"}

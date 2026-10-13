@@ -15,16 +15,36 @@
   menu.addEventListener('click', () => setMenu(menu.getAttribute('aria-expanded') !== 'true'));
   document.addEventListener('click', event => { if (!event.target.closest('.site-header')) setMenu(false); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && menu.getAttribute('aria-expanded') === 'true') { setMenu(false); menu.focus(); } });
-  matchMedia('(min-width: 701px)').addEventListener('change', () => setMenu(false));
+  const menuQuery = matchMedia('(min-width: 701px)'), resetMenu = () => setMenu(false);
+  if (typeof menuQuery.addEventListener === 'function') menuQuery.addEventListener('change', resetMenu);
+  else if (typeof menuQuery.addListener === 'function') menuQuery.addListener(resetMenu);
   const filters = document.querySelector('.filters');
   const activeFilter = filters?.querySelector('[aria-current]');
   if (activeFilter && matchMedia('(max-width: 700px)').matches) {
-    const reveal = () => filters.scrollTo({ left: activeFilter.offsetLeft - (filters.clientWidth - activeFilter.offsetWidth) / 2, behavior: 'instant' });
-    reveal(); document.fonts.ready.then(reveal);
+    const reveal = () => {
+      const left = activeFilter.offsetLeft - (filters.clientWidth - activeFilter.offsetWidth) / 2;
+      if (typeof filters.scrollTo === 'function') filters.scrollTo({ left, behavior: 'auto' });
+      else filters.scrollLeft = left;
+    };
+    reveal(); if (document.fonts?.ready) document.fonts.ready.then(reveal);
   }
   document.querySelectorAll('.photo-open img').forEach(img => { const fail = () => img.parentElement.classList.add('photo-failed'); img.addEventListener('error', fail); if (img.complete && !img.naturalWidth) fail(); });
   const dialog = document.getElementById('viewer');
-  if (!dialog.showModal) return; // Photo links still open the original without dialog support.
+  const isOpen = () => dialog.hasAttribute('open');
+  let nativeModal = false, hiddenContent = [];
+  const openDialog = () => {
+    if (typeof dialog.showModal === 'function' && typeof dialog.close === 'function') {
+      try { dialog.showModal(); nativeModal = true; return; } catch { /* Use the overlay when an embedded browser cannot open a native dialog. */ }
+    }
+    nativeModal = false; dialog.setAttribute('open', '');
+    dialog.setAttribute('role', 'dialog'); dialog.setAttribute('aria-modal', 'true');
+    hiddenContent = [...document.querySelectorAll('.site-header, main, .site-footer')].map(element => [element, element.getAttribute('aria-hidden'), element.inert]);
+    hiddenContent.forEach(([element]) => { element.setAttribute('aria-hidden', 'true'); element.inert = true; });
+  };
+  const closeDialog = () => {
+    if (nativeModal) dialog.close();
+    else { dialog.removeAttribute('open'); finishClose(); }
+  };
   const image = document.getElementById('viewer-image');
   const status = document.getElementById('viewer-status');
   const load = document.getElementById('viewer-original');
@@ -33,13 +53,14 @@
   const watermark = document.getElementById('viewer-watermark');
   const positionWatermark = () => {
     const photo = image.getBoundingClientRect(), area = stage.getBoundingClientRect();
-    watermark.hidden = !dialog.open || !image.naturalWidth;
+    watermark.hidden = !isOpen() || !image.naturalWidth;
     watermark.style.left = `${Math.min(photo.right, area.right - 8) - 12}px`;
     watermark.style.top = `${Math.min(photo.bottom, area.bottom - 8) - 12}px`;
   };
   image.addEventListener('load', positionWatermark);
-  new ResizeObserver(positionWatermark).observe(stage);
-  new ResizeObserver(positionWatermark).observe(image);
+  if (typeof ResizeObserver === 'function') {
+    const observer = new ResizeObserver(positionWatermark); observer.observe(stage); observer.observe(image);
+  } else addEventListener('resize', positionWatermark);
   stage.addEventListener('scroll', positionWatermark, { passive: true });
   const close = document.getElementById('viewer-close');
   const previous = document.getElementById('viewer-previous');
@@ -68,22 +89,27 @@
     image.alt = photo.querySelector('img').alt;
     image.onload = null; image.onerror = () => { status.textContent = tr('预览暂不可用，可加载或打开原图。', 'Preview unavailable. Load or open the original photograph.'); };
     watermark.hidden = true; image.removeAttribute('src'); image.src = photo.dataset.preview;
-    document.getElementById('viewer-link').href = photo.href;
+    document.getElementById('viewer-link').href = photo.dataset.original;
     status.textContent = tr('预览图 · 原图可按需加载', 'Preview · Load the original when you choose');
     load.hidden = false; load.disabled = false; load.textContent = tr('加载原图', 'Load original'); zoom.hidden = true;
     previous.disabled = current === 0; next.disabled = current === photos.length - 1;
-    if (!dialog.open) {
+    if (!isOpen()) {
       opener = document.activeElement; scrollY = window.scrollY;
-      document.body.classList.add('viewer-open'); dialog.showModal(); close.focus();
+      document.body.classList.add('viewer-open'); openDialog(); close.focus();
     }
   };
-  const finishClose = () => { if (dialog.open) return; cancelLoad(); resetZoom(); image.onerror = image.onload = null; image.removeAttribute('src'); document.body.classList.remove('viewer-open'); window.scrollTo({ top: scrollY, behavior: 'instant' }); if (opener?.isConnected) opener.focus({ preventScroll: true }); };
+  const finishClose = () => {
+    if (isOpen()) return;
+    cancelLoad(); resetZoom(); image.onerror = image.onload = null; image.removeAttribute('src'); document.body.classList.remove('viewer-open');
+    hiddenContent.forEach(([element, hidden, inert]) => { if (hidden === null) element.removeAttribute('aria-hidden'); else element.setAttribute('aria-hidden', hidden); element.inert = inert; });
+    hiddenContent = []; window.scrollTo({ top: scrollY, behavior: 'auto' }); if (opener?.isConnected) opener.focus({ preventScroll: true });
+  };
   const photoHash = index => '#photo=' + encodeURIComponent(photos[index].dataset.photoId);
   const closeViewer = () => {
     if (history.state?.galleryViewer) history.back();
     else {
       history.replaceState(history.state, '', location.pathname + location.search);
-      dialog.close();
+      closeDialog();
     }
   };
   const navigatePhoto = index => {
@@ -94,7 +120,7 @@
     let id;
     try { id = location.hash.startsWith('#photo=') ? decodeURIComponent(location.hash.slice(7)) : ''; } catch { id = ''; }
     const index = photos.findIndex(photo => photo.dataset.photoId === id);
-    if (index >= 0) { setMenu(false); if (!dialog.open || current !== index) show(index); }
+    if (index >= 0) { setMenu(false); if (!isOpen() || current !== index) show(index); }
     else if (id && legacyPhotoRoutes[id]) {
       // Old homepage photo fragments now lead to the photograph's stable detail page.
       redirectPhoto(legacyPhotoRoutes[id], location.hash);
@@ -111,7 +137,7 @@
         if (path) redirectPhoto((language === 'en' ? '/en' : '') + path, hash);
       }).catch(() => {});
     }
-    else if (dialog.open) dialog.close();
+    else if (isOpen()) closeDialog();
   };
   addEventListener('popstate', syncLocation); addEventListener('hashchange', syncLocation);
   photos.forEach((photo, index) => photo.addEventListener('click', event => {
@@ -145,22 +171,23 @@
     catch { status.textContent = tr('可复制地址栏中的链接，分享这张照片。', 'Copy the address bar link to share this photograph.'); }
   });
   dialog.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !nativeModal) { event.preventDefault(); closeViewer(); }
     if (event.key === 'ArrowLeft' && !dialog.classList.contains('zoomed') && current > 0) { event.preventDefault(); navigatePhoto(current - 1); }
     if (event.key === 'ArrowRight' && !dialog.classList.contains('zoomed') && current < photos.length - 1) { event.preventDefault(); navigatePhoto(current + 1); }
     if (event.key === 'Tab') {
       const controls = [...dialog.querySelectorAll('button,a[href]')].filter(control => !control.disabled && !control.hidden && control.getClientRects().length);
-      if (event.shiftKey && document.activeElement === controls[0]) { event.preventDefault(); controls.at(-1).focus(); }
-      if (!event.shiftKey && document.activeElement === controls.at(-1)) { event.preventDefault(); controls[0].focus(); }
+      if (event.shiftKey && document.activeElement === controls[0]) { event.preventDefault(); controls[controls.length - 1].focus(); }
+      if (!event.shiftKey && document.activeElement === controls[controls.length - 1]) { event.preventDefault(); controls[0].focus(); }
     }
   });
   load.addEventListener('click', () => {
-    cancelLoad(); const id = request; const url = photos[current].href;
+    cancelLoad(); const id = request; const url = photos[current].dataset.original;
     load.disabled = true; load.textContent = tr('加载原图中…', 'Loading original…'); status.textContent = tr('正在加载原图，请稍候。', 'Loading the original photograph. Please wait.');
     const high = new Image(); pending = high;
-    const fail = () => { if (id !== request || !dialog.open) return; clearTimeout(timer); high.onload = high.onerror = null; high.removeAttribute('src'); load.disabled = false; load.textContent = tr('重试加载原图', 'Retry original'); status.textContent = tr('原图加载失败或超时，可重试或通过链接打开。', 'Original failed to load or timed out. Retry or open its link.'); };
+    const fail = () => { if (id !== request || !isOpen()) return; clearTimeout(timer); high.onload = high.onerror = null; high.removeAttribute('src'); load.disabled = false; load.textContent = tr('重试加载原图', 'Retry original'); status.textContent = tr('原图加载失败或超时，可重试或通过链接打开。', 'Original failed to load or timed out. Retry or open its link.'); };
     timer = setTimeout(fail, 60000);
     high.onload = () => {
-      if (id !== request || !dialog.open) return;
+      if (id !== request || !isOpen()) return;
       clearTimeout(timer); high.onload = high.onerror = null;
       image.onerror = null; image.src = url;
       status.textContent = `${tr('原图', 'Original')} ${high.naturalWidth} × ${high.naturalHeight}`;
