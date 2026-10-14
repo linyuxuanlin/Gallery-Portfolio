@@ -36,9 +36,15 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
   const origin = process.env.GALLERY_BASE_URL || `http://127.0.0.1:${server.address().port}`;
   const navigate = async (page, url) => {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    // WebKit can withhold load/rAF in a script-disabled page after navigation.
-    // Poll the actual stylesheet state, then decode images at their assertions.
-    await page.waitForFunction(() => document.body && getComputedStyle(document.body).backgroundColor === 'rgb(247, 246, 242)', null, { polling: 100, timeout: 10000 });
+    // A script-disabled document cannot reliably run timer/rAF polling. Poll
+    // from Node so a slow stylesheet gets the same check as a cached one.
+    const deadline = Date.now() + 15000;
+    let styled = false;
+    while (!styled && Date.now() < deadline) {
+      styled = await page.evaluate(() => document.body && getComputedStyle(document.body).backgroundColor === 'rgb(247, 246, 242)');
+      if (!styled) await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    assert.ok(styled, 'Gallery stylesheet did not load: ' + url);
     await page.evaluate(() => document.fonts.ready);
   };
   const browser = await (name === 'webkit' ? webkit : chromium).launch(name === 'webkit' ? { headless: true } : { headless: true, executablePath: process.env.GALLERY_CHROMIUM_PATH || undefined, args: ['--no-sandbox', '--disable-dev-shm-usage'] }).catch(error => { server.close(); throw error; });
@@ -236,6 +242,10 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     assert.equal(new URL(directPage.url()).pathname, viewPath); assert.equal(new URL(directPage.url()).hash, '');
     await direct.close(); console.log('PASS photo history, deep links, swipe, share, contact and copyright');
     const noJS = await browser.newContext({ locale: 'zh-CN', javaScriptEnabled: false, viewport: { width: 390, height: 844 } }); const staticPage = await noJS.newPage();
+    await noJS.route('**/public/beta.css?*', async route => {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await route.continue();
+    });
     await navigate(staticPage, origin + '/works/'); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/')); assert.ok((await staticPage.locator('[data-photo]').first().getAttribute('href')).startsWith('#preview-'));
     for (const link of await staticPage.locator('#site-nav a').all()) assert.equal(await link.isVisible(), true);
     await staticPage.locator('.pagination [rel=next]').first().click(); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/page/2/'));
