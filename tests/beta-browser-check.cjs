@@ -47,7 +47,13 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     assert.ok(styled, 'Gallery stylesheet did not load: ' + url);
     await page.evaluate(() => document.fonts.ready);
   };
-  const browser = await (name === 'webkit' ? webkit : chromium).launch(name === 'webkit' ? { headless: true } : { headless: true, executablePath: process.env.GALLERY_CHROMIUM_PATH || undefined, args: ['--no-sandbox', '--disable-dev-shm-usage'] }).catch(error => { server.close(); throw error; });
+  const launchBrowser = () => (name === 'webkit' ? webkit : chromium).launch(name === 'webkit' ? { headless: true } : { headless: true, executablePath: process.env.GALLERY_CHROMIUM_PATH || undefined, args: ['--no-sandbox', '--disable-dev-shm-usage'] }).catch(error => { server.close(); throw error; });
+  let browser = await launchBrowser();
+  const finishViewport = async () => {
+    // Keep long, image-heavy WebKit runs bounded by viewport at process level.
+    // Every route and interaction still runs with the same assertions.
+    if (name === 'webkit') { await browser.close(); browser = await launchBrowser(); }
+  };
   const inside = async (page, selector, viewport) => {
     const box = await page.locator(selector).boundingBox();
     assert.ok(box && box.x >= -1 && box.y >= -1 && box.x + box.width <= viewport.width + 1 && box.y + box.height <= viewport.height + 1, `${selector} outside ${viewport.width}×${viewport.height}`);
@@ -142,7 +148,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
         await navigate(page, origin + viewPath); await page.locator('[data-photo]').first().click(); await page.waitForFunction(() => document.querySelector('#viewer-image').naturalWidth > 0);
         await page.screenshot({ path: path.join(process.env.GALLERY_SCREENSHOT_DIR, `beta-viewer-${viewport.width}.png`) });
       }
-      assert.deepEqual(errors, []); await context.close();
+      assert.deepEqual(errors, []); await context.close(); await finishViewport();
     }
     if (!process.env.GALLERY_TEST_COMPAT_ONLY && process.env.GALLERY_TEST_LANGUAGE !== 'zh') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
       let context, page, visited = 0;
@@ -181,7 +187,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
         }
         console.log(`${name} English ${viewport.width}px ${route}: translation, layout and viewer passed`);
       }
-      assert.deepEqual(errors, []); await context.close();
+      assert.deepEqual(errors, []); await context.close(); await finishViewport();
     }
     const auto = await browser.newContext({ locale: 'en-GB', viewport: { width: 390, height: 844 } }); const autoPage = await auto.newPage();
     await navigate(autoPage, origin + '/works/Tokyo/');
