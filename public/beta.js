@@ -88,11 +88,11 @@
     document.getElementById('viewer-title').textContent = photo.dataset.title;
     document.getElementById('viewer-place').textContent = `${photo.dataset.place} / ${current < 9 ? '0' : ''}${current + 1} — ${photos.length}`;
     image.alt = photo.querySelector('img').alt;
-    image.onload = null; image.onerror = () => { status.textContent = tr('预览暂不可用，可加载或打开原图。', 'Preview unavailable. Load or open the original photograph.'); };
+    image.onload = null; image.onerror = () => { status.textContent = tr('预览暂不可用，可加载或打开大图。', 'Preview unavailable. Load or open the full-size photograph.'); };
     watermark.hidden = true; image.removeAttribute('src'); image.src = photo.dataset.preview;
     document.getElementById('viewer-link').href = photo.dataset.original;
-    status.textContent = tr('预览图 · 原图可按需加载', 'Preview · Load the original when you choose');
-    load.hidden = false; load.disabled = false; load.textContent = tr('加载原图', 'Load original'); zoom.hidden = true;
+    status.textContent = tr('预览图 · 大图可按需加载', 'Preview · Load the full-size image when you choose');
+    load.hidden = false; load.disabled = false; load.textContent = tr('加载大图', 'Load full size'); zoom.hidden = true;
     previous.disabled = current === 0; next.disabled = current === photos.length - 1;
     if (!isOpen()) {
       opener = document.activeElement; scrollY = window.scrollY;
@@ -188,15 +188,15 @@
   });
   load.addEventListener('click', () => {
     cancelLoad(); const id = request; const url = photos[current].dataset.original;
-    load.disabled = true; load.textContent = tr('加载原图中…', 'Loading original…'); status.textContent = tr('正在加载原图，请稍候。', 'Loading the original photograph. Please wait.');
+    load.disabled = true; load.textContent = tr('加载大图中…', 'Loading full size…'); status.textContent = tr('正在加载大图，请稍候。', 'Loading the full-size photograph. Please wait.');
     const high = new Image(); pending = high;
-    const fail = () => { if (id !== request || !isOpen()) return; clearTimeout(timer); high.onload = high.onerror = null; high.removeAttribute('src'); load.disabled = false; load.textContent = tr('重试加载原图', 'Retry original'); status.textContent = tr('原图加载失败或超时，可重试或通过链接打开。', 'Original failed to load or timed out. Retry or open its link.'); };
+    const fail = () => { if (id !== request || !isOpen()) return; clearTimeout(timer); high.onload = high.onerror = null; high.removeAttribute('src'); load.disabled = false; load.textContent = tr('重试加载大图', 'Retry full size'); status.textContent = tr('大图加载失败或超时，可重试或通过链接打开。', 'Full-size image failed to load or timed out. Retry or open its link.'); };
     timer = setTimeout(fail, 60000);
     high.onload = () => {
       if (id !== request || !isOpen()) return;
       clearTimeout(timer); high.onload = high.onerror = null;
       image.onerror = null; image.src = url;
-      status.textContent = `${tr('原图', 'Original')} ${high.naturalWidth} × ${high.naturalHeight}`;
+      status.textContent = `${tr('完整尺寸', 'Full size')} ${high.naturalWidth} × ${high.naturalHeight}`;
       const focused = document.activeElement === load; load.hidden = true; zoom.hidden = false; if (focused) zoom.focus();
     };
     high.onerror = fail; high.src = url;

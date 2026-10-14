@@ -36,7 +36,9 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
   const origin = process.env.GALLERY_BASE_URL || `http://127.0.0.1:${server.address().port}`;
   const navigate = async (page, url) => {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await page.waitForFunction(() => document.body && getComputedStyle(document.body).backgroundColor === 'rgb(247, 246, 242)');
+    // WebKit can withhold load/rAF in a script-disabled page after navigation.
+    // Poll the actual stylesheet state, then decode images at their assertions.
+    await page.waitForFunction(() => document.body && getComputedStyle(document.body).backgroundColor === 'rgb(247, 246, 242)', null, { polling: 100, timeout: 10000 });
     await page.evaluate(() => document.fonts.ready);
   };
   const browser = await (name === 'webkit' ? webkit : chromium).launch(name === 'webkit' ? { headless: true } : { headless: true, executablePath: process.env.GALLERY_CHROMIUM_PATH || undefined, args: ['--no-sandbox', '--disable-dev-shm-usage'] }).catch(error => { server.close(); throw error; });
@@ -105,7 +107,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
           await inside(page, '#viewer-watermark', viewport);
           assert.ok(await page.locator('#viewer-watermark').evaluate(el => Number(getComputedStyle(el).opacity) > 0 && Number(getComputedStyle(el).opacity) < .3));
           assert.ok(page.url().includes('#photo='));
-          await page.locator('#viewer-original').click(); await page.getByText('原图 2160 × 3240', { exact: true }).waitFor();
+          await page.locator('#viewer-original').click(); await page.getByText('完整尺寸 2160 × 3240', { exact: true }).waitFor();
           await page.waitForFunction(() => document.querySelector('#viewer-image').naturalWidth === 2160);
           await page.locator('#viewer-zoom').click();
           assert.equal(Math.round((await page.locator('#viewer-image').boundingBox()).width), 2160);
@@ -164,7 +166,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
           await page.locator('[data-photo]').first().click(); await page.locator('#viewer[open]').waitFor();
           await page.waitForFunction(() => document.querySelector('#viewer-image').naturalWidth > 0);
           await inside(page, '#viewer-image', viewport); await inside(page, '#viewer-close', viewport); await inside(page, '#viewer-share', viewport);
-          await page.locator('#viewer-original').click(); await page.getByText('Original 2160 × 3240', { exact: true }).waitFor();
+          await page.locator('#viewer-original').click(); await page.getByText('Full size 2160 × 3240', { exact: true }).waitFor();
           await page.waitForFunction(() => document.querySelector('#viewer-image').naturalWidth === 2160);
           await page.locator('#viewer-zoom').click(); assert.equal(Math.round((await page.locator('#viewer-image').boundingBox()).width), 2160);
           await page.locator('#viewer-zoom').click(); await inside(page, '#viewer-image', viewport);
@@ -185,14 +187,14 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     await autoPage.locator('.language-switch').click(); await autoPage.waitForURL(origin + '/works/Tokyo/');
     await autoPage.reload({ waitUntil: 'domcontentloaded' }); assert.equal(await autoPage.locator('html').getAttribute('lang'), 'zh-CN');
     await navigate(autoPage, origin + '/en/works/Tokyo/' + photoHash); await autoPage.locator('#viewer[open]').waitFor();
-    assert.equal(await autoPage.locator('#viewer-original').innerText(), 'Load original');
+    assert.equal(await autoPage.locator('#viewer-original').innerText(), 'Load full size');
     await auto.close(); console.log('PASS stable language URLs, explicit switching and English photo links');
     const context = await browser.newContext({ locale: 'zh-CN', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }); const page = await context.newPage();
     let fail = true;
     await context.route(originalURL + '**', route => route.fulfill(fail ? { status: 503 } : { contentType: 'image/jpeg', body: original }));
     await navigate(page, origin + viewPath); await page.locator('[data-photo]').first().click();
-    await page.locator('#viewer-original').click(); await page.getByRole('button', { name: '重试加载原图' }).waitFor();
-    fail = false; await page.getByRole('button', { name: '重试加载原图' }).click(); await page.locator('#viewer-zoom').waitFor();
+    await page.locator('#viewer-original').click(); await page.getByRole('button', { name: '重试加载大图' }).waitFor();
+    fail = false; await page.getByRole('button', { name: '重试加载大图' }).click(); await page.locator('#viewer-zoom').waitFor();
     await page.locator('#viewer-link').focus(); await page.keyboard.press('Tab'); assert.equal(await page.evaluate(() => document.activeElement.id), 'viewer-close');
     await page.keyboard.press('Shift+Tab'); assert.equal(await page.evaluate(() => document.activeElement.id), 'viewer-link');
     const popupPromise = context.waitForEvent('page'); await page.locator('#viewer-link').click(); const popup = await popupPromise; assert.ok(popup.url().startsWith(originalURL)); await popup.close();
@@ -200,7 +202,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     await page.waitForFunction(() => !document.body.classList.contains('viewer-open'));
     await page.locator('[data-photo]').first().click();
     await context.unroute(originalURL + '**'); await context.route(originalURL + '**', () => {});
-    await page.clock.install(); await page.locator('#viewer-original').click(); await page.clock.fastForward(61000); await page.getByRole('button', { name: '重试加载原图' }).waitFor();
+    await page.clock.install(); await page.locator('#viewer-original').click(); await page.clock.fastForward(61000); await page.getByRole('button', { name: '重试加载大图' }).waitFor();
     await page.keyboard.press('Escape');
     console.log('PASS retry, timeout, original link, focus trap and close'); await context.close();
     const historyContext = await browser.newContext({ locale: 'zh-CN', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
@@ -276,7 +278,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     assert.equal(await legacyAPIPage.locator('main').getAttribute('aria-hidden'), 'true');
     await inside(legacyAPIPage, '#viewer-close', { width: 390, height: 844 });
     await legacyAPIPage.locator('#viewer-original').click();
-    await legacyAPIPage.getByText('原图 2160 × 3240', { exact: true }).waitFor();
+    await legacyAPIPage.getByText('完整尺寸 2160 × 3240', { exact: true }).waitFor();
     assert.equal(legacyOriginals, 1);
     await legacyAPIPage.evaluate(() => document.activeElement.blur());
     await legacyAPIPage.keyboard.press('Tab');

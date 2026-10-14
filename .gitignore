@@ -10,3 +10,9 @@ worker/
 
 # Local curation inventory and review sheets; never part of the public website.
 .curation/
+
+# Full retouch derivatives and private review artifacts stay outside the deploy.
+.codex-artifacts/
+
+# Python bytecode is local runtime output.
+__pycache__/

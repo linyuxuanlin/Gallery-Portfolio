@@ -11,6 +11,7 @@ const cache = process.env.GALLERY_SOURCE_CACHE;
 if (!cache) throw new Error('Set GALLERY_SOURCE_CACHE to your downloaded R2 preview directory.');
 sharp.concurrency(1); sharp.cache(false);
 const data = JSON.parse(readFileSync('gallery-index.json', 'utf8'));
+if (Object.values(data.gallery).some(category => category.images.some(image => image.editedOriginal))) throw new Error('This library uses individually retouched photographs. Use the versioned retouch pipeline; preparing previews from the old cache would replace approved edits.');
 const curation = JSON.parse(readFileSync('curation.json', 'utf8'));
 const larger = new Set([photographId(curation.about), ...readExhibitions().flatMap(exhibition => [exhibition.cover, ...exhibition.opening].filter(Boolean))]);
 // Validate the whole cache before writing any previews or changing the index.
