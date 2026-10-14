@@ -60,12 +60,20 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
   const routes = [...fs.readFileSync(path.join(dist, 'sitemap.xml'), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => new URL(match[1]).pathname).filter(route => !route.startsWith('/en/'));
   try {
     if (!process.env.GALLERY_TEST_COMPAT_ONLY && process.env.GALLERY_TEST_LANGUAGE !== 'en') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
-      const context = await browser.newContext({ locale: 'zh-CN', viewport, isMobile: viewport.width < 900, hasTouch: viewport.width < 900 });
-      let originals = 0;
-      await context.route(originalURL + '**', route => { originals++; return route.fulfill({ contentType: 'image/jpeg', body: original }); });
-      const page = await context.newPage(); const errors = [];
-      page.on('pageerror', error => errors.push(error.message));
+      let context, page, originals = 0, visited = 0;
+      const errors = [];
+      const freshContext = async () => {
+        if (context) await context.close();
+        context = await browser.newContext({ locale: 'zh-CN', viewport, isMobile: viewport.width < 900, hasTouch: viewport.width < 900 });
+        await context.route(originalURL + '**', route => { originals++; return route.fulfill({ contentType: 'image/jpeg', body: original }); });
+        page = await context.newPage(); page.on('pageerror', error => errors.push(error.message));
+      };
+      await freshContext();
       for (const route of routes) {
+        // Keep the decoded original-image fixture and navigation history bounded.
+        // Every route, viewport and assertion still runs; history scenarios follow below.
+        if (visited && visited % 24 === 0) await freshContext();
+        visited++;
         await navigate(page, origin + route);
         assert.equal(await page.locator('h1').count(), 1, route + ' missing heading');
         assert.ok((await page.title()).includes('Power’s Gallery'));
@@ -129,10 +137,18 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
       assert.deepEqual(errors, []); await context.close();
     }
     if (!process.env.GALLERY_TEST_COMPAT_ONLY && process.env.GALLERY_TEST_LANGUAGE !== 'zh') for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 844, height: 390 }, { width: 768, height: 1024 }, { width: 1440, height: 1000 }]) {
-      const context = await browser.newContext({ locale: 'en-US', viewport, isMobile: viewport.width < 900, hasTouch: viewport.width < 900 });
-      await context.route(originalURL + '**', route => route.fulfill({ contentType: 'image/jpeg', body: original }));
-      const page = await context.newPage(); const errors = []; page.on('pageerror', error => errors.push(error.message));
+      let context, page, visited = 0;
+      const errors = [];
+      const freshContext = async () => {
+        if (context) await context.close();
+        context = await browser.newContext({ locale: 'en-US', viewport, isMobile: viewport.width < 900, hasTouch: viewport.width < 900 });
+        await context.route(originalURL + '**', route => route.fulfill({ contentType: 'image/jpeg', body: original }));
+        page = await context.newPage(); page.on('pageerror', error => errors.push(error.message));
+      };
+      await freshContext();
       for (const route of routes) {
+        if (visited && visited % 24 === 0) await freshContext();
+        visited++;
         await navigate(page, origin + '/en' + route);
         assert.equal(await page.locator('html').getAttribute('lang'), 'en');
         assert.equal(await page.locator('h1').count(), 1);
@@ -218,7 +234,7 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     assert.equal(new URL(directPage.url()).pathname, viewPath); assert.equal(new URL(directPage.url()).hash, '');
     await direct.close(); console.log('PASS photo history, deep links, swipe, share, contact and copyright');
     const noJS = await browser.newContext({ locale: 'zh-CN', javaScriptEnabled: false, viewport: { width: 390, height: 844 } }); const staticPage = await noJS.newPage();
-    await navigate(staticPage, origin + '/works/'); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/')); assert.ok((await staticPage.locator('[data-photo]').first().getAttribute('href')).startsWith('/public/photos/'));
+    await navigate(staticPage, origin + '/works/'); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/')); assert.ok((await staticPage.locator('[data-photo]').first().getAttribute('href')).startsWith('#preview-'));
     for (const link of await staticPage.locator('#site-nav a').all()) assert.equal(await link.isVisible(), true);
     await staticPage.locator('.pagination [rel=next]').first().click(); assert.equal(await staticPage.locator('[data-photo]').count(), expectedPhotos('/works/page/2/'));
     await navigate(staticPage, origin); assert.equal(await staticPage.locator('.exhibition-card').count(), exhibits.length);
@@ -270,18 +286,35 @@ const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript
     assert.equal(await legacyAPIPage.locator('main').getAttribute('aria-hidden'), null);
     assert.deepEqual(legacyErrors, []); await legacyAPI.close();
     console.log('PASS large-photo overlay without native dialog, ResizeObserver, FontFaceSet or modern media-query listeners');
-    const blockedScript = await browser.newContext({ viewport: { width: 390, height: 844 } });
-    await blockedScript.route('**/public/beta.js?*', route => route.abort());
-    const blockedPage = await blockedScript.newPage();
-    await blockedPage.goto(origin + viewPath, { waitUntil: 'load' });
-    const safeLink = blockedPage.locator('[data-photo]').first(), previewURL = new URL(await safeLink.getAttribute('href'), origin).href;
-    assert.ok(previewURL.startsWith(origin + '/public/photos/'));
-    const imageTabPromise = blockedScript.waitForEvent('page'); await safeLink.click(); const imageTab = await imageTabPromise;
-    await imageTab.waitForURL(previewURL, { waitUntil: 'domcontentloaded' }); assert.equal(imageTab.url(), previewURL);
-    await imageTab.waitForFunction(() => document.images.length > 0 && document.images[0].naturalWidth > 0);
-    const previewResponse = await blockedScript.request.get(previewURL); assert.equal(previewResponse.status(), 200);
-    assert.match(previewResponse.headers()['content-type'], /^image\/webp/);
-    assert.ok(!previewResponse.headers()['content-disposition']?.includes('attachment'));
-    await blockedScript.close(); console.log('PASS blocked viewer script opens an image-typed local preview instead of a downloadable original');
+    for (const scenario of [
+      { viewport: { width: 390, height: 844 }, prefix: '', javaScriptEnabled: false },
+      { viewport: { width: 390, height: 844 }, prefix: '', javaScriptEnabled: true },
+      { viewport: { width: 844, height: 390 }, prefix: '/en', javaScriptEnabled: true }
+    ]) {
+      const blockedScript = await browser.newContext({ viewport: scenario.viewport, javaScriptEnabled: scenario.javaScriptEnabled });
+      await blockedScript.route('**/public/beta.js?*', route => route.abort());
+      let rawRequests = 0; const downloads = [];
+      await blockedScript.route(originalURL + '**', route => { rawRequests++; return route.abort(); });
+      const blockedPage = await blockedScript.newPage(); blockedPage.on('download', download => downloads.push(download.url()));
+      await blockedPage.goto(origin + scenario.prefix + viewPath, { waitUntil: 'load' });
+      for (const index of [0, 1]) {
+        const safeLink = blockedPage.locator('[data-photo]').nth(index), fragment = await safeLink.getAttribute('href');
+        assert.match(fragment, /^#preview-[a-f0-9]{16}$/); assert.equal(await safeLink.getAttribute('target'), null);
+        await safeLink.click(); assert.equal(new URL(blockedPage.url()).hash, fragment);
+        const figure = blockedPage.locator(fragment), picture = figure.locator('img'); await picture.evaluate(img => img.decode());
+        assert.equal(await figure.evaluate(element => getComputedStyle(element).position), 'fixed');
+        await inside(blockedPage, fragment, scenario.viewport); await inside(blockedPage, fragment + ' img', scenario.viewport); await inside(blockedPage, fragment + ' .photo-fallback-close', scenario.viewport);
+        const ratios = await picture.evaluate(img => ({ natural: img.naturalWidth / img.naturalHeight, shown: img.clientWidth / img.clientHeight }));
+        assert.ok(Math.abs(ratios.natural - ratios.shown) < .02, 'CSS fallback crops the photograph');
+        const previewResponse = await blockedScript.request.get(new URL(await safeLink.getAttribute('data-preview'), origin).href);
+        assert.equal(previewResponse.status(), 200); assert.match(previewResponse.headers()['content-type'], /^image\/webp/);
+        await figure.locator('.photo-fallback-close').click();
+        assert.equal(new URL(blockedPage.url()).pathname, scenario.prefix + viewPath);
+        assert.equal(await figure.evaluate(element => getComputedStyle(element).position), 'static');
+      }
+      assert.equal(rawRequests, 0); assert.deepEqual(downloads, []); assert.equal(blockedScript.pages().length, 1);
+      await blockedScript.close();
+    }
+    console.log('PASS script-free in-page photographs, uncropped mobile and landscape previews, close and no downloads');
   } finally { await browser.close(); server.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

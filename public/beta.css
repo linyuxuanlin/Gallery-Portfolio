@@ -131,7 +131,17 @@ html[lang=en] .exhibition-card-copy h2{letter-spacing:0}
   html[lang=en] .exhibition-index-intro h1{font-size:clamp(36px,10vw,52px)}
 }
 /* Closed dialogs also stay hidden in browsers without native dialog support. */
-#viewer{display:none;position:fixed;inset:0;z-index:1000}
-#viewer[open]{display:grid}
+#viewer{display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:1000}
+#viewer[open]{display:flex;flex-direction:column;display:grid}
+.viewer-stage{flex:1}
 .photo-failed::after{content:"预览暂不可用 · 点击打开大图"}
 html[lang=en] .photo-failed::after{content:"Preview unavailable · Open photograph"}
+
+/* Fragment links keep photographs inside the page when viewer scripts are unavailable. */
+html:not(.js){scroll-behavior:auto}
+.photo-fallback-close{display:none}
+.photo:target{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1000;display:flex;flex-direction:column;width:100vw!important;height:100vh;height:100dvh;margin:0!important;padding:64px 20px 20px!important;background:#11130f;color:#eeeee8;overflow:auto}
+.photo:target .photo-open{display:flex;flex:1;min-height:0;align-items:center;justify-content:center;width:100%;aspect-ratio:auto!important;background:transparent;overflow:hidden}
+.photo:target .photo-open img{width:auto!important;height:auto!important;max-width:100%;max-height:100%;object-fit:contain;filter:none}
+.photo:target figcaption{flex-shrink:0;color:#eeeee8;line-height:1.6}
+.photo:target .photo-fallback-close{display:flex;position:absolute;top:10px;right:12px;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #44463d;font-size:24px;color:#eeeee8}

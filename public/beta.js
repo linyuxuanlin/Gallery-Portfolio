@@ -19,26 +19,27 @@
   if (typeof menuQuery.addEventListener === 'function') menuQuery.addEventListener('change', resetMenu);
   else if (typeof menuQuery.addListener === 'function') menuQuery.addListener(resetMenu);
   const filters = document.querySelector('.filters');
-  const activeFilter = filters?.querySelector('[aria-current]');
+  const activeFilter = filters && filters.querySelector('[aria-current]');
   if (activeFilter && matchMedia('(max-width: 700px)').matches) {
     const reveal = () => {
       const left = activeFilter.offsetLeft - (filters.clientWidth - activeFilter.offsetWidth) / 2;
       if (typeof filters.scrollTo === 'function') filters.scrollTo({ left, behavior: 'auto' });
       else filters.scrollLeft = left;
     };
-    reveal(); if (document.fonts?.ready) document.fonts.ready.then(reveal);
+    reveal(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(reveal);
   }
-  document.querySelectorAll('.photo-open img').forEach(img => { const fail = () => img.parentElement.classList.add('photo-failed'); img.addEventListener('error', fail); if (img.complete && !img.naturalWidth) fail(); });
+  const elements = selector => Array.prototype.slice.call(document.querySelectorAll(selector));
+  elements('.photo-open img').forEach(img => { const fail = () => img.parentElement.classList.add('photo-failed'); img.addEventListener('error', fail); if (img.complete && !img.naturalWidth) fail(); });
   const dialog = document.getElementById('viewer');
   const isOpen = () => dialog.hasAttribute('open');
   let nativeModal = false, hiddenContent = [];
   const openDialog = () => {
     if (typeof dialog.showModal === 'function' && typeof dialog.close === 'function') {
-      try { dialog.showModal(); nativeModal = true; return; } catch { /* Use the overlay when an embedded browser cannot open a native dialog. */ }
+      try { dialog.showModal(); nativeModal = true; return; } catch (error) { /* Use the overlay when an embedded browser cannot open a native dialog. */ }
     }
     nativeModal = false; dialog.setAttribute('open', '');
     dialog.setAttribute('role', 'dialog'); dialog.setAttribute('aria-modal', 'true');
-    hiddenContent = [...document.querySelectorAll('.site-header, main, .site-footer')].map(element => [element, element.getAttribute('aria-hidden'), element.inert]);
+    hiddenContent = elements('.site-header, main, .site-footer').map(element => [element, element.getAttribute('aria-hidden'), element.inert]);
     hiddenContent.forEach(([element]) => { element.setAttribute('aria-hidden', 'true'); element.inert = true; });
   };
   const closeDialog = () => {
@@ -66,7 +67,7 @@
   const previous = document.getElementById('viewer-previous');
   const next = document.getElementById('viewer-next');
   const share = document.getElementById('viewer-share');
-  const photos = [...document.querySelectorAll('[data-photo]')];
+  const photos = elements('[data-photo]');
   const legacyLinks = document.getElementById('legacy-photo-links');
   const legacyPhotoRoutes = legacyLinks ? JSON.parse(legacyLinks.textContent) : {};
   let archiveRoutes;
@@ -85,7 +86,7 @@
     cancelLoad(); resetZoom(); current = index;
     const photo = photos[current];
     document.getElementById('viewer-title').textContent = photo.dataset.title;
-    document.getElementById('viewer-place').textContent = `${photo.dataset.place} / ${String(current + 1).padStart(2, '0')} — ${photos.length}`;
+    document.getElementById('viewer-place').textContent = `${photo.dataset.place} / ${current < 9 ? '0' : ''}${current + 1} — ${photos.length}`;
     image.alt = photo.querySelector('img').alt;
     image.onload = null; image.onerror = () => { status.textContent = tr('预览暂不可用，可加载或打开原图。', 'Preview unavailable. Load or open the original photograph.'); };
     watermark.hidden = true; image.removeAttribute('src'); image.src = photo.dataset.preview;
@@ -102,11 +103,11 @@
     if (isOpen()) return;
     cancelLoad(); resetZoom(); image.onerror = image.onload = null; image.removeAttribute('src'); document.body.classList.remove('viewer-open');
     hiddenContent.forEach(([element, hidden, inert]) => { if (hidden === null) element.removeAttribute('aria-hidden'); else element.setAttribute('aria-hidden', hidden); element.inert = inert; });
-    hiddenContent = []; window.scrollTo({ top: scrollY, behavior: 'auto' }); if (opener?.isConnected) opener.focus({ preventScroll: true });
+    hiddenContent = []; window.scrollTo(0, scrollY); if (opener && document.documentElement.contains(opener)) opener.focus({ preventScroll: true });
   };
   const photoHash = index => '#photo=' + encodeURIComponent(photos[index].dataset.photoId);
   const closeViewer = () => {
-    if (history.state?.galleryViewer) history.back();
+    if (history.state && history.state.galleryViewer) history.back();
     else {
       history.replaceState(history.state, '', location.pathname + location.search);
       closeDialog();
@@ -118,7 +119,7 @@
   };
   const syncLocation = () => {
     let id;
-    try { id = location.hash.startsWith('#photo=') ? decodeURIComponent(location.hash.slice(7)) : ''; } catch { id = ''; }
+    try { id = location.hash.indexOf('#photo=') === 0 ? decodeURIComponent(location.hash.slice(7)) : ''; } catch (error) { id = ''; }
     const index = photos.findIndex(photo => photo.dataset.photoId === id);
     if (index >= 0) { setMenu(false); if (!isOpen() || current !== index) show(index); }
     else if (id && legacyPhotoRoutes[id]) {
@@ -128,12 +129,12 @@
     else if (id && /^\/(?:en\/)?works\//.test(location.pathname)) {
       const hash = location.hash, global = /^\/(?:en\/)?works\/(?:page\/\d+\/)?$/.test(location.pathname);
       // Load the small route index only when a shared photograph moved off this page.
-      archiveRoutes ||= fetch('/public/archive-routes.json').then(response => {
+      archiveRoutes = archiveRoutes || fetch('/public/archive-routes.json').then(response => {
         if (!response.ok) throw new Error('Archive route index unavailable.');
         return response.json();
       });
       archiveRoutes.then(routes => {
-        const path = routes[id]?.[global ? 'all' : 'place'];
+        const path = routes[id] && routes[id][global ? 'all' : 'place'];
         if (path) redirectPhoto((language === 'en' ? '/en' : '') + path, hash);
       }).catch(() => {});
     }
@@ -143,7 +144,7 @@
   photos.forEach((photo, index) => photo.addEventListener('click', event => {
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     event.preventDefault(); setMenu(false);
-    history.pushState({ ...history.state, galleryViewer: true }, '', photoHash(index)); show(index);
+    history.pushState(Object.assign({}, history.state, { galleryViewer: true }), '', photoHash(index)); show(index);
   }));
   close.addEventListener('click', closeViewer);
   dialog.addEventListener('close', finishClose);
@@ -165,10 +166,13 @@
   dialog.addEventListener('click', event => { if (event.target === stage && Date.now() > suppressClickUntil && !dialog.classList.contains('zoomed')) closeViewer(); });
   previous.addEventListener('click', () => { if (current > 0) navigatePhoto(current - 1); });
   next.addEventListener('click', () => { if (current < photos.length - 1) navigatePhoto(current + 1); });
-  share.addEventListener('click', async () => {
+  share.addEventListener('click', () => {
     const url = photos[current].dataset.shareUrl || location.href;
-    try { await navigator.clipboard.writeText(url); status.textContent = tr('作品链接已复制，可以分享这张照片。', 'Photograph link copied. Ready to share.'); }
-    catch { status.textContent = tr('可复制地址栏中的链接，分享这张照片。', 'Copy the address bar link to share this photograph.'); }
+    const failed = () => { status.textContent = tr('可复制地址栏中的链接，分享这张照片。', 'Copy the address bar link to share this photograph.'); };
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.writeText) { failed(); return; }
+      navigator.clipboard.writeText(url).then(() => { status.textContent = tr('作品链接已复制，可以分享这张照片。', 'Photograph link copied. Ready to share.'); }, failed);
+    } catch (error) { failed(); }
   });
   document.addEventListener('keydown', event => {
     if (!isOpen()) return;
@@ -176,7 +180,7 @@
     if (event.key === 'ArrowLeft' && !dialog.classList.contains('zoomed') && current > 0) { event.preventDefault(); navigatePhoto(current - 1); }
     if (event.key === 'ArrowRight' && !dialog.classList.contains('zoomed') && current < photos.length - 1) { event.preventDefault(); navigatePhoto(current + 1); }
     if (event.key === 'Tab') {
-      const controls = [...dialog.querySelectorAll('button,a[href]')].filter(control => !control.disabled && !control.hidden && control.getClientRects().length);
+      const controls = Array.prototype.slice.call(dialog.querySelectorAll('button,a[href]')).filter(control => !control.disabled && !control.hidden && control.getClientRects().length);
       if (!dialog.contains(document.activeElement)) { event.preventDefault(); controls[0].focus(); return; }
       if (event.shiftKey && document.activeElement === controls[0]) { event.preventDefault(); controls[controls.length - 1].focus(); }
       if (!event.shiftKey && document.activeElement === controls[controls.length - 1]) { event.preventDefault(); controls[0].focus(); }

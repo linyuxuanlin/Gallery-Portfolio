@@ -24,7 +24,7 @@ function pages(directory = 'dist') {
 }
 
 test('published pages have distinct metadata, matching bilingual canonicals, valid structured data and reachable links', () => {
-  const titles = new Set(); let count = 0;
+  const titles = new Set(), anchorIDs = new Map(); let count = 0;
   for (const file of pages()) {
     const urlPath = '/' + file.replace(/^dist\//, '').replace(/index\.html$/, '').split('/').map(encodeURIComponent).join('/');
     const dom = new JSDOM(readFileSync(file, 'utf8'), { url: site.url + urlPath });
@@ -57,8 +57,15 @@ test('published pages have distinct metadata, matching bilingual canonicals, val
       const target = join('dist', relative.endsWith('/') || !relative ? relative + 'index.html' : relative);
       assert.ok(existsSync(target), `${file} links to missing ${url.pathname}`);
       if (url.hash && element.tagName === 'A' && target.endsWith('.html')) {
-        const destination = new JSDOM(readFileSync(target, 'utf8')).window.document;
-        assert.ok(destination.getElementById(url.hash.slice(1)), 'missing anchor: ' + url.href);
+        if (target === file) assert.ok(doc.getElementById(url.hash.slice(1)), 'missing anchor: ' + url.href);
+        else {
+          if (!anchorIDs.has(target)) {
+            const destination = new JSDOM(readFileSync(target, 'utf8'));
+            anchorIDs.set(target, new Set([...destination.window.document.querySelectorAll('[id]')].map(element => element.id)));
+            destination.window.close();
+          }
+          assert.ok(anchorIDs.get(target).has(url.hash.slice(1)), 'missing anchor: ' + url.href);
+        }
       }
     }
     dom.window.close();
